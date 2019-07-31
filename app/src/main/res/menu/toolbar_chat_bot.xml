@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.stupidtree.hita.activities.ActivityUserCenter">
+    <!--<item-->
+        <!--android:id="@+id/action_keyboard"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="切换输入模式"-->
+        <!--android:iconTint="@color/material_primary_text"-->
+        <!--android:icon="@drawable/bt_chatbot_toolbar_keyboard"-->
+        <!--app:showAsAction="always" />-->
+    <item
+        android:id="@+id/action_db_build"
+        android:orderInCategory="100"
+        android:title="希塔养成计划"
+        app:showAsAction="never" />
+</menu>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".jwts.FragmentJWTS_xsxk">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/listLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="16dp">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/ksxx_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp" />
+            </android.support.v7.widget.CardView>
+
+            <com.stupidtree.hita.diy.ButtonLoading
+                android:id="@+id/button_import_ksxx"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:layout_margin="16dp"
+                android:foregroundGravity="center"
+                app:BL_backgroundColor="#80ffffff"
+                app:BL_circleColor="?attr/colorAccent"
+                app:BL_circleColorSecond="?attr/colorAccent"
+                app:BL_enable="true"
+                app:BL_stateShow="normal"
+                app:BL_text="添加考试到时间表"
+                app:BL_textColor="#FFFFFF"
+                app:BL_textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ksxx_invalid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView25"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_menu_jwts"
+                android:tint="@color/material_secondary_text" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="现在暂时没有考试信息" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/xsxk_loading"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+</LinearLayout>

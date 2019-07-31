@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu tools:context="com.stupidtree.hita.activities.ActivityUserCenter" xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:title="设置" android:id="@+id/action_settings"
+      app:showAsAction="never"
+      android:orderInCategory="1200"/>
+  <item android:title="添加事件" android:id="@+id/action_add_event"
+      app:showAsAction="ifRoom"
+      android:orderInCategory="1000"
+      android:icon="@drawable/bt_timeline_toolbar_add"/>
+      />
+
+    <!--<item android:title="问答" android:id="@+id/action_chatbot"-->
+        <!--app:showAsAction="ifRoom"-->
+        <!--android:orderInCategory="800"-->
+        <!--android:icon="@drawable/ic_settings_chatbot"/>-->
+    />
+    <item android:title="任务" android:id="@+id/action_tasks"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="900"
+        android:icon="@drawable/bt_timeline_toolbar_task"/>
+    />
+</menu>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/xflb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center|left"
+        android:text="学分类别"
+        android:textColor="@color/material_primary_text" />
+
+    <TextView
+        android:id="@+id/yqxf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1.5"
+        android:gravity="center|left"
+        android:text="要求学分"
+        android:textColor="@color/material_primary_text" />
+
+    <TextView
+        android:id="@+id/done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1.5"
+        android:gravity="center|left"
+        android:text="已完成"
+        android:textColor="?attr/colorPrimary" />
+
+    <TextView
+        android:id="@+id/tobedone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1.5"
+        android:gravity="center|left"
+        android:text="未完成"
+        android:textColor="@color/material_primary_text" />
+</LinearLayout>

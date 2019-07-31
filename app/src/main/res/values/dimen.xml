@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_">10dp</dimen>
+    <dimen name="pading_">5dp</dimen>
+    <dimen name="btn_size">22sp</dimen>
+    <dimen name="txt_size">18sp</dimen>
+
+    <dimen name="material_toolbar_height">56dp</dimen>
+    <dimen name="material_app_bar_height">160dp</dimen>
+    <dimen name="material_appbar_height">56dp</dimen>
+    <dimen name="material_toolbar_top_margin">24dp</dimen>
+    <dimen name="material_fab_margin">16dp</dimen>
+
+
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">200dp</dimen>
+
+    <dimen name="second_tab_height">32dp</dimen>
+    <dimen name="jwts_second_tab_height">48dp</dimen>
+</resources>

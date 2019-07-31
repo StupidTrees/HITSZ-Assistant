@@ -1,0 +1,33 @@
+<resources>
+
+    <!-- Declare custom theme attributes that allow changing which styles are
+         used for button bars depending on the API level.
+         ?android:attr/buttonBarStyle is new as of API 11 so this is
+         necessary to support previous API levels. -->
+    <attr name="colorFade" format="color" />
+    <attr name="colorPrimaryLight" format="color" />
+
+    <!--PileLayout的参数-->
+    <declare-styleable name="pile">
+        <attr name="interval" format="dimension" />
+        <attr name="sizeRatio" format="float" />
+        <attr name="scaleStep" format="float" />
+        <attr name="displayCount" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="scene">
+        <attr name="leftMargin" format="dimension" />
+        <attr name="leftDistance" format="dimension" />
+        <attr name="rightDistance" format="dimension" />
+        <attr name="verticalDistance" format="dimension" />
+        <attr name="layoutTextSize" format="float" />
+        <attr name="layoutTextColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
+    </declare-styleable>
+
+
+</resources>
+

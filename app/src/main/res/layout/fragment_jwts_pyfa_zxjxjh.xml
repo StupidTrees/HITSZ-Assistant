@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".jwts.FragmentJWTS_pyfa_pyjhcx">
+
+    <LinearLayout
+        android:id="@+id/subject_courseItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/material_backgroung_grey_50"
+        android:clickable="false"
+        android:paddingLeft="8dp"
+        android:paddingTop="16dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="8dp">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.1"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="名称"
+            android:textColor="@color/material_secondary_text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.34"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="学年"
+            android:textColor="@color/material_secondary_text" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.34"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="学期"
+            android:textColor="@color/material_secondary_text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.34"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="性质"
+            android:textColor="@color/material_secondary_text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.34"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="学分"
+            android:textColor="@color/material_secondary_text" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.3"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="总学时"
+            android:textColor="@color/material_secondary_text" />
+
+        <TextView
+            android:id="@+id/pyjh_exam"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.3"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="考试课"
+            android:textColor="@color/material_secondary_text" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/jwts_zxjxjh_lish"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

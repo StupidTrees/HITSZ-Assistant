@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <android.support.design.widget.AppBarLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="24dp"
+            android:background="?attr/colorPrimary"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:minHeight="?attr/actionBarSize"
+            app:subtitleTextColor="#77FFFFFF"
+            app:theme="@style/ToolBarTheme_Light"
+            app:titleMarginTop="16dp"
+            app:titleTextColor="@color/material_text_icon_white" />
+
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/navi_expandable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:el_expanded="true">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/bus_segment_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
+        </net.cachapa.expandablelayout.ExpandableLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <com.amap.api.navi.AMapNaviView
+        android:id="@+id/navi_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</android.support.design.widget.CoordinatorLayout>

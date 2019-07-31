@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/xsxk_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/xsxk_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1.1"
+        android:gravity="center"
+        android:text="计算机专业导论"
+        android:textColor="@color/material_primary_text" />
+
+    <TextView
+        android:id="@+id/xsxk_point"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1.24"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="1.2"
+        android:textColor="?attr/colorPrimary" />
+
+    <TextView
+        android:id="@+id/xsxk_type"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1.24"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="是"
+        android:textColor="?attr/colorPrimary" />
+
+    <TextView
+        android:id="@+id/xsxk_totalcourses"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1.24"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="48" />
+
+    <TextView
+        android:id="@+id/xsxk_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1.1"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="是"
+        android:textColor="?attr/colorPrimary" />
+
+    <Button
+        android:id="@+id/xsxk_operate"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1.2"
+        android:text="选"
+        android:visibility="visible" />
+
+</LinearLayout>

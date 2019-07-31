@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/subject_courseItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/ksxx_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1.1"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="计算机专业导论"
+        android:textColor="@color/material_primary_text" />
+
+    <TextView
+        android:id="@+id/ksxx_place"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="必修" />
+
+    <TextView
+        android:id="@+id/ksxx_time"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="1.2"
+        android:textColor="?attr/colorPrimary" />
+
+</LinearLayout>

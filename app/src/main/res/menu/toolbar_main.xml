@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu tools:context="com.stupidtree.hita.activities.ActivityUserCenter" xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:title="问答系统" android:id="@+id/action_chatbot"
+      android:icon="@drawable/ic_keyboard_voice"
+      android:iconTint="@color/material_secondary_text"
+      app:showAsAction="always"
+      android:orderInCategory="1200"/>
+
+</menu>

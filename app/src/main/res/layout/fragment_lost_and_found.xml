@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <!-- TODO: Update blank fragment layout -->
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/society_swiperefresh"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/society_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animationCache="true"
+            android:layoutAnimation="@anim/recycler_layout_animation_falls_down"
+            android:overScrollMode="never"
+            tools:context=".activities.ActivityLostAndFound">
+
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>

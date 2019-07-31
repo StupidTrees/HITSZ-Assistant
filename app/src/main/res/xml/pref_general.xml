@@ -1,0 +1,46 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <PreferenceCategory
+        android:layout_width="match_parent"
+        android:title="应用设置">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="autoCheckUpdate"
+            android:summary="建议开启"
+            android:title="进入app自动检查更新" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="autoDownloadInWifi"
+            android:summary="建议开启"
+            android:title="Wifi自动下载更新" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="notification"
+            android:summary="重启后生效"
+            android:title="常驻通知栏" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="主页设置">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="navi_show_news"
+            android:summary="给你一个干净的主页(重启生效)"
+            android:title="校园页面显示讲座新闻" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="问答系统设置">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="ChatBot_speakNow"
+            android:summary="speak now!"
+            android:title="自动播放回复" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="ChatBot_useKeyboard"
+            android:summary="建议使用语音"
+            android:title="聊天机器人使用键盘输入" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

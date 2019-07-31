@@ -1,0 +1,7 @@
+#Tue Jul 30 13:30:29 CST 2019
+base.0=C\:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\out
+path.1=classes2.dex
+renamed.1=classes2.dex
+path.0=classes.dex
+renamed.0=classes.dex
+base.1=C\:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\out

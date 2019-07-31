@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bottom_sheet_radius_background"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:text="添加任务"
+                android:textColor="@color/material_primary_text"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="16dp"
+                    android:scaleType="fitCenter"
+                    android:tint="@color/material_secondary_text"
+                    app:srcCompat="@drawable/ic_dlg_tt_tag1" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/adt_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:hint="名称"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/adt_switch3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:text="每日任务" />
+
+            <Switch
+                android:id="@+id/adt_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="1"
+                android:text="有期限任务" />
+
+            <LinearLayout
+                android:id="@+id/adt_arrangetime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="16dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/ic_addevent_date" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:paddingRight="16dp">
+
+                        <TextView
+                            android:id="@+id/adt_fdate_show"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_weight="1"
+                            android:text="设置开始日期"
+                            android:textColor="@color/material_secondary_text"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/adt_pick_fdate"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:tint="?attr/colorPrimary"
+                            app:srcCompat="@drawable/ic_dlg_tt_duration" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:paddingRight="16dp">
+
+                        <TextView
+                            android:id="@+id/adt_ftime_show"
+                            android:layout_width="320dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_weight="1"
+                            android:text="设置起始时间"
+                            android:textColor="@color/material_secondary_text"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/adt_pick_ftime"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:tint="?attr/colorPrimary"
+                            app:srcCompat="@drawable/ic_dlg_tt_duration" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:paddingRight="16dp">
+
+                        <TextView
+                            android:id="@+id/adt_tdate_show"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_weight="1"
+                            android:text="设置结束日期"
+                            android:textColor="@color/material_secondary_text"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/adt_pick_tdate"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:tint="?attr/colorPrimary"
+                            app:srcCompat="@drawable/ic_dlg_tt_duration" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal"
+                        android:paddingRight="16dp">
+
+                        <TextView
+                            android:id="@+id/adt_ttime_show"
+                            android:layout_width="320dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_weight="1"
+                            android:text="设置结束时间"
+                            android:textColor="@color/material_secondary_text"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/adt_pick_ttime"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:tint="?attr/colorPrimary"
+                            app:srcCompat="@drawable/ic_dlg_tt_duration" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/adt_switch2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="1"
+                android:text="有时长任务" />
+
+            <LinearLayout
+                android:id="@+id/adt_arrangelength"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="16dp"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/ic_access_time" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:text="设置任务时长"
+                        android:textColor="@color/material_secondary_text"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingRight="16dp">
+
+                        <NumberPicker
+                            android:id="@+id/adt_length_picker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="80dp"></NumberPicker>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:text="分钟"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="18sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/adt_bt_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="32dp"
+        android:clickable="true"
+        app:layout_anchor="@+id/linearLayout2"
+        app:layout_anchorGravity="end|top"
+        app:srcCompat="@drawable/fab_done" />
+
+</android.support.design.widget.CoordinatorLayout>

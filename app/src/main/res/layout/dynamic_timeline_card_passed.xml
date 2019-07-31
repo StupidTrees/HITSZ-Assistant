@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <com.github.vipulasri.timelineview.TimelineView
+        android:id="@+id/timelineview"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:layout_marginLeft="16dp"
+        app:endLineColor="?attr/colorPrimary"
+        app:marker="@drawable/timeline_marker_passed"
+        app:markerInCenter="true"
+        app:markerSize="18dp"
+        app:startLineColor="?attr/colorPrimary" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/tl_card"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:longClickable="true"
+        app:cardCornerRadius="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tl_tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:text="10:15-10:32"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tl_tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:maxEms="10"
+                android:text="学习"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="16dp"
+                android:text="已结束"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

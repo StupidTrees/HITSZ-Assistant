@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/material_backgroung_white"
+        android:elevation="0dp"
+        android:fitsSystemWindows="false"
+        android:visibility="visible"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:elevation="0dp"
+            android:visibility="visible"
+            app:contentInsetStartWithNavigation="0dp"
+            >
+            <!--app:contentInsetStart="0dp"-->
+            <android.support.design.widget.TabLayout
+                android:id="@+id/timetable_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/second_tab_height"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="#00000000"
+                app:tabIndicatorGravity="bottom"
+                app:tabMode="scrollable"
+                app:tabRippleColor="@color/material_secondary_text"
+                app:tabSelectedTextColor="@color/material_primary_text"
+                app:tabTextAppearance="@style/MainTabsTextTheme_normal"
+                app:tabTextColor="#55000000"
+                app:tabUnboundedRipple="true" />
+        </android.support.v7.widget.Toolbar>
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/tt_invalidview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:gravity="center"
+            android:text="没有课表数据\n请登录教务系统导入" />
+
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/timetable_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="always"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_thisweek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="@dimen/material_fab_margin"
+        android:clickable="true"
+        android:tint="@color/material_text_icon_white"
+        app:srcCompat="@drawable/ic_return" />
+
+</android.support.design.widget.CoordinatorLayout>

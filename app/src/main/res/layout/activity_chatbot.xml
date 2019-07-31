@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chatbot_root_layout"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom"
+    android:background="@color/material_backgroung_white"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chat_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="90dp"
+        android:layoutAnimation="@anim/recycler_layout_animation_falls_down"
+        android:overScrollMode="never"
+        tools:overScrollMode="never" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="24dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:theme="@style/ToolBarTheme_Dark"
+        app:title=" " />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_shutup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true"
+        android:scaleType="fitCenter"
+        android:tint="?attr/colorAccent"
+        app:backgroundTint="@color/material_text_icon_white"
+        app:fab_size="mini"
+        app:layout_anchor="@+id/chat_recyclerview"
+        app:layout_anchorGravity="end|center"
+        app:maxImageSize="56dp"
+        app:srcCompat="@drawable/fab_chatbot_shutup" />
+
+    <LinearLayout
+        android:id="@+id/textInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="16dp"
+        android:orientation="horizontal"
+        android:paddingVertical="5dp"
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/edit_send"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/select_chat_bot_edittext"
+            android:focusable="auto"
+            android:hint="嘻嘻嘻"
+            android:paddingLeft="6dp"
+            android:textColor="@color/material_primary_text"
+            android:textColorHint="#55FFFFFF"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/btn_send"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="6dp"
+            android:focusable="auto"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:paddingHorizontal="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/bt_chatbot_send"
+            android:tint="?attr/colorPrimary" />
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_speak"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="false"
+        android:layout_centerVertical="false"
+        android:layout_gravity="bottom|center"
+        android:layout_marginStart="@dimen/material_fab_margin"
+        android:layout_marginTop="@dimen/material_fab_margin"
+        android:layout_marginEnd="@dimen/material_fab_margin"
+        android:layout_marginBottom="@dimen/material_fab_margin"
+        android:tint="@color/white"
+        android:transitionName="fab"
+
+        android:visibility="gone"
+        app:backgroundTint="?attr/colorAccent"
+        app:fabCustomSize="60dp"
+        app:maxImageSize="36dp"
+        app:srcCompat="@drawable/bt_chatbot_voice_wave" />
+
+    <jaygoo.widget.wlv.WaveLineView
+        android:id="@+id/waveLineView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_centerVertical="true"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="16dp"
+        app:layout_anchorGravity="bottom|center"
+        app:wlvBackgroundColor="#00000000"
+        app:wlvLineColor="?attr/colorPrimary"
+        app:wlvMoveSpeed="290"
+        app:wlvSensibility="10" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="8dp"
+        android:alpha="0.5"
+        android:text="语音听写能力来自科大讯飞" />
+
+</android.support.design.widget.CoordinatorLayout>

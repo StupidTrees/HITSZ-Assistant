@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:paddingTop="24dp"
+        android:transitionName="notestoolbar"
+        app:theme="@style/ToolBarTheme_notes"
+        app:title="高等数学"></android.support.v7.widget.Toolbar>
+
+
+    <LinearLayout
+        android:id="@+id/notesinvalidlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="这堂课没有笔记哦，点击右下角添加吧"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notesvalidlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/notes_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="-10dp"
+            android:layout_weight="1" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/note_textcard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center|end"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:layout_weight="1"
+                        android:text="笔记备注" />
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/note_bt_edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:clickable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:tint="?attr/colorPrimary"
+                            app:srcCompat="@drawable/bt_edit" />
+
+                        <ImageView
+                            android:id="@+id/note_bt_editdone"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:clickable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:tint="?attr/colorPrimary"
+                            app:srcCompat="@drawable/bt_done" />
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <EditText
+                        android:id="@+id/note_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:ems="10" />
+
+                    <TextView
+                        android:id="@+id/note_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:singleLine="false"
+                        android:text="TextView"
+                        android:textSize="16sp" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/notes_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:visibility="gone"
+        android:src="@drawable/fab_add"
+        android:transitionName="notesfab" />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/note_fabmenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:padding="16dp"
+        app:layout_anchor="@id/notes_recyclerview"
+        app:layout_anchorGravity="right|bottom"
+        app:menu_backgroundColor="#AAFFFFFF"
+        app:menu_colorNormal="?attr/colorAccent"
+        app:menu_colorPressed="?attr/colorAccent"
+        app:menu_labels_colorNormal="#66000000"
+        app:menu_labels_colorPressed="#66000000"
+        app:menu_labels_colorRipple="?attr/colorAccent"
+        app:menu_labels_cornerRadius="12dp"
+        app:menu_labels_showShadow="false">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/note_fab1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/fab_photos"
+            app:fab_colorNormal="?attr/colorPrimary"
+            app:fab_colorPressed="?attr/colorPrimary"
+            app:fab_label="相册" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/note_fab2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/fab_camera"
+            app:fab_colorNormal="?attr/colorPrimary"
+            app:fab_colorPressed="?attr/colorPrimary"
+            app:fab_label="拍照" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/note_fab3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/fab_pencil"
+            app:fab_colorNormal="?attr/colorPrimary"
+            app:fab_colorPressed="?attr/colorPrimary"
+            app:fab_label="文字" />
+    </com.github.clans.fab.FloatingActionMenu>
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-sw360dp-v13\\values-sw360dp-v13.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\b32d777a815c247135b363f8481f14af\\res\\values-sw360dp-v13\\values-sw360dp-v13.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,127",
+                        "endColumns": "71,64",
+                        "endOffsets": "122,187"
+                    }
+                }
+            ]
+        }
+    ]
+}

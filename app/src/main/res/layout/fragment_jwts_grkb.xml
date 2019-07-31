@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".jwts.FragmentJWTS_grkb">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="选择导入课表：" />
+
+            <Spinner
+                android:id="@+id/spinner_grkb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <Switch
+                android:id="@+id/switch_teacher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="帮助完善教师数据库" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="如果教师信息不全，请开启后导入，这将耗费一些缓存和处理时间，但会帮助我们将教务系统上的教师信息保存到云教师库" />
+
+            <com.stupidtree.hita.diy.ButtonLoading
+                android:id="@+id/button_import_grkb"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="8dp"
+                android:foregroundGravity="center"
+                app:BL_backgroundColor="#80ffffff"
+                app:BL_circleColor="?attr/colorAccent"
+                app:BL_circleColorSecond="?attr/colorAccent"
+                app:BL_enable="true"
+                app:BL_stateShow="normal"
+                app:BL_text="导入"
+                app:BL_textColor="#FFFFFF"
+                app:BL_textSize="14sp" />
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</android.support.v4.widget.NestedScrollView>

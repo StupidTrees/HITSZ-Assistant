@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ActivityExplore">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/material_backgroung_grey_50">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@color/material_backgroung_grey_50"
+            android:elevation="0dp"
+            android:minHeight="?attr/actionBarSize"
+            app:theme="@style/ToolBarTheme_Dark">
+
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout
+            android:id="@+id/head_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center_vertical"
+            android:minHeight="56dp"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/firstline"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:singleLine="true"
+                    android:textColor="@color/material_primary_text"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/secondline"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/firstline"
+                    android:gravity="right"
+                    android:singleLine="true"
+                    android:textColor="@color/material_secondary_text"
+                    android:textSize="13sp"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/detail"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:theme="@style/button_ripple_primary">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="4dp"
+                    android:gravity="center_vertical"
+                    android:text="导航"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_navigation"
+                    android:tint="?attr/colorPrimary" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </android.support.design.widget.AppBarLayout>
+    <FrameLayout
+        android:id="@+id/mainFram"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.amap.api.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_gravity="bottom"
+                android:background="#FFFFFF"
+                android:text="昼"
+                android:textColor="@color/material_secondary_text"
+                android:textStyle="bold"
+                android:typeface="normal"
+                android:visibility="visible"
+                tools:visibility="visible" />
+
+        </com.amap.api.maps.MapView>
+
+
+    </FrameLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/ic_location"
+        android:tint="@color/material_text_icon_white" />
+
+    <!--<me.wangyuwei.particleview.ParticleView-->
+        <!--android:id="@+id/welcome"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="#0867AB"-->
+        <!--app:pv_host_text="校园访客指引"-->
+        <!--app:pv_host_text_size="42sp"-->
+        <!--app:pv_particle_text="HIT"-->
+        <!--app:pv_particle_text_size="42sp"-->
+        <!--app:pv_text_anim_time="1500" />-->
+
+
+</android.support.design.widget.CoordinatorLayout>

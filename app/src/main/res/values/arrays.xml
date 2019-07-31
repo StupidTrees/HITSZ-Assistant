@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string-array name="query_suggestions">
+        <item>A栋（研究生院主楼）</item>
+        <item>B栋</item>
+        <item>C栋（继续教育学院）</item>
+        <item>D栋</item>
+        <item>E栋</item>
+        <item>F栋</item>
+        <item>G栋</item>
+        <item>H栋（本科生院主楼）</item>
+        <item>J栋（活动中心）</item>
+        <item>K栋（实训楼）</item>
+        <item>L栋（信息楼）</item>
+        <item>T2栋（本科生院教学楼）</item>
+        <item>T3栋（本科生院教学楼）</item>
+        <item>T4栋（本科生院教学楼）</item>
+        <item>T5栋（本科生院教学楼）</item>
+        <item>T6栋（本科生院教学楼）</item>
+        <item>哈工大篮球场（研究生院）</item>
+        <item>哈工大篮球场（本科生院）</item>
+        <item>哈工大足球场</item>
+        <item>哈工大网球场</item>
+        <item>哈工大排球场</item>
+        <item>哈工大大门（平山村）</item>
+        <item>HIT（哈工大）广场</item>
+        <item>荔园一食堂</item>
+        <item>荔园二食堂（关闭）</item>
+        <item>荔园三食堂</item>
+        <item>荔园四食堂（关闭）</item>
+        <item>荔园超市（关闭）</item>
+        <item>荔园10栋</item>
+        <item>荔园9栋</item>
+        <item>荔园8栋</item>
+        <item>荔园7栋</item>
+        <item>荔园6栋</item>
+        <item>荔园5栋</item>
+        <item>荔园4栋</item>
+        <item>荔园3栋</item>
+        <item>荔园2栋</item>
+        <item>荔园1栋</item>
+        <item>大学城体育中心</item>
+        <item>清华大学深圳国际研究生院</item>
+        <item>北京大学研究生院</item>
+        <item>大学城图书馆</item>
+        <item>北京大学汇商学院</item>
+        <item>大学城会议中心</item>
+        <item>清华大学新能源与环境大楼</item>
+    </string-array>
+</resources>

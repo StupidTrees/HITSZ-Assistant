@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/widget_time_line"
+    android:initialLayout="@layout/widget_time_line"
+    android:minWidth="250dp"
+    android:minHeight="100dp"
+    android:resizeMode="horizontal|vertical"
+
+    android:widgetCategory="home_screen" />
+    <!--android:previewImage="@drawable/example_appwidget_preview"-->
+    <!--android:updatePeriodMillis="86400000"-->

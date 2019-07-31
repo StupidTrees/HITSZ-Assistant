@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- 设置toolbar按钮样式-->
+        <item name="drawerArrowStyle">@style/left_Drawer_Arrow_Style</item>
+    </style>
+
+    <style name="MainTabsTextTheme">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="MainTabsTextTheme_normal">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+
+
+
+    <!-- 欢迎页的风格 -->
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:windowFullscreen">true</item>
+        <!-- <item name="android:windowIsTranslucent">true</item> -->
+        <!-- 透明背景不要了 -->
+    </style>
+
+    <!-- chatbotActivity的主题 -->
+    <style name="ChatBotTheme" parent="AppTheme">
+        <!-- 状态栏透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+
+
+    <!-- toolbar三线按钮样式颜色-->
+    <style name="left_Drawer_Arrow_Style" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">#99FFFFFF</item>
+        <!--<item name="barLength">10dp</item>-->
+        <!--<item name="gapBetweenBars">3dp</item>-->
+    </style>
+    <!-- Timetable的toolbar三线按钮样式颜色-->
+    <style name="left_Drawer_Arrow_Style_TimeTable" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/material_text_icon_white</item>
+        <item name="barLength">6dp</item>
+        <item name="gapBetweenBars">2dp</item>
+        <item name="thickness">2dp</item>
+    </style>
+
+
+    <!-- 用在ChatBot的toolbar主题-->
+    <style name="ToolBarTheme_chatbot" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorButtonNormal">?attr/colorPrimary</item>
+        <item name="colorControlNormal">?attr/colorPrimary</item>
+    </style>
+    <!-- 用在TimeTable的toolbar主题-->
+    <style name="ToolBarTheme_timetable" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="drawerArrowStyle">@style/left_Drawer_Arrow_Style_TimeTable</item>-->
+        <item name="colorButtonNormal">@color/material_text_icon_white</item>
+        <item name="colorControlNormal">@color/material_text_icon_white</item>
+    </style>
+    <!-- 用在TimeLine的toolbar主题-->
+    <style name="ToolBarTheme_timeline" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="drawerArrowStyle">@style/left_Drawer_Arrow_Style_TimeTable</item>-->
+        <item name="colorButtonNormal">@color/material_text_icon_white</item>
+        <item name="colorControlNormal">@color/material_text_icon_white</item>
+    </style>
+    <!-- 用在NoteActivity的toolbar主题-->
+    <style name="ToolBarTheme_notes" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorButtonNormal">#202020</item>
+        <item name="colorControlNormal">#202020</item>
+    </style>
+
+    <!-- 用在UserCenterActivity的toolbar主题-->
+    <style name="ToolBarTheme_usercenter" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorButtonNormal">@color/material_text_icon_white</item>
+        <item name="colorControlNormal">@color/material_text_icon_white</item>
+    </style>
+    <!-- 用在SubjectActivity的toolbar主题-->
+    <style name="ToolBarTheme_subject" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorButtonNormal">@color/material_text_icon_white</item>
+        <item name="colorControlNormal">@color/material_text_icon_white</item>
+    </style>
+
+    <!--水波纹风格-->
+    <style name="button_ripple_primary">
+        <item name="android:colorControlHighlight">?attr/colorPrimary</item>
+        <item name="android:radius">24dp</item>
+    </style>
+    <!--水波纹风格-->
+    <style name="button_ripple_primary_large">
+        <item name="android:colorControlHighlight">?attr/colorPrimary</item>
+        <item name="android:radius">36dp</item>
+    </style>
+    <!--水波纹风格-->
+    <style name="button_ripple_primary_extra_large">
+        <item name="android:colorControlHighlight">?attr/colorPrimary</item>
+        <item name="android:radius">64dp</item>
+    </style>
+    <!--水波纹风格-->
+    <style name="button_ripple_white">
+        <item name="android:colorControlHighlight">@color/white</item>
+        <item name="android:radius">24dp</item>
+    </style>
+
+    <!--switch风格-->
+    <style name="switch_white" parent="Theme.AppCompat.Light">
+        <!-- Active thumb color & Active track color(30% transparency) switch 打开时的拇指按钮的颜色 轨迹颜色默认为30%这个颜色 -->
+        <item name="colorControlActivated">@color/white</item>
+
+        <!--&lt;!&ndash; Inactive thumb color switch关闭时的拇指按钮的颜色 &ndash;&gt;-->
+        <!--<item name="colorSwitchThumbNormal">@color/theme_color_gray</item>-->
+
+        <!--&lt;!&ndash; Inactive track color(30% transparency) switch关闭时的轨迹的颜色 30%这个颜色 &ndash;&gt;-->
+        <!--<item name="android:colorForeground">@color/colorAccent</item>-->
+
+        <!--使用方法： 在布局文件中给需要自定义控件中增加app:theme="@style/MySwitch"-->
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+
+    <style name="ToolBarTheme_Light" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorButtonNormal">#EEFFFFFF</item>
+        <item name="colorControlNormal">#EEFFFFFF</item>
+    </style>
+
+    <style name="ToolBarTheme_Dark" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorButtonNormal">@color/material_primary_text</item>
+        <item name="colorControlNormal">@color/material_primary_text</item>
+    </style>
+
+
+    <style name="RedTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/red_primary</item>
+        <item name="colorPrimaryDark">@color/red_primary_dark</item>
+        <item name="colorFade">@color/red_fade</item>
+        <item name="colorAccent">@color/red_accent</item>
+
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="PinkTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/pink_primary</item>
+        <item name="colorPrimaryDark">@color/pink_primary_dark</item>
+        <item name="colorAccent">@color/pink_accent</item>
+        <item name="colorFade">@color/pink_fade</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="BrownTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/brown_primary</item>
+        <item name="colorPrimaryDark">@color/brown_primary_dark</item>
+        <item name="colorAccent">@color/brown_accent</item>
+        <item name="colorFade">@color/brown_fade</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+
+    <style name="BlueTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorPrimaryDark">@color/blue_primary_dark</item>
+        <item name="colorAccent">@color/blue_accent</item>
+        <item name="colorFade">@color/blue_fade</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+
+    <style name="BlueGreyTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/blue_grey_primary</item>
+        <item name="colorPrimaryDark">@color/blue_grey_primary_dark</item>
+        <item name="colorAccent">@color/blue_grey_accent</item>
+        <item name="colorFade">@color/blue_grey_fade</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+
+    <style name="TealTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/teal_primary</item>
+        <item name="colorPrimaryDark">@color/teal_primary_dark</item>
+        <item name="colorAccent">@color/teal_accent</item>
+        <item name="colorFade">@color/teal_fade</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+
+    <style name="DeepPurpleTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/deep_purple_primary</item>
+        <item name="colorPrimaryDark">@color/deep_purple_primary_dark</item>
+        <item name="colorAccent">@color/deep_purple_accent</item>
+        <item name="colorFade">@color/deep_purple_fade</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+
+    <style name="GreenTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/green_primary</item>
+        <item name="colorPrimaryDark">@color/green_primary_dark</item>
+        <item name="colorAccent">@color/green_accent</item>
+        <item name="colorFade">@color/green_fade</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="DeepOrangeTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/deep_orange_primary</item>
+        <item name="colorPrimaryDark">@color/deep_orange_primary_dark</item>
+        <item name="colorAccent">@color/deep_orange_accent</item>
+        <item name="colorFade">@color/deep_orange_fade</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="IndigoTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/indigo_primary</item>
+        <item name="colorPrimaryDark">@color/indigo_primary_dark</item>
+        <item name="colorAccent">@color/indigo_accent</item>
+        <item name="colorFade">@color/indigo_fade</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="CyanTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/cyan_primary</item>
+        <item name="colorPrimaryDark">@color/cyan_primary_dark</item>
+        <item name="colorAccent">@color/cyan_accent</item>
+        <item name="colorFade">@color/cyan_fade</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="AmberTheme_chatbot" parent="AppTheme">
+        <item name="colorPrimary">@color/amber_primary</item>
+        <item name="colorPrimaryDark">@color/amber_primary_dark</item>
+        <item name="colorAccent">@color/amber_accent</item>
+        <item name="colorFade">@color/amber_fade</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+
+    <style name="RedTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/red_primary</item>
+        <item name="colorPrimaryDark">@color/red_primary_dark</item>
+        <item name="colorAccent">@color/red_accent</item>
+        <item name="colorFade">@color/red_fade</item>
+        <item name="colorPrimaryLight">@color/red_primary_light</item>
+
+    </style>
+
+    <style name="PinkTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/pink_primary</item>
+        <item name="colorPrimaryDark">@color/pink_primary_dark</item>
+        <item name="colorAccent">@color/pink_accent</item>
+        <item name="colorFade">@color/pink_fade</item>
+        <item name="colorPrimaryLight">@color/pink_primary_light</item>
+
+    </style>
+
+    <style name="BrownTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/brown_primary</item>
+        <item name="colorPrimaryDark">@color/brown_primary_dark</item>
+        <item name="colorAccent">@color/brown_accent</item>
+        <item name="colorFade">@color/brown_fade</item>
+        <item name="colorPrimaryLight">@color/brown_primary_light</item>
+
+    </style>
+
+
+    <style name="BlueTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorPrimaryDark">@color/blue_primary_dark</item>
+        <item name="colorAccent">@color/blue_accent</item>
+        <item name="colorFade">@color/blue_fade</item>
+        <item name="colorPrimaryLight">@color/blue_primary_light</item>
+
+    </style>
+
+
+    <style name="BlueGreyTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/blue_grey_primary</item>
+        <item name="colorPrimaryDark">@color/blue_grey_primary_dark</item>
+        <item name="colorAccent">@color/blue_grey_accent</item>
+        <item name="colorFade">@color/blue_grey_fade</item>
+        <item name="colorPrimaryLight">@color/blue_grey_primary_light</item>
+
+    </style>
+
+
+    <style name="TealTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/teal_primary</item>
+        <item name="colorPrimaryDark">@color/teal_primary_dark</item>
+        <item name="colorAccent">@color/teal_accent</item>
+        <item name="colorFade">@color/teal_fade</item>
+        <item name="colorPrimaryLight">@color/teal_primary_light</item>
+
+    </style>
+
+
+    <style name="DeepPurpleTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/deep_purple_primary</item>
+        <item name="colorPrimaryDark">@color/deep_purple_primary_dark</item>
+        <item name="colorAccent">@color/deep_purple_accent</item>
+        <item name="colorFade">@color/deep_purple_fade</item>
+        <item name="colorPrimaryLight">@color/deep_purple_primary_light</item>
+
+    </style>
+
+
+    <style name="GreenTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/green_primary</item>
+        <item name="colorPrimaryDark">@color/green_primary_dark</item>
+        <item name="colorAccent">@color/green_accent</item>
+        <item name="colorFade">@color/green_fade</item>
+        <item name="colorPrimaryLight">@color/green_primary_light</item>
+
+    </style>
+
+    <style name="DeepOrangeTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/deep_orange_primary</item>
+        <item name="colorPrimaryDark">@color/deep_orange_primary_dark</item>
+        <item name="colorAccent">@color/deep_orange_accent</item>
+        <item name="colorFade">@color/deep_orange_fade</item>
+        <item name="colorPrimaryLight">@color/deep_orange_primary_light</item>
+
+    </style>
+
+    <style name="IndigoTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/indigo_primary</item>
+        <item name="colorPrimaryDark">@color/indigo_primary_dark</item>
+        <item name="colorAccent">@color/indigo_accent</item>
+        <item name="colorFade">@color/indigo_fade</item>
+        <item name="colorPrimaryLight">@color/indigo_primary_light</item>
+
+    </style>
+
+    <style name="CyanTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/cyan_primary</item>
+        <item name="colorPrimaryDark">@color/cyan_primary_dark</item>
+        <item name="colorAccent">@color/cyan_accent</item>
+        <item name="colorFade">@color/cyan_fade</item>
+        <item name="colorPrimaryLight">@color/cyan_primary_light</item>
+
+    </style>
+
+    <style name="AmberTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/amber_primary</item>
+        <item name="colorPrimaryDark">@color/amber_primary_dark</item>
+        <item name="colorAccent">@color/amber_accent</item>
+        <item name="colorFade">@color/amber_fade</item>
+        <item name="colorPrimaryLight">@color/amber_primary_light</item>
+    </style>
+
+</resources>
