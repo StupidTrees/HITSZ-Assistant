@@ -11,12 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.Task;
 
 import java.util.List;
-
-import static com.stupidtree.hita.ChatSec.TextTools.words_time_DOW;
 
 
 public class ChatBotListTaskListAdapater extends RecyclerView.Adapter<ChatBotListTaskListAdapater.mHolder> {

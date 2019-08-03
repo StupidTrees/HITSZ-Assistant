@@ -297,7 +297,7 @@ public class ActivityJWTS extends BaseActivity implements  FragmentJWTS_grkb.OnF
                return null;
             }
             //FileOperator.saveAvatarToFile(ActivityJWTS.this.getFilesDir(), "avatar_ugly", BitmapFactory.decodeByteArray(avatar,0,avatar.length));
-            //PreferenceManager.getDefaultSharedPreferences(HContext).edit().putString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())).commit();
+            //defaultSP.edit().putString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())).commit();
             return avatar;
         }
 

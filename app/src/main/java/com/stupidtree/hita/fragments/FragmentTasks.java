@@ -49,7 +49,6 @@ public class FragmentTasks extends Fragment implements RefreshBroadcastReceiver.
     ArrayList<Task> listRes;
     ImageView bt_add;
     FragmentAddTask fat;
-    public FragmentTimeLine ftl;
     public  boolean hasInit = false;
     LocalBroadcastManager localBroadcastManager;
     RefreshBroadcastReceiver refreshBroadcastReceiver;
@@ -72,10 +71,6 @@ public class FragmentTasks extends Fragment implements RefreshBroadcastReceiver.
         localBroadcastManager.registerReceiver(refreshBroadcastReceiver,iF);
     }
 
-
-    public void connectWithTimeLine(FragmentTimeLine ft){
-        ftl = ft;
-    }
 
     @Nullable
     @Override

@@ -19,6 +19,7 @@ import com.stupidtree.hita.R;
 import java.net.HttpCookie;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 
 public class ActivityDynamicTable extends BaseActivity {
 
@@ -58,11 +59,11 @@ public class ActivityDynamicTable extends BaseActivity {
         item.setActionView(R.layout.util_dynamictimetable_toolbar_actionlayout);
         final Switch switchA = item
                 .getActionView().findViewById(R.id.action_layout_switch);
-        switchA.setChecked(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("dynamicTimeTable",false));
+        switchA.setChecked(defaultSP.getBoolean("dynamicTimeTable",false));
         switchA.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                  PreferenceManager.getDefaultSharedPreferences(HContext).edit().putBoolean("dynamicTimeTable",isChecked).commit();
+                  defaultSP.edit().putBoolean("dynamicTimeTable",isChecked).commit();
             }
         });
         return super.onCreateOptionsMenu(menu);

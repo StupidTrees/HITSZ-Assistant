@@ -1,50 +1,32 @@
 package com.stupidtree.hita.activities;
 
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.ChatSec.TextTools;
+import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.TimeTable;
 import com.stupidtree.hita.diy.HDatePickerDialog;
-import com.stupidtree.hita.util.ActivityUtils;
 
-import org.apache.http.util.EncodingUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.isDataAvailable;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
 
 public class ActivityEmptyClassroomDetail extends BaseActivity {

@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.stupidtree.hita.ChatSec.TextTools;
+import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.timetable.EventItem;
 

@@ -1,29 +1,24 @@
 package com.stupidtree.hita.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.CanteenListAdapter;
 import com.stupidtree.hita.online.Canteen;
 import com.stupidtree.hita.online.Infos;
 import com.stupidtree.hita.online.Location;
-import com.stupidtree.hita.online.RateUser;
 import com.stupidtree.hita.util.ActivityUtils;
 
 import java.util.ArrayList;
@@ -33,12 +28,6 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UpdateListener;
-
-import static com.stupidtree.hita.HITAApplication.CurrentUser;
-import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.online.Location.showRateDialog;
 
 public class FragmentCanteenList extends Fragment {
     CanteenListAdapter listAdapter;
@@ -46,6 +35,7 @@ public class FragmentCanteenList extends Fragment {
     List<Canteen> listRes;
     TextView rank_number, rank_board;
     SwipeRefreshLayout refreshLayout;
+    ImageView head_bg;
     boolean firstOpen = true;
 
 
@@ -68,8 +58,9 @@ public class FragmentCanteenList extends Fragment {
     void initList(View v) {
         refreshLayout = v.findViewById(R.id.refresh);
         list = v.findViewById(R.id.canteen_list);
-        rank_number = v.findViewById(R.id.canteen_number);
-        rank_board = v.findViewById(R.id.canteen_board);
+        rank_number = v.findViewById(R.id.canteen_title);
+        rank_board = v.findViewById(R.id.canteen_subtitle);
+        head_bg = v.findViewById(R.id.head_bg);
         listRes = new ArrayList<>();
         listAdapter = new CanteenListAdapter(this.getContext(), listRes);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
@@ -135,14 +126,21 @@ public class FragmentCanteenList extends Fragment {
                 if (e == null && list != null && list.size() > 0) {
                     JsonObject jo = list.get(0).getJson();
                     if (jo != null) {
-                        String number = jo.get("number_text").getAsString();
-                        String board = jo.get("board_text").getAsString();
+                        String number = jo.get("title").getAsString();
+                        String board = jo.get("subtitle").getAsString();
+                        String imageUrl = jo.get("image_url").getAsString();
                         if (number != null) rank_number.setText(number);
                         if (board != null) rank_board.setText(board);
+                        if(imageUrl!=null){
+                            Glide.with(getContext()).load(imageUrl).placeholder(R.drawable.timeline_head_bg)
+                                    .into(head_bg);
+                        }else head_bg.setImageResource(R.drawable.timeline_head_bg);
+
                     }
                 } else {
                     rank_number.setText("-");
                     rank_board.setText("-");
+                    head_bg.setImageResource(R.drawable.timeline_head_bg);
                 }
             }
         });

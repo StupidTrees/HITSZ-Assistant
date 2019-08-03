@@ -16,7 +16,7 @@ import com.stupidtree.hita.core.timetable.EventItem;
 
 import java.util.List;
 
-import static com.stupidtree.hita.ChatSec.TextTools.words_time_DOW;
+import static com.stupidtree.hita.hita.TextTools.words_time_DOW;
 
 
 public class ChatBotListEventListAdapater extends RecyclerView.Adapter<ChatBotListEventListAdapater.mHolder> {

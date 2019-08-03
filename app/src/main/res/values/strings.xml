@@ -171,7 +171,7 @@
     </string-array>
     <string name="title_activity_settings">Settings</string>
     <!-- Strings related to Settings -->
-    <!-- Example General settings -->
+    <!-- Example General defaultSP -->
     <string name="pref_header_general">General</string>
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact based on your message history </string>
@@ -188,7 +188,7 @@
         <item>0</item>
         <item>-1</item>
     </string-array>
-    <!-- Example settings for Data & Sync -->
+    <!-- Example defaultSP for Data & Sync -->
     <string name="pref_header_data_sync">Data sync</string>
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
@@ -219,7 +219,7 @@
     </string-array>
     <string-array name="multi_select_list_preference_default_value" />
     <string name="pref_title_system_sync_settings">System sync settings</string>
-    <!-- Example settings for Notifications -->
+    <!-- Example defaultSP for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
     <string name="pref_title_new_message_notifications">New message notifications</string>
     <string name="pref_title_ringtone">Ringtone</string>
@@ -286,6 +286,12 @@
     <string name="timeline_head_notthisterm_title">假期</string>
     <string name="timeline_head_notthisterm_subtitle">本学期未开始！</string>
     <string name="title_activity_user_profile">ActivityUserProfile</string>
-
-
+    <string name="shortcut_empty_classroom_short">空教室</string>
+    <string name="shortcut_empty_classroom_long">空教室查询</string>
+    <string name="shortcut_explore_short">探索</string>
+    <string name="shortcut_explore_long">探索模式</string>
+    <string name="shortcut_timetable_short">课表</string>
+    <string name="shortcut_timetable_long">课程表</string>
+    <string name="shortcut_news_short">信息窗</string>
+    <string name="shortcut_news_long">信息窗口</string>
 </resources>

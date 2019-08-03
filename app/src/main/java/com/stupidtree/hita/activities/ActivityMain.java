@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
@@ -46,7 +45,6 @@ import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.TimeWatcher;
 import com.stupidtree.hita.adapter.MainPagerAdapter;
 import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.fragments.FragmentAddEvent;
@@ -96,13 +94,11 @@ public class ActivityMain extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true,true,false);
-        isFirst =  PreferenceManager.getDefaultSharedPreferences(this).getBoolean("firstOpen",true);
+        isFirst =  defaultSP.getBoolean("firstOpen",true);
         tlf = FragmentTimeLine.newInstance(isFirst);
         nvf = new FragmentNavi();
         tskf = new FragmentTasks();
-        tskf.connectWithTimeLine(tlf);
         checkAPPPermission();
-        new InitDataTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         setContentView(R.layout.activity_main_drawer);
         fabmain = findViewById(R.id.fab_main);
         fabmain.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +110,7 @@ public class ActivityMain extends BaseActivity
             }
         });
 
-        if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("autoCheckUpdate",true)) checkUpdate(this);
+        if(defaultSP.getBoolean("autoCheckUpdate",true)) checkUpdate(this);
         initDrawer();
         initToolBar();
         initPager();
@@ -307,7 +303,7 @@ public class ActivityMain extends BaseActivity
                 super.onTargetClick(view);
                 Intent i = new Intent(ActivityMain.this, ActivityLogin.class);
                 startActivity(i);
-                PreferenceManager.getDefaultSharedPreferences(HContext).edit().putBoolean("firstOpen",false).commit();
+                defaultSP.edit().putBoolean("firstOpen",false).commit();
                 isFirst = false;
             }
         });
@@ -329,35 +325,13 @@ public class ActivityMain extends BaseActivity
         saveData(this);
     }
 
-    public void loadData() {
-        FileOperator.verifyStoragePermissions(this);
-        ArrayList temp1 = new ArrayList();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        Cursor c = sd.query("curriculum",null,null,null,null,null,null);
-        //ArrayList temp1 = FileOperator.loadCurriculumFromFile(this.getFilesDir());
-        while (c.moveToNext()){
-            temp1.add(new Curriculum(c));
-        }
-        c.close();
-        loadCurriculums(temp1);
-        correctData();
-    }
+
 
     public static void saveData(Activity context) {
         new SaveDataTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void initCoreData(){
-        loadData();
-        thisCurriculumIndex = settings.getInt("thisCurriculum",0);
-        try {
-            allCurriculum.get(thisCurriculumIndex);
-            thisWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
-        } catch (Exception e) {
-            thisCurriculumIndex = 0;
-        }
-        if(isDataAvailable()&&thisWeekOfTerm>allCurriculum.get(thisCurriculumIndex).totalWeeks) allCurriculum.get(thisCurriculumIndex).totalWeeks = thisWeekOfTerm;
-    }
+
 
 
 
@@ -525,11 +499,11 @@ public class ActivityMain extends BaseActivity
                         //.placeholder(R.drawable.ic_account_activated)
                         //.skipMemoryCache(false)
                         //.dontAnimate()
-                        //.signature(new ObjectKey(Objects.requireNonNull(PreferenceManager.getDefaultSharedPreferences(HContext).getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
+                        //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
                         .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                         .into(drawerUserAvatar);
 //                Glide.with(ActivityMain.this).load(CurrentUser.getAvatarUri())
-//                        //.signature(new ObjectKey(Objects.requireNonNull(PreferenceManager.getDefaultSharedPreferences(HContext).getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
+//                        //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
 //                        //.placeholder(R.drawable.ic_account_activated)
 //                        .apply(RequestOptions.bitmapTransform(new mBlurTransformation(this, 24, 6)))
 //                        .into(drawer_bg);
@@ -562,30 +536,7 @@ public class ActivityMain extends BaseActivity
     }
 
 
-    class InitDataTask extends AsyncTask{
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            FileOperator.verifyStoragePermissions(ActivityMain.this);
-            initCoreData();
-//            ((HITAApplication)ActivityMain.this.getApplication()).copyAssetsSingleFile(HContext.getFilesDir(), "mDict_default.dic");
-//            ((HITAApplication)ActivityMain.this.getApplication()).copyAssetsSingleFile(HContext.getFilesDir(), "mDict_ambiguity.dic");
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            try {
-                refreshDrawerHeader();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            TimeWatcher.refreshTodaysEvents();
-            Intent mes = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH_FROM_OTHER");
-            sendBroadcast(mes);
-           // tlf.Refresh(FragmentTimeLine.TL_REFRESH_FROM_UNHIDE);
-        }
-    }
 
     class onUserAvatarClickListener implements View.OnClickListener {
         @Override
@@ -644,6 +595,11 @@ public class ActivityMain extends BaseActivity
     @Override
     public void onBackPressed() {
         if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)) mDrawerLayout.closeDrawers();
-        else super.onBackPressed();
+        else { //返回桌面而不是退出
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
+        }
     }
 }

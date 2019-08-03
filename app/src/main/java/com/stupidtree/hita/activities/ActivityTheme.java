@@ -30,6 +30,7 @@ import com.stupidtree.hita.R;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.getThemeID;
 import static com.stupidtree.hita.HITAApplication.themeID;
 
@@ -88,7 +89,7 @@ public class ActivityTheme extends BaseActivity {
                 }
                 System.out.println("pos="+pos);
 
-                PreferenceManager.getDefaultSharedPreferences(HContext).edit().putInt("theme_id",pos).commit();
+                defaultSP.edit().putInt("theme_id",pos).commit();
                 getThemeID();
                 Intent mStartActivity = new Intent(HContext,ActivityMain.class);
                 int mPendingIntentId = 2333333;

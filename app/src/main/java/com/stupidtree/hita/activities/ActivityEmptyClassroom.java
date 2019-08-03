@@ -2,7 +2,7 @@ package com.stupidtree.hita.activities;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -18,20 +18,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-import com.google.gson.JsonObject;
 import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.ChatSec.TextTools;
+import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.online.Classroom;
-import com.stupidtree.hita.online.Location;
 import com.stupidtree.hita.util.ActivityUtils;
 
 import org.jsoup.Jsoup;
@@ -45,9 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-
+import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.isDataAvailable;
@@ -74,7 +66,22 @@ public class ActivityEmptyClassroom extends BaseActivity {
         setContentView(R.layout.activity_empty_classroom);
 
         initToolbar();
-        if(!isDataAvailable()){
+        if(CurrentUser==null){
+            AlertDialog ad = new AlertDialog.Builder(this).setMessage("登录HITSZ助手账号后同步课表").setTitle("请登录").setPositiveButton("前往登录", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(ActivityEmptyClassroom.this,ActivityLogin.class);
+                    startActivity(i);
+                    finish();
+                }
+            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            }).create();
+            ad.show();
+        }else if(!isDataAvailable()){
             AlertDialog ad = new AlertDialog.Builder(this).setMessage("需要当前学期的课表代码进行空教室查询，请导入课表后使用！").setTitle("没有课表数据").setPositiveButton("前往教务系统", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -88,6 +95,22 @@ public class ActivityEmptyClassroom extends BaseActivity {
                 }
             }).create();
             ad.show();
+        }else if(thisWeekOfTerm<0) {
+            AlertDialog ad = new AlertDialog.Builder(this).setMessage("当前选择的学期尚未开始，请切换为已开始学期进行查询！").setTitle("学期未开始").setPositiveButton("前往课表管理", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(ActivityEmptyClassroom.this,ActivityCurriculumManager.class);
+                    startActivity(i);
+                    finish();
+                }
+            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            }).create();
+            ad.show();
+
         }else{
             initList();
             new refreshListTask().execute();

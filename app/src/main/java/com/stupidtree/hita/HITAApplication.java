@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,8 +14,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechUtility;
 import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.core.CurriculumHelper;
 import com.stupidtree.hita.core.HITADBHelper;
@@ -25,7 +24,7 @@ import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.core.Subject;
 import com.stupidtree.hita.core.TimeTable;
 import com.stupidtree.hita.core.timetable.EventItem;
-import com.stupidtree.hita.ChatSec.ChatBotMessageItem;
+import com.stupidtree.hita.hita.ChatBotMessageItem;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.util.FileOperator;
 import com.stupidtree.hita.util.mUpgradeListener;
@@ -72,7 +71,7 @@ public class HITAApplication extends Application {
     public static HashMap<String, String> cookies = null;
     public static boolean login = false;
     public static TimeTable mainTimeTable;
-    public static SharedPreferences settings;
+    public static SharedPreferences defaultSP;
     public static int thisCurriculumIndex;
     public static List<EventItem> todaysEvents;
     /*刻画数据状态的标志常量*/
@@ -90,21 +89,25 @@ public class HITAApplication extends Application {
     public void onCreate() {
         super.onCreate();
         HContext = getApplicationContext();
+        defaultSP = PreferenceManager.getDefaultSharedPreferences(this);
         mDBHelper = new HITADBHelper(HContext);
         allCurriculum = new ArrayList<>();
         ChatBotListRes = new ArrayList<>();
         timeWatcher = new TimeWatcher(this);
         mainTimeTable = new TimeTable(null);
         todaysEvents = new ArrayList<>();
-        settings = PreferenceManager.getDefaultSharedPreferences(HContext);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ToAnalysis.parse("abc");
+                initCoreData();
+                TimeWatcher.refreshTodaysEvents();
+                Intent mes = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH_FROM_OTHER");
+                sendBroadcast(mes);
+                ToAnalysis.parse("");
                 //System.out.println(ToAnalysis.parse("6：30分"));
             }
         }).start();
-        initXfVoice();
         initUpgradeDialog();
         Bugly.init(this, "7c0e87536a", false);//务必最后再init
         Bmob.initialize(this, "9c9c53cd53b3c7f02c37b7a3e6fd9145");
@@ -139,9 +142,7 @@ public class HITAApplication extends Application {
         }
     }
 
-    private void initXfVoice() {
-        SpeechUtility.createUtility(getApplicationContext(), SpeechConstant.APPID + "=5c4aa1d3");
-    }
+
 
     private void initUpgradeDialog() {
         Beta.autoInit = true;
@@ -192,7 +193,7 @@ public class HITAApplication extends Application {
         /**
          * 设置Wifi下自动下载
          */
-        Beta.autoDownloadOnWifi = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("autoDownloadInWifi", true);
+        Beta.autoDownloadOnWifi = defaultSP.getBoolean("autoDownloadInWifi", true);
 
 
         /*在application中初始化时设置监听，监听策略的收取*/
@@ -244,8 +245,7 @@ public class HITAApplication extends Application {
     }
 
     public static void getThemeID() {
-        //Log.i("!!!!!!!!!!!!!!!", String.valueOf(PreferenceManager.getDefaultSharedPreferences(HContext).getInt("theme_id",0)));
-        switch (PreferenceManager.getDefaultSharedPreferences(HContext).getInt("theme_id", 3)) {
+       switch (defaultSP.getInt("theme_id", 3)) {
             case 0:
                 themeID = R.style.RedTheme;
                 break;
@@ -285,11 +285,6 @@ public class HITAApplication extends Application {
         }
     }
 
-    public static boolean loadCurriculums(ArrayList<Curriculum> ils) {
-        if (ils == null || ils.size() <= 0) return false;
-        allCurriculum = ils;
-        return true;
-    }
 
     public static boolean deleteCurriculum(int index){
         if(index>allCurriculum.size()-1) return false;
@@ -326,7 +321,7 @@ public class HITAApplication extends Application {
         mainTimeTable.core = cur;//顺序不能乱
         mainTimeTable.addCurriculum(il);
         addSubjects(il);
-        settings.edit().putInt("thisCurriculum", thisCurriculumIndex).apply();
+        defaultSP.edit().putInt("thisCurriculum", thisCurriculumIndex).apply();
         return true;
     }
 
@@ -358,6 +353,26 @@ public class HITAApplication extends Application {
         }
     }
 
+    private void initCoreData(){
+        ArrayList temp1 = new ArrayList();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        Cursor c = sd.query("curriculum",null,null,null,null,null,null);
+        //ArrayList temp1 = FileOperator.loadCurriculumFromFile(this.getFilesDir());
+        while (c.moveToNext()){
+            temp1.add(new Curriculum(c));
+        }
+        c.close();
+        allCurriculum.addAll(temp1);
+        correctData();
+        thisCurriculumIndex = defaultSP.getInt("thisCurriculum",0);
+        try {
+            allCurriculum.get(thisCurriculumIndex);
+            thisWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
+        } catch (Exception e) {
+            thisCurriculumIndex = 0;
+        }
+        if(isDataAvailable()&&thisWeekOfTerm>allCurriculum.get(thisCurriculumIndex).totalWeeks) allCurriculum.get(thisCurriculumIndex).totalWeeks = thisWeekOfTerm;
+    }
     public static void correctData() {
         if (allCurriculum == null || mainTimeTable == null) return;
         int allCurriculumSize = allCurriculum.size();
@@ -503,6 +518,23 @@ public class HITAApplication extends Application {
         super.onTerminate();
         mDBHelper.getWritableDatabase().close();
     }
+
+//    class InitDataTask extends AsyncTask{
+//        @Override
+//        protected Object doInBackground(Object[] objects) {
+//            initCoreData();
+////            ((HITAApplication)ActivityMain.this.getApplication()).copyAssetsSingleFile(HContext.getFilesDir(), "mDict_default.dic");
+////            ((HITAApplication)ActivityMain.this.getApplication()).copyAssetsSingleFile(HContext.getFilesDir(), "mDict_ambiguity.dic");
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Object o) {
+//            super.onPostExecute(o);
+//
+//            // tlf.Refresh(FragmentTimeLine.TL_REFRESH_FROM_UNHIDE);
+//        }
+//    }
 
     static class writeDataToLocalTask extends AsyncTask{
 

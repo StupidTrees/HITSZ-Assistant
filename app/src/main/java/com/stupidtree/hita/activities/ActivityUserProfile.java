@@ -97,7 +97,7 @@ public class ActivityUserProfile extends BaseActivity
                     Glide.with(ActivityUserProfile.this).load(user.getAvatarUri()).apply(RequestOptions.circleCropTransform())
                             .placeholder(R.drawable.ic_account_activated).into(avatar);
                     Glide.with(ActivityUserProfile.this).load(user.getAvatarUri())
-                            //.signature(new ObjectKey(Objects.requireNonNull(PreferenceManager.getDefaultSharedPreferences(HContext).getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
+                            //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
                             //.placeholder(R.drawable.ic_account_activated)
                             .listener(new RequestListener<Drawable>() {
                                 @Override

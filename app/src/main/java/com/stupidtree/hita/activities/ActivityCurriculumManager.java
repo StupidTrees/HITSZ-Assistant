@@ -10,46 +10,30 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.azoft.carousellayoutmanager.CarouselLayoutManager;
 import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener;
-import com.gordonwong.materialsheetfab.MaterialSheetFab;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.CurriculumManagerAdapter;
-import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.core.CurriculumHelper;
 import com.stupidtree.hita.util.FileOperator;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 
 import static com.stupidtree.hita.activities.ActivityMain.saveData;
@@ -130,7 +114,7 @@ public class ActivityCurriculumManager extends BaseActivity {
                                     allCurriculum.get(thisCurriculumIndex).totalWeeks = thisWeekOfTerm;
                                 }
                                 saveData(ActivityCurriculumManager.this);
-                                settings.edit().putInt("thisCurriculum",thisCurriculumIndex).apply();
+                                defaultSP.edit().putInt("thisCurriculum",thisCurriculumIndex).apply();
                                 timeWatcher.refreshProgress(false);
                                 finish();
                             }

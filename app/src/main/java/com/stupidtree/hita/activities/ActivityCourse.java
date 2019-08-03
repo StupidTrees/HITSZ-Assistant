@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.ChatSec.TextTools;
+import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.Note;
 import com.stupidtree.hita.core.Subject;
@@ -35,8 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-
-import cn.bmob.v3.util.V;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;

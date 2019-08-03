@@ -8,16 +8,18 @@
     android:layout_marginLeft="16dp"
     android:layout_marginTop="16dp"
     android:layout_marginRight="16dp"
-    android:layout_marginBottom="16dp"
     android:clickable="true"
-    android:foreground="?attr/selectableItemBackgroundBorderless"
-    app:cardCornerRadius="16dp">
+    android:foreground="?attr/selectableItemBackgroundBorderless">
 
     <ImageView
+        android:id="@+id/canteen_bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="91dp"
+        android:layout_gravity="bottom"
+        android:foreground="#66000000"
         android:scaleType="centerCrop"
-        android:src="@drawable/timeline_head_bg" />
+        android:src="@drawable/timeline_head_bg"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,49 +28,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/canteen_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="16dp"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:text="荔园一食堂"
-                android:textColor="@color/material_text_icon_white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/canteen_rate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="16dp"
-                android:text="4.8/5"
-                android:textColor="@color/material_text_icon_white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="16dp"
-                android:tint="@color/material_text_icon_white"
-                app:srcCompat="@drawable/ic_star" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal">
 
@@ -77,18 +37,42 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
                 android:transitionName="image"
                 tools:srcCompat="@tools:sample/avatars" />
 
-            <TextView
-                android:id="@+id/canteen_rank"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="16dp"
-                android:text="排名第一"
-                android:textColor="@color/material_text_icon_white"
-                android:textSize="18sp" />
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/canteen_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:singleLine="true"
+                    android:text="荔园一食堂"
+                    android:textColor="@color/material_primary_text"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/canteen_company"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|start"
+                    android:layout_marginTop="4dp"
+                    android:maxEms="6"
+                    android:singleLine="true"
+                    android:text="快乐时间"
+                    android:textColor="@color/material_secondary_text"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <Space
                 android:layout_width="wrap_content"
@@ -100,13 +84,54 @@
                 android:id="@+id/canteen_navi_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
+                android:layout_gravity="center|right"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
-                android:tint="@color/material_text_icon_white"
+                android:tint="@color/material_secondary_text"
                 app:srcCompat="@drawable/ic_navigation" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/canteen_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:gravity="center"
+                android:text="4.8/5"
+                android:textColor="@color/material_secondary_text"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="16dp"
+                android:tint="?attr/colorPrimary"
+                app:srcCompat="@drawable/ic_star" />
+
+            <TextView
+                android:id="@+id/canteen_rank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center|right"
+                android:text="排名第一"
+                android:textColor="@color/material_secondary_text"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
     </LinearLayout>

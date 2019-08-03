@@ -1,11 +1,11 @@
 package com.stupidtree.hita.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.JsonObject;
 import com.lapism.searchview.Search;
 import com.lapism.searchview.database.SearchHistoryTable;
 import com.lapism.searchview.widget.SearchAdapter;
@@ -37,9 +37,6 @@ import com.stupidtree.hita.activities.ActivityRankBoard;
 import com.stupidtree.hita.activities.ActivityEmptyClassroom;
 import com.stupidtree.hita.activities.ActivityExplore;
 import com.stupidtree.hita.activities.ActivityHITSZInfo;
-import com.stupidtree.hita.activities.ActivityJWTS;
-import com.stupidtree.hita.activities.ActivityLogin;
-import com.stupidtree.hita.activities.ActivityLoginJWTS;
 import com.stupidtree.hita.activities.ActivityLostAndFound;
 import com.stupidtree.hita.activities.ActivityUniversity;
 import com.stupidtree.hita.adapter.HITSZInfoPagerAdapter;
@@ -48,6 +45,7 @@ import com.stupidtree.hita.diy.CornerTransform;
 import com.stupidtree.hita.online.BannerItem;
 
 import com.stupidtree.hita.online.Canteen;
+import com.stupidtree.hita.online.Infos;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZHolderCreator;
@@ -61,16 +59,15 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
-import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.login;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.adapter.IpNewsListAdapter.dip2px;
 
 public class FragmentNavi extends Fragment {
 
 
     SearchView searchview;
-    CardView card_explore,card_jwts,card_jwts2,card_lostandfound,card_canteen,card_info,card_university,card_emptyclassroom,card_locations;
+    CardView card_explore,card_jwts,card_lostandfound,card_canteen,card_info,card_university,card_emptyclassroom,card_locations,card_head;
     MZBannerView banner;
     List<BannerItem> bannerItemList;
     List<Canteen> canteen_res;
@@ -83,6 +80,9 @@ public class FragmentNavi extends Fragment {
     List<Fragment> fragments;
     TabLayout tab;
     LinearLayout card_info_layout;
+    ImageView head_image;
+    TextView head_hint,head_sub_hint;
+    headClickListener headClickListener;
 
 
 
@@ -104,12 +104,14 @@ public class FragmentNavi extends Fragment {
         card_info_layout = v.findViewById(R.id.navipage_card_info_layout);
         card_canteen = v.findViewById(R.id.navipage_card_canteen);
         card_jwts = v.findViewById(R.id.navipage_card_jwts);
-        card_jwts2 = v.findViewById(R.id.navipage_card_jwts2);
         card_lostandfound = v.findViewById(R.id.navipage_card_society);
         card_explore = v.findViewById(R.id.navi_card_explore);
         card_emptyclassroom = v.findViewById(R.id.navipage_card_empty_classroom);
         card_locations = v.findViewById(R.id.navipage_card_location);
-
+        card_head = v.findViewById(R.id.navi_card_head);
+        head_image = v.findViewById(R.id.navi_page_head_image);
+        head_hint = v.findViewById(R.id.navi_page_head_hint);
+        head_sub_hint = v.findViewById(R.id.navi_page_head_subhint);
         tab = v.findViewById(R.id.hitszinfo_tab);
         pager = v.findViewById(R.id.hitszinfo_pager);
         card_explore.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +150,6 @@ public class FragmentNavi extends Fragment {
             }
         };
         card_jwts.setOnClickListener(jwtsClick);
-        card_jwts2.setOnClickListener(jwtsClick);
         card_canteen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,6 +171,8 @@ public class FragmentNavi extends Fragment {
                 startActivity(i);
             }
         });
+        headClickListener = new headClickListener();
+        card_head.setOnClickListener(headClickListener);
     }
 
 
@@ -249,7 +252,7 @@ public class FragmentNavi extends Fragment {
 
 
     void pagePreference(View v){
-        if(PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("navi_show_news",true)){
+        if(defaultSP.getBoolean("navi_show_news",true)){
             initPager(v);
             tab.setVisibility(View.VISIBLE);
             pager.setVisibility(View.VISIBLE);
@@ -291,6 +294,27 @@ public class FragmentNavi extends Fragment {
                     });
                 }else{
                     Toast.makeText(HContext,"加载banner出错！"+e.toString(),Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    void refreshHeadBoard(){
+        BmobQuery<Infos> bq = new BmobQuery<>();
+        bq.addWhereEqualTo("objectId","HUJs888B");
+        bq.findObjects(new FindListener<Infos>() {
+            @Override
+            public void done(List<Infos> list, BmobException e) {
+                try{
+                    JsonObject jo = list.get(0).getJson();
+                    Glide.with(getContext()).load(jo.get("image_url").getAsString()).placeholder(R.drawable.timeline_head_bg)
+                            .into(head_image);
+                    head_hint.setText(jo.get("hint").getAsString());
+                    head_sub_hint.setText(jo.get("subhint").getAsString());
+                    headClickListener.setAction(jo);
+                }catch (Exception el){
+                    head_image.setImageResource(R.drawable.timeline_head_bg);
+                    head_hint.setText("今日哈工深");
                 }
             }
         });
@@ -338,6 +362,7 @@ public class FragmentNavi extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        refreshHeadBoard();
         //refreshBanner();
         //refreshCanteen();
         //banner.start();
@@ -375,6 +400,36 @@ public class FragmentNavi extends Fragment {
             title.setText(bannerItem.getTitle());
         }
 
+    }
+
+    class headClickListener implements View.OnClickListener{
+
+        JsonObject action;
+
+        public void setAction(JsonObject action) {
+            this.action = action;
+        }
+
+        @Override
+        public void onClick(View view) {
+            if(action==null) return;
+            if(action.has("intent")){
+                if(action.get("intent").getAsString().equals("jwts")){
+                    ActivityUtils.startJWTSActivity(getActivity());
+                }else if(action.get("intent").getAsString().equals("rankboard")){
+                    Intent i = new Intent(getActivity(),ActivityRankBoard.class);
+                    startActivity(i);
+                }
+            }else if(action.has("url")){
+                Uri uri = Uri.parse(action.get("url").getAsString());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }else if(action.has("dialog_title")&&action.has("dialog_message")){
+                AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(action.get("dialog_title").getAsString())
+                        .setMessage(action.get("dialog_message").getAsString()).setPositiveButton("好的",null).create();
+                ad.show();
+            }
+        }
     }
 
 }

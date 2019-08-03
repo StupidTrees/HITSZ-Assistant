@@ -69,6 +69,7 @@ import java.util.Map;
 
 import static com.amap.api.maps.CameraUpdateFactory.newLatLng;
 import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 
 
 public class ActivityExplore extends BaseActivity implements AMap.OnMapClickListener, AMap.OnMarkerClickListener, AMap.OnInfoWindowClickListener, AMap.InfoWindowAdapter, RouteSearch.OnRouteSearchListener, AMap.OnMapLongClickListener, AMap.OnMyLocationChangeListener {
@@ -143,9 +144,9 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
         }
         new LoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         changeDayAndNight();//昼夜模式
-        if(PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("firstOpen_explore",true)&&longClickAvailable){
+        if(defaultSP.getBoolean("firstOpen_explore",true)&&longClickAvailable){
             Guide();
-            PreferenceManager.getDefaultSharedPreferences(HContext).edit().putBoolean("firstOpen_explore",false).apply();
+            defaultSP.edit().putBoolean("firstOpen_explore",false).apply();
         }
     }
 

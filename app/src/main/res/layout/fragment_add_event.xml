@@ -27,9 +27,10 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
+                android:fontFamily="sans-serif-black"
                 android:text="添加事件"
                 android:textColor="@color/material_primary_text"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -129,42 +130,27 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <Switch
+                        android:id="@+id/ade_switch_autoallocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="8dp"
                         android:layout_marginBottom="8dp"
-                        android:orientation="horizontal">
+                        android:text="自动安排时间"
+                        android:textColor="@color/material_secondary_text"
+                        android:textSize="16sp" />
 
-                        <Switch
-                            android:id="@+id/ade_switch_autoallocation"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginRight="8dp"
-                            android:layout_weight="1"
-                            android:text="自动安排时间"
-                            android:textColor="@color/material_secondary_text"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ade_wholeday_layout"
+                    <Switch
+                        android:id="@+id/ade_switch_wholeday"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="8dp"
                         android:layout_marginBottom="8dp"
-                        android:orientation="horizontal">
-
-                        <Switch
-                            android:id="@+id/ade_switch_wholeday"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginRight="8dp"
-                            android:layout_weight="1"
-                            android:text="全天事件"
-                            android:textColor="@color/material_secondary_text"
-                            android:textSize="16sp" />
-                    </LinearLayout>
+                        android:text="全天事件"
+                        android:textColor="@color/material_secondary_text"
+                        android:textSize="16sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

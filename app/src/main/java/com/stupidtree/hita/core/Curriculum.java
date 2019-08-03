@@ -83,7 +83,7 @@ public class Curriculum extends BmobObject {
 //        curriculumText = txts[6];
 //        subjectsText = txts[7];
 //        totalWeeks = Integer.parseInt(txts[3]);
-        
+
         JsonObject jo= new JsonParser().parse(CurriculumString).getAsJsonObject();
         start_year = jo.get("start_year").getAsInt();
         start_month = jo.get("start_month").getAsInt();
@@ -100,7 +100,6 @@ public class Curriculum extends BmobObject {
         int sD = cur.getInt(5);
         name = cur.getString(0);
         totalWeeks = cur.getInt(2);
-        setObjectId(cur.getString(7));
         curriculumText = cur.getString(6);
         curriculumCode = cur.getString(1);
         int y, m, d;
@@ -332,7 +331,6 @@ public class Curriculum extends BmobObject {
         cv.put("start_month",start_month);
         cv.put("start_day",start_day);
         cv.put("total_weeks",totalWeeks);
-        cv.put("object_id",getObjectId());
         cv.put("curriculum_text",curriculumText);
         return cv;
     }

@@ -11,8 +11,8 @@ android {
         applicationId "com.stupidtree.hita"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 20190730
-        versionName "测试版7.30"
+        versionCode 20190802
+        versionName "测试版8.02"
     }
     sourceSets {
         main.jniLibs.srcDirs = ['libs']

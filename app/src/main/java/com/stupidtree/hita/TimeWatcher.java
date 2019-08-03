@@ -12,11 +12,9 @@ import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.stupidtree.hita.activities.ActivityLogin;
 import com.stupidtree.hita.activities.ActivityLoginJWTS;
@@ -26,8 +24,6 @@ import com.stupidtree.hita.core.TimeTable;
 import com.stupidtree.hita.core.TimeTableGenerator;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.HTime;
-import com.stupidtree.hita.core.timetable.Task;
-import com.stupidtree.hita.fragments.FragmentTimeLine;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,7 +33,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
-import static android.app.PendingIntent.readPendingIntentOrNullFromParcel;
 import static com.stupidtree.hita.HITAApplication.*;
 
 public class TimeWatcher {
@@ -108,14 +103,14 @@ public class TimeWatcher {
         } catch (Exception e) {
             thisWeekOfTerm = -1;
         }
-        if (PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("dynamicTimeTable", false) && isDataAvailable()) {
+        if (defaultSP.getBoolean("dynamicTimeTable", false) && isDataAvailable()) {
             TimeTableGenerator.Dynamic_PreviewPlan(now, mainTimeTable);
         } else if (isDataAvailable()) {
             mainTimeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC);
         }
         refreshTodaysEvents();
         refreshNowAndNextEvent();
-        if (PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("notification", true))
+        if (defaultSP.getBoolean("notification", true))
             sendNotification();
         if (!fromOther) {
                 Intent mes = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH_FROM_TIMETICK");

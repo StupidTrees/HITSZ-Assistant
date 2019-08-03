@@ -9,7 +9,7 @@
         <item android:title="教务系统" android:id="@+id/drawer_nav_jwts" android:icon="@drawable/ic_menu_jwts"/>
         <item android:title="信息窗口" android:id="@+id/drawer_nav_info" android:icon="@drawable/ic_menu_bulletin"/>
         <item android:title="失物招领" android:id="@+id/drawer_nav_laf" android:icon="@drawable/ic_lostandfound"/>
-        <item android:title="校内服务" android:id="@+id/drawer_nav_campusservice" android:icon="@drawable/ic_menu_food"/>
+        <item android:title="排行榜" android:id="@+id/drawer_nav_campusservice" android:icon="@drawable/ic_menu_food"/>
     </menu>
 </item>
 

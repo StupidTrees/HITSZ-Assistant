@@ -23,21 +23,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.ChatSec.TextTools;
+import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.core.TimeTable;
 import com.stupidtree.hita.core.timetable.EventItem;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 import tyrantgit.explosionfield.ExplosionField;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.isThisTerm;
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
@@ -93,13 +92,13 @@ public class FragmentTimeTablePage extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CARD_HEIGHT = PreferenceManager.getDefaultSharedPreferences(HContext).getInt("TimeTable_cardheight", 160);//课程表卡片高度
+        CARD_HEIGHT = defaultSP.getInt("TimeTable_cardheight", 160);//课程表卡片高度
 
         if (getArguments() != null) {
             pageWeek = getArguments().getInt("week");
         }
-        curiculumOnly = PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("timetable_curriculumonly", true);
-        wholeday = PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("timetable_wholeday", false);
+        curiculumOnly = defaultSP.getBoolean("timetable_curriculumonly", true);
+        wholeday = defaultSP.getBoolean("timetable_wholeday", false);
         start = wholeday ? 0 : 8;
     }
 
@@ -203,9 +202,9 @@ public class FragmentTimeTablePage extends Fragment {
 
     public void NotifyRefresh() {
         if (!hasInit) return;
-        CARD_HEIGHT = PreferenceManager.getDefaultSharedPreferences(HContext).getInt("TimeTable_cardheight", 160);//课程表卡片高度
-        curiculumOnly = PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("timetable_curriculumonly", true);
-        wholeday = PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("timetable_wholeday", false);
+        CARD_HEIGHT = defaultSP.getInt("TimeTable_cardheight", 160);//课程表卡片高度
+        curiculumOnly = defaultSP.getBoolean("timetable_curriculumonly", true);
+        wholeday = defaultSP.getBoolean("timetable_wholeday", false);
         start = wholeday ? 0 : 8;
         createLeftView();
         RefreshPageView(pageWeek);

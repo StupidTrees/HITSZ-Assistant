@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stupidtree.hita"
     android:targetSandboxVersion="2"
-    android:versionCode="20190730"
-    android:versionName="测试版7.30" >
+    android:versionCode="20190802"
+    android:versionName="测试版8.02" >
 
     <uses-sdk
         android:minSdkVersion="21"
@@ -135,7 +135,7 @@
             android:label="@string/title_activity_subject"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.stupidtree.hita.activities.ActivityNoteDetail"
+            android:name="com.stupidtree.hita.activities.ActivityPhotoDetail"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityNotes"
@@ -156,6 +156,10 @@
         <activity
             android:name="com.stupidtree.hita.activities.ActivitySplash"
             android:theme="@style/SplashTheme" >
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

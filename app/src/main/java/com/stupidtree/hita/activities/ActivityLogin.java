@@ -29,7 +29,7 @@ public class ActivityLogin extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true,true,false);
+        setWindowParams(true,false,false);
         setContentView(R.layout.activity_login);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         initToolbar();

@@ -37,9 +37,9 @@ public final class R {
     public static final class id {
         private id() {}
 
-        public static final int left = 0x7f0a0191;
-        public static final int none = 0x7f0a01db;
-        public static final int right = 0x7f0a023a;
+        public static final int left = 0x7f0a0193;
+        public static final int none = 0x7f0a01e1;
+        public static final int right = 0x7f0a0240;
     }
     public static final class string {
         private string() {}

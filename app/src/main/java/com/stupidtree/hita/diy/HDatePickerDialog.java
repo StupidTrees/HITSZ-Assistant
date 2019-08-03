@@ -11,7 +11,7 @@ import com.cncoderx.wheelview.OnWheelChangedListener;
 import com.cncoderx.wheelview.Wheel3DView;
 import com.cncoderx.wheelview.WheelView;
 import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.ChatSec.TextTools;
+import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 
 import java.util.ArrayList;

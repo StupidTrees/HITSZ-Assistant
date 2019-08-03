@@ -88,6 +88,10 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\d0592fe37e932ff1595796302c245eb2\\res\\drawable-xhdpi-v4\\abc_ic_commit_search_api_mtrl_alpha.png"
     },
     {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_shortcut_empty_classroom.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\shortcut_empty_classroom.xml"
+    },
+    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_notification_bg.xml.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\5f0652e4103e06f6f1e45e2d2b3b0ec1\\res\\drawable\\notification_bg.xml"
     },
@@ -538,6 +542,10 @@
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_dynamic_timetable_course_card.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dynamic_timetable_course_card.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_shortcut_news.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\shortcut_news.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_abc_ic_menu_selectall_mtrl_alpha.png.flat",
@@ -1324,6 +1332,10 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\d0592fe37e932ff1595796302c245eb2\\res\\drawable-xhdpi-v4\\abc_btn_switch_to_on_mtrl_00001.9.png"
     },
     {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_shortcut_timetable.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\shortcut_timetable.xml"
+    },
+    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4_abc_list_selector_disabled_holo_dark.9.png.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\d0592fe37e932ff1595796302c245eb2\\res\\drawable-mdpi-v4\\abc_list_selector_disabled_holo_dark.9.png"
     },
@@ -1370,6 +1382,10 @@
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4_abc_list_divider_mtrl_alpha.9.png.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\d0592fe37e932ff1595796302c245eb2\\res\\drawable-xhdpi-v4\\abc_list_divider_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_shortcut_explore.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\shortcut_explore.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_select_dialog_item_material.xml.flat",
@@ -2742,6 +2758,10 @@
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_design_bottom_sheet_dialog.xml.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\1354ce8a935214e091825db3ac5bd1fe\\res\\layout\\design_bottom_sheet_dialog.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\xml-v25_shortcuts.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\xml-v25\\shortcuts.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-v21_abc_btn_colored_material.xml.flat",

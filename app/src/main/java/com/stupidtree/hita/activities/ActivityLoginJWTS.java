@@ -3,37 +3,28 @@ package com.stupidtree.hita.activities;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
-import android.net.http.HttpsConnection;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.diy.ButtonLoading;
 import com.stupidtree.hita.diy.MaterialCircleAnimator;
 
-import org.apache.http.impl.client.HttpClients;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -51,9 +42,6 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
-
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.UpdateListener;
 
 import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static com.stupidtree.hita.HITAApplication.*;
@@ -80,7 +68,7 @@ public class ActivityLoginJWTS extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true, true, false);
+        setWindowParams(true, false, false);
         setContentView(R.layout.activity_login_jwts);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -320,7 +308,7 @@ public class ActivityLoginJWTS extends BaseActivity {
             }
             if (CurrentUser != null) {
                 at.username.setText(CurrentUser.getStudentnumber());
-                at.password.setText(PreferenceManager.getDefaultSharedPreferences(HContext).getString(CurrentUser.getStudentnumber() + ".password", ""));
+                at.password.setText(defaultSP.getString(CurrentUser.getStudentnumber() + ".password", ""));
             }
         }
     }
@@ -378,9 +366,9 @@ public class ActivityLoginJWTS extends BaseActivity {
                 HITAApplication.login = true;
                 at.presentActivity(at, at.login);
                 if (CurrentUser != null)
-                    PreferenceManager.getDefaultSharedPreferences(HContext).edit().putString(CurrentUser.getStudentnumber() + ".password", password).commit();
-                //PreferenceManager.getDefaultSharedPreferences(HContext).edit().putString("username",username).commit();
-                //PreferenceManager.getDefaultSharedPreferences(HContext).edit().putString("userpassword",password).commit();
+                    defaultSP.edit().putString(CurrentUser.getStudentnumber() + ".password", password).commit();
+                //defaultSP.edit().putString("username",username).commit();
+                //defaultSP.edit().putString("userpassword",password).commit();
                 //finish();
             } else {
                 HITAApplication.login = false;

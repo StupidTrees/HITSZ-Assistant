@@ -37,7 +37,7 @@ import com.gelitenight.waveview.library.WaveView;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.ChatSec.TextTools;
+import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.TimeWatcher;
 import com.stupidtree.hita.activities.ActivityCourse;
@@ -64,7 +64,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import cn.bmob.v3.util.V;
 import tyrantgit.explosionfield.ExplosionField;
 
 import static com.stupidtree.hita.TimeWatcher.nextEvent;

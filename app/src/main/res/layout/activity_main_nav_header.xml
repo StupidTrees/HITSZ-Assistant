@@ -11,7 +11,7 @@
         android:id="@+id/drawer_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:foreground="#FFFFFF"
+        android:foreground="#88FFFFFF"
         android:scaleType="centerCrop"
         android:visibility="visible"
         app:srcCompat="@drawable/timeline_head_bg_reverse" />
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="杨涵丞"
-                    android:textColor="@color/material_secondary_text"
+                    android:textColor="@color/material_primary_text"
                     android:textSize="10sp" />
 
             </LinearLayout>
@@ -72,7 +72,7 @@
                 android:layout_height="1dp"
                 android:layout_gravity="bottom"
                 android:background="@color/material_backgroung_grey_300"
-                android:visibility="visible"></View>
+                android:visibility="gone"></View>
 
         </FrameLayout>
 

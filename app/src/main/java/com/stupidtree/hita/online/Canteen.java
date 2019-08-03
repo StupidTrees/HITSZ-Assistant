@@ -78,7 +78,7 @@ public class Canteen extends Location {
         HashMap m4 = new HashMap();
         m4.put("key","负责人电话");
         m4.put("value",telephone);
-        m4.put("is_colored",true);
+        m4.put("is_colored",false);
         m4.put("is_phonenumber",true); //标注为电话
         m4.put("icon", R.drawable.ic_local_phone);
         HashMap m5 = new HashMap();

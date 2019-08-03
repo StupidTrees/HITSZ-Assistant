@@ -1690,6 +1690,10 @@ drawable select_add_event_ddl
 drawable select_add_event_exam
 drawable select_add_event_remind
 drawable select_chat_bot_edittext
+drawable shortcut_empty_classroom
+drawable shortcut_explore
+drawable shortcut_news
+drawable shortcut_timetable
 drawable splash
 drawable splash_logo
 drawable start
@@ -1784,7 +1788,6 @@ id ade_time_from_show
 id ade_time_to_show
 id ade_weekpicker_dow
 id ade_weekpicker_week
-id ade_wholeday_layout
 id adt_arrangelength
 id adt_arrangetime
 id adt_bt_done
@@ -1851,9 +1854,10 @@ id button_import_grkb
 id button_import_ksxx
 id cancel
 id cancel_action
-id canteen_board
+id canteen_bg
 id canteen_card
 id canteen_card_bg
+id canteen_company
 id canteen_image
 id canteen_img
 id canteen_list
@@ -1864,10 +1868,11 @@ id canteen_no1_img
 id canteen_no1_name
 id canteen_no2_name
 id canteen_no3_name
-id canteen_number
 id canteen_rank
 id canteen_rate
 id canteen_rating
+id canteen_subtitle
+id canteen_title
 id canteen_update
 id card
 id cardView
@@ -2018,6 +2023,7 @@ id griditem_text
 id group_divider
 id groups
 id hamburger_arrow
+id head_bg
 id head_counting
 id head_layout
 id hitszinfo_pager
@@ -2163,8 +2169,13 @@ id mz_banner_item_tag
 id mzbanner_vp
 id navi_banner
 id navi_card_explore
+id navi_card_head
 id navi_card_university
 id navi_expandable
+id navi_page_head_hint
+id navi_page_head_hint2
+id navi_page_head_image
+id navi_page_head_subhint
 id navi_view
 id navigation_header_container
 id navipage_card_canteen
@@ -2172,7 +2183,6 @@ id navipage_card_empty_classroom
 id navipage_card_info
 id navipage_card_info_layout
 id navipage_card_jwts
-id navipage_card_jwts2
 id navipage_card_location
 id navipage_card_society
 id nestedScrollView
@@ -3064,6 +3074,14 @@ string sd_disable
 string search_app_name
 string search_behavior
 string search_menu_title
+string shortcut_empty_classroom_long
+string shortcut_empty_classroom_short
+string shortcut_explore_long
+string shortcut_explore_short
+string shortcut_news_long
+string shortcut_news_short
+string shortcut_timetable_long
+string shortcut_timetable_short
 string skid_activty_2_text
 string status_bar_notification_info_overflow
 string strNetworkTipsCancelBtn
@@ -3850,4 +3868,5 @@ styleable scene layoutTextColor layoutTextSize leftDistance leftMargin rightDist
 xml iat_setting
 xml pref_general
 xml provider_paths
+xml shortcuts
 xml time_line_widget_info

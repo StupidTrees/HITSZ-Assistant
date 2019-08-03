@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <shortcut
+        android:shortcutId="shortcut_timetable"
+        android:enabled="true"
+        android:icon="@drawable/shortcut_timetable"
+        android:shortcutShortLabel="@string/shortcut_timetable_short"
+        android:shortcutLongLabel="@string/shortcut_timetable_long">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.stupidtree.hita"
+            android:targetClass="com.stupidtree.hita.activities.ActivityTimeTable" />
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+    <shortcut
+        android:shortcutId="shortcut_news"
+        android:enabled="true"
+        android:icon="@drawable/shortcut_news"
+        android:shortcutShortLabel="@string/shortcut_news_short"
+        android:shortcutLongLabel="@string/shortcut_news_long">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.stupidtree.hita"
+            android:targetClass="com.stupidtree.hita.activities.ActivityHITSZInfo" />
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="shortcut_empty_classroom"
+        android:enabled="true"
+        android:icon="@drawable/shortcut_empty_classroom"
+        android:shortcutShortLabel="@string/shortcut_empty_classroom_short"
+        android:shortcutLongLabel="@string/shortcut_empty_classroom_long">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.stupidtree.hita"
+            android:targetClass="com.stupidtree.hita.activities.ActivityEmptyClassroom" />
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+    <shortcut
+        android:shortcutId="shortcut_explore"
+        android:enabled="true"
+        android:icon="@drawable/shortcut_explore"
+        android:shortcutShortLabel="@string/shortcut_explore_short"
+        android:shortcutLongLabel="@string/shortcut_explore_long">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.stupidtree.hita"
+            android:targetClass="com.stupidtree.hita.activities.ActivityExplore" />
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+</shortcuts>

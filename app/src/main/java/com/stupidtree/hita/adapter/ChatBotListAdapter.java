@@ -13,12 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.ChatSec.ChatBotMessageItem;
+import com.stupidtree.hita.hita.ChatBotMessageItem;
 import com.stupidtree.hita.diy.CornerTransform;
 
 import java.util.List;
@@ -101,7 +98,7 @@ public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.
 //        if(recyclerHolder.type==TYPE_RIGHT&&recyclerHolder.userAvatarImg!=null){
 //            Glide.with(mContext)
 //                    .load(CurrentUser.getAvatarUri())
-//                    .signature(new ObjectKey(PreferenceManager.getDefaultSharedPreferences(HContext).getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis()))))
+//                    .signature(new ObjectKey(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis()))))
 //                    .centerCrop().
 //                    apply(RequestOptions.bitmapTransform(new CircleCrop()))
 //                    .into(recyclerHolder.userAvatarImg);

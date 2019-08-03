@@ -1,7 +1,6 @@
 package com.stupidtree.hita.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
@@ -17,8 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -118,9 +114,8 @@ public class ActivityNotes extends BaseActivity {
             public void onItemClick(View view, int position, ImageView photoView) {
                 if(gridItems.get(position).imagePath.isEmpty()) return;
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ActivityNotes.this,
-                        Pair.create(view, "notesimage"));
-
-                Intent i = new Intent(ActivityNotes.this,ActivityNoteDetail.class);
+                        Pair.create(view, "image"));
+                Intent i = new Intent(ActivityNotes.this, ActivityPhotoDetail.class);
                 i.putExtra("imagePath",gridItems.get(position).imagePath);
                 ActivityNotes.this.startActivity(i,options.toBundle());
             }

@@ -49,7 +49,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
     ImageView pickFromTime,pickToTime,pickDate,bt_expand,pickCourse;
     FloatingActionButton done;
     String subjectCode;
-    LinearLayout pickToTimeLayout,pickFromTimeLayout,wholedayLayout,pickCourseLayout,nameLayout;
+    LinearLayout pickToTimeLayout,pickFromTimeLayout,pickCourseLayout,nameLayout;
     ExpandableLayout mExpandableLayout;
     Switch wholeDaySwitch,autoAllocation;
     HTime fromT,toT;
@@ -107,7 +107,6 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         done = v.findViewById(R.id.ade_bt_done);
         pickToTimeLayout = v.findViewById(R.id.ade_picktotimelayout);
         pickFromTimeLayout = v.findViewById(R.id.ade_pickfromtimelayout);
-        wholedayLayout = v.findViewById(R.id.ade_wholeday_layout);
         wholeDaySwitch = v.findViewById(R.id.ade_switch_wholeday);
         autoAllocation = v.findViewById(R.id.ade_switch_autoallocation);
         autoAllocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -181,26 +180,29 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                wholeDaySwitch.setChecked(false);
+                autoAllocation.setChecked(false);
                 switch (checkedId){
                     case R.id.ade_arrange:
-                        wholedayLayout.setVisibility(View.VISIBLE);
+                        wholeDaySwitch.setVisibility(View.VISIBLE);
+                        autoAllocation.setVisibility(View.VISIBLE);
                         pickCourseLayout.setVisibility(View.GONE);
                         nameLayout.setVisibility(View.VISIBLE);
                         mExpandableLayout.setVisibility(View.VISIBLE);
-                        if(!wholeDaySwitch.isChecked()){
-                            pickToTimeLayout.setVisibility(View.VISIBLE);
-                            pickFromTimeLayout.setVisibility(View.VISIBLE);
-                        }
+                        pickFromTimeLayout.setVisibility(View.VISIBLE);
+                        pickToTimeLayout.setVisibility(View.VISIBLE);
                         break;
                     case R.id.ade_remind:
-                        wholedayLayout.setVisibility(View.VISIBLE);
+                        wholeDaySwitch.setVisibility(View.VISIBLE);
+                        autoAllocation.setVisibility(View.VISIBLE);
                         pickToTimeLayout.setVisibility(View.GONE);
                         pickCourseLayout.setVisibility(View.GONE);
                         nameLayout.setVisibility(View.VISIBLE);
                         mExpandableLayout.setVisibility(View.VISIBLE);
                         break;
                     case R.id.ade_ddl:
-                        wholedayLayout.setVisibility(View.VISIBLE);
+                        wholeDaySwitch.setVisibility(View.VISIBLE);
+                        autoAllocation.setVisibility(View.VISIBLE);
                         pickToTimeLayout.setVisibility(View.GONE);
                         pickCourseLayout.setVisibility(View.GONE);
                         nameLayout.setVisibility(View.VISIBLE);
@@ -209,7 +211,8 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                     case R.id.ade_exam:
                         pickFromTimeLayout.setVisibility(View.VISIBLE);
                         pickToTimeLayout.setVisibility(View.VISIBLE);
-                        wholedayLayout.setVisibility(View.GONE);
+                        wholeDaySwitch.setVisibility(View.GONE);
+                        autoAllocation.setVisibility(View.GONE);
                         pickCourseLayout.setVisibility(View.VISIBLE);
                         nameLayout.setVisibility(View.GONE);
                         mExpandableLayout.setVisibility(View.GONE);

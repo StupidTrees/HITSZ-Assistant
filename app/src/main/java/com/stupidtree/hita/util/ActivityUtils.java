@@ -15,6 +15,7 @@ import com.stupidtree.hita.activities.ActivityJWTS;
 import com.stupidtree.hita.activities.ActivityLocation;
 import com.stupidtree.hita.activities.ActivityLogin;
 import com.stupidtree.hita.activities.ActivityLoginJWTS;
+import com.stupidtree.hita.activities.ActivityPhotoDetail;
 import com.stupidtree.hita.activities.ActivityPostDetail;
 import com.stupidtree.hita.activities.ActivityTeacher;
 import com.stupidtree.hita.activities.ActivityUserCenter;
@@ -29,6 +30,13 @@ import static com.stupidtree.hita.HITAApplication.login;
 
 public class ActivityUtils {
 
+    public static void startPhotoDetailActivity_transition(Activity from,String imageurl, View transition){
+        Intent i = new Intent(from, ActivityPhotoDetail.class);
+        i.putExtra("imagePath",imageurl);
+        transition.setTransitionName("image");
+        ActivityOptionsCompat ip = ActivityOptionsCompat.makeSceneTransitionAnimation(from,transition,"image");
+        from.startActivity(i,ip.toBundle());
+    }
     public static void   startLocationActivity(Activity from, Location c) {
         Intent i = new Intent(from, ActivityLocation.class);
         i.putExtra("location",c);

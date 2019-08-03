@@ -203,6 +203,14 @@ public class ActivityLocation extends BaseActivity {
                 });
             }
         });
+        appbarBG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(location!=null&&location.getImageURL()!=null){
+                    ActivityUtils.startPhotoDetailActivity_transition(ActivityLocation.this,location.getImageURL(),view);
+                }
+            }
+        });
     }
     void loadInfos(){
         collapsingToolbarLayout.setTitle(location.getName());

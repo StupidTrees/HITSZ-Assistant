@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -44,18 +43,19 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
+import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
 import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.ChatSec.ChatBotA;
-import com.stupidtree.hita.ChatSec.ChatBotB;
-import com.stupidtree.hita.ChatSec.TextTools;
+import com.stupidtree.hita.hita.ChatBotA;
+import com.stupidtree.hita.hita.ChatBotB;
+import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.HTime;
 import com.stupidtree.hita.adapter.ChatBotListAdapter;
 import com.stupidtree.hita.core.timetable.Task;
-import com.stupidtree.hita.ChatSec.ChatBotMessageItem;
+import com.stupidtree.hita.hita.ChatBotMessageItem;
 import com.stupidtree.hita.diy.RevealAnimation;
 import com.stupidtree.hita.online.ChatMessage;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -65,6 +65,7 @@ import com.stupidtree.hita.util.JsonParser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -80,13 +81,13 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import jaygoo.widget.wlv.WaveLineView;
 
-import static com.stupidtree.hita.ChatSec.TextTools.BEFORE;
-import static com.stupidtree.hita.ChatSec.TextTools.NEXT;
-import static com.stupidtree.hita.ChatSec.TextTools.THIS;
-import static com.stupidtree.hita.ChatSec.TextTools.TT_BEFORE;
-import static com.stupidtree.hita.ChatSec.TextTools.TT_NEXT;
-import static com.stupidtree.hita.ChatSec.TextTools.T_BEFORE;
-import static com.stupidtree.hita.ChatSec.TextTools.T_NEXT;
+import static com.stupidtree.hita.hita.TextTools.BEFORE;
+import static com.stupidtree.hita.hita.TextTools.NEXT;
+import static com.stupidtree.hita.hita.TextTools.THIS;
+import static com.stupidtree.hita.hita.TextTools.TT_BEFORE;
+import static com.stupidtree.hita.hita.TextTools.TT_NEXT;
+import static com.stupidtree.hita.hita.TextTools.T_BEFORE;
+import static com.stupidtree.hita.hita.TextTools.T_NEXT;
 import static com.stupidtree.hita.HITAApplication.ChatBotListRes;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
@@ -96,7 +97,7 @@ import static com.stupidtree.hita.HITAApplication.isThisTerm;
 import static com.stupidtree.hita.HITAApplication.login;
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.settings;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 
 import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
@@ -168,6 +169,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         setWindowParams(true,true,false);
+        initXfVoice();
         chatbotA = new ChatBotA(this);
         chatbotB = new ChatBotB();
         //setTheme(R.style.ChatBotTheme);
@@ -186,7 +188,9 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
 
     }
 
-
+    private void initXfVoice() {
+        SpeechUtility.createUtility(getApplicationContext(), SpeechConstant.APPID + "=5c4aa1d3");
+    }
     @Override
     public void onBackPressed() {
         mRevealAnimation.unRevealActivity(new Animator.AnimatorListener() {
@@ -586,7 +590,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         waveLineView.setOnClickListener(this);
         // btSpeak.setOnClickListener(this);
         initToolBar();
-        if (settings.getBoolean("ChatBot_useKeyboard", false)) {
+        if (defaultSP.getBoolean("ChatBot_useKeyboard", false)) {
             textInputLayout.setVisibility(View.VISIBLE);
             //btSpeak.hide();
             waveLineView.setVisibility(View.GONE);
@@ -663,7 +667,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                             @Override
                             public void onAnimationEnd(Animator animation) {
 
-                                if(!settings.getBoolean("ChatBot_useKeyboard", false)){
+                                if(!defaultSP.getBoolean("ChatBot_useKeyboard", false)){
                                     waveLineView.setVolume(0);
                                     waveLineView.startAnim();
 //                                    mSpeechRecognizer.startListening(mRecognizerListener);
@@ -694,12 +698,12 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     public void addMessageToChat_Right(String msg) {
         JsonObject message = new JsonObject();
         message.addProperty("message_show", msg);
-        addMessageView(message, VIEW_TYPE_RIGHT, settings.getBoolean("ChatBot_speakNow", true));
+        addMessageView(message, VIEW_TYPE_RIGHT, defaultSP.getBoolean("ChatBot_speakNow", true));
         postToChatBot(msg);
     }
 
     public void addMessageToChat_Left(JsonObject msg) {
-        addMessageView(msg, VIEW_TYPE_LEFT, settings.getBoolean("ChatBot_speakNow", true));
+        addMessageView(msg, VIEW_TYPE_LEFT, defaultSP.getBoolean("ChatBot_speakNow", true));
     }
 
 
@@ -711,6 +715,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         chatMessageBmobQuery.findObjects(new FindListener<ChatMessage>() {
             @Override
             public void done(List<ChatMessage> list, BmobException e) {
+                if(ActivityChatbot.this.isDestroyed()) return;
                 if(e==null&&list!=null&&list.size()>0){
                     com.google.gson.JsonParser jp = new com.google.gson.JsonParser();
                     String[] answers = list.get(0).getAnswer().split("\\$\\$");
@@ -726,7 +731,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
 
                 }else{
                     if(e!=null) Log.e("!",e.toString());
-                    ChatBotIteractTask cbit = new ChatBotIteractTask(message);
+                    ChatBotIteractTask cbit = new ChatBotIteractTask(message,ActivityChatbot.this);
                     cbit.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
@@ -755,7 +760,9 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                 final int tag = msg.get("tag").getAsInt();
                 if (!isDataAvailable()) {
                     textOnShow = "请先导入数据或选择当前日程表！";
-                } else {
+                } else if(!isThisTerm) {
+                    textOnShow = "别急着问啊，这学期还没开始";
+                }else {
                     courseList = propcessSerchEvents(msg);
                     if (courseList == null || courseList.size() <= 0) {
                         String textTemp_onlyOne = "东西";
@@ -830,7 +837,9 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                 final int tag = msg.get("tag").getAsInt();
                 if (!isDataAvailable()) {
                     textOnShow = "请先导入数据或选择当前日程表！";
-                } else {
+                } else if(!isThisTerm) {
+                    textOnShow = "别急着问啊，这学期还没开始";
+                }else {
                     EventItem nextevent = null;
                     Calendar c = Calendar.getInstance();
                     c.set(Calendar.HOUR_OF_DAY, 23);
@@ -1435,9 +1444,12 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     class ChatBotIteractTask extends AsyncTask<String, Integer, JsonObject> {
 
         String message;
+        WeakReference<Activity> activity;
 
-        ChatBotIteractTask(String message) {
+        ChatBotIteractTask(String message,Activity a)
+        {
             this.message = message;
+            activity = new WeakReference(a);
         }
 
         @Override
@@ -1447,7 +1459,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                 return chatbotA.Interact(message);
             } else {
                 State = STATE_NORMAL;
-                if (PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("ChatBot_useTulin", true)) {
+                if (defaultSP.getBoolean("ChatBot_useTulin", true)) {
                     JsonObject jo = chatbotB.InteractTulin(message);
                     if (jo.get("message_show").toString().contains("请求次数"))
                         return chatbotB.InteractQ(message);
@@ -1467,11 +1479,14 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(JsonObject s) {
             super.onPostExecute(s);
-            try {
-                getReply(s);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(activity.get()!=null&&(!activity.get().isDestroyed())){
+                try {
+                    getReply(s);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
         }
     }
 

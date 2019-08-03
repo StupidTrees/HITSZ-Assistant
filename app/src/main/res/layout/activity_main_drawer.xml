@@ -5,12 +5,12 @@
     android:id="@+id/main_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
+
+    tools:context=".activities.ActivityMain"
     tools:openDrawer="start">
 
     <include
-        layout="@layout/activity_main_content"
-        android:fitsSystemWindows="false" />
+        layout="@layout/activity_main_content" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/drawer_navigationview"
@@ -18,7 +18,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="bottom|center|start"
         android:background="@color/material_text_icon_white"
-        android:fitsSystemWindows="false"
         app:itemIconPadding="16dp"
         app:itemIconTint="@color/material_secondary_text"
         app:menu="@menu/drawer_main" />

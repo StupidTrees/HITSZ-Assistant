@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stupidtree.hita"
     android:targetSandboxVersion="2"
-    android:versionCode="20190730"
-    android:versionName="测试版7.30" >
+    android:versionCode="20190802"
+    android:versionName="测试版8.02" >
 
     <uses-sdk
         android:minSdkVersion="21"
@@ -48,6 +48,7 @@
         android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:testOnly="true"
         android:usesCleartextTraffic="true" >
         <activity android:name="com.stupidtree.hita.activities.ActivityEmptyClassroomDetail" />
         <activity android:name="com.stupidtree.hita.activities.ActivityEmptyClassroom" />
@@ -136,7 +137,7 @@
             android:label="@string/title_activity_subject"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.stupidtree.hita.activities.ActivityNoteDetail"
+            android:name="com.stupidtree.hita.activities.ActivityPhotoDetail"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityNotes"
@@ -157,6 +158,10 @@
         <activity
             android:name="com.stupidtree.hita.activities.ActivitySplash"
             android:theme="@style/SplashTheme" >
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -215,6 +220,11 @@
             android:name="com.tencent.bugly.beta.tinker.TinkerResultService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <provider
+            android:name="com.android.tools.ir.server.InstantRunContentProvider"
+            android:authorities="com.stupidtree.hita.com.android.tools.ir.server.InstantRunContentProvider"
+            android:multiprocess="true" />
     </application>
 
 </manifest>

@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.diy.mBlurTransformation;
 import com.stupidtree.hita.online.Canteen;
 
 import java.text.DecimalFormat;
@@ -64,8 +65,9 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
     @Override
     public void onBindViewHolder(@NonNull final FoodViewHolder foodViewHolder, final int i) {
         foodViewHolder.rate.setText(df.format(mBeans.get(i).getRate()) + "/10");
-        foodViewHolder.rank.setText("第" + (i + 1));
+        foodViewHolder.rank.setText("排名第" + (i + 1));
         foodViewHolder.name.setText(mBeans.get(i).getName());
+        foodViewHolder.company.setText(mBeans.get(i).getCompany());
         if (mOnNaviClickListener != null) {
             foodViewHolder.button_navi.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -83,6 +85,9 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
             });
         }
         Glide.with(mContext).load(mBeans.get(i).getImageURL()).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(foodViewHolder.image);
+        //Glide.with(mContext).load(mBeans.get(i).getImageURL()).placeholder(R.drawable.timeline_head_bg).apply(RequestOptions.bitmapTransform(new mBlurTransformation(mContext))).into(foodViewHolder.background);
+
+
     }
 
     @Override
@@ -92,8 +97,8 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
 
     class FoodViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name, rate, rank;
-        ImageView button_navi, image;
+        TextView name, rate, rank,company;
+        ImageView button_navi, image,background;
         CardView card;
 
         public FoodViewHolder(@NonNull View itemView) {
@@ -104,6 +109,8 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
             button_navi = itemView.findViewById(R.id.canteen_navi_button);
             card = itemView.findViewById(R.id.canteen_card);
             image = itemView.findViewById(R.id.canteen_img);
+            background = itemView.findViewById(R.id.canteen_bg);
+            company = itemView.findViewById(R.id.canteen_company);
         }
     }
 }

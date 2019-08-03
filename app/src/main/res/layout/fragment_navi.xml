@@ -275,9 +275,9 @@
                 app:layout_collapseParallaxMultiplier="0.95">
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/navipage_card_jwts"
+                    android:id="@+id/navi_card_head"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"
+                    android:layout_height="200dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:clickable="true"
@@ -287,404 +287,442 @@
 
 
                     <ImageView
+                        android:id="@+id/navi_page_head_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_gravity="bottom"
+                        android:scaleType="centerCrop"
                         app:srcCompat="@drawable/timeline_head_bg" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
-                        android:fontFamily="sans-serif-black"
-                        android:text="教务系统"
-                        android:textColor="@color/material_text_icon_white"
-                        android:textSize="24sp" />
-
-                    <ImageView
-                        android:layout_width="108dp"
-                        android:layout_height="108dp"
-                        android:layout_gravity="center"
-                        android:tint="@color/material_text_icon_white"
-                        app:srcCompat="@drawable/ic_menu_jwts" />
-                </android.support.v7.widget.CardView>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:visibility="visible">
-
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/navipage_card_jwts2"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            app:cardBackgroundColor="@color/material_backgroung_grey_50"
-                            app:cardCornerRadius="28dp"
-                            app:cardElevation="0dp">
-
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:tint="?attr/colorPrimary"
-                                app:srcCompat="@drawable/ic_menu_jwts" />
-                        </android.support.v7.widget.CardView>
+                        android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:id="@+id/navi_page_head_hint"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
+                            android:fontFamily="sans-serif-black"
                             android:text="教务系统"
-                            android:textSize="10sp" />
+                            android:textColor="@color/material_text_icon_white"
+                            android:textSize="24sp" />
 
+                        <TextView
+                            android:id="@+id/navi_page_head_subhint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="教务系统"
+                            android:textColor="@color/material_text_icon_white"
+                            android:textSize="14sp" />
                     </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/navipage_card_society"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            app:cardBackgroundColor="@color/material_backgroung_grey_50"
-                            app:cardCornerRadius="28dp"
-                            app:cardElevation="0dp">
-
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:tint="?attr/colorPrimary"
-                                app:srcCompat="@drawable/ic_lostandfound" />
-                        </android.support.v7.widget.CardView>
-
                         <TextView
+                            android:id="@+id/navi_page_head_hint2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="失物寻物"
-                            android:textSize="12sp" />
+                            android:layout_gravity="bottom"
+                            android:layout_margin="16dp"
+                            android:layout_weight="1"
+                            android:fontFamily="sans-serif-black"
+                            android:text="校园服务"
+                            android:textColor="@color/material_secondary_text"
+                            android:textSize="18sp" />
 
-                    </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="16dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/navipage_card_canteen"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            app:cardBackgroundColor="@color/material_backgroung_grey_50"
-                            app:cardCornerRadius="28dp"
-                            app:cardElevation="0dp">
-
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="center"
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:tint="?attr/colorPrimary"
-                                app:srcCompat="@drawable/ic_lunch" />
-                        </android.support.v7.widget.CardView>
+                                android:orientation="vertical"
+                                android:visibility="visible">
 
-                        <TextView
+                                <android.support.v7.widget.CardView
+                                    android:id="@+id/navipage_card_jwts"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_menu_jwts" />
+                                </android.support.v7.widget.CardView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="教务系统"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <android.support.v7.widget.CardView
+                                    android:id="@+id/navipage_card_society"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_lostandfound" />
+                                </android.support.v7.widget.CardView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="失物寻物"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <android.support.v7.widget.CardView
+                                    android:id="@+id/navipage_card_canteen"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_lunch" />
+                                </android.support.v7.widget.CardView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="排行榜"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:visibility="visible">
+
+                                <android.support.v7.widget.CardView
+                                    android:id="@+id/navipage_card_empty_classroom"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_dlg_tt_classroom" />
+                                </android.support.v7.widget.CardView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="空教室"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="排行榜"
-                            android:textSize="12sp" />
+                            android:layout_marginBottom="16dp"
+                            android:orientation="horizontal">
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:visibility="visible">
-
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/navipage_card_empty_classroom"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            app:cardBackgroundColor="@color/material_backgroung_grey_50"
-                            app:cardCornerRadius="28dp"
-                            app:cardElevation="0dp">
-
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="center"
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:tint="?attr/colorPrimary"
-                                app:srcCompat="@drawable/ic_dlg_tt_classroom" />
-                        </android.support.v7.widget.CardView>
+                                android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="空教室"
-                            android:textSize="12sp" />
+                                <android.support.v7.widget.CardView
+                                    android:id="@+id/navipage_card_location"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
 
-                    </LinearLayout>
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_location2" />
+                                </android.support.v7.widget.CardView>
 
-                </LinearLayout>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="校内地点"
+                                    android:textSize="12sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="24dp"
-                    android:orientation="horizontal">
+                            </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/navipage_card_location"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            app:cardBackgroundColor="@color/material_backgroung_grey_50"
-                            app:cardCornerRadius="28dp"
-                            app:cardElevation="0dp">
-
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="center"
+                            <LinearLayout
+                                android:id="@+id/navipage_card_info_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:tint="?attr/colorPrimary"
-                                app:srcCompat="@drawable/ic_location2" />
-                        </android.support.v7.widget.CardView>
+                                android:orientation="vertical"
+                                android:visibility="visible">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="校内地点"
-                            android:textSize="12sp" />
+                                <android.support.v7.widget.CardView
+                                    android:id="@+id/navipage_card_info"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
 
-                    </LinearLayout>
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_menu_bulletin" />
+                                </android.support.v7.widget.CardView>
 
-                    <LinearLayout
-                        android:id="@+id/navipage_card_info_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:visibility="visible">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="信息窗口"
+                                    android:textSize="12sp" />
 
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/navipage_card_info"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            app:cardBackgroundColor="@color/material_backgroung_grey_50"
-                            app:cardCornerRadius="28dp"
-                            app:cardElevation="0dp">
+                            </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="center"
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:tint="?attr/colorPrimary"
-                                app:srcCompat="@drawable/ic_menu_bulletin" />
-                        </android.support.v7.widget.CardView>
+                                android:orientation="vertical"
+                                android:visibility="visible">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="信息窗口"
-                            android:textSize="12sp" />
+                                <android.support.v7.widget.CardView
+                                    android:id="@+id/navi_card_explore"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
 
-                    </LinearLayout>
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_map" />
+                                </android.support.v7.widget.CardView>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:visibility="visible">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="探索模式"
+                                    android:textSize="12sp" />
 
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/navi_card_explore"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            app:cardBackgroundColor="@color/material_backgroung_grey_50"
-                            app:cardCornerRadius="28dp"
-                            app:cardElevation="0dp">
+                            </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="center"
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:tint="?attr/colorPrimary"
-                                app:srcCompat="@drawable/ic_map" />
-                        </android.support.v7.widget.CardView>
+                                android:orientation="vertical"
+                                android:visibility="gone">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="探索模式"
-                            android:textSize="12sp" />
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="56dp"
+                                    android:layout_height="56dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:layout_marginBottom="4dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="28dp"
+                                    app:cardElevation="0dp">
 
-                    </LinearLayout>
+                                    <ImageView
+                                        android:id="@+id/imageView3"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_menu_jwts" />
+                                </android.support.v7.widget.CardView>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="教务系统"
+                                    android:textSize="10sp" />
 
-                        <android.support.v7.widget.CardView
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="4dp"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            app:cardCornerRadius="28dp"
-                            app:cardElevation="0dp">
+                            </LinearLayout>
 
-                            <ImageView
-                                android:id="@+id/imageView3"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="center"
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:tint="?attr/colorPrimary"
-                                app:srcCompat="@drawable/ic_menu_jwts" />
-                        </android.support.v7.widget.CardView>
+                                android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="教务系统"
-                            android:textSize="10sp" />
+                                <android.support.v7.widget.CardView
+                                    android:id="@+id/navi_card_university"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
 
-                    </LinearLayout>
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_university" />
+                                </android.support.v7.widget.CardView>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="校园介绍"
+                                    android:textSize="12sp" />
 
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/navi_card_university"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            app:cardBackgroundColor="@color/material_backgroung_grey_50"
-                            app:cardCornerRadius="28dp"
-                            app:cardElevation="0dp">
+                            </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:tint="?attr/colorPrimary"
-                                app:srcCompat="@drawable/ic_university" />
-                        </android.support.v7.widget.CardView>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="校园介绍"
-                            android:textSize="12sp" />
+                        </LinearLayout>
 
                     </LinearLayout>
-
-                </LinearLayout>
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
 

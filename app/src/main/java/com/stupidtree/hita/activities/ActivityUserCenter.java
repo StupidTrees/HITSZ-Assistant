@@ -62,6 +62,7 @@ import cn.bmob.v3.listener.UploadFileListener;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.clearData;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 
 public class ActivityUserCenter extends BaseActivity implements FragmentSubjects.OnFragmentInteractionListener, FragmentJWTS_info.OnListFragmentInteractionListener
 {
@@ -218,12 +219,12 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
             //appbarBg.setImageResource(R.drawable.timeline_head_bg);
         }else {
             Glide.with(ActivityUserCenter.this).load(CurrentUser.getAvatarUri())
-                    //.signature(new ObjectKey(Objects.requireNonNull(PreferenceManager.getDefaultSharedPreferences(HContext).getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
+                    //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
                     //.placeholder(R.drawable.ic_account_activated)
                     .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                     .into(avatar);
             Glide.with(ActivityUserCenter.this).load(CurrentUser.getAvatarUri())
-                    //.signature(new ObjectKey(Objects.requireNonNull(PreferenceManager.getDefaultSharedPreferences(HContext).getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
+                    //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
                     //.placeholder(R.drawable.ic_account_activated)
                     .apply(RequestOptions.bitmapTransform(new mBlurTransformation(this, 15, 4)))
                     .into(appbarBg);
@@ -253,7 +254,7 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
                            public void done(BmobException e) {
                                if(e==null){
                                    Toast.makeText(HContext, "更换头像成功", Toast.LENGTH_SHORT).show();
-                                   PreferenceManager.getDefaultSharedPreferences(HContext).edit().putString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())).commit();
+                                   defaultSP.edit().putString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())).commit();
                                    loadAvatar();
                                }else{
                                    Toast.makeText(HContext, "更换头像失败", Toast.LENGTH_SHORT).show();

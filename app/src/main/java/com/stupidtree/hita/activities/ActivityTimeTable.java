@@ -41,6 +41,7 @@ import static com.stupidtree.hita.HITAApplication.DATA_STATE_NONE_CURRICULUM;
 import static com.stupidtree.hita.HITAApplication.DATA_STATE_NULL;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.correctData;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.getDataState;
 import static com.stupidtree.hita.HITAApplication.isThisTerm;
 import static com.stupidtree.hita.HITAApplication.now;
@@ -50,10 +51,8 @@ import static com.stupidtree.hita.HITAApplication.timeWatcher;
 
 public class ActivityTimeTable extends BaseActivity implements FragmentTimeTablePage.OnFragmentInteractionListener {
     /*标志类常量*/
-    final int FROM_SEEKBAR = 0;
     final int FROM_SPINNER_Curriculum = 1;
     final int FROM_SPINNER_TIMETABLE = 2;
-    final int FROM_DIS_HIDE = 3;
     final int FROM_INIT = 4;
     final int FROM_RESUME = 5;
 
@@ -338,7 +337,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 //        item.setActionView(R.layout.util_dynamictimetable_toolbar_actionlayout);
 //        final Switch switchA = item
 //                .getActionView().findViewById(R.id.action_layout_switch);
-//        switchA.setChecked(!PreferenceManager.getDefaultSharedPreferences(this).getBoolean("curriculumsonly",true));
+//        switchA.setChecked(!defaultSP.getBoolean("curriculumsonly",true));
 //        switchA.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //            @Override
 //            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
@@ -347,8 +346,8 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 //                //Refresh(FROM_INIT);
 //            }
 //        });
-        menu.findItem(R.id.action_switch_timetable).setChecked(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("timetable_curriculumonly",true));
-        menu.findItem(R.id.action_whole_day).setChecked(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("timetable_wholeday",false));
+        menu.findItem(R.id.action_switch_timetable).setChecked(defaultSP.getBoolean("timetable_curriculumonly",true));
+        menu.findItem(R.id.action_whole_day).setChecked(defaultSP.getBoolean("timetable_wholeday",false));
         return super.onCreateOptionsMenu(menu);
     }
 

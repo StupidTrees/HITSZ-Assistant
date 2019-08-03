@@ -6,7 +6,7 @@
     density="440dpi"
     format="10"
     plugin-version="3.4.2"
-    timestamp="1564464185984"
+    timestamp="1564764119282"
     token="-4072830926956593849"
     verifier="FULL_BUILD_REQUESTED" >
 
@@ -24,10 +24,10 @@
         duration="0" />
 
     <artifact
-        location="C:\projects\hita\HITA_V\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
+        location="C:\projects\hita\HITA_V\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
         type="SPLIT" />
     <artifact
-        location="C:\projects\hita\HITA_V\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
+        location="C:\projects\hita\HITA_V\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
         type="SPLIT" />
     <artifact
         location="C:\projects\hita\HITA_V\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
@@ -65,13 +65,13 @@
 
     <build
         build-mode="FULL"
-        timestamp="1564464185984"
+        timestamp="1564764119282"
         verifier="FULL_BUILD_REQUESTED" >
         <artifact
-            location="C:\projects\hita\HITA_V\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
+            location="C:\projects\hita\HITA_V\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
             type="SPLIT" />
         <artifact
-            location="C:\projects\hita\HITA_V\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
+            location="C:\projects\hita\HITA_V\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
             type="SPLIT" />
         <artifact
             location="C:\projects\hita\HITA_V\app\build\intermediates\split-apk\debug\slices\slice_3.apk"

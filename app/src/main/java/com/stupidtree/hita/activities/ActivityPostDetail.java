@@ -1,11 +1,9 @@
 package com.stupidtree.hita.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -140,5 +138,12 @@ public class ActivityPostDetail extends BaseActivity {
         transformation = new CornerTransform(ActivityPostDetail.this, dip2px(HContext, 10));
         Glide.with(this).load(laf.getImageUri()).apply(RequestOptions.bitmapTransform(transformation))
                 .into(image);
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Intent i = new Intent(ActivityPostDetail.this, ActivityPhotoDetail.class);
+                ActivityUtils.startPhotoDetailActivity_transition(ActivityPostDetail.this,laf.getImageUri(),view);
+            }
+        });
     }
 }

@@ -32,10 +32,10 @@ public final class R {
     public static final class id {
         private id() {}
 
-        public static final int dash = 0x7f0a00d6;
-        public static final int horizontal = 0x7f0a0139;
-        public static final int normal = 0x7f0a01dd;
-        public static final int vertical = 0x7f0a0391;
+        public static final int dash = 0x7f0a00d7;
+        public static final int horizontal = 0x7f0a013b;
+        public static final int normal = 0x7f0a01e3;
+        public static final int vertical = 0x7f0a0397;
     }
     public static final class string {
         private string() {}

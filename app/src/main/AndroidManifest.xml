@@ -131,7 +131,7 @@
             android:label="@string/title_activity_subject"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.ActivityNoteDetail"
+            android:name=".activities.ActivityPhotoDetail"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityNotes"
@@ -152,6 +152,9 @@
         <activity
             android:name=".activities.ActivitySplash"
             android:theme="@style/SplashTheme">
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
