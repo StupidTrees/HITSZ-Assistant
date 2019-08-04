@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityCurriculumManager;
 import com.stupidtree.hita.activities.ActivitySetting;
@@ -49,7 +50,7 @@ import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
 import static com.stupidtree.hita.HITAApplication.timeWatcher;
 
-public class FragmentTimeTable extends Fragment implements FragmentTimeTablePage.OnFragmentInteractionListener {
+public class FragmentTimeTable extends BaseFragment implements FragmentTimeTablePage.OnFragmentInteractionListener {
     /*标志类常量*/
     final int FROM_SEEKBAR = 0;
     final int FROM_SPINNER_Curriculum = 1;
@@ -74,6 +75,7 @@ public class FragmentTimeTable extends Fragment implements FragmentTimeTablePage
     ViewPager viewPager;
     TimeTablePagerAdapter pagerAdapter;
     FloatingActionButton fab;
+    RefreshTask pageTask;
 
 
 
@@ -188,8 +190,9 @@ public class FragmentTimeTable extends Fragment implements FragmentTimeTablePage
 
     /*刷新课表视图函数*/
     public void Refresh(int from) {
-        RefreshTask rtf = new RefreshTask(from);
-        rtf.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask = new RefreshTask(from);
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
@@ -204,6 +207,15 @@ public class FragmentTimeTable extends Fragment implements FragmentTimeTablePage
 
     }
 
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
+    @Override
+    protected void Refresh() {
+
+    }
 
 
     @SuppressLint("StaticFieldLeak")

@@ -72,6 +72,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
     TimeTablePagerAdapter pagerAdapter;
     FloatingActionButton fab_return;
     TabLayout tabs;
+    RefreshTask pageTask;
 
 
 
@@ -194,8 +195,9 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 
     /*刷新课表视图函数*/
     public void Refresh(int from) {
-        RefreshTask rtf = new RefreshTask(from);
-        rtf.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask = new RefreshTask(from);
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
@@ -305,6 +307,11 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 
 
     @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS);//申请动画
@@ -346,7 +353,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 //                //Refresh(FROM_INIT);
 //            }
 //        });
-        menu.findItem(R.id.action_switch_timetable).setChecked(defaultSP.getBoolean("timetable_curriculumonly",true));
+        menu.findItem(R.id.action_switch_timetable).setChecked(defaultSP.getBoolean("timetable_curriculumonly",false));
         menu.findItem(R.id.action_whole_day).setChecked(defaultSP.getBoolean("timetable_wholeday",false));
         return super.onCreateOptionsMenu(menu);
     }

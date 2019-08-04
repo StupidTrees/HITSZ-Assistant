@@ -31,6 +31,7 @@ import com.lapism.searchview.database.SearchHistoryTable;
 import com.lapism.searchview.widget.SearchAdapter;
 import com.lapism.searchview.widget.SearchItem;
 import com.lapism.searchview.widget.SearchView;
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityCampusLocations;
 import com.stupidtree.hita.activities.ActivityRankBoard;
@@ -63,7 +64,7 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.adapter.IpNewsListAdapter.dip2px;
 
-public class FragmentNavi extends Fragment {
+public class FragmentNavi extends BaseFragment {
 
 
     SearchView searchview;
@@ -192,7 +193,7 @@ public class FragmentNavi extends Fragment {
         bannerItemList = new ArrayList<>();
         banner = v.findViewById(R.id.navi_banner);
         banner.setDelayedTime(1000);
-        refreshBanner();
+        //refreshBanner();
     }
 
     @SuppressLint("WrongConstant")
@@ -272,6 +273,33 @@ public class FragmentNavi extends Fragment {
         return suggestion;
     }
 
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
+        BmobQuery<Infos> bq = new BmobQuery<>();
+        bq.addWhereEqualTo("objectId","HUJs888B");
+        bq.findObjects(new FindListener<Infos>() {
+            @Override
+            public void done(List<Infos> list, BmobException e) {
+                try{
+                    JsonObject jo = list.get(0).getJson();
+                    Glide.with(getContext()).load(jo.get("image_url").getAsString()).placeholder(R.drawable.timeline_head_bg)
+                            .into(head_image);
+                    head_hint.setText(jo.get("hint").getAsString());
+                    head_sub_hint.setText(jo.get("subhint").getAsString());
+                    headClickListener.setAction(jo);
+                }catch (Exception el){
+                    head_image.setImageResource(R.drawable.timeline_head_bg);
+                    head_hint.setText("今日哈工深");
+                }
+            }
+        });
+    }
+
 
     public interface OnFragmentInteractionListener{
         void onFragmentInteraction(Uri uri);
@@ -299,26 +327,7 @@ public class FragmentNavi extends Fragment {
         });
     }
 
-    void refreshHeadBoard(){
-        BmobQuery<Infos> bq = new BmobQuery<>();
-        bq.addWhereEqualTo("objectId","HUJs888B");
-        bq.findObjects(new FindListener<Infos>() {
-            @Override
-            public void done(List<Infos> list, BmobException e) {
-                try{
-                    JsonObject jo = list.get(0).getJson();
-                    Glide.with(getContext()).load(jo.get("image_url").getAsString()).placeholder(R.drawable.timeline_head_bg)
-                            .into(head_image);
-                    head_hint.setText(jo.get("hint").getAsString());
-                    head_sub_hint.setText(jo.get("subhint").getAsString());
-                    headClickListener.setAction(jo);
-                }catch (Exception el){
-                    head_image.setImageResource(R.drawable.timeline_head_bg);
-                    head_hint.setText("今日哈工深");
-                }
-            }
-        });
-    }
+
 
     void initCanteen(View v){
         canteen_res = new ArrayList<>();
@@ -362,7 +371,7 @@ public class FragmentNavi extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        refreshHeadBoard();
+        Refresh();
         //refreshBanner();
         //refreshCanteen();
         //banner.start();

@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivitySubject;
 import com.stupidtree.hita.adapter.SubjectsListAdapter;
@@ -31,7 +32,7 @@ import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.getDataState;
 import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 
-public class FragmentUserCenter_Info extends Fragment {
+public class FragmentUserCenter_Info extends BaseFragment {
 
 
     TextView username,nick,studentnumber,realname,school,signature;
@@ -161,6 +162,13 @@ public class FragmentUserCenter_Info extends Fragment {
     }
 
 
+    @Override
+    protected void stopTasks() {
 
+    }
 
+    @Override
+    protected void Refresh() {
+
+    }
 }

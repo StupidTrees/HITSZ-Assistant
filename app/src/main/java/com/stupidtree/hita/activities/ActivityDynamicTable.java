@@ -24,6 +24,12 @@ import static com.stupidtree.hita.HITAApplication.defaultSP;
 public class ActivityDynamicTable extends BaseActivity {
 
     Toolbar toolbar;
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -40,6 +40,12 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
     SwipeRefreshLayout refresh;
     int pageWeek;
     int pageDow;
+    getResultTask pageTask;
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +63,13 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
         initToolbar();
         initViews();
         // getResult();
-        new getResultTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Refresh();
+    }
 
     void initToolbar(){
         toolbar = findViewById(R.id.toolbar);
@@ -104,11 +114,16 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new getResultTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+              Refresh();
             }
         });
     }
 
+    void Refresh(){
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask =  new getResultTask();
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
     class pickTimeListener implements View.OnClickListener {
         HDatePickerDialog dialog;
 
@@ -119,7 +134,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
                 public void onClick(int week, int dow, boolean dateSet) {
                     pageWeek = week;
                     pageDow = dow;
-                    new getResultTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                   Refresh();
                 }
             });
         }

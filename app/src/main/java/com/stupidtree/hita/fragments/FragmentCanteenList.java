@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.CanteenListAdapter;
 import com.stupidtree.hita.online.Canteen;
@@ -29,7 +30,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
-public class FragmentCanteenList extends Fragment {
+public class FragmentCanteenList extends BaseFragment {
     CanteenListAdapter listAdapter;
     RecyclerView list;
     List<Canteen> listRes;
@@ -47,6 +48,16 @@ public class FragmentCanteenList extends Fragment {
         initList(v);
        // refresh();
         return v;
+    }
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
+
     }
 
 

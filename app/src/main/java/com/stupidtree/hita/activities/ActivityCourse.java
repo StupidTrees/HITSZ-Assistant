@@ -56,7 +56,14 @@ public class ActivityCourse extends BaseActivity {
     RatingBar ratingBar;
     LinearLayout value3Detail,value2Detail;
     ImageView classroom_detail_icon;
+    RefreshTask pageTask;
     int courseNumber; //课程在科目中的序号
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,7 +209,9 @@ public class ActivityCourse extends BaseActivity {
     @Override
      protected void onResume() {
         super.onResume();
-        new RefreshTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask = new RefreshTask();
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     class RefreshTask extends AsyncTask {

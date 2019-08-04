@@ -54,7 +54,12 @@ Runnable runnable;
 
 boolean imageLoaded = false;
 
-//mReciever reciever;
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    //mReciever reciever;
     //IntentFilter intentFilter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.LostAndFoundListAdapter;
 import com.stupidtree.hita.online.HITAUser;
@@ -32,7 +33,7 @@ import cn.bmob.v3.listener.FindListener;
  * Use the {@link FragmentLostAndFound#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentLostAndFound extends Fragment {
+public class FragmentLostAndFound extends BaseFragment {
     String type;
     RecyclerView list;
     LostAndFoundListAdapter listAdapter;
@@ -70,7 +71,6 @@ public class FragmentLostAndFound extends Fragment {
        View v = inflater.inflate(R.layout.fragment_lost_and_found, container, false);
         pullRefreshLayout =v. findViewById(R.id.society_swiperefresh);
        initList(v);
-       refreshList();
        return v;
     }
 
@@ -84,7 +84,7 @@ public class FragmentLostAndFound extends Fragment {
         pullRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshList();
+                Refresh();
             }
         });
         listAdapter.setmOnPostClickListener(new LostAndFoundListAdapter.OnPostClickListener() {
@@ -96,7 +96,37 @@ public class FragmentLostAndFound extends Fragment {
 
     }
 
-    public void refreshList(){
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Refresh();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    public void Refresh() {
         pullRefreshLayout.setRefreshing(true);
         final BmobQuery<LostAndFound> query = new BmobQuery<>();
         query.addWhereEqualTo("type",type);
@@ -116,24 +146,6 @@ public class FragmentLostAndFound extends Fragment {
 
                     }
                 });
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     /**

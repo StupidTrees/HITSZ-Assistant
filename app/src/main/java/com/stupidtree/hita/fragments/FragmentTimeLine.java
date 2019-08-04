@@ -37,6 +37,7 @@ import com.gelitenight.waveview.library.WaveView;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.TimeWatcher;
@@ -77,7 +78,7 @@ import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_EXAM;
 import static com.stupidtree.hita.HITAApplication.*;
 
 @SuppressLint("ValidFragment")
-public class FragmentTimeLine extends Fragment implements
+public class FragmentTimeLine extends BaseFragment implements
         RefreshBroadcastReceiver.ActionListener {
     public static final int TL_REFRESH_FROM_TIMETICK = 111;
     public static final int TL_REFRESH_FROM_UNHIDE = 112;
@@ -110,6 +111,7 @@ public class FragmentTimeLine extends Fragment implements
     RefreshBroadcastReceiver refreshReciever;
     LocalBroadcastManager localBroadcastManager;
     SwipeRefreshLayout swipeRefreshLayout;
+    RefreshTask pageTask;
 
     public FragmentTimeLine(){
 
@@ -170,7 +172,6 @@ public class FragmentTimeLine extends Fragment implements
     public void onResume() {
         super.onResume();
         Refresh(TL_REFRESH_FROM_UNHIDE);
-
     }
 
     public void showHeadCard(){
@@ -229,6 +230,16 @@ public class FragmentTimeLine extends Fragment implements
     public void receive(Context context, Intent intent) {
         if(intent.getAction().equals("COM.STUPIDTREE.HITA.TIMELINE_REFRESH_FROM_TIMETICK")) Refresh(TL_REFRESH_FROM_TIMETICK);
         else Refresh(TL_REFRESH_FROM_UNHIDE);
+    }
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
+    @Override
+    protected void Refresh() {
+
     }
 
     public interface OnFragmentInteractionListener {
@@ -509,8 +520,9 @@ public class FragmentTimeLine extends Fragment implements
 
     private void Refresh(int from) {
         if(!hasInit) return;
-        RefreshTask rt = new RefreshTask(from);
-        rt.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask = new RefreshTask(from);
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private class RefreshTask extends AsyncTask<String, Integer, Integer> {

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityNewsDetail;
 import com.stupidtree.hita.adapter.IpNewsListAdapter;
@@ -29,13 +30,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FragmentNewsIPNews extends Fragment implements FragmentNews {
+public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
     RecyclerView list;
     int offset = 0;
     List<Map<String,String>> listRes;
     IpNewsListAdapter listAdapter;
     SwipeRefreshLayout pullRefreshLayout;
     boolean first = true;
+    LoadTask pageTask;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class FragmentNewsIPNews extends Fragment implements FragmentNews {
     @Override
     public void onResume() {
         super.onResume();
-        new LoadTask(false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        Refresh();
     }
 
     public void backToTop(){
@@ -76,7 +78,9 @@ public class FragmentNewsIPNews extends Fragment implements FragmentNews {
                         && lastVisibleItemPosition == totalItemCount - 1
                         && visibleItemCount > 0) {
                     offset+=10;
-                    new LoadTask(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    if(pageTask!=null&&!pageTask.isCancelled())pageTask.cancel(true);
+                    pageTask = new LoadTask(true);
+                    pageTask.execute();
                 }
             }
         });
@@ -94,9 +98,23 @@ public class FragmentNewsIPNews extends Fragment implements FragmentNews {
             @Override
             public void onRefresh() {
                 first = true;
-                new LoadTask(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                if(pageTask!=null&&!pageTask.isCancelled())pageTask.cancel(true);
+                pageTask = new LoadTask(true);
+                pageTask.execute();
             }
         });
+    }
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled())pageTask.cancel(true);
+    }
+
+    @Override
+    protected void Refresh() {
+        if(pageTask!=null&&!pageTask.isCancelled())pageTask.cancel(true);
+        pageTask = new LoadTask(false);
+        pageTask.execute();
     }
 
     class LoadTask extends AsyncTask{

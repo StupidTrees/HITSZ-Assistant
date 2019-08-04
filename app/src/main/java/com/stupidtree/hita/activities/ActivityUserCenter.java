@@ -77,6 +77,12 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     ImageView avatar;
     TextView name,signature;
     AppBarLayout appBarLayout;
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -218,6 +224,7 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
             avatar.setImageResource(R.drawable.ic_account_activated);
             //appbarBg.setImageResource(R.drawable.timeline_head_bg);
         }else {
+            if(this.isDestroyed()) return;
             Glide.with(ActivityUserCenter.this).load(CurrentUser.getAvatarUri())
                     //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
                     //.placeholder(R.drawable.ic_account_activated)

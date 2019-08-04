@@ -125,6 +125,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     FloatingActionButton fab_shutup;
     ChatBotA chatbotA;
     ChatBotB chatbotB;
+    ChatBotIteractTask pageTask;
 
     //语音听写对象
     private SpeechRecognizer mSpeechRecognizer;
@@ -163,6 +164,11 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     private RevealAnimation mRevealAnimation;
     private int revealX;
     private int revealY;
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -731,8 +737,9 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
 
                 }else{
                     if(e!=null) Log.e("!",e.toString());
-                    ChatBotIteractTask cbit = new ChatBotIteractTask(message,ActivityChatbot.this);
-                    cbit.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+                    pageTask = new ChatBotIteractTask(message,ActivityChatbot.this);
+                    pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
         });

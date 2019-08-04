@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.stupidtree.hita"
-      android:versionCode="20190802"
-      android:versionName="测试版8.02"
-      split="lib_slice_8_apk">
-</manifest>

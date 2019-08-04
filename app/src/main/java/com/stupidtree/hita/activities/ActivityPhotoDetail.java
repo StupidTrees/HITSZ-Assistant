@@ -16,6 +16,12 @@ public class ActivityPhotoDetail extends BaseActivity {
 
     String imagePath;
     PhotoView photoView;
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

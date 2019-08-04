@@ -69,6 +69,13 @@ public class ActivityNotes extends BaseActivity {
     LinearLayout invalidLayout,validLayout;
     FloatingActionMenu fam;
     CardView textCard;
+    RefreshTask pageTask;
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -300,7 +307,9 @@ public class ActivityNotes extends BaseActivity {
 
 
     public void Refresh(boolean refreshList){
-        new RefreshTask(refreshList,this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask = new RefreshTask(refreshList,this);
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.FacilityListAdapter;
 import com.stupidtree.hita.online.Location;
@@ -25,7 +26,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
-public class FragmentFacilityList extends Fragment {
+public class FragmentFacilityList extends BaseFragment {
     FacilityListAdapter listAdapter;
     RecyclerView list;
     List<Facility> listRes;
@@ -41,6 +42,16 @@ public class FragmentFacilityList extends Fragment {
         initList(v);
         //refresh();
         return v;
+    }
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
+
     }
 
 

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.diy.ButtonLoading;
@@ -31,7 +32,7 @@ import static com.stupidtree.hita.HITAApplication.loadDataFromCloud;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.timeWatcher;
 
-public class FragmentLogin extends Fragment {
+public class FragmentLogin extends BaseFragment {
     
     EditText username,password;
     ButtonLoading login;
@@ -103,6 +104,16 @@ public class FragmentLogin extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
+
     }
 
     class mTextWatcher implements TextWatcher {

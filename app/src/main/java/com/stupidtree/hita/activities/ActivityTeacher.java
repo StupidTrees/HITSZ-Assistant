@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -44,6 +46,7 @@ import java.io.IOException;
 import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
@@ -53,11 +56,20 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 
 public class ActivityTeacher extends BaseActivity {
 
+
+    LoadTeacherPageTask pageTask;
     String teacherName;
     ImageView teacherAvatar;
     TextView name, school, gender, title, code, detail, phone, email;
     Teacher teacher;
-    SwipeRefreshLayout refresh;
+    ProgressBar refresh;
+    AppBarLayout appBarLayout;
+
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,20 +90,20 @@ public class ActivityTeacher extends BaseActivity {
 //        new LoadTeacherPageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    void refreshPage(){
-        refresh.setRefreshing(true);
+    void refreshPage() {
+        refresh.setVisibility(View.VISIBLE);
         BmobQuery<Teacher> bq = new BmobQuery();
         bq.addWhereEqualTo("name", teacherName);
         bq.findObjects(new FindListener<Teacher>() {
             @Override
             public void done(List<Teacher> list, BmobException e) {
-                refresh.setRefreshing(false);
+                refresh.setVisibility(View.INVISIBLE);
                 if (e == null && list != null && list.size() > 0) {
                     teacher = list.get(0);
                     loadInfos();
-                } else{
+                } else {
                     AlertDialog ad = new AlertDialog.Builder(ActivityTeacher.this).setMessage("是否前往教务系统，勾选导入教师信息后重新导入课表，帮助我们完善教师库？").setTitle("教师库未收录该教师")
-                            .setNegativeButton("下次吧",null).setPositiveButton("好的！！！", new DialogInterface.OnClickListener() {
+                            .setNegativeButton("下次吧", null).setPositiveButton("好的！！！", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ActivityUtils.startJWTSActivity(ActivityTeacher.this);
@@ -99,12 +111,15 @@ public class ActivityTeacher extends BaseActivity {
                             }).setNeutralButton("查找教师网站", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    new LoadTeacherPageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                    if (pageTask != null && !pageTask.isCancelled())
+                                        pageTask.cancel(true);
+                                    pageTask = new LoadTeacherPageTask();
+                                    pageTask.execute();
                                 }
                             })
 
                             .create();
-                    if(!ActivityTeacher.this.isDestroyed()) ad.show();
+                    if (!ActivityTeacher.this.isDestroyed()) ad.show();
                 }
             }
         });
@@ -113,6 +128,7 @@ public class ActivityTeacher extends BaseActivity {
 
     void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
+        appBarLayout = findViewById(R.id.appbar);
         toolbar.setTitle("");
         toolbar.inflateMenu(R.menu.toolbar_teacher);
         setSupportActionBar(toolbar);
@@ -121,8 +137,10 @@ public class ActivityTeacher extends BaseActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                if(menuItem.getItemId()==R.id.action_website) {
-                    new LoadTeacherPageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                if (menuItem.getItemId() == R.id.action_website) {
+                    if (pageTask != null & !pageTask.isCancelled()) pageTask.cancel(true);
+                    pageTask = new LoadTeacherPageTask();
+                    pageTask.execute();
                     return true;
                 }
                 return false;
@@ -134,11 +152,21 @@ public class ActivityTeacher extends BaseActivity {
                 onBackPressed();
             }
         });
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            private float mHeadImgScale = 0;
 
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                float scale = 1.0f + (verticalOffset) / ((float) appBarLayout.getHeight());
+                teacherAvatar.setScaleX(scale);
+                teacherAvatar.setScaleY(scale);
+                teacherAvatar.setTranslationY(mHeadImgScale * verticalOffset);
+            }
+        });
     }
 
     void initViews() {
-        refresh = findViewById(R.id.refresh);
+        refresh = findViewById(R.id.progressBar);
         name = findViewById(R.id.teacher_name);
         gender = findViewById(R.id.teacher_gender);
         title = findViewById(R.id.teacher_title);
@@ -148,12 +176,6 @@ public class ActivityTeacher extends BaseActivity {
         detail = findViewById(R.id.teacher_detail);
         code = findViewById(R.id.teacher_code);
         teacherAvatar = findViewById(R.id.teacher_avatar);
-        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-               refreshPage();
-            }
-        });
     }
 
     void loadInfos() {
@@ -171,22 +193,23 @@ public class ActivityTeacher extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_teacher,menu);
+        getMenuInflater().inflate(R.menu.toolbar_teacher, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     class LoadTeacherPageTask extends AsyncTask {
 
         AlertDialog ad;
-        LoadTeacherPageTask(){
+
+        LoadTeacherPageTask() {
             ad = new AlertDialog.Builder(ActivityTeacher.this).setTitle("正在尝试查找教师网站").setMessage("请稍候").
                     create();
             ad.setCancelable(false);
         }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             ad.show();
         }
 
@@ -238,7 +261,7 @@ public class ActivityTeacher extends BaseActivity {
 //                        MaterialCircleAnimator.animShow(notfoundView, 600);
 //                    }
 //                });
-                Toast.makeText(ActivityTeacher.this,"没有找到信息！",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ActivityTeacher.this, "没有找到信息！", Toast.LENGTH_SHORT).show();
             }
         }
     }

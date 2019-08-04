@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 
 import org.jsoup.Jsoup;
@@ -23,6 +24,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +34,7 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.cookies;
 import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
 
-public class FragmentJWTS_cjgl_xxjd extends Fragment {
+public class FragmentJWTS_cjgl_xxjd extends BaseFragment {
 
 
     private OnFragmentInteractionListener mListener;
@@ -43,6 +45,7 @@ public class FragmentJWTS_cjgl_xxjd extends Fragment {
     xflbListAdapter listAdapter;
     RecyclerView list;
     ProgressBar loading;
+    refreshPageTask pageTask;
 
 
     public FragmentJWTS_cjgl_xxjd() {
@@ -68,9 +71,10 @@ public class FragmentJWTS_cjgl_xxjd extends Fragment {
         View v = inflater.inflate(R.layout.fragment_jwts_cjgl_xxjd, container, false);
         initViews(v);
         initList(v);
-        new refreshPageTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        Refresh();
         return v;
     }
+
 
 
     void initViews(View v){
@@ -86,6 +90,18 @@ public class FragmentJWTS_cjgl_xxjd extends Fragment {
         listAdapter = new xflbListAdapter();
         list.setAdapter(listAdapter);
         list.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+    }
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
+    @Override
+    protected void Refresh() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask = new refreshPageTask(getContext());
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

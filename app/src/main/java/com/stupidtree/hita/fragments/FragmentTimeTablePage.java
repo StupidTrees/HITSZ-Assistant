@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.TimeTable;
@@ -52,7 +53,7 @@ import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_REMIND;
 import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
 
 
-public class FragmentTimeTablePage extends Fragment {
+public class FragmentTimeTablePage extends BaseFragment {
 
     public boolean hasInit = false;
     View pageView;
@@ -75,6 +76,7 @@ public class FragmentTimeTablePage extends Fragment {
     CardView tWholeDayCards[] = new CardView[7];
     LinearLayout classNumberLayout;
     LinearLayout wholedayLayout;
+    refreshPageTask pageTask;
 
     public FragmentTimeTablePage() {
         // Required empty public constructor
@@ -197,7 +199,9 @@ public class FragmentTimeTablePage extends Fragment {
     }
 
     public void RefreshPageView(int week) {
-        new refreshPageTask(week).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask =  new refreshPageTask(week);
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void NotifyRefresh() {
@@ -224,6 +228,16 @@ public class FragmentTimeTablePage extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
+    @Override
+    protected void Refresh() {
+
     }
 
     public interface OnFragmentInteractionListener {

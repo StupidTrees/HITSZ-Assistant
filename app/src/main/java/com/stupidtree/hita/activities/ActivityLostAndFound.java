@@ -67,6 +67,11 @@ public class ActivityLostAndFound extends BaseActivity implements FragmentLostAn
     private static final int REQUEST_CAMERA_CODE = 1;
 
     @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true,true,false);
@@ -193,7 +198,7 @@ public class ActivityLostAndFound extends BaseActivity implements FragmentLostAn
                                         public void done(String s, BmobException e) {
                                             Toast.makeText(HContext,"成功！",Toast.LENGTH_SHORT).show();
                                             for(FragmentLostAndFound flaf:fragments){
-                                                flaf.refreshList();
+                                                flaf.Refresh();
                                             }
                                         }
                                     });
@@ -206,7 +211,7 @@ public class ActivityLostAndFound extends BaseActivity implements FragmentLostAn
                             public void done(String s, BmobException e) {
                                 Toast.makeText(HContext,"成功！",Toast.LENGTH_SHORT).show();
                                 for(FragmentLostAndFound flaf:fragments){
-                                    flaf.refreshList();
+                                    flaf.Refresh();
                                 }
                             }
                         });

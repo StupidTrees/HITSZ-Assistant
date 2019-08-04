@@ -1,21 +1,26 @@
 package com.stupidtree.hita;
 
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.stupidtree.hita.activities.ActivityChatbot;
-import com.stupidtree.hita.fragments.FragmentTasks;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.stupidtree.hita.HITAApplication.themeID;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
+    abstract protected void stopTasks();
 
 
     @Override
@@ -66,5 +71,12 @@ public class BaseActivity extends AppCompatActivity {
         TypedValue typedValue = new  TypedValue();
         getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
         return typedValue.data;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopTasks();
+        Log.e("onDestroy","停止任务");
     }
 }

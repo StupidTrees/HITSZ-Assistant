@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 
 import com.stupidtree.hita.online.HITAUser;
@@ -28,7 +29,7 @@ import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.clearData;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
 
-public class FragmentSignup extends Fragment {
+public class FragmentSignup extends BaseFragment {
     
     EditText username,password,confirm_password,studentnumber,nickname;
     ButtonLoading signup;
@@ -119,6 +120,16 @@ public class FragmentSignup extends Fragment {
             }
         });
 
+
+    }
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
 
     }
 

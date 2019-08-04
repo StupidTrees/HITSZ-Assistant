@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import java.util.List;
  * Use the {@link FragmentJWTS_pyfa#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentJWTS_pyfa extends Fragment {
+public class FragmentJWTS_pyfa extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
 
@@ -86,6 +87,16 @@ public class FragmentJWTS_pyfa extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
+
     }
 
     public interface OnFragmentInteractionListener {

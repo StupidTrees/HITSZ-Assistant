@@ -54,6 +54,11 @@ public class ActivityUniversity extends BaseActivity {
     private TextView descriptionView;
 
     @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true,true,false);

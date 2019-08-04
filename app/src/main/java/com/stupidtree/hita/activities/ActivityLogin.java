@@ -27,6 +27,11 @@ public class ActivityLogin extends BaseActivity {
     TabLayout tabs;
 
     @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true,false,false);

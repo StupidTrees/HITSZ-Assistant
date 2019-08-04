@@ -44,6 +44,12 @@ public class ActivityUserProfile extends BaseActivity
     TextView name,signature,nick,school,grade;
     AppBarLayout appBarLayout;
     HITAUser user = null;
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

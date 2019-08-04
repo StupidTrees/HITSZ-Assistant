@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
@@ -49,13 +50,14 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.cookies;
 
 
-public class FragmentJWTS_grkb extends Fragment {
+public class FragmentJWTS_grkb extends BaseFragment {
     Spinner spinner_grkb;
     ButtonLoading bt_import_grkb;
     List<String> spinnerItems;
     List<Map<String, String>> curriculumItems;
     Switch uploadTeacher;
     ArrayAdapter aa;
+    refreshPageTask pageTask;
 
 
     private OnFragmentInteractionListener mListener;
@@ -82,8 +84,14 @@ public class FragmentJWTS_grkb extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_jwts_grkb, container, false);
         initViews(v);
-        new refreshPageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Refresh();
     }
 
     void initViews(View v) {
@@ -304,6 +312,18 @@ public class FragmentJWTS_grkb extends Fragment {
 
     }
 
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
+    @Override
+    protected void Refresh() {
+        stopTasks();
+        pageTask = new refreshPageTask();
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     class refreshPageTask extends AsyncTask {
 
         @Override
@@ -480,7 +500,6 @@ public class FragmentJWTS_grkb extends Fragment {
             }
         }
     }
-
 
     class uploadTeacherTask extends AsyncTask{
 

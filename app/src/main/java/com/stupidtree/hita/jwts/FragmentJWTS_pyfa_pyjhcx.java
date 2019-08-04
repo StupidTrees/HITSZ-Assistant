@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.adapter.PYJHListAdapter;
@@ -23,6 +24,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,11 +33,12 @@ import java.util.Map;
 import static com.stupidtree.hita.HITAApplication.cookies;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
 
-public class FragmentJWTS_pyfa_pyjhcx extends Fragment {
+public class FragmentJWTS_pyfa_pyjhcx extends BaseFragment {
     List<Map<String, String>> subjectsItems;
     RecyclerView pyjhList;
     PYJHListAdapter pyjhAdapter;
     private OnFragmentInteractionListener mListener;
+    getPYJHTask pageTask;
 
     public FragmentJWTS_pyfa_pyjhcx() {
         // Required empty public constructor
@@ -59,16 +62,16 @@ public class FragmentJWTS_pyfa_pyjhcx extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_jwts_pyfa_pyjhcx, container, false);
         initViews(v);
-        new getPYJHTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         return v;
     }
 
-    void initViews(View v){
+    void initViews(View v) {
         subjectsItems = new ArrayList<>();
         pyjhList = v.findViewById(R.id.jwts_pyjh_lish);
-        pyjhAdapter = new PYJHListAdapter(this.getContext(),subjectsItems);
+        pyjhAdapter = new PYJHListAdapter(this.getContext(), subjectsItems);
         pyjhList.setAdapter(pyjhAdapter);
-        pyjhList.setLayoutManager(new LinearLayoutManager(this.getContext(),LinearLayoutManager.VERTICAL,false));
+        pyjhList.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
 
     }
 
@@ -96,6 +99,24 @@ public class FragmentJWTS_pyfa_pyjhcx extends Fragment {
         mListener = null;
     }
 
+    @Override
+    protected void stopTasks() {
+        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Refresh();
+    }
+
+    @Override
+    protected void Refresh() {
+        stopTasks();
+        pageTask = new getPYJHTask(getContext());
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
 
     class getPYJHTask extends loadJWTSinfoTask {
 
@@ -118,36 +139,36 @@ public class FragmentJWTS_pyfa_pyjhcx extends Fragment {
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .ignoreContentType(true)
-                        .data("pageSize","200")
+                        .data("pageSize", "200")
                         .post();
                 String res = super.doInBackground(page.toString());
-                if(res!=null) return res;
+                if (res != null) return res;
                 Elements es = page.getElementsByClass("bot_line").select("tr");
-                for(Element e:es){
-                    if(e.toString().contains("option")) continue;
-                    if(e.toString().contains("是否考试课")) continue;
-                    HashMap<String,String> m = new HashMap();
+                for (Element e : es) {
+                    if (e.toString().contains("option")) continue;
+                    if (e.toString().contains("是否考试课")) continue;
+                    HashMap<String, String> m = new HashMap();
                     Elements tds = e.select("td");
-                    m.put("number",tds.get(0).text());
-                    m.put("code",tds.get(1).text());
-                    m.put("name",tds.get(2).text());
-                    m.put("school",tds.get(5).text());
-                    m.put("attr",tds.get(6).text());
-                    m.put("type",tds.get(7).text());
-                    m.put("direction",tds.get(8).text());
-                    m.put("point",tds.get(9).text());
-                    m.put("totalcourses",tds.get(10).text());
-                    m.put("exam",tds.get(11).text());
-                    m.put("xn",tds.get(3).text());
-                    m.put("xq",tds.get(4).text());
+                    m.put("number", tds.get(0).text());
+                    m.put("code", tds.get(1).text());
+                    m.put("name", tds.get(2).text());
+                    m.put("school", tds.get(5).text());
+                    m.put("attr", tds.get(6).text());
+                    m.put("type", tds.get(7).text());
+                    m.put("direction", tds.get(8).text());
+                    m.put("point", tds.get(9).text());
+                    m.put("totalcourses", tds.get(10).text());
+                    m.put("exam", tds.get(11).text());
+                    m.put("xn", tds.get(3).text());
+                    m.put("xq", tds.get(4).text());
                     subjectsItems.add(m);
                 }
                 SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-                for(Map<String,String> m2:subjectsItems){
+                for (Map<String, String> m2 : subjectsItems) {
                     ContentValues cv = new ContentValues();
-                    cv.put("is_exam",m2.get("exam").equals("是"));
-                    cv.put("is_default",false);
-                    sd.update("subject",cv,"code=?",new String[]{m2.get("code")});
+                    cv.put("is_exam", m2.get("exam").equals("是"));
+                    cv.put("is_default", false);
+                    sd.update("subject", cv, "code=?", new String[]{m2.get("code")});
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -170,19 +191,19 @@ public class FragmentJWTS_pyfa_pyjhcx extends Fragment {
         }
     }
 
-    Map<String,String> mContains(List<Map<String,String>> ir,String c){
+    Map<String, String> mContains(List<Map<String, String>> ir, String c) {
 
-        for(Map<String,String> m2:ir){
+        for (Map<String, String> m2 : ir) {
             //System.out.println("compare:"+c+","+m2.get("name"));
-            if(m2.get("name").equals(c)) return m2;
+            if (m2.get("name").equals(c)) return m2;
         }
         return null;
     }
 
-    Map<String,String> mMatchCode(List<Map<String,String>> ir,String c){
-        for(Map<String,String> m2:ir){
+    Map<String, String> mMatchCode(List<Map<String, String>> ir, String c) {
+        for (Map<String, String> m2 : ir) {
             //System.out.println("compare:"+c+","+m2.get("name"));
-            if(m2.get("code").equals(c)) return m2;
+            if (m2.get("code").equals(c)) return m2;
         }
         return null;
     }

@@ -29,6 +29,12 @@ public class ActivitySubjectManager extends BaseActivity implements FragmentSubj
     SubjectsManagerPagerAdapter pagerAdapter;
     List<Fragment> fragments;
     TabLayout tabLayout;
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

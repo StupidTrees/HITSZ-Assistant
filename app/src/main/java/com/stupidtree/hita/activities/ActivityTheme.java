@@ -44,6 +44,12 @@ public class ActivityTheme extends BaseActivity {
     int[] radioButtons;
     ImageView demoBG;
    Button changeTheme;
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

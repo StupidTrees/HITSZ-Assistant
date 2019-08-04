@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.core.Subject;
@@ -27,15 +28,18 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.cookies;
 
-public class FragmentJWTS_cjgl_grcj extends Fragment {
+public class FragmentJWTS_cjgl_grcj extends BaseFragment {
     RecyclerView qzcj_list,qmcj_list;
     CJXXListAdapter qzcj_adapter,qmcj_adapter;
     List<Map<String,String>> qzcj_listRes,qmcj_listRes;
@@ -45,8 +49,10 @@ public class FragmentJWTS_cjgl_grcj extends Fragment {
     ArrayAdapter xnxqAdapter;
     List<String> xnxqAdapterRes;
     List<Map<String,String>> xnxqValueRes;
+    Set<AsyncTask> taskSet;
 
     public FragmentJWTS_cjgl_grcj() {
+
         // Required empty public constructor
     }
 
@@ -58,20 +64,21 @@ public class FragmentJWTS_cjgl_grcj extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        taskSet = new HashSet<>();
         View v = inflater.inflate(R.layout.fragment_jwts_cjgl_grcj, container, false);
         initPage(v);
         initLists(v);
-        new refreshQZCJListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new refreshXNXQSpinnerTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Refresh();
     }
 
     void initPage(View v){
@@ -133,6 +140,17 @@ public class FragmentJWTS_cjgl_grcj extends Fragment {
         mListener = null;
     }
 
+    @Override
+    protected void stopTasks() {
+        for(AsyncTask at:taskSet) if(at!=null&&!at.isCancelled()) at.cancel(true);
+    }
+
+    @Override
+    protected void Refresh() {
+        new refreshQZCJListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new refreshXNXQSpinnerTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
@@ -150,6 +168,7 @@ public class FragmentJWTS_cjgl_grcj extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            taskSet.add(this);
             qzcj_list.setVisibility(View.GONE);
             loadingView_qzcj.setVisibility(View.VISIBLE);
         }
@@ -206,6 +225,7 @@ public class FragmentJWTS_cjgl_grcj extends Fragment {
             qzcj_list.setVisibility(View.VISIBLE);
             loadingView_qzcj.setVisibility(View.GONE);
             qzcj_adapter.notifyDataSetChanged();
+            taskSet.remove(this);
         }
     }
 
@@ -217,6 +237,7 @@ public class FragmentJWTS_cjgl_grcj extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            taskSet.add(this);
             super.onPreExecute();
             qmcj_list.setVisibility(View.GONE);
             loadingView_qmcj.setVisibility(View.VISIBLE);
@@ -253,6 +274,7 @@ public class FragmentJWTS_cjgl_grcj extends Fragment {
         @Override
         protected void onPostExecute(String o) {
             super.onPostExecute(o);
+            taskSet.remove(this);
             qmcj_list.setVisibility(View.VISIBLE);
             loadingView_qmcj.setVisibility(View.GONE);
             for(Map m:xnxqValueRes){
@@ -271,6 +293,7 @@ public class FragmentJWTS_cjgl_grcj extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            taskSet.add(this);
             super.onPreExecute();
             qmcj_list.setVisibility(View.GONE);
             loadingView_qmcj.setVisibility(View.VISIBLE);
@@ -331,6 +354,7 @@ public class FragmentJWTS_cjgl_grcj extends Fragment {
         @Override
         protected void onPostExecute(String o) {
             super.onPostExecute(o);
+            taskSet.remove(this);
 //            if(o!=null&&o instanceof String){
 //                AlertDialog ad = new AlertDialog.Builder(getContext()).setMessage("提示").setMessage(o.toString()).setPositiveButton("好的",null).create();
 //                ad.show();

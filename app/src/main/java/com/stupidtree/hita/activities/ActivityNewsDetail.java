@@ -31,6 +31,12 @@ public class ActivityNewsDetail extends BaseActivity {
     String link;
     TextView title,time;
     WebView wv;
+    LoadTask pageTask;
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled())pageTask.cancel(true);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +65,16 @@ public class ActivityNewsDetail extends BaseActivity {
         wv.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         wv.getSettings().setLoadWithOverviewMode(true);
 
-        new LoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(pageTask!=null&&!pageTask.isCancelled())pageTask.cancel(true);
+        pageTask = new LoadTask();
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
     class LoadTask extends AsyncTask{
 

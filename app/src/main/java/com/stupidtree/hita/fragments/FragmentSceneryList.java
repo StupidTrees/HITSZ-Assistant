@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.SceneryListAdapter;
 import com.stupidtree.hita.online.Location;
@@ -39,7 +40,7 @@ import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.online.Location.showRateDialog;
 
-public class FragmentSceneryList extends Fragment {
+public class FragmentSceneryList extends BaseFragment {
     SceneryListAdapter listAdapter;
     RecyclerView list;
     List<Scenery> listRes;
@@ -55,6 +56,16 @@ public class FragmentSceneryList extends Fragment {
         initList(v);
         //refresh();
         return v;
+    }
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
+
     }
 
 

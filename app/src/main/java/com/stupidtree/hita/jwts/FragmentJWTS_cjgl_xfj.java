@@ -11,12 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.sql.Ref;
 import java.text.DecimalFormat;
 
 import cn.bmob.v3.http.I;
@@ -31,12 +33,13 @@ import static com.stupidtree.hita.HITAApplication.cookies;
  * Use the {@link FragmentJWTS_cjgl_xfj#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentJWTS_cjgl_xfj extends Fragment {
+public class FragmentJWTS_cjgl_xfj extends BaseFragment {
 
     private OnFragmentInteractionListener mListener;
 
     TextView xfj,pm,percentage;
     String xfj_txt,pm_txt,percentage_txt;
+    refreshTask pageTask;
     public FragmentJWTS_cjgl_xfj() {
         // Required empty public constructor
     }
@@ -57,7 +60,6 @@ public class FragmentJWTS_cjgl_xfj extends Fragment {
         // Inflate the layout for this fragment
        View v =  inflater.inflate(R.layout.fragment_jwts_cjgl_xfj, container, false);
        initViews(v);
-       new refreshTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
        return v;
     }
 
@@ -84,6 +86,24 @@ public class FragmentJWTS_cjgl_xfj extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Refresh();
+    }
+
+    @Override
+    protected void Refresh() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask = new refreshTask(getContext());
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public interface OnFragmentInteractionListener {

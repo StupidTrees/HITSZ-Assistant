@@ -34,10 +34,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
@@ -56,15 +59,23 @@ public class ActivityEmptyClassroom extends BaseActivity {
     SwipeRefreshLayout refresh;
     TextView pageXnxq_Text,pageTime_Text;
     int pageCourseNumber;
+    refreshListTask pageTask;
+    Set<refreshDetailTask> detailTaskSet;
 
 
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        for(refreshDetailTask rdt:detailTaskSet) if(rdt!=null&&!rdt.isCancelled()) rdt.cancel(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true,true,false);
         setContentView(R.layout.activity_empty_classroom);
-
+        detailTaskSet = new HashSet<>();
         initToolbar();
         if(CurrentUser==null){
             AlertDialog ad = new AlertDialog.Builder(this).setMessage("登录HITSZ助手账号后同步课表").setTitle("请登录").setPositiveButton("前往登录", new DialogInterface.OnClickListener() {
@@ -113,7 +124,7 @@ public class ActivityEmptyClassroom extends BaseActivity {
 
         }else{
             initList();
-            new refreshListTask().execute();
+            Refresh();
         }
 
     }
@@ -143,11 +154,16 @@ public class ActivityEmptyClassroom extends BaseActivity {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new refreshListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+             Refresh();
             }
         });
     }
 
+    void Refresh(){
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask =  new refreshListTask();
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
     class refreshListTask extends AsyncTask{
 
         @SuppressLint("SetTextI18n")
@@ -333,13 +349,24 @@ public class ActivityEmptyClassroom extends BaseActivity {
         @Override
         public void onBindViewHolder(@NonNull final placesHolder placesHolder, final int i) {
             placesHolder.domainName.setText((CharSequence) listRes.get(i).get("name"));
+            placesHolder.detailDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    if(placesHolder.dialogPageTask!=null&&!placesHolder.dialogPageTask.isCancelled()) placesHolder.dialogPageTask.cancel(true);
+                    detailTaskSet.remove(placesHolder.dialogPageTask);
+                }
+            });
             placesHolder.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    placesHolder.detailDialog.show();
-                    new refreshDetailTask((String) listRes.get(i).get("name"),(String) listRes.get(i).get("value"),placesHolder.detailRes,placesHolder.detailAdapter
+                    if(placesHolder.dialogPageTask!=null&&!placesHolder.dialogPageTask.isCancelled()) placesHolder.dialogPageTask.cancel(true);
+                    placesHolder.dialogPageTask = new refreshDetailTask((String) listRes.get(i).get("name"),(String) listRes.get(i).get("value"),placesHolder.detailRes,placesHolder.detailAdapter
                             ,placesHolder.loading,placesHolder.detailPlaces
-                    ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    );
+                    detailTaskSet.add(placesHolder.dialogPageTask);
+                    placesHolder.dialogPageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    placesHolder.detailDialog.show();
+
 
                 }
             });
@@ -359,6 +386,7 @@ public class ActivityEmptyClassroom extends BaseActivity {
             detailListAdapter detailAdapter;
             ProgressBar loading;
             AlertDialog detailDialog;
+            refreshDetailTask dialogPageTask;
             public placesHolder(@NonNull View itemView,String lh) {
                 super(itemView);
                 detailRes = new ArrayList<>();

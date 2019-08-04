@@ -14,6 +14,12 @@ import com.stupidtree.hita.fragments.FragmentSettings;
 public class ActivitySetting extends BaseActivity {
 
     Toolbar mToolbar;
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

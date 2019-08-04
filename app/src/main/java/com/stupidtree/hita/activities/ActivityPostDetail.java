@@ -40,6 +40,11 @@ public class ActivityPostDetail extends BaseActivity {
     Toolbar toolbar;
 
     @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true,true,false);

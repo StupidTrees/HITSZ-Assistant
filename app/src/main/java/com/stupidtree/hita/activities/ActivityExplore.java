@@ -101,6 +101,11 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
     List<Map<String,String>> lectureList;
 
     @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true,true,false);

@@ -27,6 +27,11 @@ public class ActivityRankBoard extends BaseActivity {
     Toolbar toolbar;
 
     @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rank_board);

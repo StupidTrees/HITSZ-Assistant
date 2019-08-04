@@ -52,6 +52,11 @@ public class ActivityCurriculumManager extends BaseActivity {
 
 
     @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true,true,false);

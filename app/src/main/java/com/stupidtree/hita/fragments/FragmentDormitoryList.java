@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.DormitoryListAdapter;
 import com.stupidtree.hita.online.Dormitory;
@@ -25,7 +26,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
-public class FragmentDormitoryList extends Fragment {
+public class FragmentDormitoryList extends BaseFragment {
     DormitoryListAdapter listAdapter;
     RecyclerView list;
     List<Dormitory> listRes;
@@ -41,6 +42,16 @@ public class FragmentDormitoryList extends Fragment {
         initList(v);
         //refresh();
         return v;
+    }
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
+
     }
 
 

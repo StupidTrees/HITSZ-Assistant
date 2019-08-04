@@ -66,6 +66,11 @@ public class ActivityLocation extends BaseActivity {
     ImageView rateButton;
 
     @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true,false,false);

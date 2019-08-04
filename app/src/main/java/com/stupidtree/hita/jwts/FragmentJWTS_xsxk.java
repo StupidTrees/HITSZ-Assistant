@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.XSXKListAdapter;
 
@@ -46,7 +47,7 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.cookies;
 import static com.stupidtree.hita.activities.ActivityLoginJWTS.trustEveryone;
 
-public class FragmentJWTS_xsxk extends Fragment {
+public class FragmentJWTS_xsxk extends BaseFragment {
     RecyclerView list;
     XSXKListAdapter listAdapter;
     List<Map<String, String>> lisRes;
@@ -215,6 +216,16 @@ public class FragmentJWTS_xsxk extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
+
     }
 
 

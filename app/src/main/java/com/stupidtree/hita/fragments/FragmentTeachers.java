@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.Subject;
 import com.stupidtree.hita.core.timetable.EventItem;
@@ -34,11 +35,11 @@ import static com.stupidtree.hita.HITAApplication.isDataAvailable;
 import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 
 
-public class FragmentTeachers extends Fragment {
+public class FragmentTeachers extends BaseFragment {
     RecyclerView list;
     List<Map<String, String>> listRes;
     listAdapter listAdapter;
-
+    refreshListTask pageTask;
 
     public FragmentTeachers() {
         // Required empty public constructor
@@ -73,7 +74,7 @@ public class FragmentTeachers extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        new refreshListTask().execute();
+       Refresh();
     }
 
     void initList(View v) {
@@ -82,6 +83,18 @@ public class FragmentTeachers extends Fragment {
         listRes = new ArrayList<>();
         list.setAdapter(listAdapter);
         list.setLayoutManager(new GridLayoutManager(getContext(), 2));
+    }
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
+    @Override
+    protected void Refresh() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask =  new refreshListTask();
+        pageTask.execute();
     }
 
 

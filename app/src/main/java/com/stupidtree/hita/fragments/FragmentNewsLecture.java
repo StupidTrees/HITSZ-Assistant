@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityExplore;
 import com.stupidtree.hita.activities.ActivityNewsDetail;
@@ -32,13 +33,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FragmentNewsLecture extends Fragment implements FragmentNews {
+public class FragmentNewsLecture extends BaseFragment  {
     RecyclerView list;
     int offset = 0;
     List<Map<String, String>> listRes;
     LectureListAdapter listAdapter;
     SwipeRefreshLayout pullRefreshLayout;
     boolean first = true;
+    LoadTask pageTask;
+
 
     @Nullable
     @Override
@@ -52,7 +55,7 @@ public class FragmentNewsLecture extends Fragment implements FragmentNews {
     @Override
     public void onResume() {
         super.onResume();
-        new LoadTask(false ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        Refresh();
     }
 
     public void backToTop() {
@@ -80,7 +83,7 @@ public class FragmentNewsLecture extends Fragment implements FragmentNews {
                         && lastVisibleItemPosition == totalItemCount - 1
                         && visibleItemCount > 0) {
                     offset += 10;
-                    new LoadTask(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    Refresh();
                 }
             }
         });
@@ -106,11 +109,25 @@ public class FragmentNewsLecture extends Fragment implements FragmentNews {
         pullRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new LoadTask(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                Refresh();
                 first = true;
             }
         });
     }
+
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
+    @Override
+    protected void Refresh() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask = new LoadTask(false);
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
 
     class LoadTask extends AsyncTask {
         boolean swipe;

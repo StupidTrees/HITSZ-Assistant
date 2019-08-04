@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.ClassroomListAdapter;
 import com.stupidtree.hita.online.Location;
@@ -33,7 +34,7 @@ import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.online.Location.showRateDialog;
 
-public class FragmentClassroomList extends Fragment {
+public class FragmentClassroomList extends BaseFragment {
     ClassroomListAdapter listAdapter;
     RecyclerView list;
     List<Classroom> listRes;
@@ -48,6 +49,16 @@ public class FragmentClassroomList extends Fragment {
         initList(v);
        // refresh();
         return v;
+    }
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
+
     }
 
 

@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.core.TimeTable;
@@ -28,6 +29,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.sql.Ref;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 
 
-public class FragmentJWTS_ksxx extends Fragment {
+public class FragmentJWTS_ksxx extends BaseFragment {
     RecyclerView list;
     KSXXListAdapter listAdapter;
     List<Map<String,String>> lisRes;
@@ -54,6 +56,7 @@ public class FragmentJWTS_ksxx extends Fragment {
     ButtonLoading bt_import_exam;
     LinearLayout listLayout;
     LinearLayout invalidLayout;
+    refreshListTask pageTask;
 
     public FragmentJWTS_ksxx() {
         // Required empty public constructor
@@ -78,7 +81,7 @@ public class FragmentJWTS_ksxx extends Fragment {
         View v = inflater.inflate(R.layout.fragment_jwts_ksxx, container, false);
         initPage(v);
         initList(v);
-        new refreshListTask().execute(AsyncTask.THREAD_POOL_EXECUTOR);
+        Refresh();
         return v;
     }
 
@@ -143,6 +146,18 @@ public class FragmentJWTS_ksxx extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
+
+    @Override
+    protected void Refresh() {
+        stopTasks();
+        pageTask =  new refreshListTask();
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
@@ -277,7 +292,7 @@ public class FragmentJWTS_ksxx extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            bt_import_exam.setProgress(false);
+            if(bt_import_exam!=null) bt_import_exam.setProgress(false);
             if((Boolean) o){
                 Toast.makeText(FragmentJWTS_ksxx.this.getContext(),"导入成功！",Toast.LENGTH_SHORT).show();
                 ActivityMain.saveData(FragmentJWTS_ksxx.this.getActivity());

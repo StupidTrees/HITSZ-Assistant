@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.core.Subject;
@@ -35,7 +36,7 @@ import static com.stupidtree.hita.HITAApplication.loadDataFromCloud;
 import static com.stupidtree.hita.HITAApplication.saveDataToCloud;
 
 
-public class FragmentUserCenter_sync extends Fragment {
+public class FragmentUserCenter_sync extends BaseFragment {
     CardView load_from_cloud;
     CardView save_to_cloud;
     CardView clear_cloud;
@@ -93,6 +94,16 @@ public class FragmentUserCenter_sync extends Fragment {
         return v;
     }
 
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
+
+    }
+
     class upLoadTask extends AsyncTask{
 
         @Override
@@ -106,8 +117,6 @@ public class FragmentUserCenter_sync extends Fragment {
             Toast.makeText(HContext,"开始上传",Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
 
 }

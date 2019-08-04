@@ -87,7 +87,12 @@ public class ActivityJWTS extends BaseActivity implements  FragmentJWTS_grkb.OnF
     private int revealY;
     ImageView avatarView;
     TextView nameText,studentnumberText;
+    refreshInfoTask pageTask;
 
+    @Override
+    protected void stopTasks() {
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +113,9 @@ public class ActivityJWTS extends BaseActivity implements  FragmentJWTS_grkb.OnF
     @Override
     protected void onResume() {
         super.onResume();
-        new refreshInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask = new refreshInfoTask();
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
@@ -215,7 +222,11 @@ public class ActivityJWTS extends BaseActivity implements  FragmentJWTS_grkb.OnF
                     String image;
                     image = "http://jwts.hitsz.edu.cn/"+tds.get(i).select("img").attr("src");
                    // userInfos.put("头像",image);
+                    avatar = Jsoup.connect(image).cookies(cookies).ignoreContentType(true).execute().bodyAsBytes();
                     new saveAvatarTask(image).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                    if(avatar==null) Toast.makeText(HContext,"加载教务头像失败！",Toast.LENGTH_SHORT).show();
+//                    else Glide.with(HContext).load(avatar).signature(new ObjectKey(System.currentTimeMillis())).placeholder(R.drawable.ic_account).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(avatarView);
+
                     tds.remove(i);
                 }
             }
@@ -270,17 +281,21 @@ public class ActivityJWTS extends BaseActivity implements  FragmentJWTS_grkb.OnF
         @Override
         protected void onPostExecute(Boolean o) {
             super.onPostExecute(o);
-            if(!o){
-                Toast.makeText(HContext,"页面过期，请返回重新登录！",Toast.LENGTH_SHORT).show();
-                login = false;
-                Intent i = new Intent(ActivityJWTS.this, ActivityLoginJWTS.class);
-                ActivityJWTS.this.startActivity(i);
-                finish();
+            try {
+                if(!o){
+                    Toast.makeText(HContext,"页面过期，请返回重新登录！",Toast.LENGTH_SHORT).show();
+                    login = false;
+                    Intent i = new Intent(ActivityJWTS.this, ActivityLoginJWTS.class);
+                    ActivityJWTS.this.startActivity(i);
+                    finish();
+                }
+                //Glide.with(HContext).load(avatar).signature(new ObjectKey(System.currentTimeMillis())).placeholder(R.drawable.ic_account).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(avatarView);
+                if(CurrentUser!=null&&userInfos.get("学号").equals(CurrentUser.getStudentnumber()))  studentnumberText.setText(userInfos.get("学号")+"（已与本账号绑定）");
+                else  studentnumberText.setText(userInfos.get("学号"));
+                nameText.setText(userInfos.get("姓名"));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            //Glide.with(HContext).load(avatar).signature(new ObjectKey(System.currentTimeMillis())).placeholder(R.drawable.ic_account).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(avatarView);
-            if(CurrentUser!=null&&userInfos.get("学号").equals(CurrentUser.getStudentnumber()))  studentnumberText.setText(userInfos.get("学号")+"（已与本账号绑定）");
-            else  studentnumberText.setText(userInfos.get("学号"));
-            nameText.setText(userInfos.get("姓名"));
         }
     }
 

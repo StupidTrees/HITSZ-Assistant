@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.UserInfosAdapter;
 
@@ -20,7 +21,7 @@ import java.util.Map;
 
 
 @SuppressLint("ValidFragment")
-public class FragmentJWTS_info extends Fragment {
+public class FragmentJWTS_info extends BaseFragment {
 
     List<Map.Entry> listRes;
     RecyclerView list;
@@ -63,6 +64,16 @@ public class FragmentJWTS_info extends Fragment {
         View view = inflater.inflate(R.layout.fragment_jwts_info, container, false);
         initList(view);
         return view;
+    }
+
+    @Override
+    protected void stopTasks() {
+
+    }
+
+    @Override
+    protected void Refresh() {
+
     }
 
     public interface OnListFragmentInteractionListener {

@@ -43,10 +43,20 @@ public class ActivitySubject extends BaseActivity {
     TextView name,point, attr, totalcourses, exam, school, xnxq, type, code, score_qz, score_qm, score_none;
     CardView  card_scores, card_rate, card_allcourses, card_html;
     LinearLayout qz_score_layout, qm_score_layout;
-
+    InitProgressTask pageTask_progress;
+    RefreshRatingTask pageTask_rating;
+    InitCourseListTask pageTask_courseList;
 
     //WebView webView;
 
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask_progress!=null&&!pageTask_progress.isCancelled()) pageTask_progress.cancel(true);
+        if(pageTask_rating!=null&&!pageTask_rating.isCancelled()) pageTask_rating.cancel(true);
+        if(pageTask_courseList!=null&&!pageTask_courseList.isCancelled()) pageTask_courseList.cancel(true);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,14 +172,18 @@ public class ActivitySubject extends BaseActivity {
 
     void initCourseList() {
         courseList = findViewById(R.id.subject_recycler);
-        new InitCourseListTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(pageTask_courseList!=null&&!pageTask_courseList.isCancelled()) pageTask_courseList.cancel(true);
+        pageTask_courseList = new InitCourseListTask();
+        pageTask_courseList.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
     void initProgress() {
         arcProgress = findViewById(R.id.subject_progress);
         //arcProgress.setTextColor(getColorAccent());
-        new InitProgressTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+       if(pageTask_progress!=null&&!pageTask_progress.isCancelled()) pageTask_progress.cancel(true);
+       pageTask_progress =  new InitProgressTask();
+       pageTask_progress.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     class InitProgressTask extends AsyncTask<String, Integer, Integer> {
@@ -269,6 +283,10 @@ public class ActivitySubject extends BaseActivity {
             subject = allCurriculum.get(thisCurriculumIndex).getSubjectByCourseCode(getIntent().getStringExtra("subject"));
         }
         setInfos();
-        if (subject != null) new RefreshRatingTask().execute();
+        if (subject != null){
+            if(pageTask_rating!=null&&!pageTask_rating.isCancelled()) pageTask_rating.cancel(true);
+            pageTask_rating = new RefreshRatingTask();
+            pageTask_rating.execute();
+        }
     }
 }

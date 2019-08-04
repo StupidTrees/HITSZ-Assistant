@@ -48,7 +48,7 @@ import static com.stupidtree.hita.HITAApplication.*;
 
 public class ActivityLoginJWTS extends BaseActivity {
     //登录请求地址
-    private final static String LOGIN = "http://jwts.hitsz.edu.cn/login";
+    private final   static String LOGIN = "http://jwts.hitsz.edu.cn/login";
     //登录界面
     private final static String LOGIN_VIEW = "http://jwts.hitsz.edu.cn/";
     //验证码请求地址
@@ -64,6 +64,14 @@ public class ActivityLoginJWTS extends BaseActivity {
     Button bt_vpn;
     //验证码
     private byte[] checkPic;
+    loadSafeCodeTask pageTask_safecode;
+    loginTask pageTask_login;
+
+    @Override
+    protected void stopTasks() {
+        if(pageTask_safecode!=null&&!pageTask_safecode.isCancelled())pageTask_safecode.cancel(true);
+        if(pageTask_login!=null&&!pageTask_login.isCancelled()) pageTask_login.cancel(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +101,9 @@ public class ActivityLoginJWTS extends BaseActivity {
         login.setOnButtonLoadingListener(new ButtonLoading.OnButtonLoadingListener() {
             @Override
             public void onClick() {
-                new loginTask(ActivityLoginJWTS.this, username.getText().toString(), password.getText().toString(), safecode.getText().toString(), true).executeOnExecutor(THREAD_POOL_EXECUTOR);
+                if(pageTask_login!=null&&!pageTask_login.isCancelled()) pageTask_login.cancel(true);
+                pageTask_login = new loginTask(ActivityLoginJWTS.this, username.getText().toString(), password.getText().toString(), safecode.getText().toString(), true);
+                pageTask_login.executeOnExecutor(THREAD_POOL_EXECUTOR);
             }
 
             @Override
@@ -115,7 +125,9 @@ public class ActivityLoginJWTS extends BaseActivity {
             }
         });
 
-        new loadSafeCodeTask(this).executeOnExecutor(THREAD_POOL_EXECUTOR);
+        if(pageTask_safecode!=null&&!pageTask_safecode.isCancelled()) pageTask_safecode.cancel(true);
+        pageTask_safecode = new loadSafeCodeTask(this);
+        pageTask_safecode.executeOnExecutor(THREAD_POOL_EXECUTOR);
         //new directlyLoginTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -384,80 +396,7 @@ public class ActivityLoginJWTS extends BaseActivity {
             }
         }
     }
-//
-//    class directlyLoginTask extends AsyncTask{
-//
-//        @Override
-//        protected Object doInBackground(Object[] objects) {
-//            if(cookies!=null&&cookies.size()>0){
-//                Document login = null;
-//                try {
-//                    login = Jsoup.connect(LOGIN).cookies(cookies).timeout(60000)
-//                            .header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-//                            .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-//                            .header("Content-Type","application/x-www-form-urlencoded").
-//                                    ignoreContentType(true).post();
-//                } catch (IOException e) {
-//                    return false;
-//                }
-//                 if(login.toString().contains("欢迎使用")) return true;
-//                else return false;
-//            }else{
-//                return false;
-//            }
-//
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object o) {
-//            super.onPostExecute(o);
-//                Boolean b = (Boolean) o;
-//                if (b) {
-//                    presentActivity(ActivityLoginJWTS.this,login);
-//                   // finish();
-//                } else {
-//                    setContentView(R.layout.activity_login_jwts);
-//                    Toolbar toolbar = findViewById(R.id.toolbar);
-//                    setSupportActionBar(toolbar);
-//                    setSupportActionBar(toolbar);
-//                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
-//                    getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
-//                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            onBackPressed();
-//                        }
-//                    });
-//                    safeCodeImage = findViewById(R.id.safecode_img);
-//                    username = findViewById(R.id.username);
-//                    password = findViewById(R.id.password);
-//                    safecode = findViewById(R.id.safecode);
-//                    login = findViewById(R.id.login);
-//                    loginCard = findViewById(R.id.logincard);
-//                    loadingView = findViewById(R.id.loadingview);
-//                    loadingError = findViewById(R.id.loadingerror);
-//                    login.setOnButtonLoadingListener(new ButtonLoading.OnButtonLoadingListener() {
-//                        @Override
-//                        public void onClick() {
-//                            new loginTask(username.getText().toString(), password.getText().toString(), safecode.getText().toString(), true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//                        }
-//
-//                        @Override
-//                        public void onStart() {
-//
-//                        }
-//
-//                        @Override
-//                        public void onFinish() {
-//
-//                        }
-//                    });
-//
-//                    new loadSafeCodeTask().executeOnExecutor(THREAD_POOL_EXECUTOR);
-//                }
-//            }
-//
-//    }
+
 
     public static void trustEveryone() {
         try {
