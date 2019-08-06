@@ -1,15 +1,14 @@
 package com.stupidtree.hita.adapter;
 
 import android.content.Context;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,16 +18,13 @@ import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.TimeTable;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.HTime;
-import com.stupidtree.hita.diy.TimeLineEventItem;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.TimeWatcher.nowEvent;
 import static com.stupidtree.hita.TimeWatcher.nowProgress;
-import static com.stupidtree.hita.TimeWatcher.todaysEvents;
 
 
 public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapter.timelineHolder> {

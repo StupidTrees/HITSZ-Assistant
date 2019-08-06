@@ -13,7 +13,7 @@
         android:gravity="right"
         android:orientation="horizontal">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/lamp"
             android:layout_width="12dp"
             android:layout_height="12dp"
@@ -38,12 +38,12 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="24dp">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/detail_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layoutAnimation="@anim/recycler_layout_animation_falls_down"
-            android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
+            android:overScrollMode="never"></androidx.recyclerview.widget.RecyclerView>
 
         <ProgressBar
             android:id="@+id/detail_loading"

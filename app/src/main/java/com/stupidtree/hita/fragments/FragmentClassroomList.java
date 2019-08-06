@@ -2,22 +2,19 @@ package com.stupidtree.hita.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.ClassroomListAdapter;
 import com.stupidtree.hita.online.Location;
-import com.stupidtree.hita.online.RateUser;
 import com.stupidtree.hita.online.Classroom;
 import com.stupidtree.hita.util.ActivityUtils;
 
@@ -28,11 +25,6 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
-
-import static com.stupidtree.hita.HITAApplication.CurrentUser;
-import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.online.Location.showRateDialog;
 
 public class FragmentClassroomList extends BaseFragment {
     ClassroomListAdapter listAdapter;

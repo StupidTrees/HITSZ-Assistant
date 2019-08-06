@@ -1,11 +1,10 @@
 package com.stupidtree.hita.fragments;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.textfield.TextInputLayout;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -27,11 +26,10 @@ import cn.bmob.v3.listener.SaveListener;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.clearData;
-import static com.stupidtree.hita.HITAApplication.mDBHelper;
 
 public class FragmentSignup extends BaseFragment {
     
-    EditText username,password,confirm_password,studentnumber,nickname;
+    EditText username,password,confirm_password,nickname;
     ButtonLoading signup;
     TextInputLayout usernameLayout,passwordLayout,confirmPasswordLayout;
 
@@ -49,7 +47,6 @@ public class FragmentSignup extends BaseFragment {
         confirm_password = v.findViewById(R.id.password_confirm);
         usernameLayout = v.findViewById(R.id.usernameLayout);
         passwordLayout = v.findViewById(R.id.passwordLayout);
-        studentnumber = v.findViewById(R.id.studentnumber);
         confirmPasswordLayout = v.findViewById(R.id.confirmPasswordLayout);
         signup = v.findViewById(R.id.signup);
         nickname = v.findViewById(R.id.nickname);
@@ -74,7 +71,6 @@ public class FragmentSignup extends BaseFragment {
                     HITAUser hitau = new HITAUser();
                     hitau.setUsername(username.getText().toString());
                     hitau.setPassword(password.getText().toString());
-                    hitau.setStudentnumber(studentnumber.getText().toString());
                     hitau.setNick(nickname.getText().toString());
                     hitau.signUp(new SaveListener<HITAUser>() {
                         @Override

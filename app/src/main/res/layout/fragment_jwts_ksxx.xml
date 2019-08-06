@@ -19,18 +19,18 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 app:cardCornerRadius="16dp">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ksxx_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp" />
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <com.stupidtree.hita.diy.ButtonLoading
                 android:id="@+id/button_import_ksxx"

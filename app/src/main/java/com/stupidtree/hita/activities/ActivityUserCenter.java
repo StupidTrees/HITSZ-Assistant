@@ -8,23 +8,22 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.Nullable;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,6 +76,7 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     ImageView avatar;
     TextView name,signature;
     AppBarLayout appBarLayout;
+    CardView change_avatar;
 
     @Override
     protected void stopTasks() {
@@ -147,11 +147,12 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
         name = findViewById(R.id.usercenter_name);
         signature = findViewById(R.id.usercenter_signature);
         avatar = findViewById(R.id.usercenter_avatar);
+        change_avatar = findViewById(R.id.change_avatar);
         //Glide.with(this).load(userInfos.get("头像")).into(avatar);
         name.setText(CurrentUser.getNick());
         signature.setText(CurrentUser.getSignature());
         loadAvatar();
-        avatar.setOnClickListener(new View.OnClickListener() {
+        change_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 自由配置选项

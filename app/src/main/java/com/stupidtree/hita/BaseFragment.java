@@ -1,7 +1,6 @@
 package com.stupidtree.hita;
 
-import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 
 public abstract class BaseFragment extends Fragment {

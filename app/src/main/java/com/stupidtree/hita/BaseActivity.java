@@ -1,20 +1,16 @@
 package com.stupidtree.hita;
 
 import android.content.pm.ActivityInfo;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.stupidtree.hita.activities.ActivityChatbot;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static com.stupidtree.hita.HITAApplication.themeID;
 

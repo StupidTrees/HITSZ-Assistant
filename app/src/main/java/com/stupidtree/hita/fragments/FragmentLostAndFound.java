@@ -3,10 +3,10 @@ package com.stupidtree.hita.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +49,7 @@ public class FragmentLostAndFound extends BaseFragment {
     public static FragmentLostAndFound newInstance(String type) {
         FragmentLostAndFound fragment = new FragmentLostAndFound();
         Bundle args = new Bundle();
-        args.putString("type",type);
+        args.putString("type", type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,23 +63,23 @@ public class FragmentLostAndFound extends BaseFragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View v = inflater.inflate(R.layout.fragment_lost_and_found, container, false);
-        pullRefreshLayout =v. findViewById(R.id.society_swiperefresh);
-       initList(v);
-       return v;
+        View v = inflater.inflate(R.layout.fragment_lost_and_found, container, false);
+        pullRefreshLayout = v.findViewById(R.id.society_swiperefresh);
+        initList(v);
+        Refresh();
+        return v;
     }
 
-    void initList(View v){
+    void initList(View v) {
         list = v.findViewById(R.id.society_list);
         listRes = new ArrayList<>();
-        listAdapter = new LostAndFoundListAdapter(getActivity(),listRes);
+        listAdapter = new LostAndFoundListAdapter(getActivity(), listRes);
         list.setAdapter(listAdapter);
-        RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         list.setLayoutManager(lm);
         pullRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -90,18 +90,12 @@ public class FragmentLostAndFound extends BaseFragment {
         listAdapter.setmOnPostClickListener(new LostAndFoundListAdapter.OnPostClickListener() {
             @Override
             public void OnClick(View v, LostAndFound laf, HITAUser author) {
-                ActivityUtils.startPostDetailActivity(getActivity(),laf,author);
+                ActivityUtils.startPostDetailActivity(getActivity(), laf, author);
             }
         });
 
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Refresh();
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -129,14 +123,14 @@ public class FragmentLostAndFound extends BaseFragment {
     public void Refresh() {
         pullRefreshLayout.setRefreshing(true);
         final BmobQuery<LostAndFound> query = new BmobQuery<>();
-        query.addWhereEqualTo("type",type);
+        query.addWhereEqualTo("type", type);
         query.order("-createdAt")
-                .findObjects(new FindListener<LostAndFound>(){
+                .findObjects(new FindListener<LostAndFound>() {
                     @Override
                     public void done(List<LostAndFound> list2, BmobException e) {
-                        if(e==null){
+                        if (e == null) {
                             listRes.clear();
-                            for(LostAndFound hp:list2){
+                            for (LostAndFound hp : list2) {
                                 listRes.add(hp);
                             }
                             listAdapter.notifyDataSetChanged();

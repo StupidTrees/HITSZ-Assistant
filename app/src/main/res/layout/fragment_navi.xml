@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="70dp"
@@ -31,7 +31,7 @@
 
             </com.zhouwei.mzbanner.MZBannerView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
                 android:layout_marginLeft="16dp"
@@ -63,9 +63,9 @@
                     android:layout_gravity="center"
                     android:tint="@color/material_text_icon_white"
                     app:srcCompat="@drawable/ic_university" />
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
                 android:layout_marginLeft="16dp"
@@ -104,9 +104,9 @@
                     android:tint="@color/material_text_icon_white"
                     app:srcCompat="@drawable/ic_map" />
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -169,7 +169,7 @@
                         android:layout_gravity="center"
                         android:orientation="horizontal">
 
-                        <android.support.v7.widget.CardView
+                        <androidx.cardview.widget.CardView
                             android:layout_width="72dp"
                             android:layout_height="72dp"
                             android:layout_gravity="center|left"
@@ -184,7 +184,7 @@
                                 android:visibility="visible"
                                 tools:srcCompat="@tools:sample/avatars" />
 
-                        </android.support.v7.widget.CardView>
+                        </androidx.cardview.widget.CardView>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -247,19 +247,19 @@
                         android:textSize="10sp" />
 
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/material_backgroung_grey_50"
         app:elevation="0dp">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
@@ -274,7 +274,7 @@
                 app:layout_collapseMode="none"
                 app:layout_collapseParallaxMultiplier="0.95">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/navi_card_head"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
@@ -319,9 +319,9 @@
                             android:textSize="14sp" />
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -361,7 +361,7 @@
                                 android:orientation="vertical"
                                 android:visibility="visible">
 
-                                <android.support.v7.widget.CardView
+                                <androidx.cardview.widget.CardView
                                     android:id="@+id/navipage_card_jwts"
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
@@ -381,7 +381,7 @@
                                         android:layout_weight="1"
                                         android:tint="@color/material_text_icon_white"
                                         app:srcCompat="@drawable/ic_menu_jwts" />
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -400,7 +400,7 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
-                                <android.support.v7.widget.CardView
+                                <androidx.cardview.widget.CardView
                                     android:id="@+id/navipage_card_society"
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
@@ -420,7 +420,7 @@
                                         android:layout_weight="1"
                                         android:tint="@color/material_text_icon_white"
                                         app:srcCompat="@drawable/ic_lostandfound" />
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -439,7 +439,7 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
-                                <android.support.v7.widget.CardView
+                                <androidx.cardview.widget.CardView
                                     android:id="@+id/navipage_card_canteen"
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
@@ -459,7 +459,7 @@
                                         android:layout_weight="1"
                                         android:tint="@color/material_text_icon_white"
                                         app:srcCompat="@drawable/ic_lunch" />
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -479,7 +479,7 @@
                                 android:orientation="vertical"
                                 android:visibility="visible">
 
-                                <android.support.v7.widget.CardView
+                                <androidx.cardview.widget.CardView
                                     android:id="@+id/navipage_card_empty_classroom"
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
@@ -499,7 +499,7 @@
                                         android:layout_weight="1"
                                         android:tint="@color/material_text_icon_white"
                                         app:srcCompat="@drawable/ic_dlg_tt_classroom" />
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -526,7 +526,7 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
-                                <android.support.v7.widget.CardView
+                                <androidx.cardview.widget.CardView
                                     android:id="@+id/navipage_card_location"
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
@@ -546,7 +546,7 @@
                                         android:layout_weight="1"
                                         android:tint="@color/material_text_icon_white"
                                         app:srcCompat="@drawable/ic_location2" />
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -567,7 +567,7 @@
                                 android:orientation="vertical"
                                 android:visibility="visible">
 
-                                <android.support.v7.widget.CardView
+                                <androidx.cardview.widget.CardView
                                     android:id="@+id/navipage_card_info"
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
@@ -587,7 +587,7 @@
                                         android:layout_weight="1"
                                         android:tint="@color/material_text_icon_white"
                                         app:srcCompat="@drawable/ic_menu_bulletin" />
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -607,7 +607,7 @@
                                 android:orientation="vertical"
                                 android:visibility="visible">
 
-                                <android.support.v7.widget.CardView
+                                <androidx.cardview.widget.CardView
                                     android:id="@+id/navi_card_explore"
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
@@ -627,7 +627,7 @@
                                         android:layout_weight="1"
                                         android:tint="@color/material_text_icon_white"
                                         app:srcCompat="@drawable/ic_map" />
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -647,7 +647,7 @@
                                 android:orientation="vertical"
                                 android:visibility="gone">
 
-                                <android.support.v7.widget.CardView
+                                <androidx.cardview.widget.CardView
                                     android:layout_width="56dp"
                                     android:layout_height="56dp"
                                     android:layout_gravity="center"
@@ -668,7 +668,7 @@
                                         android:layout_weight="1"
                                         android:tint="@color/material_text_icon_white"
                                         app:srcCompat="@drawable/ic_menu_jwts" />
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -686,7 +686,7 @@
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
-                                <android.support.v7.widget.CardView
+                                <androidx.cardview.widget.CardView
                                     android:id="@+id/navi_card_university"
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
@@ -706,7 +706,7 @@
                                         android:layout_weight="1"
                                         android:tint="@color/material_text_icon_white"
                                         app:srcCompat="@drawable/ic_university" />
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -722,13 +722,13 @@
                         </LinearLayout>
 
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-        <android.support.design.widget.TabLayout
+        <com.google.android.material.tabs.TabLayout
             android:id="@+id/hitszinfo_tab"
             android:layout_width="match_parent"
             android:layout_height="36dp"
@@ -739,7 +739,7 @@
             app:tabSelectedTextColor="?attr/colorPrimary"
             app:tabTextColor="@color/material_secondary_text" />
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <com.lapism.searchview.widget.SearchView
         android:id="@+id/searchBar"
@@ -753,10 +753,10 @@
         app:search_shape="rounded"
         app:search_version_margins="toolbar" />
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/hitszinfo_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/material_backgroung_grey_50"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-</android.support.design.widget.CoordinatorLayout>
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

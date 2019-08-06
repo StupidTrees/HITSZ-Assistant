@@ -1,11 +1,8 @@
 package com.stupidtree.hita.activities;
 
-import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;

@@ -1,12 +1,10 @@
 package com.stupidtree.hita.fragments;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.textfield.TextInputLayout;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -26,11 +24,7 @@ import cn.bmob.v3.listener.SaveListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.clearData;
-import static com.stupidtree.hita.HITAApplication.isDataAvailable;
 import static com.stupidtree.hita.HITAApplication.loadDataFromCloud;
-import static com.stupidtree.hita.HITAApplication.mDBHelper;
-import static com.stupidtree.hita.HITAApplication.timeWatcher;
 
 public class FragmentLogin extends BaseFragment {
     

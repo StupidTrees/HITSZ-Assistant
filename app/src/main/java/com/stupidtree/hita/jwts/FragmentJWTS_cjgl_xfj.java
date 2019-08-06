@@ -1,11 +1,10 @@
 package com.stupidtree.hita.jwts;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,7 @@ import com.stupidtree.hita.R;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.IOException;
-import java.sql.Ref;
 import java.text.DecimalFormat;
-
-import cn.bmob.v3.http.I;
 
 import static com.stupidtree.hita.HITAApplication.cookies;
 

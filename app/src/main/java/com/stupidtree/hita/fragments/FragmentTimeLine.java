@@ -10,17 +10,17 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.util.Pair;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.core.util.Pair;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,6 +38,7 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.activities.ActivityUserCenter;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.TimeWatcher;
@@ -698,10 +699,10 @@ public class FragmentTimeLine extends BaseFragment implements
                 case JWTS:
                     Intent k;
                     if(CurrentUser.getStudentnumber()==null||CurrentUser.getStudentnumber().isEmpty()){
-                        AlertDialog ad = new AlertDialog.Builder(HContext).setTitle("提示").setMessage("请先绑定学号后再使用教务系统").setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                        AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle("提示").setMessage("请先绑定学号后再使用教务系统导入课表").setPositiveButton("好的", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(HContext,ActivityLogin.class);
+                                Intent i = new Intent(HContext, ActivityUserCenter.class);
                                 startActivity(i);
                             }
                         }).create();
@@ -774,9 +775,22 @@ public class FragmentTimeLine extends BaseFragment implements
             teacher_detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(a, ActivityTeacher.class);
-                    i.putExtra("name",ei.tag3);
-                    a.startActivity(i);
+                    final String[] names = ei.tag3.split("，");
+                    if(names.length>1){
+                        AlertDialog ad = new AlertDialog.Builder(a).setTitle("选择教师").setItems(names, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent il = new Intent(a, ActivityTeacher.class);
+                                il.putExtra("name",names[i]);
+                                a.startActivity(il);
+                            }
+                        }).create();
+                        ad.show();
+                    }else {
+                        Intent i = new Intent(a, ActivityTeacher.class);
+                        i.putExtra("name",ei.tag3);
+                        a.startActivity(i);
+                    }
                 }
             });
             if(ei.tag2.isEmpty()){

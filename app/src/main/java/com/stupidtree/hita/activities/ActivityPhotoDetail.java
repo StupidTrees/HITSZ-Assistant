@@ -1,9 +1,6 @@
 package com.stupidtree.hita.activities;
 
-import android.graphics.Bitmap;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.EditText;
 
 import com.bm.library.PhotoView;
 import com.bumptech.glide.Glide;

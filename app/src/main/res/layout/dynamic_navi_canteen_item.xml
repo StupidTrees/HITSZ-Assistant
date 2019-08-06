@@ -23,7 +23,7 @@
         android:layout_width="84dp"
         android:layout_height="84dp">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_margin="2dp"
@@ -43,7 +43,7 @@
                 android:fontFamily="sans-serif-black"
                 android:text="1"
                 android:textColor="@color/material_text_icon_white" />
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <ImageView
             android:id="@+id/canteen_image"

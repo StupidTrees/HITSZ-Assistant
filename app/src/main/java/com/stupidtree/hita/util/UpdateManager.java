@@ -1,6 +1,6 @@
 package com.stupidtree.hita.util;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.tencent.bugly.beta.Beta;
 

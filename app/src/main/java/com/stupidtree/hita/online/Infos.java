@@ -14,7 +14,7 @@ public class Infos extends BmobObject {
         try {
             JsonParser jp = new JsonParser();
             return jp.parse(json).getAsJsonObject();
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

@@ -22,7 +22,7 @@
 		android:textColor="?attr/colorPrimary"
 		android:textSize="18sp" />
 
-	<android.support.v7.widget.CardView
+	<androidx.cardview.widget.CardView
 		android:id="@+id/chatbot_right_card"
 		android:layout_width="40dp"
 		android:layout_height="40dp"
@@ -44,6 +44,6 @@
 			android:layout_height="40dp"
 			tools:srcCompat="@tools:sample/avatars" />
 
-	</android.support.v7.widget.CardView>
+	</androidx.cardview.widget.CardView>
 
 </LinearLayout>

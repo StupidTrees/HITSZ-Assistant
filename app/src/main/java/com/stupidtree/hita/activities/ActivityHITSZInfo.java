@@ -1,27 +1,25 @@
 package com.stupidtree.hita.activities;
 
 import android.graphics.Color;
-import android.os.AsyncTask;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
+
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.HITSZInfoPagerAdapter;
-import com.stupidtree.hita.fragments.FragmentNews;
 import com.stupidtree.hita.fragments.FragmentNewsBulletin;
 import com.stupidtree.hita.fragments.FragmentNewsIPNews;
 import com.stupidtree.hita.fragments.FragmentNewsLecture;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class ActivityHITSZInfo extends BaseActivity {
 

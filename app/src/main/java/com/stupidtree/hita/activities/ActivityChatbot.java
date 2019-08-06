@@ -2,6 +2,7 @@ package com.stupidtree.hita.activities;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -12,15 +13,21 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieComposition;
+import com.airbnb.lottie.LottieCompositionFactory;
+import com.airbnb.lottie.LottieListener;
+import com.airbnb.lottie.OnCompositionLoadedListener;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -58,6 +65,7 @@ import com.stupidtree.hita.core.timetable.Task;
 import com.stupidtree.hita.hita.ChatBotMessageItem;
 import com.stupidtree.hita.diy.RevealAnimation;
 import com.stupidtree.hita.online.ChatMessage;
+import com.stupidtree.hita.online.Infos;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.IatSettings;
 import com.stupidtree.hita.util.JsonParser;
@@ -121,11 +129,12 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     private ArrayList<HashMap<Integer, Object>> mItems = null;
     Toolbar mToolbar;
     LinearLayout textInputLayout;
-
+    LottieAnimationView animationView;
     FloatingActionButton fab_shutup;
     ChatBotA chatbotA;
     ChatBotB chatbotB;
     ChatBotIteractTask pageTask;
+    JsonObject chatBotInfos;
 
     //语音听写对象
     private SpeechRecognizer mSpeechRecognizer;
@@ -189,9 +198,44 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
 //        waveLineView.setVolume(0);
         checkPermissions();
         initIFlyParams();
+        initChatBotInfo();
+
 
         //onClick(rootLayout);
 
+    }
+
+    void initChatBotInfo(){
+        BmobQuery<Infos> bq = new BmobQuery<>();
+        bq.addWhereEqualTo("name","chatbot_info");
+        bq.findObjects(new FindListener<Infos>() {
+            @Override
+            public void done(List<Infos> list, BmobException e) {
+                if(e==null&&list!=null&&list.size()>0){
+                    chatBotInfos =  list.get(0).getJson();
+                }else{
+                    Log.e("Bmob错误",e.toString());
+                    chatBotInfos = new JsonObject();
+                    chatBotInfos.addProperty("message_show","你好，我是希塔");
+                    chatBotInfos.addProperty("hint","获取提示失败");
+                }
+                if(ChatBotListRes.size()==0) addMessageView(chatBotInfos,VIEW_TYPE_LEFT,false);
+                initHitaAnimation();
+            }
+        });
+    }
+
+
+    void initHitaAnimation(){
+        animationView= findViewById(R.id.hita_animation_view);
+        animationView.setImageAssetsFolder("hita_animation/");
+        if(chatBotInfos.has("animation")) animationView.setAnimationFromJson(chatBotInfos.get("animation").getAsJsonObject().getAsString(),"animation");
+        else{
+            Log.e("animation load failed","没有找到在线动画");
+            animationView.setAnimation("hita_animation/hita_normal.json");
+        }
+
+        animationView.playAnimation();
     }
 
     private void initXfVoice() {
@@ -242,7 +286,6 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
             Toast.makeText(ActivityChatbot.this.getApplicationContext(), "听写失败，错误码是：" + mRet, Toast.LENGTH_LONG).show();
         }
 
-//        }
     }
 
 
@@ -273,25 +316,6 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
             Log.d(TAG, "SpeechRecognizer init() code=" + code);
             if (code != ErrorCode.SUCCESS) {
                 Toast.makeText(ActivityChatbot.this.getApplicationContext(), "初始化失败，错误码为：" + code, Toast.LENGTH_LONG).show();
-            }
-            if(ChatBotListRes.size()==0){
-                BmobQuery<ChatMessage> bq = new BmobQuery<>();
-                bq.addWhereEqualTo("queryText","$$Greet$$");
-                bq.findObjects(new FindListener<ChatMessage>() {
-                    @Override
-                    public void done(List<ChatMessage> list, BmobException e) {
-                        JsonObject jo;
-                        if(e==null&&list!=null&&list.size()>0){
-                            jo = new com.google.gson.JsonParser().parse(list.get(0).getAnswer()).getAsJsonObject();
-
-                        }else{
-                            jo = new JsonObject();
-                            jo.addProperty("message_show","你好，我是希塔");
-                            jo.addProperty("hint","获取提示失败");
-                        }
-                        addMessageView(jo,VIEW_TYPE_LEFT,false);
-                    }
-                });
             }
         }
     };
@@ -852,34 +876,36 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                     c.set(Calendar.HOUR_OF_DAY, 23);
                     c.set(Calendar.MINUTE, 59);
                     List<EventItem> tempList = mainTimeTable.getEventFrom(now, c, -1);
-
-                    Log.e("!!", tempList.toString());
-                    for (EventItem ei : tempList) {
-                        Log.e("!!", ei.toString());
-                        if (ei.startTime.compareTo(new HTime(now)) < 0) continue;
-                        int eventTypeFilter = -99;
-                        switch (tag) {
-                            case ChatBotA.FUN_SEARCH_EVENT_COURSE:
-                                eventTypeFilter = TIMETABLE_EVENT_TYPE_COURSE;
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
-                                eventTypeFilter = TIMETABLE_EVENT_TYPE_ARRANGEMENT;
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_REMIND:
-                                eventTypeFilter = TIMETABLE_EVENT_TYPE_REMIND;
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_EXAM:
-                                eventTypeFilter = TIMETABLE_EVENT_TYPE_EXAM;
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_DDL:
-                                eventTypeFilter = TIMETABLE_EVENT_TYPE_DEADLINE;
-                                break;
+                    if(tempList==null) nextevent = null;
+                    else {
+                        Log.e("!!", tempList.toString());
+                        for (EventItem ei : tempList) {
+                            Log.e("!!", ei.toString());
+                            if (ei.startTime.compareTo(new HTime(now)) < 0) continue;
+                            int eventTypeFilter = -99;
+                            switch (tag) {
+                                case ChatBotA.FUN_SEARCH_EVENT_COURSE:
+                                    eventTypeFilter = TIMETABLE_EVENT_TYPE_COURSE;
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
+                                    eventTypeFilter = TIMETABLE_EVENT_TYPE_ARRANGEMENT;
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_REMIND:
+                                    eventTypeFilter = TIMETABLE_EVENT_TYPE_REMIND;
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_EXAM:
+                                    eventTypeFilter = TIMETABLE_EVENT_TYPE_EXAM;
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_DDL:
+                                    eventTypeFilter = TIMETABLE_EVENT_TYPE_DEADLINE;
+                                    break;
+                            }
+                            if (eventTypeFilter != -99) {
+                                if (ei.eventType != eventTypeFilter) continue;
+                            }
+                            nextevent = ei;
+                            break;
                         }
-                        if (eventTypeFilter != -99) {
-                            if (ei.eventType != eventTypeFilter) continue;
-                        }
-                        nextevent = ei;
-                        break;
                     }
                     if (nextevent == null) {
                         String textTemp_onlyOne = "东西";
@@ -1460,6 +1486,15 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            animationView.cancelAnimation();
+//            animationView.setColorFilter(getColorPrimary());
+//            animationView.setAnimation("hita_animation/hita_thinking.json");
+//            animationView.playAnimation();
+        }
+
+        @Override
         protected JsonObject doInBackground(String... strings) {
 
             if (chatbotA.simpleJudge(message, ActivityChatbot.this)) {
@@ -1486,6 +1521,9 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(JsonObject s) {
             super.onPostExecute(s);
+//            animationView.setColorFilter(getColorPrimary());
+//            animationView.setAnimation("hita_animation/hita_normal.json");
+//            animationView.playAnimation();
             if(activity.get()!=null&&(!activity.get().isDestroyed())){
                 try {
                     getReply(s);

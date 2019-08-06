@@ -10,6 +10,7 @@ public class Teacher extends BmobObject {
     String phone;
     String email;
     String teacherCode;
+    String address;
 
 
     String detail;

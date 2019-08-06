@@ -5,11 +5,15 @@ package com.stupidtree.hita.hita;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.stupidtree.hita.online.ChatMessage;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 
 public class ChatBotB {
@@ -69,6 +73,17 @@ public class ChatBotB {
                     String reply = j.get("results").getAsJsonArray().get(j.get("results").getAsJsonArray().size()-1).getAsJsonObject().get("values").getAsJsonObject().get("text").getAsString();
                     reply.replace("图灵","哈工深");
                     re.addProperty("message_show",reply);
+                    if(!reply.contains("请求次数")){
+                        ChatMessage cm = new ChatMessage();
+                        cm.setQueryText(text);
+                        cm.setAnswer(re.toString());
+                        cm.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+
+                            }
+                        });
+                    }
                     return re;
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -126,10 +141,21 @@ public class ChatBotB {
                     String reply = j.get("content").getAsString();
                     reply = reply.replace("{br}","\n");
                     if(reply.startsWith("我是")||reply.startsWith("我就是")||reply.startsWith("我正是")) reply="我就是希塔啊！";
-                    reply.replace("慧慧","希塔");
-                    reply.replace("菲菲","希塔");
-                    reply.replace("小丰","希塔");
+                    reply =  reply.replace("慧慧","希塔").replace("菲菲","希塔")
+                            .replace("小丰","希塔").replace("李元","Hita");
                     result.addProperty("message_show",reply);
+                    if(!reply.contains("请求次数")){
+                        ChatMessage cm = new ChatMessage();
+                        cm.setQueryText(text);
+                        cm.setAnswer(result.toString());
+                        cm.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+
+                            }
+                        });
+                    }
+
                     return result;
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -173,132 +199,6 @@ public class ChatBotB {
 
 
 
-
-
-    public static void test(JsonObject obj){
-        try {
-
-            System.out.println(obj);
-            // 创建url资源
-            URL url = new URL("http://openapi.tuling123.com/openapi/api/v2");
-            // 建立http连接
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            // 设置允许输出
-            conn.setDoOutput(true);
-
-            conn.setDoInput(true);
-
-            // 设置不用缓存
-            conn.setUseCaches(false);
-            // 设置传递方式
-            conn.setRequestMethod("POST");
-            // 设置维持长连接
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            // 设置文件字符集:
-            conn.setRequestProperty("Charset", "UTF-8");
-            //转换为字节数组
-            byte[] data = (obj.toString()).getBytes();
-            // 设置文件长度
-            conn.setRequestProperty("Content-Length", String.valueOf(data.length));
-
-            // 设置文件类型:
-            conn.setRequestProperty("contentType", "application/json");
-
-
-            // 开始连接请求
-            conn.connect();
-            OutputStream out = conn.getOutputStream();
-            // 写入请求的字符串
-            out.write((obj.toString()).getBytes());
-            out.flush();
-            out.close();
-
-            System.out.println(conn.getResponseCode());
-
-            // 请求返回的状态
-            if (conn.getResponseCode() == 200) {
-                System.out.println("连接成功");
-                // 请求返回的数据
-                InputStream in = conn.getInputStream();
-                String a = null;
-                try {
-                    byte[] data1 = new byte[in.available()];
-                    in.read(data1);
-                    // 转成字符串
-                    a = new String(data1);
-                    JsonObject j = (JsonObject) new JsonParser().parse(a);
-                    String reply = j.get("results").getAsJsonArray().get(j.get("results").getAsJsonArray().size()-1).getAsJsonObject().get("values").getAsJsonObject().get("text").getAsString();
-                    System.out.println(reply);
-                } catch (Exception e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-            } else {
-                System.out.println("no++");
-            }
-
-        } catch (Exception e) {
-
-        }
-
-    }
-
-    public static void test2(String text){
-        try {
-
-            // 创建url资源
-            URL url = new URL("http://api.qingyunke.com/api.php?key=free&appid=0&msg="+text);
-            // 建立http连接
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            // 设置允许输出
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            // 设置不用缓存
-            conn.setUseCaches(false);
-            // 设置传递方式
-            conn.setRequestMethod("GET");
-            // 设置维持长连接
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            // 开始连接请求
-            conn.connect();
-
-            System.out.println(conn.getResponseCode());
-
-            // 请求返回的状态
-            if (conn.getResponseCode() == 200) {
-                System.out.println("连接成功");
-                // 请求返回的数据
-                InputStream in = conn.getInputStream();
-                String a = null;
-                try {
-                    byte[] data1 = new byte[in.available()];
-                    in.read(data1);
-                    // 转成字符串
-                    a = new String(data1);
-                    JsonObject j = (JsonObject) new JsonParser().parse(a);
-                    String reply = j.get("content").getAsString();
-                    System.out.print(reply);
-                } catch (Exception e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-            } else {
-                System.out.println("no++");
-            }
-
-        } catch (Exception e) {
-
-        }
-
-    }
-
-
-    public static void main(String[] args){
-        JsonObject jsonObject = transJosn("你好鸭"); // content是文本消息
-        // String js = this.postJson("http://openapi.tuling123.com/openapi/api/v2", jsonObject.toString());
-        test2("你好呀");
-
-    }
 
 
 }

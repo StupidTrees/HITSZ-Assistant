@@ -3,9 +3,9 @@ package com.stupidtree.hita.util;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.AlertDialog;
+
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -106,7 +106,7 @@ public class ActivityUtils {
                 AlertDialog ad = new AlertDialog.Builder(from).setTitle("提示").setMessage("请先绑定学号后再使用教务系统").setPositiveButton("好的", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(from,ActivityLogin.class);
+                        Intent i = new Intent(from,ActivityUserCenter.class);
                         from.startActivity(i);
                     }
                 }).create();

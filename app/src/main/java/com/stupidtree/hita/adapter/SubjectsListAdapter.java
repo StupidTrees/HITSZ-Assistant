@@ -3,11 +3,10 @@ package com.stupidtree.hita.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +21,8 @@ import com.stupidtree.hita.core.timetable.EventItemHolder;
 
 import java.util.ArrayList;
 
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 
 
 public class SubjectsListAdapter extends RecyclerView.Adapter<SubjectsListAdapter.SubjectViewHolder> {

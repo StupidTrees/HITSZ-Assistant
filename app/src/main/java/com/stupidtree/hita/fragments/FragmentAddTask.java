@@ -3,20 +3,17 @@ package com.stupidtree.hita.fragments;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
+
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,7 +36,6 @@ import java.util.Calendar;
 
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.themeID;
 
 @SuppressLint("ValidFragment")
 public class FragmentAddTask extends BottomSheetDialogFragment {
@@ -204,8 +200,6 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                     return;
                 }else{
                     Task t = new Task(mainTimeTable.core.curriculumCode,name.getText().toString());
-
-
                     if(adt_switch.isChecked()){
                         mainTimeTable.addEvent(tW,tDOW, TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE,
                                 "DDL:"+name.getText().toString(),"任务截至","Deadline","请尽快完成",tT,tT,false);

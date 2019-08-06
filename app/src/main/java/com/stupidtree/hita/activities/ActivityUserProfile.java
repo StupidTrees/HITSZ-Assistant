@@ -1,15 +1,14 @@
 package com.stupidtree.hita.activities;
 
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -95,10 +94,10 @@ public class ActivityUserProfile extends BaseActivity
             public void done(List<HITAUser> list, BmobException e) {
                 if(e==null&&list!=null&&list.size()>0){
                     user = list.get(0);
-                    nick.setText(user.getNick());
-                    name.setText(user.getRealname());
-                    school.setText(user.getSchool());
-                    signature.setText(user.getSignature());
+                    nick.setText(showText(user.getNick()));
+                    name.setText(showText(user.getRealname()));
+                    school.setText(showText(user.getSchool()));
+                    signature.setText(showText(user.getSignature()));
                     grade.setText(getGradeText(user.getStudentnumber()));
                     Glide.with(ActivityUserProfile.this).load(user.getAvatarUri()).apply(RequestOptions.circleCropTransform())
                             .placeholder(R.drawable.ic_account_activated).into(avatar);
@@ -132,8 +131,12 @@ public class ActivityUserProfile extends BaseActivity
             }
         });
     }
-
+    String showText(String raw) {
+        if (raw == null || raw.isEmpty()) return "无数据";
+        else return raw;
+    }
     private  String getGradeText(String studentNumber){
+        if(studentNumber==null) return "未知年级";
         if(studentNumber.startsWith("SZ16")) return "16级";
         else if(studentNumber.startsWith("SZ17")) return "17级";
         else if(studentNumber.startsWith("18")) return "18级";

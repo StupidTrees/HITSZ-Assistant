@@ -1,24 +1,18 @@
 package com.stupidtree.hita.activities;
 
-import android.os.Build;
-import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 
-import java.net.HttpCookie;
-
-import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 
 public class ActivityDynamicTable extends BaseActivity {
