@@ -69,7 +69,6 @@ public class IpNewsListAdapter extends RecyclerView.Adapter<IpNewsListAdapter.Ne
 
             Glide.with(mContext).load(mBeans.get(i).get("image"))
                     //.apply(RequestOptions.bitmapTransform(new RoundedCorners()))
-                    .placeholder(R.drawable.ic_default_image)
                     .apply(RequestOptions.bitmapTransform(transformation))
                     .into(newsViewHolder.image);
     }

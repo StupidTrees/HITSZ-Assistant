@@ -139,7 +139,7 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
         appbarBg.post(new Runnable() {
             @Override
             public void run() {
-                MaterialCircleAnimator.animShow(appbarBg,700);
+              MaterialCircleAnimator.animShow(appbarBg,700);
             }
         });
     }

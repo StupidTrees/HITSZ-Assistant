@@ -67,14 +67,14 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
         foodViewHolder.rank.setText("排名第" + (i + 1));
         foodViewHolder.name.setText(mBeans.get(i).getName());
         foodViewHolder.company.setText(mBeans.get(i).getCompany());
-        if (mOnNaviClickListener != null) {
-            foodViewHolder.button_navi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnNaviClickListener.OnClick(mBeans.get(i));
-                }
-            });
-        }
+//        if (mOnNaviClickListener != null) {
+//            foodViewHolder.button_navi.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    mOnNaviClickListener.OnClick(mBeans.get(i));
+//                }
+//            });
+//        }
         if (mOnItemClickListener != null) {
             foodViewHolder.card.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -97,7 +97,7 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
     class FoodViewHolder extends RecyclerView.ViewHolder {
 
         TextView name, rate, rank,company;
-        ImageView button_navi, image,background;
+        ImageView image,background;
         CardView card;
 
         public FoodViewHolder(@NonNull View itemView) {
@@ -105,7 +105,7 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
             name = itemView.findViewById(R.id.canteen_name);
             rank = itemView.findViewById(R.id.canteen_rank);
             rate = itemView.findViewById(R.id.canteen_rate);
-            button_navi = itemView.findViewById(R.id.canteen_navi_button);
+          //  button_navi = itemView.findViewById(R.id.canteen_navi_button);
             card = itemView.findViewById(R.id.canteen_card);
             image = itemView.findViewById(R.id.canteen_img);
             background = itemView.findViewById(R.id.canteen_bg);

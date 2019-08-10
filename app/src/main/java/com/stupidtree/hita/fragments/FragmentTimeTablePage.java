@@ -97,7 +97,7 @@ public class FragmentTimeTablePage extends BaseFragment {
         if (getArguments() != null) {
             pageWeek = getArguments().getInt("week");
         }
-        curiculumOnly = defaultSP.getBoolean("timetable_curriculumonly", true);
+        curiculumOnly = defaultSP.getBoolean("timetable_curriculumonly", false);
         wholeday = defaultSP.getBoolean("timetable_wholeday", false);
         start = wholeday ? 0 : 8;
     }
@@ -205,7 +205,7 @@ public class FragmentTimeTablePage extends BaseFragment {
     public void NotifyRefresh() {
         if (!hasInit) return;
         CARD_HEIGHT = defaultSP.getInt("TimeTable_cardheight", 160);//课程表卡片高度
-        curiculumOnly = defaultSP.getBoolean("timetable_curriculumonly", true);
+        curiculumOnly = defaultSP.getBoolean("timetable_curriculumonly", false);
         wholeday = defaultSP.getBoolean("timetable_wholeday", false);
         start = wholeday ? 0 : 8;
         createLeftView();

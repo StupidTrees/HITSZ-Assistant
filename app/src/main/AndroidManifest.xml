@@ -44,7 +44,9 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".activities.ActivityEmptyClassroomDetail"></activity>
+        <activity android:name=".activities.ActivityYX_FDY"></activity>
+        <activity android:name=".activities.ActivityYX_ToSchool" />
+        <activity android:name=".activities.ActivityEmptyClassroomDetail" />
         <activity android:name=".activities.ActivityEmptyClassroom" />
         <activity android:name=".activities.ActivityPostDetail" />
         <activity
@@ -154,7 +156,8 @@
             android:theme="@style/SplashTheme">
             <meta-data
                 android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts"/>
+                android:resource="@xml/shortcuts" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

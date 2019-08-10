@@ -16,7 +16,10 @@
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
-
+    <style name="CourseTitleTheme_normal">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/material_primary_text</item>
+    </style>
 
 
     <!-- 欢迎页的风格 -->
@@ -165,6 +168,8 @@
         <item name="colorAccent">@color/red_accent</item>
 
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="PinkTheme_chatbot" parent="AppTheme">
@@ -173,6 +178,8 @@
         <item name="colorAccent">@color/pink_accent</item>
         <item name="colorFade">@color/pink_fade</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="BrownTheme_chatbot" parent="AppTheme">
@@ -199,6 +206,8 @@
         <item name="colorAccent">@color/blue_grey_accent</item>
         <item name="colorFade">@color/blue_grey_fade</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
 
@@ -208,6 +217,8 @@
         <item name="colorAccent">@color/teal_accent</item>
         <item name="colorFade">@color/teal_fade</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
 
@@ -217,6 +228,8 @@
         <item name="colorAccent">@color/deep_purple_accent</item>
         <item name="colorFade">@color/deep_purple_fade</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
 
@@ -226,6 +239,8 @@
         <item name="colorAccent">@color/green_accent</item>
         <item name="colorFade">@color/green_fade</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="DeepOrangeTheme_chatbot" parent="AppTheme">
@@ -234,6 +249,8 @@
         <item name="colorAccent">@color/deep_orange_accent</item>
         <item name="colorFade">@color/deep_orange_fade</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="IndigoTheme_chatbot" parent="AppTheme">
@@ -242,6 +259,8 @@
         <item name="colorAccent">@color/indigo_accent</item>
         <item name="colorFade">@color/indigo_fade</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="CyanTheme_chatbot" parent="AppTheme">
@@ -250,6 +269,8 @@
         <item name="colorAccent">@color/cyan_accent</item>
         <item name="colorFade">@color/cyan_fade</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="AmberTheme_chatbot" parent="AppTheme">
@@ -258,6 +279,8 @@
         <item name="colorAccent">@color/amber_accent</item>
         <item name="colorFade">@color/amber_fade</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
 

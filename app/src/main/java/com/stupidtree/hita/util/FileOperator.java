@@ -3,8 +3,12 @@ package com.stupidtree.hita.util;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.core.CurriculumHelper;
 import com.stupidtree.hita.core.Note;
@@ -16,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,9 +28,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
+
+import static com.stupidtree.hita.HITAApplication.HContext;
 
 public class FileOperator {
 
@@ -448,193 +459,206 @@ public class FileOperator {
 
     /*函数功能:从教务系统课表文字中分析出课程信息（写这个真滴累）
      * 参数1：一格中的文字*/
-    public static List<Map<String, String>> analyseTableText(String rawText) {
+    public static List<Map<String, String>> analyseTableText(String rawText){
         List<String> textSplit = new ArrayList<>();
         List<Map<String, String>> result = new ArrayList<>();
-        String text = rawText.replaceAll("<br>","</br>");
-       // System.out.println("block:\n"+text);
-        if(text.contains("&nbsp")) return result;
-        if (text.startsWith("[考试]")) {
-            String ExamsText;
-            if(text.contains("考试时间")){
-                int temp0 = text.indexOf("</br>", text.lastIndexOf("考试时间"));
-                if (temp0 > 0) {
-                    ExamsText = text.substring(0, temp0);
-                    String CoursesText = text.substring(temp0 + 5);
-                    result.addAll(analyseTableText(CoursesText));
-                } else {
-                    ExamsText = text;
-                }
-            }else{
-                int temp0 = text.indexOf("</br>", text.lastIndexOf("周 ，"));
-                if (temp0 > 0) {
-                    ExamsText = text.substring(0, temp0);
-                    String CoursesText = text.substring(temp0 + 5);
-                    result.addAll(analyseTableText(CoursesText));
-                } else {
-                    ExamsText = text;
-                }
-            }
-
-
-
-            List<String> ExamTexts = new ArrayList<>();
-            int lastIndex = 1;
-            while (true) {
-                int temp = ExamsText.indexOf("[考试]", lastIndex);
-                if (temp > 0) {
-                    ExamTexts.add(ExamsText.substring(lastIndex - 1, temp));
-                    lastIndex = temp + 1;
-                } else {
-                    ExamTexts.add(ExamsText.substring(lastIndex - 1));
-                    break;
-                }
-
-            }
-            for (String x : ExamTexts) {
-                //System.out.println("text:"+x);
-                Map m = new HashMap();
-                String name = x.substring(x.indexOf("[考试]") + 4, x.indexOf("</br>"));
-                String week = x.substring(x.indexOf("[", 5) + 1, x.indexOf("]", 5));
-                String time;
-                String classroom;
-                if(x.indexOf("，")>0)time = x.substring(x.indexOf("考试时间") + 5, x.indexOf("，", x.indexOf("考试时间")));
-                else time = x.substring(x.indexOf("考试时间") + 5);
-                if(x.indexOf("<br/>", x.indexOf("考试时间"))>0) classroom= x.substring(x.indexOf("]周", x.indexOf("考试时间")) + 2, x.indexOf("<br/>", x.indexOf("考试时间")));
-                else classroom= "";
-
-                //System.out.println("classroom:"+classroom);
-                m.put("name", name);
-                m.put("week", week);
-                m.put("time", time);
-                m.put("teacher", "null");
-                m.put("classroom", classroom);
-                result.add(m);
-
-            }
-
-
-        } else {
-            List<Integer> splitIndexes = new ArrayList<>();
-            List<Integer> splitIndexes_plus = new ArrayList<>();
-            int lastIndex = 0;
-            while (true) {
-                int temp = text.indexOf("]周", lastIndex);
-                if (temp > 0) {
-                    splitIndexes.add(temp);
-                    lastIndex = temp + 1;
-                } else {
-                    lastIndex = 0;
-                    break;
-                }
-            }
-            while (true) {
-                int temp = text.indexOf("]单周", lastIndex);
-                if (temp > 0) {
-                    splitIndexes.add(temp);
-                    lastIndex = temp + 1;
-                } else {
-                    lastIndex = 0;
-                    break;
-                }
-            }
-            while (true) {
-                int temp = text.indexOf("]双周", lastIndex);
-                if (temp > 0) {
-                    splitIndexes.add(temp);
-                    lastIndex = temp + 1;
-                } else {
-                    break;
-                }
-            }
-
-            List<Integer> integersToDelete = new ArrayList<>();
-            for (Integer x : splitIndexes) {
-                if (x + 4 >= text.length()) {
-                } else {
-                    String temp = text.substring(x, x + 4);
-                    if (temp.contains("，") || temp.contains(",")) {
-                        integersToDelete.add(x);
+        try {
+            String text = rawText.replaceAll("<br>","</br>");
+            // System.out.println("block:\n"+text);
+            if(text.contains("&nbsp")) return result;
+            if (text.startsWith("[考试]")) {
+                String ExamsText;
+                if(text.contains("考试时间")){
+                    int temp0 = text.indexOf("</br>", text.lastIndexOf("考试时间"));
+                    if (temp0 > 0) {
+                        ExamsText = text.substring(0, temp0);
+                        String CoursesText = text.substring(temp0 + 5);
+                        result.addAll(analyseTableText(CoursesText));
+                    } else {
+                        ExamsText = text;
                     }
-                }
-            }
-            splitIndexes.removeAll(integersToDelete);
-            Collections.sort(splitIndexes);
-            System.out.println("text:"+text+",splitIndexes:"+splitIndexes.toString());
-            for (int i = 0; i < splitIndexes.size() - 1; i++) {
-                if (i == splitIndexes.size() - 1) break;
-                if (text.substring(splitIndexes.get(i), splitIndexes.get(i) + 7>=text.length()?text.length()-1:splitIndexes.get(i) + 7).contains("</br>")) {
-                    boolean hasMultiWeek = false;//判断是否为在教室前加</br>这种情况（前面有多个周就加，没有就不加）
-                    if(integersToDelete.size()>0&&integersToDelete.get(0)<splitIndexes.get(i))
-                        hasMultiWeek = true;
-                    List<Integer> fuckoff = new ArrayList<>();
-                    for(int x:integersToDelete){
-                        if(x<splitIndexes.get(i)) fuckoff.add(x);
-                    }
-                    integersToDelete.removeAll(fuckoff);
-                    int offset =  hasMultiWeek?3:0;//如果有</br>则跳过这个br，否则不调过
-                    splitIndexes_plus.add(text.indexOf("</br>", splitIndexes.get(i) +offset));
-                } else if(text.indexOf("</br>", splitIndexes.get(i))>0){
-                    splitIndexes_plus.add(text.indexOf("</br>", splitIndexes.get(i))); }
-            }
-            System.out.println("text:"+text+",splitIndexes_plus:"+splitIndexes_plus.toString());
-            int from = 0;
-            for (int i = 0; i < splitIndexes_plus.size() + 1; i++) {
-                if (i > splitIndexes_plus.size() - 1) {
-                    textSplit.add(text.substring(from));
-                } else {
-                    textSplit.add(text.substring(from, splitIndexes_plus.get(i)));
-                    from = splitIndexes_plus.get(i) + 5; }
-            }
-            for (String x : textSplit) {
-                Map m = new HashMap();
-                System.out.println("text:\n"+x);
-                String name = x.substring(0, x.indexOf("</br>"));
-                String teacher = x.substring(x.indexOf("</br>") + 5, x.indexOf("["));
-
-                String classroom, timeText;
-                if(x.contains("，[")&&(!x.contains("周，"))){//教室变动的情况
-                    int f = x.indexOf("[");
-                    classroom = x.substring(f);
-                    StringBuilder sb = new StringBuilder();
-                    for(String df:classroom.split("，\\[")){
-                        String timeT = df.substring(0,df.lastIndexOf("]"));
-                        sb.append(timeT);
-                        sb.append("，");
-                    }
-                    timeText = sb.toString().substring(0,sb.length()-1)+"]";
-                    //Log.e("!!!",timeText);
                 }else{
-                    if (x.substring(x.lastIndexOf("周")).contains("</br>")) {
-                        classroom = x.substring(x.lastIndexOf("</br>") + 5);
+                    int temp0 = text.indexOf("</br>", text.lastIndexOf("周 ，"));
+                    if (temp0 > 0) {
+                        ExamsText = text.substring(0, temp0);
+                        String CoursesText = text.substring(temp0 + 5);
+                        result.addAll(analyseTableText(CoursesText));
                     } else {
-                        classroom = x.substring(x.lastIndexOf("周") + 1); }
-                    if (x.lastIndexOf("]") + 3 < x.length()) {
-                        timeText = x.substring(x.indexOf("["), x.lastIndexOf("]") + 3);
-                    } else {
-                        timeText = x.substring(x.indexOf("["), x.lastIndexOf("]") + 1);
+                        ExamsText = text;
                     }
                 }
 
 
 
-                String timeMap = new String();
-
-                List<Integer> weeks = analyseTimeText(timeText);
-                for (int i = 0; i < weeks.size(); i++) {
-                    if (i != weeks.size() - 1) {
-                        timeMap = timeMap + String.valueOf(weeks.get(i)) + "-";
+                List<String> ExamTexts = new ArrayList<>();
+                int lastIndex = 1;
+                while (true) {
+                    int temp = ExamsText.indexOf("[考试]", lastIndex);
+                    if (temp > 0) {
+                        ExamTexts.add(ExamsText.substring(lastIndex - 1, temp));
+                        lastIndex = temp + 1;
                     } else {
-                        timeMap = timeMap + String.valueOf(weeks.get(i));
+                        ExamTexts.add(ExamsText.substring(lastIndex - 1));
+                        break;
                     }
 
                 }
-                m.put("name", name);
-                m.put("teacher", teacher);
-                m.put("classroom", classroom);
-                m.put("weeks", timeMap);
-                result.add(m);
+                for (String x : ExamTexts) {
+                    //System.out.println("text:"+x);
+                    Map m = new HashMap();
+                    String name = x.substring(x.indexOf("[考试]") + 4, x.indexOf("</br>"));
+                    String week = x.substring(x.indexOf("[", 5) + 1, x.indexOf("]", 5));
+                    String time;
+                    String classroom;
+                    if(x.indexOf("，")>0)time = x.substring(x.indexOf("考试时间") + 5, x.indexOf("，", x.indexOf("考试时间")));
+                    else time = x.substring(x.indexOf("考试时间") + 5);
+                    if(x.indexOf("<br/>", x.indexOf("考试时间"))>0) classroom= x.substring(x.indexOf("]周", x.indexOf("考试时间")) + 2, x.indexOf("<br/>", x.indexOf("考试时间")));
+                    else classroom= "";
+
+                    //System.out.println("classroom:"+classroom);
+                    m.put("name", name);
+                    m.put("week", week);
+                    m.put("time", time);
+                    m.put("teacher", "null");
+                    m.put("classroom", classroom);
+                    result.add(m);
+
+                }
+
+
+            } else {
+                List<Integer> splitIndexes = new ArrayList<>();
+                List<Integer> splitIndexes_plus = new ArrayList<>();
+                int lastIndex = 0;
+                while (true) {
+                    int temp = text.indexOf("]周", lastIndex);
+                    if (temp > 0) {
+                        splitIndexes.add(temp);
+                        lastIndex = temp + 1;
+                    } else {
+                        lastIndex = 0;
+                        break;
+                    }
+                }
+                while (true) {
+                    int temp = text.indexOf("]单周", lastIndex);
+                    if (temp > 0) {
+                        splitIndexes.add(temp);
+                        lastIndex = temp + 1;
+                    } else {
+                        lastIndex = 0;
+                        break;
+                    }
+                }
+                while (true) {
+                    int temp = text.indexOf("]双周", lastIndex);
+                    if (temp > 0) {
+                        splitIndexes.add(temp);
+                        lastIndex = temp + 1;
+                    } else {
+                        break;
+                    }
+                }
+
+                List<Integer> integersToDelete = new ArrayList<>();
+                for (Integer x : splitIndexes) {
+                    if (x + 4 >= text.length()) {
+                    } else {
+                        String temp = text.substring(x, x + 4);
+                        if (temp.contains("，") || temp.contains(",")) {
+                            integersToDelete.add(x);
+                        }
+                    }
+                }
+                splitIndexes.removeAll(integersToDelete);
+                Collections.sort(splitIndexes);
+                System.out.println("text:"+text+",splitIndexes:"+splitIndexes.toString());
+                for (int i = 0; i < splitIndexes.size() - 1; i++) {
+                    if (i == splitIndexes.size() - 1) break;
+                    if (text.substring(splitIndexes.get(i), splitIndexes.get(i) + 7>=text.length()?text.length()-1:splitIndexes.get(i) + 7).contains("</br>")) {
+                        boolean hasMultiWeek = false;//判断是否为在教室前加</br>这种情况（前面有多个周就加，没有就不加）
+                        if(integersToDelete.size()>0&&integersToDelete.get(0)<splitIndexes.get(i))
+                            hasMultiWeek = true;
+                        List<Integer> fuckoff = new ArrayList<>();
+                        for(int x:integersToDelete){
+                            if(x<splitIndexes.get(i)) fuckoff.add(x);
+                        }
+                        integersToDelete.removeAll(fuckoff);
+                        int offset =  hasMultiWeek?3:0;//如果有</br>则跳过这个br，否则不调过
+                        splitIndexes_plus.add(text.indexOf("</br>", splitIndexes.get(i) +offset));
+                    } else if(text.indexOf("</br>", splitIndexes.get(i))>0){
+                        splitIndexes_plus.add(text.indexOf("</br>", splitIndexes.get(i))); }
+                }
+                System.out.println("text:"+text+",splitIndexes_plus:"+splitIndexes_plus.toString());
+                int from = 0;
+                for (int i = 0; i < splitIndexes_plus.size() + 1; i++) {
+                    if (i > splitIndexes_plus.size() - 1) {
+                        textSplit.add(text.substring(from));
+                    } else {
+                        textSplit.add(text.substring(from, splitIndexes_plus.get(i)));
+                        from = splitIndexes_plus.get(i) + 5; }
+                }
+                for (String x : textSplit) {
+                    Map m = new HashMap();
+                    System.out.println("x:\n"+x);
+                    String name = x.substring(0, x.indexOf("</br>"));
+                    String teacher = x.substring(x.indexOf("</br>") + 5, x.indexOf("["));
+                    String classroom, timeText;
+                    int num1 = countStrNum(x,"]");
+                    int num2 = countStrNum(x,"周，");
+                  //  if(x.contains("，[")&&(!x.contains("周，"))){//教室变动的情况
+                    Log.e("教室变动处理：","text="+text+",num1="+num1+",num2="+num2);
+                    if(num1!=num2+1){ //教室变动的情况
+                        int f = x.indexOf("[");
+                        classroom = x.substring(f);
+                        StringBuilder sb = new StringBuilder();
+                        for(String df:classroom.split("，\\[")){
+                            String timeT = df.substring(0,df.lastIndexOf("]"));
+                            sb.append(timeT);
+                            sb.append("，");
+                        }
+                        timeText = sb.toString().substring(0,sb.length()-1)+"]";
+                        //Log.e("!!!",timeText);
+                    }else{
+                        if (x.substring(x.lastIndexOf("周")).contains("</br>")) {
+                            classroom = x.substring(x.lastIndexOf("</br>") + 5);
+                        } else {
+                            classroom = x.substring(x.lastIndexOf("周") + 1); }
+                        if (x.lastIndexOf("]") + 3 < x.length()) {
+                            timeText = x.substring(x.indexOf("["), x.lastIndexOf("]") + 3);
+                        } else {
+                            timeText = x.substring(x.indexOf("["), x.lastIndexOf("]") + 1);
+                        }
+                    }
+
+
+
+                    String timeMap = new String();
+
+                    List<Integer> weeks = analyseTimeText(timeText);
+                    for (int i = 0; i < weeks.size(); i++) {
+                        if (i != weeks.size() - 1) {
+                            timeMap = timeMap + String.valueOf(weeks.get(i)) + "-";
+                        } else {
+                            timeMap = timeMap + String.valueOf(weeks.get(i));
+                        }
+
+                    }
+                    m.put("name", name);
+                    m.put("teacher", teacher);
+                    m.put("classroom", classroom);
+                    m.put("weeks", timeMap);
+                    result.add(m);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            new errorTableText(rawText,e).save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    Toast.makeText(HContext,"解析课表出现问题，已上传错误日志", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
         return result;
 
@@ -781,6 +805,22 @@ public class FileOperator {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+
+    }
+
+    static int countStrNum(String text,String str){
+        String without = text.replaceAll(str,"");
+        return ((text.length()-without.length())/str.length());
+    }
+
+    static class errorTableText extends BmobObject{
+        String tableText;
+        Exception exception;
+
+        public errorTableText(String tableText, Exception exception) {
+            this.tableText = tableText;
+            this.exception = exception;
         }
 
     }

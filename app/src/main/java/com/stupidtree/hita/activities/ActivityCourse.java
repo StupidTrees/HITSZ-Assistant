@@ -10,6 +10,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,6 +32,7 @@ import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.FileOperator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,13 +72,14 @@ public class ActivityCourse extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setWindowParams(true,true,false);
         setContentView(R.layout.activity_course);
         toolbar = findViewById(R.id.toolbar);
         noteText = findViewById(R.id.text_note);
 
         ei = (EventItem) getIntent().getExtras().getSerializable("eventitem");
         // Log.e("!!!", String.valueOf(ei));
-        toolbar.setTitle("");
+        toolbar.setTitle("课时："+ei.mainName);
         name = findViewById(R.id.course_name);
         ratingCard = findViewById(R.id.card_rating);
         ratingBar = findViewById(R.id.ratingBar);
@@ -188,11 +192,27 @@ public class ActivityCourse extends BaseActivity {
             value2Detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                        ActivityUtils.startLocationActivity_name(ActivityCourse.this,ei.tag2);
-                   // ActivityUtils.startLocationActivity_name(ActivityCourse.this, ei.tag2);
-//                    Intent i = new Intent(ActivityCourse.this,ActivityExplore.class);
-//                    i.putExtra("terminal",ei.tag2);
-//                    ActivityCourse.this.startActivity(i);
+                    final String cr[] = ei.tag2.split("，");
+                    final ArrayList<String> classRooms = new ArrayList<>(Arrays.asList(cr));
+                    if(classRooms.size()>1){
+                        ArrayList<String> toRemove = new ArrayList<>();
+                        for(int i=0;i<classRooms.size();i++){
+                            classRooms.set(i,classRooms.get(i).substring(classRooms.get(i).lastIndexOf("周")+1));
+                        }
+                        for(String x:classRooms){
+                            if(TextUtils.isEmpty(x)) toRemove.add(x);
+                        }
+                        classRooms.removeAll(toRemove);
+                        String classRoomItems[] = new String[classRooms.size()];
+                        for(int i=0;i<classRoomItems.length;i++) classRoomItems[i] = classRooms.get(i);
+                        AlertDialog ad = new AlertDialog.Builder(ActivityCourse.this).setTitle("选择教室").setItems(classRoomItems, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityUtils.startLocationActivity_name(ActivityCourse.this,classRooms.get(i));
+                            }
+                        }).create();
+                        ad.show();
+                    }else ActivityUtils.startLocationActivity_name(ActivityCourse.this,ei.tag2);
                 }
             });
         }

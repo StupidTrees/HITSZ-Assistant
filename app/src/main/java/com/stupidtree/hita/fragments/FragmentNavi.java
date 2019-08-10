@@ -39,6 +39,8 @@ import com.stupidtree.hita.activities.ActivityExplore;
 import com.stupidtree.hita.activities.ActivityHITSZInfo;
 import com.stupidtree.hita.activities.ActivityLostAndFound;
 import com.stupidtree.hita.activities.ActivityUniversity;
+import com.stupidtree.hita.activities.ActivityYX_FDY;
+import com.stupidtree.hita.activities.ActivityYX_ToSchool;
 import com.stupidtree.hita.adapter.HITSZInfoPagerAdapter;
 
 import com.stupidtree.hita.diy.CornerTransform;
@@ -67,7 +69,8 @@ public class FragmentNavi extends BaseFragment {
 
 
     SearchView searchview;
-    CardView card_explore,card_jwts,card_lostandfound,card_canteen,card_info,card_university,card_emptyclassroom,card_locations,card_head;
+    CardView card_explore,card_jwts,card_lostandfound,card_canteen,card_info,card_university,card_emptyclassroom,card_locations,card_head,
+    card_yx_toschool,card_yx_timetable,card_yx_fdy,card_yx_signup;
     MZBannerView banner;
     List<BannerItem> bannerItemList;
     List<Canteen> canteen_res;
@@ -104,6 +107,10 @@ public class FragmentNavi extends BaseFragment {
         card_info_layout = v.findViewById(R.id.navipage_card_info_layout);
         card_canteen = v.findViewById(R.id.navipage_card_canteen);
         card_jwts = v.findViewById(R.id.navipage_card_jwts);
+        card_yx_toschool = v.findViewById(R.id.navipage_card_yx_guide_toschool);
+        card_yx_timetable = v.findViewById(R.id.navipage_card_yx_timetable);
+        card_yx_fdy = v.findViewById(R.id.navipage_card_yx_fdy);
+        card_yx_signup = v.findViewById(R.id.navipage_card_yx_guide_tologin);
         card_lostandfound = v.findViewById(R.id.navipage_card_society);
         card_explore = v.findViewById(R.id.navi_card_explore);
         card_emptyclassroom = v.findViewById(R.id.navipage_card_empty_classroom);
@@ -172,7 +179,35 @@ public class FragmentNavi extends BaseFragment {
             }
         });
         headClickListener = new headClickListener();
+        card_yx_toschool.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), ActivityYX_ToSchool.class);
+                startActivity(i);
+            }
+        });
         card_head.setOnClickListener(headClickListener);
+        card_yx_timetable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse("http://yx.hitsz.edu.cn/yx/sjym?id=5f53525aea104d2d962c2837e113639f&xxlm=00");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+        card_yx_fdy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(), ActivityYX_FDY.class);
+                startActivity(i);
+            }
+        });
+        card_yx_signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityUtils.startExploreActivity_forNavi(getActivity(),"哈工大活动中心",113.9726100000,22.5864610000);
+            }
+        });
     }
 
 

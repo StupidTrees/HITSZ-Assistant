@@ -11,16 +11,16 @@ android {
         applicationId "com.stupidtree.hita"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 20190806
-        versionName "测试版8.06"
+        versionCode 20190810
+        versionName "测试版（迎新）8.10"
     }
     sourceSets {
         main.jniLibs.srcDirs = ['libs']
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            //shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

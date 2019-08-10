@@ -68,6 +68,8 @@ public class TimeWatcher {
             channel.enableLights(true); //是否在桌面icon右上角展示小红点    channel.setLightColor(Color.RED); //小红点颜色    channel.setShowBadge(true); //是否在久按桌面图标时显示此渠道的通知    notificationManager.createNotificationChannel(channel);}
             channel.setImportance(NotificationManager.IMPORTANCE_DEFAULT);
             channel.enableVibration(false);
+            channel.setVibrationPattern(new long[]{0});
+            channel.setSound(null, null);
             notificationManager.createNotificationChannel(channel);
         }
         notificationBuilder = new NotificationCompat.Builder(application, application.getString(R.string.app_notification_channel_id));
@@ -237,7 +239,12 @@ public class TimeWatcher {
         // pendingIntent = PendingIntent.getBroadcast(HContext, 0,intent, FLAG_UPDATE_CURRENT);
         PendingIntent pendingIntent = PendingIntent.getActivity(HContext, 0, intent, FLAG_UPDATE_CURRENT);
         notificationBuilder.setContentIntent(pendingIntent);
+        notificationBuilder.setVibrate(null);
+        notificationBuilder.setSound(null);
+        notificationBuilder.setLights(0,0,0);
+
         notification = notificationBuilder.build();
+
         notification.flags = Notification.FLAG_ONGOING_EVENT;
         notificationManager.notify(R.string.app_notification_channel_id, notification);
     }

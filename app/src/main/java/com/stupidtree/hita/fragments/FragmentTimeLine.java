@@ -21,6 +21,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,6 +64,7 @@ import com.stupidtree.hita.util.RefreshBroadcastReceiver;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -739,7 +741,7 @@ public class FragmentTimeLine extends BaseFragment implements
     }
 
 
-    public static void showEventDialog(final Activity a, final EventItem ei, View transitionCard, View transitionName) {
+    public static void showEventDialog(final Activity a, final EventItem ei, final View transitionCard, View transitionName) {
         View dlgView = null;
         final AlertDialog dialog = new AlertDialog.Builder(a).create();
         if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
@@ -753,6 +755,7 @@ public class FragmentTimeLine extends BaseFragment implements
             final ImageView detail = dlgView.findViewById(R.id.dlg_bt_detail);
             final LinearLayout teacher_detail = dlgView.findViewById(R.id.tt_dlg_value3_detail);
             final LinearLayout classroom_detail = dlgView.findViewById(R.id.tt_dlg_value2_detail);
+            final LinearLayout card = dlgView.findViewById(R.id.card);
             ImageView classroom_detail_icon = dlgView.findViewById(R.id.classroom_detail_icon);
             value2.setText(ei.tag2.isEmpty() ? "无" : ei.tag2);
             value3.setText(ei.tag3.isEmpty() ? "无" : ei.tag3);
@@ -763,7 +766,7 @@ public class FragmentTimeLine extends BaseFragment implements
             detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ActivityOptionsCompat ops = ActivityOptionsCompat.makeSceneTransitionAnimation(a,new Pair<View, String>(name,"course_name"));
+                    ActivityOptionsCompat ops = ActivityOptionsCompat.makeSceneTransitionAnimation(a,card,"card");
                     Intent i = new Intent(a, ActivityCourse.class);
                     Bundle b = new Bundle();
                     b.putSerializable("eventitem",ei);
@@ -800,7 +803,27 @@ public class FragmentTimeLine extends BaseFragment implements
                 classroom_detail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ActivityUtils.startLocationActivity_name(a,ei.tag2);
+                        final String cr[] = ei.tag2.split("，");
+                        final ArrayList<String> classRooms = new ArrayList<>(Arrays.asList(cr));
+                        if(classRooms.size()>1){
+                            ArrayList<String> toRemove = new ArrayList<>();
+                            for(int i=0;i<classRooms.size();i++){
+                                classRooms.set(i,classRooms.get(i).substring(classRooms.get(i).lastIndexOf("周")+1));
+                            }
+                            for(String x:classRooms){
+                                if(TextUtils.isEmpty(x)) toRemove.add(x);
+                            }
+                            classRooms.removeAll(toRemove);
+                            String classRoomItems[] = new String[classRooms.size()];
+                            for(int i=0;i<classRoomItems.length;i++) classRoomItems[i] = classRooms.get(i);
+                            AlertDialog ad = new AlertDialog.Builder(a).setTitle("选择教室").setItems(classRoomItems, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    ActivityUtils.startLocationActivity_name(a,classRooms.get(i));
+                                }
+                            }).create();
+                            ad.show();
+                        }else ActivityUtils.startLocationActivity_name(a,ei.tag2);
 //                    Intent i = new Intent(a,ActivityExplore.class);
 //                    i.putExtra("terminal",ei.tag2);
 //                    a.startActivity(i);

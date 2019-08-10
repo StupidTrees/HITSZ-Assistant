@@ -21,7 +21,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//禁止屏幕旋转
         super.onCreate(savedInstanceState);
         if(this instanceof ActivityChatbot){
             switch (themeID){
@@ -41,6 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }else{
             setTheme(themeID);
         }
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//禁止屏幕旋转
     }
 
 
