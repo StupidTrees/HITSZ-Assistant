@@ -30,7 +30,6 @@ import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityCurriculumManager;
 import com.stupidtree.hita.activities.ActivitySetting;
-import com.stupidtree.hita.diy.AutoLocateHorizontalView;
 import com.stupidtree.hita.adapter.TimeTablePagerAdapter;
 
 import java.util.Calendar;
@@ -70,7 +69,6 @@ public class FragmentTimeTable extends BaseFragment implements FragmentTimeTable
     LinearLayout invalidLayout;
     Button invalidJump;
     TextView toolbar_title;
-    AutoLocateHorizontalView weekPicker;
     TabLayout tabs;
     ViewPager viewPager;
     TimeTablePagerAdapter pagerAdapter;
@@ -253,7 +251,7 @@ public class FragmentTimeTable extends BaseFragment implements FragmentTimeTable
                 }
             }
             if (from == FROM_SPINNER_Curriculum || from == FROM_SPINNER_TIMETABLE || from == FROM_INIT) {
-                timeWatcher.refreshProgress(true);
+                timeWatcher.refreshProgress(true,true);
             }
             return 99;
         }

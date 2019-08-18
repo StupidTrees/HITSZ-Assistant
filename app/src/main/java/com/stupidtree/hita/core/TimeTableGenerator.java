@@ -1,11 +1,15 @@
 package com.stupidtree.hita.core;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.EventLog;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.EventItemHolder;
 import com.stupidtree.hita.core.timetable.HTime;
+import com.stupidtree.hita.core.timetable.Task;
 import com.stupidtree.hita.core.timetable.TimePeriod;
 
 import org.xml.sax.DTDHandler;
@@ -13,11 +17,15 @@ import org.xml.sax.DTDHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
 
+import static android.content.pm.SharedLibraryInfo.TYPE_DYNAMIC;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
+import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.themeID;
@@ -25,107 +33,70 @@ import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
 
 public class TimeTableGenerator {
-    public static void Dynamic_PreviewPlan(Calendar present, TimeTable timeTable) {
-        int minDURATION = 40;
+//    public static void Dynamic_PreviewPlan(Calendar present, TimeTable timeTable) {
+//        int minDURATION = 40;
+//        Calendar from = (Calendar) present.clone();
+//        Calendar to = (Calendar) present.clone();
+//        from.set(Calendar.HOUR_OF_DAY, 0);
+//        from.set(Calendar.MINUTE, 0);
+//        to.set(Calendar.HOUR_OF_DAY, 23);
+//        to.set(Calendar.MINUTE, 59);
+//        timeTable.deleteEvent(from, to, TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC);
+//        List<TimePeriod> breakTime = getBreakTime();
+//        for (TimePeriod tp : breakTime) {
+//            mainTimeTable.addEvent(thisWeekOfTerm, TimeTable.getDOW(now), TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break", "", "", "", tp.start, tp.end, false);
+//        }
+//        List<TimePeriod> spaces = timeTable.getSpaces(from, to, minDURATION, -1);
+//        timeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break");
+//        Collections.sort(spaces);
+//        for (TimePeriod tp : spaces) {
+//            mainTimeTable.addEvent(thisWeekOfTerm, TimeTable.getDOW(now), TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "动态", "", "", "", tp.start, tp.end, false);
+//        }
+//        Log.e("after:", String.valueOf(spaces));
+//    }
+
+    public static void Dynamic_PreviewPlan(Calendar present) {
+        int totalLength =  60; //每天花一小时预习
         Calendar from = (Calendar) present.clone();
         Calendar to = (Calendar) present.clone();
         from.set(Calendar.HOUR_OF_DAY, 0);
         from.set(Calendar.MINUTE, 0);
         to.set(Calendar.HOUR_OF_DAY, 23);
         to.set(Calendar.MINUTE, 59);
-        timeTable.deleteEvent(from, to, TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC);
-        List<TimePeriod> breakTime = getBreakTime();
-        for (TimePeriod tp : breakTime) {
-            mainTimeTable.addEvent(thisWeekOfTerm, TimeTable.getDOW(now), TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break", "", "", "", tp.start, tp.end, false);
+        from.add(Calendar.DATE,1);
+        to.add(Calendar.DATE,1);
+        List<EventItem> toRemove = new ArrayList<>();
+        HashMap<EventItem,Float> courseMap = new HashMap<>();
+        List<EventItem> courses = mainTimeTable.getEventFrom(from,to,TimeTable.TIMETABLE_EVENT_TYPE_COURSE);
+        if(courses==null||courses.size()==0) return;
+        for(EventItem ei:courses){
+            Subject subject = mainTimeTable.core.getSubjectByCourse(ei);
+            if(!subject.exam)  toRemove.add(ei);
+            else courseMap.put(ei,subject.getPriority());
         }
-        List<TimePeriod> spaces = timeTable.getSpaces(from, to, minDURATION, -1);
-        timeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break");
-        Collections.sort(spaces);
-        for (TimePeriod tp : spaces) {
-            mainTimeTable.addEvent(thisWeekOfTerm, TimeTable.getDOW(now), TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "动态", "", "", "", tp.start, tp.end, false);
+        float total = 0;
+        for(Float f:courseMap.values()) total+=f;
+        SQLiteDatabase sdb = mDBHelper.getWritableDatabase();
+        for(Map.Entry<EventItem,Float> entry:courseMap.entrySet()){
+            Task t = new Task(mainTimeTable.core.curriculumCode,"预习"+entry.getKey().mainName);
+            t.setType(Task.TYPE_DYNAMIC);
+            t.setLength((int) (totalLength*entry.getValue()/total));
+            t.arrangeTime(thisWeekOfTerm,TimeTable.getDOW(now),entry.getKey().week,entry.getKey().DOW,new HTime(now),entry.getKey().startTime,"null");
+            t.setPriority(entry.getValue().intValue());
+            String tag = entry.getKey().getUuid()+":::"+entry.getKey().week;
+            t.setTag(tag);
+            Cursor c = sdb.query("task",null,"tag=?",new String[]{tag},null,null,null);
+            if(c.moveToNext()){
+                c.close();
+            }else{
+                mainTimeTable.addTask(t);
+                c.close();
+            }
         }
-
-//        for(TimePeriod tp:spaces){
-//            EventItem
-//        }
-        Log.e("after:", String.valueOf(spaces));
-        //Log.e("before:", String.valueOf(spaces));
-//        dealWithBreak(spaces,getBreakTime(),minDURATION);
-//        Log.e("afterbreak:", String.valueOf(spaces));
-//
-//
-//        from.add(Calendar.DATE,1);
-//        to.add(Calendar.DATE,2);
-//        from.set(Calendar.HOUR_OF_DAY,0);
-//        from.set(Calendar.MINUTE,0);
-//        List<EventItem> ddlS  = timeTable.getEventFrom(from,to,TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE);
-//        List<EventItem> exams  = timeTable.getEventFrom(from,to,TimeTable.TIMETABLE_EVENT_TYPE_EXAM);
-//        //Log.e("ddlS", String.valueOf(ddlS));
-//        if(exams!=null&&exams.size()>0){
-//            spaces = splitPeriod(spaces,exams.size());
-//            Log.e("afterSplit:", String.valueOf(spaces));
-//            int i = 0;
-//            for(TimePeriod xx:spaces){
-//                if(xx.before(new HTime(now))) continue;
-//                if(xx.getLeftTime(new HTime(now))>0&&xx.getLeftTime(new HTime(now))<minDURATION) continue;
-//                HTime start = xx.start;
-//                HTime end = xx.end;
-//                if(i<exams.size()) {
-//                    timeTable.addEvent(timeTable.core.getWeekOfTerm(present), timeTable.getDOW(present), TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "准备" + exams.get(i).mainName, "临近考试", "目标优先级高于一切", "！！！！", start, end,false);
-//
-//                }i++;
-//            }
-//        }else if(ddlS!=null&&ddlS.size()>0){
-//            spaces = splitPeriod(spaces,ddlS.size());
-//            Log.e("afterSplit:", String.valueOf(spaces));
-//            int i = 0;
-//            for(TimePeriod xx:spaces){
-//                if(xx.before(new HTime(now))) continue;
-//                if(xx.getLeftTime(new HTime(now))>0&&xx.getLeftTime(new HTime(now))<minDURATION) continue;
-//                HTime start = xx.start;
-//                HTime end = xx.end;
-//                if(i<ddlS.size()) {
-//                    timeTable.addEvent(timeTable.core.getWeekOfTerm(present), timeTable.getDOW(present), TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "处理DDL:" + ddlS.get(i).mainName, "明后天有DDL", "目标优先级高于一切", "完成后请删除DDL", start, end,false);
-//
-//                }i++;
-//            }
-//        }else{
-//            to.add(Calendar.DATE,-1);
-//            List<EventItem> courses = timeTable.getEventFrom(present,to,TimeTable.TIMETABLE_EVENT_TYPE_COURSE);
-//            List<EventItem> examCourse = new ArrayList<>();
-//            //Log.e("courses", String.valueOf(courses));
-//            if(courses!=null){
-//                for(EventItem course:courses){
-//                    if(allCurriculum.get(thisCurriculumIndex).getSubjectByCourse(course)!=null&&allCurriculum.get(thisCurriculumIndex).getSubjectByCourse(course).exam){
-//                        examCourse.add(course);
-//                    }
-//                }
-//                Log.e("examCourses", String.valueOf(examCourse));
-//                spaces = splitPeriod(spaces,examCourse.size());
-//                Log.e("afterSplit:", String.valueOf(spaces));
-//            }
-//
-//
-//              //Log.e("courses", String.valueOf(courses));
-//            if(examCourse.size()>0){
-//                int i = 0;
-//                for(TimePeriod xx:spaces){
-//                    if(xx.before(new HTime(now))) continue;
-//                    if(xx.getLeftTime(new HTime(now))>0&&xx.getLeftTime(new HTime(now))<minDURATION) continue;
-//                    HTime start = xx.start;
-//                    HTime end = xx.end;
-//                    if(i<examCourse.size()){
-//                        timeTable.addEvent(timeTable.core.getWeekOfTerm(present),timeTable.getDOW(present),TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC,"预习"+examCourse.get(i).mainName,"嗯！","无","无",start,end,false);
-//                    }
-//                    i++;
-//                }
-//            }
-//
-//        }
 
     }
 
-    public static void autoAdd(int week, int dow, String name, String tag2, String tag3, String tag4, int type, int duration) {
+    public static SparseArray<HTime> autoAdd_getTime(int week, int dow, int duration) {
         int minDURATION = 40;
         Calendar date = mainTimeTable.core.getDateAtWOT(week, dow);
         Calendar from = (Calendar) date.clone();
@@ -143,25 +114,19 @@ public class TimeTableGenerator {
         mainTimeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break");
         Collections.sort(spaces);
         TimePeriod tp = spaces.get(spaces.size() - 1);
+        String uuid = null;
         for(int i = spaces.size()-1;i>=0;i--){
             if(spaces.get(i).getLength()>duration){
                 HTime start = tp.start.getAdded(15);
                 HTime end = tp.start.getAdded(duration);
-                mainTimeTable.addEvent(week, dow, type, name, tag2, tag3, tag4, start, end, false);
-                break;
-            }else{
-                //split
+                SparseArray<HTime> result = new SparseArray<>(2);
+                result.put(0,start);
+                result.put(1,end);
+                return result;
             }
         }
+        return null;
 
-//        if(type==TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE){
-//            mainTimeTable.addTask("处理DDL:"+name,allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now), TimeTable.getDOW(now),new HTime(now),toAdd);
-//        }
-
-//        for(TimePeriod tp:spaces){
-//            EventItem
-//        }
-        Log.e("after:", String.valueOf(spaces));
     }
 
     private static List<TimePeriod> dealWithBreak(List<TimePeriod> res, List<TimePeriod> breakT, int minDurationMinute) {
@@ -239,11 +204,6 @@ public class TimeTableGenerator {
         return result;
     }
 
-    //    private static List<TimePeriod> getPeriodPieces(List<TimePeriod> res,int periodLength){
-//        for(TimePeriod m:res){
-//
-//        }
-//    }
     private static List<TimePeriod> splitPeriod(List<TimePeriod> res, int num) {
         if (num == 0 || num == 1) return res;
         List<TimePeriod> result = new ArrayList<>();

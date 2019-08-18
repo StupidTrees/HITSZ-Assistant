@@ -11,8 +11,8 @@ android {
         applicationId "com.stupidtree.hita"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 20190810
-        versionName "测试版（迎新）8.10"
+        versionCode 20190817
+        versionName "测试版（迎新）8.17"
     }
     sourceSets {
         main.jniLibs.srcDirs = ['libs']
@@ -70,7 +70,7 @@ dependencies {
     implementation files('libs/Msc.jar')
     implementation files('libs/jxl.jar')
 
-    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.10.0'
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
 
     //首次启动的用户引导
     implementation 'com.yuyh.imgsel:library:2.0.6'

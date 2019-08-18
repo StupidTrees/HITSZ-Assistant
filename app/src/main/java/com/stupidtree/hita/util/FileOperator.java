@@ -463,7 +463,7 @@ public class FileOperator {
         List<String> textSplit = new ArrayList<>();
         List<Map<String, String>> result = new ArrayList<>();
         try {
-            String text = rawText.replaceAll("<br>","</br>");
+            String text = rawText.replaceAll("<br>","</br>").replaceAll("双]","]双").replaceAll("单]","]单");
             // System.out.println("block:\n"+text);
             if(text.contains("&nbsp")) return result;
             if (text.startsWith("[考试]")) {

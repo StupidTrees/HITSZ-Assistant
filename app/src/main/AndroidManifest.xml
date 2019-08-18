@@ -44,7 +44,11 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".activities.ActivityYX_FDY"></activity>
+        <activity
+            android:name=".activities.ActivityXL"
+            android:label="@string/title_activity_xl"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activities.ActivityYX_FDY" />
         <activity android:name=".activities.ActivityYX_ToSchool" />
         <activity android:name=".activities.ActivityEmptyClassroomDetail" />
         <activity android:name=".activities.ActivityEmptyClassroom" />

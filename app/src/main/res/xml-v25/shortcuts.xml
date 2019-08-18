@@ -9,8 +9,8 @@
         android:shortcutShortLabel="@string/shortcut_timetable_short"
         android:shortcutLongLabel="@string/shortcut_timetable_long">
 
-        <intent
-            android:action="android.intent.action.VIEW"
+        <action
+            android:action="android.action.action.VIEW"
             android:targetPackage="com.stupidtree.hita"
             android:targetClass="com.stupidtree.hita.activities.ActivityTimeTable" />
         <categories android:name="android.shortcut.conversation"/>
@@ -22,8 +22,8 @@
         android:shortcutShortLabel="@string/shortcut_news_short"
         android:shortcutLongLabel="@string/shortcut_news_long">
 
-        <intent
-            android:action="android.intent.action.VIEW"
+        <action
+            android:action="android.action.action.VIEW"
             android:targetPackage="com.stupidtree.hita"
             android:targetClass="com.stupidtree.hita.activities.ActivityHITSZInfo" />
         <categories android:name="android.shortcut.conversation"/>
@@ -36,8 +36,8 @@
         android:shortcutShortLabel="@string/shortcut_empty_classroom_short"
         android:shortcutLongLabel="@string/shortcut_empty_classroom_long">
 
-        <intent
-            android:action="android.intent.action.VIEW"
+        <action
+            android:action="android.action.action.VIEW"
             android:targetPackage="com.stupidtree.hita"
             android:targetClass="com.stupidtree.hita.activities.ActivityEmptyClassroom" />
         <categories android:name="android.shortcut.conversation"/>
@@ -49,8 +49,8 @@
         android:shortcutShortLabel="@string/shortcut_explore_short"
         android:shortcutLongLabel="@string/shortcut_explore_long">
 
-        <intent
-            android:action="android.intent.action.VIEW"
+        <action
+            android:action="android.action.action.VIEW"
             android:targetPackage="com.stupidtree.hita"
             android:targetClass="com.stupidtree.hita.activities.ActivityExplore" />
         <categories android:name="android.shortcut.conversation"/>

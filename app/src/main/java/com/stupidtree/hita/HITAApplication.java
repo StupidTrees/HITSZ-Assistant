@@ -101,7 +101,7 @@ public class HITAApplication extends Application {
             @Override
             public void run() {
                 initCoreData();
-                TimeWatcher.refreshTodaysEvents();
+                timeWatcher.refreshTodaysEvents();
                 Intent mes = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH_FROM_OTHER");
                 sendBroadcast(mes);
                 ToAnalysis.parse("");
@@ -424,7 +424,8 @@ public class HITAApplication extends Application {
         ArrayList<Task> tasks = new ArrayList<>();
         Cursor c2 = sd.query("task", null, null, null, null, null, null);
         while (c2.moveToNext()) {
-            tasks.add(new Task(c2));
+            Task t = new Task(c2);
+            if(!t.isFinished()&&t.getType()!=Task.TYPE_DYNAMIC)tasks.add(t);
         }
         c2.close();
         final Bmob_User_Data BUD = new Bmob_User_Data(allCurriculum, TUHs, tasks);

@@ -155,6 +155,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .data("fhlj", "kbcx/queryXszkb")
                 .data("xnxq", xnxq)
+                .data("pageSize","1000")
                 .ignoreContentType(true)
                 .post();
         Elements table = page.getElementsByClass("bot_line");
@@ -241,27 +242,30 @@ public class FragmentJWTS_grkb extends BaseFragment {
     }
 
     protected void getSubjectsInfo2(CurriculumHelper ci, String xnxq) throws IOException {
-        Document page = Jsoup.connect(" http://jwts.hitsz.edu.cn/zxjh/queryZxkc").cookies(cookies).timeout(30000)
+        Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/zxjh/queryZxkc").cookies(cookies).timeout(30000)
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .ignoreContentType(true)
+                .data("pageSize","1000")
                 .get();
-        System.out.println(page);
+       // System.out.println(page);
         Elements table = page.getElementsByClass("bot_line");
         Elements subjects = table.select("tr");
         subjects.remove(0);
-        for (Subject s : ci.Subjects) {
-            for (Element e : subjects) {
-                Elements rows = e.getElementsByTag("td");
-                //Log.e("compare:",s.code+"-->"+rows.get(0));
-                if (rows.get(0).text().equals(s.code)) {
-                    //Log.e("找到了！",s.name+"-->"+rows);
-                    s.exam = rows.get(12).text().contains("是");
-                    s.Default = false;
-                }
-            }
+        for (Element e : subjects) {
+            Elements rows = e.getElementsByTag("td");
+             for (Subject s : ci.Subjects) {
+                 //Log.e("compare:",s.code+"-->"+rows.get(0).text());
+                 if (rows.get(0).text().equals(s.code)) {
+                    // Log.e("找到了！",s.name+"-->"+rows);
+                     s.exam = rows.get(12).text().contains("是");
+                     s.Default = false;
+                 }
+             }
+
         }
+
 
     }
 
@@ -276,7 +280,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                 .data("pageXnxq", xnxq)
                 .post();
         final Elements links = page.select("a[onclick^=javascript:queryJsxxDiv]");
-        System.out.println(links);
+        //System.out.println(links);
         for (Element e : links) {
             String onclick = e.attr("onclick");
             final String teacherCode = onclick.substring(onclick.indexOf("('") + 2, onclick.indexOf("')"));
@@ -301,7 +305,9 @@ public class FragmentJWTS_grkb extends BaseFragment {
             bq.findObjects(new FindListener<Teacher>() {
                 @Override
                 public void done(List<Teacher> list, BmobException e) {
-                    if(e==null&&list!=null&&list.size()>0);
+                    if(list!=null&&list.size()>0){
+                        new uploadTeacherTask(t,list.get(0)).execute();
+                    }
                     else{
                         new uploadTeacherTask(t).execute();
                     }
@@ -504,12 +510,18 @@ public class FragmentJWTS_grkb extends BaseFragment {
     class uploadTeacherTask extends AsyncTask{
 
         Teacher t;
+        Teacher old = null;
         uploadTeacherTask(Teacher t){
             this.t = t;
         }
 
+        uploadTeacherTask(Teacher t,Teacher old){
+            this.t = t;
+            this.old = old;
+        }
+
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(final Object[] objects) {
            // Log.e("add teacher:",t.getName());
             try {
                 String photo = "http://jwts.hitsz.edu.cn/xxgl/showPhoto?zgh=" + t.getTeacherCode();
@@ -522,6 +534,12 @@ public class FragmentJWTS_grkb extends BaseFragment {
                     @Override
                     public void done(BmobException e) {
                         t.setPhotoLink(bf.getFileUrl());
+                        if(old!=null) {
+                            t.setObjectId(old.getObjectId());
+                            BmobFile oldImg = new BmobFile();
+                            oldImg.setUrl(old.getPhotoLink());
+                            oldImg.delete();
+                        }
                         t.save(new SaveListener<String>() {
                             @Override
                             public void done(String s, BmobException e) {

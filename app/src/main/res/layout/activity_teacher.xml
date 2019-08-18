@@ -185,23 +185,22 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <ImageView
-                    android:id="@+id/teacher_avatar"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center|top"
-                    android:elevation="4dp"
-                    tools:srcCompat="@tools:sample/avatars" />
-
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/card_avatar"
                     android:layout_width="82dp"
                     android:layout_height="82dp"
                     android:layout_gravity="center|top"
-                    android:visibility="gone"
                     app:cardCornerRadius="41dp"
                     app:cardElevation="6dp"
                     app:cardMaxElevation="6dp">
 
+                    <ImageView
+                        android:id="@+id/teacher_avatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center|top"
+                        android:layout_margin="2dp"
+                        tools:srcCompat="@tools:sample/avatars" />
                 </androidx.cardview.widget.CardView>
 
             </FrameLayout>

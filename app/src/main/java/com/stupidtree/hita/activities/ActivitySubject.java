@@ -44,7 +44,7 @@ public class ActivitySubject extends BaseActivity {
     CardView  card_scores, card_rate, card_allcourses, card_html;
     LinearLayout qz_score_layout, qm_score_layout;
     InitProgressTask pageTask_progress;
-    RefreshRatingTask pageTask_rating;
+    //RefreshRatingTask pageTask_rating;
     InitCourseListTask pageTask_courseList;
 
     //WebView webView;
@@ -53,7 +53,7 @@ public class ActivitySubject extends BaseActivity {
     @Override
     protected void stopTasks() {
         if(pageTask_progress!=null&&!pageTask_progress.isCancelled()) pageTask_progress.cancel(true);
-        if(pageTask_rating!=null&&!pageTask_rating.isCancelled()) pageTask_rating.cancel(true);
+       // if(pageTask_rating!=null&&!pageTask_rating.isCancelled()) pageTask_rating.cancel(true);
         if(pageTask_courseList!=null&&!pageTask_courseList.isCancelled()) pageTask_courseList.cancel(true);
 
     }
@@ -158,7 +158,17 @@ public class ActivitySubject extends BaseActivity {
                 qm_score_layout.setVisibility(View.GONE);
             }
         }
-
+        Double rate = 0.0;
+        Double sum = 0.0;
+        int size = 0;
+        for (Double f : subject.getRatingMap().values()) {
+            if (f < 0) continue;
+            sum += f;
+            size++;
+        }
+        if (size == 0) rate = 0.0;
+        else rate =  sum / size;
+        ratingText.setText(rate + "/5");
 //        if(subject.infoHTML!=null){
 //
 //            card_html.setVisibility(View.VISIBLE);
@@ -213,32 +223,7 @@ public class ActivitySubject extends BaseActivity {
         }
     }
 
-    class RefreshRatingTask extends AsyncTask<String, Integer, Double> {
 
-        @Override
-        protected Double doInBackground(String... strings) {
-            Double sum = 0.0;
-            int size = 0;
-            for (Double f : subject.getRatingMap().values()) {
-                if (f < 0) continue;
-                sum += f;
-                size++;
-            }
-            if (size == 0) return 0.0;
-            return sum / size;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(Double x) {
-            super.onPostExecute(x);
-            ratingText.setText(x + "/5");
-        }
-    }
 
     class InitCourseListTask extends AsyncTask<String, Integer, ArrayList<EventItem>> {
 
@@ -284,9 +269,17 @@ public class ActivitySubject extends BaseActivity {
         }
         setInfos();
         if (subject != null){
-            if(pageTask_rating!=null&&!pageTask_rating.isCancelled()) pageTask_rating.cancel(true);
-            pageTask_rating = new RefreshRatingTask();
-            pageTask_rating.execute();
+            Double rate = 0.0;
+            Double sum = 0.0;
+            int size = 0;
+            for (Double f : subject.getRatingMap().values()) {
+                if (f < 0) continue;
+                sum += f;
+                size++;
+            }
+            if (size == 0) rate = 0.0;
+            else rate =  sum / size;
+            ratingText.setText(rate + "/5");
         }
     }
 }

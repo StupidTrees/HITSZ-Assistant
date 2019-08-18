@@ -20,7 +20,7 @@ import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
 
-public class Subject {
+public class Subject implements Comparable{
     public String code;
     public String name;
     public String teacher;
@@ -312,5 +312,30 @@ public class Subject {
 
     public HashMap<Integer, Double> getRatingMap() {
         return ratingMap;
+    }
+
+    public float getPriority(){
+        float creditF,rate;
+        try {
+            creditF = Float.parseFloat(credit);
+        } catch (NumberFormatException e) {
+            creditF = 3.0f;
+        }
+        Double sum = 0.0;
+        int size = 0;
+        for (Double f : ratingMap.values()) {
+            if (f < 0) continue;
+            sum += f;
+            size++;
+        }
+        if(size==0) rate = 0f;
+        else rate = (float) (sum/size);
+        return 100+creditF*5-rate*20;
+
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return (int) (getPriority()-((Subject)o).getPriority());
     }
 }

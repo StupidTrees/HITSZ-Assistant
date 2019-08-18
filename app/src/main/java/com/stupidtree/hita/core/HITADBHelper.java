@@ -20,7 +20,7 @@ import static com.stupidtree.hita.HITAApplication.mDBHelper;
 
 public class HITADBHelper extends SQLiteOpenHelper {
 
-    public static final int DB_VERSION = 33;
+    public static final int DB_VERSION = 36;
     private static final String CREATE_TABLE_TIMETABLE  =
             "create table timetable("
             + "name text  not null,"
@@ -35,7 +35,8 @@ public class HITADBHelper extends SQLiteOpenHelper {
             +"tag3 text,"
             +"tag4 text,"
             +"curriculum_code text not null,"
-            +"is_whole_day integer not null"
+            +"is_whole_day integer not null,"
+            +"uuid text primary key"
             + ");";;
 
     private static final String CREATE_TABLE_SUBJECT  =
@@ -75,8 +76,12 @@ public class HITADBHelper extends SQLiteOpenHelper {
                     +"length integer,"
                     +"progress integer,"
                     +"type integer,"
-                    +"priority integer"
-                    + ");";;
+                    +"priority integer,"
+                    +"uuid text primary key,"
+                    +"event_map text,"
+                    +"tag text,"
+                    +"finished integer"
+                    + ");";
 
     private static final String CREATE_TABLE_CURRICULUM =
             "create table curriculum("
@@ -123,6 +128,21 @@ public class HITADBHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_TABLE_TIMETABLE);
             db.execSQL(CREATE_TABLE_TASK);
             db.execSQL(CREATE_TABLE_CURRICULUM);
+        }else if(oldVersion<=35){
+           //db.execSQL("DROP TABLE IF EXISTS timetable");
+            //db.execSQL("DROP TABLE IF EXISTS task");
+            //db.execSQL(CREATE_TABLE_TIMETABLE);
+            //db.execSQL(CREATE_TABLE_TASK);
+            db.execSQL("alter table task add column event_map text;");
+            db.execSQL("alter table task add column uuid text;");
+            db.execSQL("alter table task add column tag text;");
+            db.execSQL("alter table task add column finished integer;");
+            db.execSQL("alter table timetable add column uuid text;");
+            db.delete("task",null,null);
+            db.delete("timetable","type=?",new String[]{TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT+""});
+            db.delete("timetable","type=?",new String[]{TimeTable.TIMETABLE_EVENT_TYPE_REMIND+""});
+            db.delete("timetable","type=?",new String[]{TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE+""});
+            db.delete("timetable","type=?",new String[]{TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC+""});
         }
     }
 

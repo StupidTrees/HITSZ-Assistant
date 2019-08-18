@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@drawable/timeline_head_bg_reverse"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -10,7 +11,6 @@
         android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorAccent"
         android:padding="16dp"
         android:text="5月9日（今天）"
         android:textColor="@color/material_text_icon_white"
@@ -19,7 +19,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorAccent"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingTop="16dp">
@@ -58,8 +57,13 @@
 
     <CalendarView
         android:id="@+id/ade_calendarview"
-        style="@android:style/Widget.Material.Light.CalendarView"
+        style="@android:style/Widget.Material.CalendarView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/material_backgroung_white"
+        android:firstDayOfWeek="2"
+        android:showWeekNumber="false"
+        android:weekNumberColor="?attr/colorPrimary"
+        android:weekSeparatorLineColor="#2cff2f" />
 
 </LinearLayout>

@@ -35,7 +35,7 @@
                 app:tabMode="scrollable"
                 app:tabRippleColor="@color/material_secondary_text"
                 app:tabSelectedTextColor="@color/material_primary_text"
-                app:tabTextAppearance="@style/MainTabsTextTheme"
+                app:tabTextAppearance="@style/MainTabsTextTheme_normal"
                 app:tabTextColor="#55000000"
                 app:tabUnboundedRipple="true" />
         </androidx.appcompat.widget.Toolbar>

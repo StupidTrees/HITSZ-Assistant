@@ -443,7 +443,7 @@ public class FragmentTimeTablePage extends BaseFragment {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                mainTimeTable.deleteEvent(ei, true);
+                                mainTimeTable.deleteEvent(ei, ei.eventType== TIMETABLE_EVENT_TYPE_DEADLINE);
                                 ExplosionField ef = ExplosionField.attach2Window(FragmentTimeTablePage.this.getActivity());
                                 ef.explode(v);
                             }

@@ -14,80 +14,65 @@
         android:background="@color/material_backgroung_grey_50"
         app:elevation="0dp">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:cardCornerRadius="16dp">
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed">
 
-            <ImageView
-                android:id="@+id/imageView18"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:srcCompat="@drawable/timeline_head_bg" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/task_head_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-black"
-                    android:maxEms="10"
-                    android:singleLine="false"
-                    android:text="还有13个任务"
-                    android:textColor="@color/material_text_icon_white"
-                    android:textSize="18sp" />
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:visibility="visible"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardMaxElevation="6dp"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.8">
 
                 <ImageView
-                    android:id="@+id/bt_add"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/imageView18"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center|right"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:padding="16dp"
-                    android:tint="@color/material_text_icon_white"
-                    app:srcCompat="@drawable/bt_timeline_toolbar_add"
-                    app:theme="@style/button_ripple_white" />
+                    app:srcCompat="@drawable/timeline_head_bg" />
 
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/task_head_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-black"
+                        android:maxEms="10"
+                        android:singleLine="false"
+                        android:text="还有13个任务"
+                        android:textColor="@color/material_text_icon_white"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/bt_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center|right"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="16dp"
+                        android:tint="@color/material_text_icon_white"
+                        app:srcCompat="@drawable/bt_timeline_toolbar_add"
+                        app:theme="@style/button_ripple_white" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/task_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:visibility="visible"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <FrameLayout
-        android:id="@+id/none_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <ImageView
-            android:id="@+id/imageView19"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:tint="#11000000"
-            android:tintMode="src_in"
-            app:srcCompat="@drawable/ic_task" />
-
-    </FrameLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/task_fab"
@@ -98,8 +83,173 @@
         android:transitionName="fab"
         android:visibility="gone"
         app:backgroundTint="?attr/colorAccent"
-        app:layout_anchor="@+id/task_recycler"
-        app:layout_anchorGravity="end|bottom"
         app:srcCompat="@drawable/fab_add" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:minHeight="160dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardMaxElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:fontFamily="sans-serif-black"
+                        android:maxEms="10"
+                        android:singleLine="false"
+                        android:text="正在进行"
+                        android:textColor="@color/material_secondary_text"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/none_img1"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:tint="#11000000"
+                        android:tintMode="src_in"
+                        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                        app:srcCompat="@drawable/ic_task" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/task_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="16dp"
+                        android:overScrollMode="never"
+                        android:visibility="visible">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:minHeight="160dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardMaxElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:fontFamily="sans-serif-black"
+                        android:maxEms="10"
+                        android:singleLine="false"
+                        android:text="未开始"
+                        android:textColor="@color/material_secondary_text"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/none_img2"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:tint="#11000000"
+                        android:tintMode="src_in"
+                        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                        app:srcCompat="@drawable/ic_empty" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/task_recycler_not_yet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:overScrollMode="never"
+                        android:visibility="visible">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:minHeight="160dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardMaxElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:fontFamily="sans-serif-black"
+                        android:maxEms="10"
+                        android:singleLine="false"
+                        android:text="已完成"
+                        android:textColor="@color/material_secondary_text"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/none_img3"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:tint="#11000000"
+                        android:tintMode="src_in"
+                        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                        app:srcCompat="@drawable/ic_empty" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/task_recycler_done"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:overScrollMode="never"
+                        android:visibility="visible">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

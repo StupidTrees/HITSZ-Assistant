@@ -294,4 +294,5 @@
     <string name="shortcut_timetable_long">课程表</string>
     <string name="shortcut_news_short">信息窗</string>
     <string name="shortcut_news_long">信息窗口</string>
+    <string name="title_activity_xl">ActivityXL</string>
 </resources>

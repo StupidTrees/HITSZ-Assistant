@@ -110,6 +110,161 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:scaleType="fitCenter"
+                    android:tint="@color/material_secondary_text"
+                    app:srcCompat="@drawable/ic_settings" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <Switch
+                        android:id="@+id/ade_switch_autoallocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="帮我安排时间"
+                        android:textColor="@color/material_secondary_text"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:id="@+id/ade_switch_wholeday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="全天事件"
+                        android:textColor="@color/material_secondary_text"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:id="@+id/ade_switch_dealwithtask"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="处理任务"
+                        android:textColor="@color/material_secondary_text"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:id="@+id/ade_courselayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/ade_text_course"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center|top"
+                                android:layout_marginLeft="4dp"
+                                android:layout_marginRight="16dp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_weight="1"
+                                android:textColor="@color/material_secondary_text"
+                                android:textSize="16sp" />
+
+                            <ImageView
+                                android:id="@+id/ade_pick_course_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:foreground="?attr/selectableItemBackgroundBorderless"
+                                android:paddingLeft="16dp"
+                                android:paddingRight="16dp"
+                                android:scaleType="center"
+                                android:tint="?attr/colorPrimary"
+                                app:srcCompat="@drawable/bt_edit" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="16dp"
+                                android:layout_weight="1">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/ade_nexam_place"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:hint="考试地点"
+                                    android:inputType="text"
+                                    android:maxLines="1"
+                                    android:singleLine="true" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ade_picktasklayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ade_choose_deal_task"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:gravity="center|left"
+                            android:text="选择处理任务"
+                            android:textColor="@color/material_secondary_text"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/ade_pick_task_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:scaleType="center"
+                            android:tint="?attr/colorPrimary"
+                            app:srcCompat="@drawable/bt_edit" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:visibility="visible">
@@ -130,28 +285,6 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <Switch
-                        android:id="@+id/ade_switch_autoallocation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="自动安排时间"
-                        android:textColor="@color/material_secondary_text"
-                        android:textSize="16sp" />
-
-                    <Switch
-                        android:id="@+id/ade_switch_wholeday"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="全天事件"
-                        android:textColor="@color/material_secondary_text"
-                        android:textSize="16sp" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -162,10 +295,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="4dp"
-                            android:layout_marginTop="8dp"
                             android:layout_marginRight="16dp"
                             android:layout_marginBottom="8dp"
                             android:layout_weight="1"
+                            android:gravity="center|left"
                             android:text="设置事件日期"
                             android:textColor="@color/material_secondary_text"
                             android:textSize="16sp" />
@@ -197,6 +330,7 @@
                             android:layout_marginRight="16dp"
                             android:layout_marginBottom="8dp"
                             android:layout_weight="1"
+                            android:gravity="center|left"
                             android:text="设置起始时间"
                             android:textColor="@color/material_secondary_text"
                             android:textSize="16sp" />
@@ -244,87 +378,6 @@
                             app:srcCompat="@drawable/ic_dlg_tt_duration"
                             app:theme="@style/button_ripple_primary" />
                     </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ade_courselayout"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginRight="16dp"
-                        android:scaleType="fitCenter"
-                        android:tint="@color/material_secondary_text"
-                        app:srcCompat="@drawable/ic_dlg_tt_tag1" />
-
-                    <TextView
-                        android:id="@+id/ade_text_course"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="TextView"
-                        android:textColor="@color/material_secondary_text"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/ade_pick_course_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp"
-                        android:scaleType="center"
-                        android:tint="?attr/colorPrimary"
-                        app:srcCompat="@drawable/bt_edit" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginRight="16dp"
-                        android:scaleType="fitCenter"
-                        android:tint="@color/material_secondary_text"
-                        app:srcCompat="@drawable/ic_dlg_tt_tag1" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="16dp"
-                        android:layout_weight="1">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/ade_nexam_place"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:hint="考试地点"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:singleLine="true" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
                 </LinearLayout>
 
             </LinearLayout>
@@ -441,37 +494,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="标签3"
-                                android:inputType="text"
-                                android:maxLines="1"
-                                android:singleLine="true" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginRight="16dp"
-                            android:scaleType="fitCenter"
-                            android:tint="@color/material_secondary_text"
-                            app:srcCompat="@drawable/ic_dlg_tag2" />
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <AutoCompleteTextView
-                                android:id="@+id/ade_tag4"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:hint="标签4"
                                 android:inputType="text"
                                 android:maxLines="1"
                                 android:singleLine="true" />

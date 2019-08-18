@@ -23,10 +23,11 @@ public class EventItem implements Serializable, Comparable {
     public float rate = 5f; //用在course的评分
     public String curriculumCode;
     public boolean isWholeDay;
+    String uuid;
 
 
 
-    public EventItem(String curriculumCode,int type, String eventName, String tag2, String tag3, String tag4, HTime start, HTime end, int week, int DOW,boolean isWholeDay) {
+    public EventItem(String uuid,String curriculumCode,int type, String eventName, String tag2, String tag3, String tag4, HTime start, HTime end, int week, int DOW,boolean isWholeDay) {
         eventType = type;
         this.curriculumCode = curriculumCode;
         this.startTime = start;
@@ -39,9 +40,14 @@ public class EventItem implements Serializable, Comparable {
         this.DOW = DOW;
         this.isWholeDay = isWholeDay;
         rate = 2.5f;
+        this.uuid = uuid;
      }
 
-    public EventItem(String curriculumCode,int type, String eventName, String tag2, String tag3, String tag4, int begin, int last, int week, int DOW,boolean isWholeDay) {
+     public int getDuration(){
+        return startTime.getDuration(endTime);
+     }
+
+    public EventItem(String uuid,String curriculumCode,int type, String eventName, String tag2, String tag3, String tag4, int begin, int last, int week, int DOW,boolean isWholeDay) {
         eventType = type;
         this.curriculumCode = curriculumCode;
         startTime = TimeTable.getTimeAtNumber(begin, last).get(0);
@@ -54,6 +60,7 @@ public class EventItem implements Serializable, Comparable {
         this.DOW = DOW;
         this.isWholeDay = isWholeDay;
         rate = 2.5f;
+        this.uuid = uuid;
     }
 
 
@@ -83,6 +90,14 @@ public class EventItem implements Serializable, Comparable {
 
     public static int getDOW(Calendar c){
         return c.get(Calendar.DAY_OF_WEEK)==1?7:c.get(Calendar.DAY_OF_WEEK)-1;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @Override

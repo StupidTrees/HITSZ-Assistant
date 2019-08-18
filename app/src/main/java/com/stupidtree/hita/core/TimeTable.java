@@ -20,8 +20,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.login;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
+import static com.stupidtree.hita.HITAApplication.mainTimeTable;
+import static com.stupidtree.hita.HITAApplication.now;
+import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 import static com.stupidtree.hita.HITAApplication.timeWatcher;
 import static com.stupidtree.hita.core.CurriculumHelper.CURRICULUM_TYPE_COURSE;
 
@@ -111,12 +115,13 @@ public class TimeTable{
     }
 
     /*函数功能：添加事件*/
-    public boolean addEvent(int week, int DOW, int type, String eventName, String tag2, String tag3, String tag4, int begin, int last,boolean isWholeDay) {
+    public String addEvent(int week, int DOW, int type, String eventName, String tag2, String tag3, String tag4, int begin, int last,boolean isWholeDay) {
         SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
         if (week > core.totalWeeks) core.totalWeeks = week;
         EventItemHolder temp = new EventItemHolder(core.curriculumCode,type,eventName,tag2,tag3,tag4,getTimeAtNumber(begin,last).get(0),getTimeAtNumber(begin,last).get(1),DOW,isWholeDay);
         temp.weeks.add(week);
         Cursor c = mDatabase.query("timetable",null,EventItemHolder.QUERY_SELECTION,temp.getQueryParams(),null,null,null);
+        String uuid = temp.getUuid();
         if(c.moveToNext()){
             List<Integer> weeks = new ArrayList<>();
             String [] strs = c.getString(2).split(",");
@@ -128,30 +133,22 @@ public class TimeTable{
             }
             String newWeeks = getWeeksText(weeks);
             ContentValues cv = new ContentValues();
+            uuid = c.getString(c.getColumnIndex("uuid"));
             cv.put("weeks",newWeeks);
+            cv.put("uuid",uuid);
             mDatabase.update("timetable",cv,EventItemHolder.QUERY_SELECTION,temp.getQueryParams());
         }else{
             mDatabase.insert("timetable",null,temp.getContentValues());
         }
-//        int tempIndex = EventHolders.indexOf(temp);
-//        if(tempIndex>=0){
-//            EventItemHolder holder = EventHolders.get(tempIndex);
-//            if(!(holder.weeks.contains(week))) holder.weeks.add(week);
-//            else return false;
-//        }else{
-//            temp.addWeek(week);
-//            EventHolders.add(temp);
-//        }
         c.close();
-
-        return true;
+        return uuid;
     }
-    public boolean addEvent(int week, int DOW, int type, String eventName, String tag2, String tag3, String tag4, HTime start,HTime end,boolean isWholeDay) {
+    public String addEvent(int week, int DOW, int type, String eventName, String tag2, String tag3, String tag4, HTime start,HTime end,boolean isWholeDay) {
         SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
         if (week > core.totalWeeks) core.totalWeeks = week;
         EventItemHolder temp = new EventItemHolder(core.curriculumCode,type,eventName,tag2,tag3,tag4,start,end,DOW,isWholeDay);
         temp.weeks.add(week);
-
+        String uuid = temp.getUuid();
         Cursor c = mDatabase.query("timetable",null,EventItemHolder.QUERY_SELECTION,temp.getQueryParams(),null,null,null);
         if(c.moveToNext()){
             List<Integer> weeks = new ArrayList<>();
@@ -164,15 +161,17 @@ public class TimeTable{
             }
             String newWeeks = getWeeksText(weeks);
             ContentValues cv = new ContentValues();
+            uuid = c.getString(c.getColumnIndex("uuid"));
             cv.put("weeks",newWeeks);
+            cv.put("uuid",uuid);
             mDatabase.update("timetable",cv,EventItemHolder.QUERY_SELECTION,temp.getQueryParams());
         }else{
            mDatabase.insert("timetable",null,temp.getContentValues());
         }
         c.close();
-        return true;
+        return uuid;
     }
-    public boolean addEvent(EventItem ei) {
+    public String addEvent(EventItem ei) {
         SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
         int week,DOW, type;
         String eventName, tag2,  tag3, tag4;
@@ -189,7 +188,9 @@ public class TimeTable{
         if (week > core.totalWeeks) core.totalWeeks = week;
         EventItemHolder temp = new EventItemHolder(ei.curriculumCode,type,eventName,tag2,tag3,tag4,start,end,DOW,ei.isWholeDay);
         temp.weeks.add(week);
+        ei.setUuid(temp.getUuid());
         Cursor c = mDatabase.query("timetable",null,EventItemHolder.QUERY_SELECTION,temp.getQueryParams(),null,null,null);
+        String uuid = temp.getUuid();
         if(c.moveToNext()){
             List<Integer> weeks = new ArrayList<>();
             String [] strs = c.getString(2).split(",");
@@ -201,23 +202,27 @@ public class TimeTable{
             }
             String newWeeks = getWeeksText(weeks);
             ContentValues cv = temp.getContentValues();
+            uuid = c.getString(c.getColumnIndex("uuid"));
             cv.put("weeks",newWeeks);
+            cv.put("uuid",uuid);
             mDatabase.update("timetable",cv,EventItemHolder.QUERY_SELECTION,temp.getQueryParams());
         }else{
             Log.e("add",temp.toString());
             mDatabase.insert("timetable",null,temp.getContentValues());
         }
         c.close();
-        return true;
+
+        return uuid;
     }
 
 
     public boolean deleteEvent(EventItem ei,boolean deleteTask) {
+        Log.e("deleteEvent","dt:"+deleteTask);
         SQLiteDatabase mSQLiteDatabase = mDBHelper.getWritableDatabase();
        if(ei==null) return false;
         EventItemHolder eih = new EventItemHolder(ei);
-        Cursor c = mSQLiteDatabase.query("timetable",null,EventItemHolder.QUERY_SELECTION,
-                eih.getQueryParams(),null,null,null);
+        Cursor c = mSQLiteDatabase.query("timetable",null,"uuid=?",
+                new String[]{ei.getUuid()},null,null,null);
         if(c.moveToNext()){
             List<Integer> weeks = new ArrayList<>();
             String [] strs = c.getString(2).split(",");
@@ -227,18 +232,49 @@ public class TimeTable{
             if(!weeks.contains(ei.week))return false;
             else weeks.remove((Object)ei.week);
             if(weeks.size()==0){
-                mSQLiteDatabase.delete("timetable",EventItemHolder.QUERY_SELECTION,eih.getQueryParams());
+                mSQLiteDatabase.delete("timetable","uuid=?",new String[]{ei.getUuid()});
             }else{
                 String newWeeks = getWeeksText(weeks);
                 ContentValues cv = new ContentValues();
                 cv.put("weeks",newWeeks);
-                mSQLiteDatabase.update("timetable",cv,EventItemHolder.QUERY_SELECTION,eih.getQueryParams());
+                mSQLiteDatabase.update("timetable",cv,"uuid=?",new String[]{ei.getUuid()});
             }
             if(deleteTask){
-                mSQLiteDatabase.delete("task","to_week=? and to_dow=? and to_hour=? and to_minute=? and curriculum_code=? and ddl_name=?",
-                        new String[]{ei.week+"",ei.DOW+"",ei.endTime.hour+"",ei.endTime.minute+"",core.curriculumCode,eih.mainName});
+                mSQLiteDatabase.delete("task","uuid=?",
+                        new String[]{eih.tag4});
             }
         }else{
+            c.close();
+            return false;
+        }
+        c.close();
+        return true;
+    }
+
+    public boolean deleteEvent(String uuid,int week) {
+        SQLiteDatabase mSQLiteDatabase = mDBHelper.getWritableDatabase();
+        Cursor c = mSQLiteDatabase.query("timetable",null,"uuid=?",
+                new String[]{uuid},null,null,null);
+        if(c.moveToNext()){
+            List<Integer> weeks = new ArrayList<>();
+            String [] strs = c.getString(2).split(",");
+            for(int i=0;i<strs.length;i++){
+                if(!strs[i].isEmpty())weeks.add(Integer.parseInt(strs[i]));
+            }
+            if(!weeks.contains(week))return false;
+            else weeks.remove((Object)week);
+            if(weeks.size()==0){
+                mSQLiteDatabase.delete("timetable","uuid=?",
+                        new String[]{uuid});
+            }else{
+                String newWeeks = getWeeksText(weeks);
+                ContentValues cv = new ContentValues();
+                cv.put("weeks",newWeeks);
+                mSQLiteDatabase.update("timetable",cv,"uuid=?",
+                        new String[]{uuid});
+            }
+        }else{
+            c.close();
             return false;
         }
         c.close();
@@ -246,15 +282,41 @@ public class TimeTable{
     }
     public boolean deleteEvent(Calendar from,Calendar to,int type){
         List<EventItem> temp = getEventFrom(from,to,type);
-        if(temp==null) return false;
+        if(temp==null||temp.size()==0) return false;
         for(EventItem e:temp){
             deleteEvent(e,true);
         }
         return temp.size()>0;
     }
     public boolean deleteTask(Task ta){
-        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-        return sd.delete("task",Task.QUERY_SELECTION,ta.getQueryParams())!=0;
+        try {
+            if (ta.has_deadline&&!ta.ddlName.equals("null")) {
+                String ddlUUID = ta.ddlName.split(":::")[0];
+                int week = Integer.parseInt(ta.ddlName.split(":::")[1]);
+                mainTimeTable.deleteEvent(ddlUUID,week);
+            }
+            SQLiteDatabase sd = mDBHelper.getWritableDatabase();
+            return sd.delete("task",Task.QUERY_SELECTION,ta.getQueryParams())!=0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean finishTask(Task ta){
+        try {
+            if (ta.has_deadline&&!ta.ddlName.equals("null")) {
+                String ddlUUID = ta.ddlName.split(":::")[0];
+                int week = Integer.parseInt(ta.ddlName.split(":::")[1]);
+                mainTimeTable.deleteEvent(ddlUUID,week);
+            }
+            SQLiteDatabase sd = mDBHelper.getWritableDatabase();
+            ta.setFinished(true);
+            return sd.update("task",ta.getContentValues(),"uuid=?",new String[]{ta.getUuid()})!=0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
     public void clearEvent(int type){
         SQLiteDatabase mSQLiteDatabase = mDBHelper.getWritableDatabase();
@@ -268,7 +330,41 @@ public class TimeTable{
         SQLiteDatabase mSQLiteDatabase = mDBHelper.getWritableDatabase();
         mSQLiteDatabase.delete("timetable","curriculum_code=? and type=?",new String[]{curriculumCode+"",TIMETABLE_EVENT_TYPE_COURSE+""});
     }
+
+    public static boolean contains_integer(int[] array,int object){
+        for(int x:array) if(x==object) return true;
+        return false;
+    }
+
     /*函数功能：获取从从某周某天某点到某周某天某点内的所有事件列表*/
+    public List<EventItem> getEventFrom_typeLimit(int f_week, int f_dayOfWeek, HTime start, int t_week, int t_dayOfWeek, HTime end,int[] types) {
+        // System.out.println("开始查询,共有事件"+getEventsWithinWeeks(f_week,t_week).size()+"个");
+        if (t_dayOfWeek == -1) t_dayOfWeek = core.totalWeeks;
+        if (f_week > t_week) return null;
+        else if (f_week == t_week) {
+            if (f_dayOfWeek > t_dayOfWeek) return null;
+            else if (f_dayOfWeek == t_dayOfWeek) {
+                if (start.compareTo(end) > 0) return null;
+            }
+        }
+        List<EventItem> result = new ArrayList<EventItem>();
+        if (f_week > core.totalWeeks || t_week > core.totalWeeks || f_week <= 0 || t_week <= 0) return null;
+        for(EventItem ei:getEventsWithinWeeks(f_week,t_week)){
+            if ((types!=null&&types.length!=0&&!contains_integer(types,ei.eventType))||(ei.week == f_week && ei.DOW < f_dayOfWeek) || (ei.week == t_week && ei.DOW > t_dayOfWeek)) continue;
+            if ((ei.week == f_week && ei.DOW == f_dayOfWeek)) {
+                if(f_dayOfWeek==t_dayOfWeek){
+                    if (ei.hasCross(start) ||( ei.startTime.compareTo(start) >= 0&&ei.startTime.compareTo(end)<=0)) result.add(ei);
+                }else{
+                    if (ei.hasCross(start) ||( ei.startTime.compareTo(start) >= 0)) result.add(ei);
+                }
+            } else if (ei.week == t_week && ei.DOW== t_dayOfWeek) {
+                if ((ei.endTime.compareTo(end) <= 0 )|| ei.hasCross(end)) result.add(ei);
+            } else {
+                result.add(ei);
+            }
+        }
+         return result;
+    }//type<0表示所有类型
     public List<EventItem> getEventFrom(int f_week, int f_dayOfWeek, HTime start, int t_week, int t_dayOfWeek, HTime end,int type) {
         // System.out.println("开始查询,共有事件"+getEventsWithinWeeks(f_week,t_week).size()+"个");
         if (t_dayOfWeek == -1) t_dayOfWeek = core.totalWeeks;
@@ -295,8 +391,7 @@ public class TimeTable{
                 result.add(ei);
             }
         }
-        if (result.size() > 0) return result;
-        else return null;
+        return result;
     }//type<0表示所有类型
     public List<EventItem> getEventFrom(int f_week, int f_dayOfWeek, HTime start, int t_week, int t_dayOfWeek, HTime end) {
         //System.out.println("开始查询,共有事件"+getEventsWithinWeeks(f_week,t_week).size()+"个");
@@ -324,10 +419,10 @@ public class TimeTable{
                 result.add(ei);
             }
         }
-        if (result.size() > 0) return result;
-        else return null;
+        return result;
     }
     public List<EventItem> getEventFrom(Calendar from, Calendar to, int type) {
+        List<EventItem> result = new ArrayList<EventItem>();
         int f_week = core.getWeekOfTerm(from);
         int tempDOW1 = from.get(Calendar.DAY_OF_WEEK);
         int f_dayOfWeek =  tempDOW1==1?7:tempDOW1-1;
@@ -347,7 +442,7 @@ public class TimeTable{
                 if (start.compareTo(end) > 0) return null;
             }
         }
-        List<EventItem> result = new ArrayList<EventItem>();
+
         if (f_week > core.totalWeeks || t_week > core.totalWeeks || f_week <= 0 || t_week <= 0) return null;
         for(EventItem ei:getEventsWithinWeeks(f_week,t_week)){
             if ((type>0&&ei.eventType!=type)||(ei.week == f_week && ei.DOW < f_dayOfWeek) || (ei.week == t_week && ei.DOW > t_dayOfWeek)) continue;
@@ -363,10 +458,19 @@ public class TimeTable{
                 result.add(ei);
             }
         }
-        if (result.size() > 0) return result;
-        else return null;
+        return result;
     } //type<0表示所有类型
 
+    public List<EventItem> getAllEvents(){
+        List<EventItem> result = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        Cursor c =  sd.query("timetable",null,"curriculum_code=?",new String[]{core.curriculumCode},null,null,null);
+        while (c.moveToNext()){
+            result.addAll(new EventItemHolder(c).getAllEvents()) ;
+        }
+        c.close();
+        return result;
+    }
     public List<EventItem> getOneDayEvents(int week,int DOW){
         List<EventItem> result = new ArrayList<>();
         if(week<=0||week>core.totalWeeks) return result;
@@ -376,34 +480,69 @@ public class TimeTable{
         return result;
     }
 
-    public void addTask(String name){
-        Task t = new Task(core.curriculumCode,name);
-        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-        sd.insert("task",null,t.getContentValues());
+    public Task getTaskWithUUID(String uuid){
+        Task result = null;
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        Cursor c = sd.query("task",null,"uuid=?",new String[]{uuid},null,null,null);
+        if(c.moveToNext()){
+            result = new Task(c);
+        }
+        c.close();
+        return result;
     }
-    public void addTask(String name,int fW,int fDOW,int tW,int tDOW,HTime sTime,HTime tTime,String ddlName){
-        Task t = new Task(core.curriculumCode,name,fW,fDOW,tW,tDOW,sTime,tTime,ddlName);
-        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-        sd.insert("task",null,t.getContentValues());
-    }
+//    public void addTask(String name){
+//        Task t = new Task(core.curriculumCode,name);
+//        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
+//        sd.insert("task",null,t.getContentValues());
+//    }
+//    public void addTask(String name,int fW,int fDOW,int tW,int tDOW,HTime sTime,HTime tTime,String ddlName){
+//        Task t = new Task(core.curriculumCode,name,fW,fDOW,tW,tDOW,sTime,tTime,ddlName);
+//        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
+//        sd.insert("task",null,t.getContentValues());
+//    }
 
-    public void addTask(Task t){
+    public String addTask(Task t){
         SQLiteDatabase sd = mDBHelper.getWritableDatabase();
         sd.insert("task",null,t.getContentValues());
+        return t.getUuid();
     }
-    public void addTask(String name,int fW,int fDOW,HTime sTime,EventItem DDL){
+    public String addTask(String name,int fW,int fDOW,HTime sTime,int tW,int tDOW,HTime eTime,String ddlUUID){
             SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-            Task t = new Task(core.curriculumCode,name,fW,fDOW,sTime,DDL);
+            Task t = new Task(core.curriculumCode,name,fW,fDOW,sTime,tW,tDOW,eTime,ddlUUID);
             sd.insert("task",null,t.getContentValues());
+            return t.getUuid();
     }
 
-    public ArrayList<Task> getTasks(){
+    public ArrayList<Task> getUnfinishedTasks(){
         ArrayList<Task> res = new ArrayList<>();
         if(core==null) return res;
         SQLiteDatabase sld = mDBHelper.getReadableDatabase();
-        Cursor c = sld.query("task",null,"curriculum_code=?",new String[]{core.curriculumCode},null,null,null);
+        Cursor c = sld.query("task",null,"curriculum_code=? and finished=?",new String[]{core.curriculumCode,0+""},null,null,null);
+        while (c.moveToNext()){
+             res.add(new Task(c));
+        }
+        c.close();
+        return res;
+    }
+
+    public ArrayList<Task> getfinishedTasks(){
+        ArrayList<Task> res = new ArrayList<>();
+        if(core==null) return res;
+        SQLiteDatabase sld = mDBHelper.getReadableDatabase();
+        Cursor c = sld.query("task",null,"curriculum_code=? and finished=?",new String[]{core.curriculumCode,1+""},null,null,null);
         while (c.moveToNext()){
             res.add(new Task(c));
+        }
+        c.close();
+        return res;
+    }
+    public ArrayList<Task> getUnfinishedTaskWithLength(){
+        ArrayList<Task> res = new ArrayList<>();
+        if(core==null) return res;
+        SQLiteDatabase sld = mDBHelper.getReadableDatabase();
+        Cursor c = sld.query("task",null,"curriculum_code=? and has_length=? and finished=?",new String[]{core.curriculumCode,1+"",0+""},null,null,null);
+        while (c.moveToNext()){
+             res.add(new Task(c));
         }
         c.close();
         return res;
@@ -451,7 +590,6 @@ public class TimeTable{
         if(from.after(to)||from.get(Calendar.DAY_OF_MONTH)!=to.get(Calendar.DAY_OF_MONTH)) return null;
         List<TimePeriod> result = new ArrayList<>();
         List<EventItem> temp = getEventFrom(from,to,type);
-        if(temp==null) return result;
         Collections.sort(temp);
         if(temp==null||temp.size()==0){
             TimePeriod m = new TimePeriod();

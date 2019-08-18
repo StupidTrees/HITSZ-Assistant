@@ -11,6 +11,7 @@
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="MainTabsTextTheme_normal">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?android:textColorPrimary</item>
@@ -39,7 +40,6 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
-
 
 
     <!-- toolbar三线按钮样式颜色-->

@@ -201,10 +201,10 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                 }else{
                     Task t = new Task(mainTimeTable.core.curriculumCode,name.getText().toString());
                     if(adt_switch.isChecked()){
-                        mainTimeTable.addEvent(tW,tDOW, TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE,
-                                "DDL:"+name.getText().toString(),"任务截至","Deadline","请尽快完成",tT,tT,false);
+                        String ddlUUID = mainTimeTable.addEvent(tW,tDOW, TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE,
+                                "DDL:"+name.getText().toString(),"任务截至","Deadline",t.getUuid(),tT,tT,false);
                       //  mainTimeTable.addTask(name.getText().toString(),fW,fDOW,tW,tDOW,fT,tT,"DDL:"+name.getText().toString());
-                        t.arrangeTime(fW,fDOW,tW,tDOW,fT,tT,"DDL:"+name.getText().toString());
+                        t.arrangeTime(fW,fDOW,tW,tDOW,fT,tT,ddlUUID+":::"+tW);
                     }
                     //else  mainTimeTable.addTask(name.getText().toString());
                     if(adt_switch2.isChecked()){
@@ -214,17 +214,9 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                     mainTimeTable.addTask(t);
                     dismiss();
                     Intent mes = new Intent("COM.STUPIDTREE.HITA.TASK_REFRESH");
-                    Intent mes2 = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH_FROM_OTHER");
+                    Intent mes2 = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes);
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes2);
-//
-//                    getActivity().sendBroadcast(mes);
-//                    getActivity().sendBroadcast(mes2);
-//                    if(attachedFragment!=null) {
-//                        attachedFragment.Refresh();
-//                        if(attachedFragment.ftl!=null) attachedFragment.ftl.Refresh(FragmentTimeLine.TL_REFRESH_FROM_UNHIDE);
-//                    }
-
                     ActivityMain.saveData(getActivity());
                 }
             }

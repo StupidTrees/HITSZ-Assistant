@@ -5,253 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="70dp"
-        android:fillViewport="true"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
-
-            <com.zhouwei.mzbanner.MZBannerView
-                android:id="@+id/navi_banner"
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:clickable="false"
-                android:focusableInTouchMode="false"
-                android:visibility="visible"
-                app:canLoop="true"
-                app:middle_page_cover="true"
-                app:open_mz_mode="false">
-
-            </com.zhouwei.mzbanner.MZBannerView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:visibility="gone"
-                app:cardCornerRadius="16dp">
-
-                <ImageView
-                    android:id="@+id/imageView13"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/timeline_head_bg" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:fontFamily="sans-serif-black"
-                    android:text="校园"
-                    android:textColor="@color/material_text_icon_white"
-                    android:textSize="24sp" />
-
-                <ImageView
-                    android:layout_width="108dp"
-                    android:layout_height="108dp"
-                    android:layout_gravity="center"
-                    android:tint="@color/material_text_icon_white"
-                    app:srcCompat="@drawable/ic_university" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:focusableInTouchMode="true"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:visibility="gone"
-                app:cardCornerRadius="16dp">
-
-
-                <ImageView
-                    android:id="@+id/imageView12"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="false"
-                    android:visibility="visible"
-                    app:srcCompat="@drawable/timeline_head_bg" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:fontFamily="sans-serif-black"
-                    android:text="探索模式"
-                    android:textColor="@color/material_text_icon_white"
-                    android:textSize="24sp" />
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="108dp"
-                    android:layout_height="108dp"
-                    android:layout_gravity="center"
-                    android:tint="@color/material_text_icon_white"
-                    app:srcCompat="@drawable/ic_map" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:visibility="visible"
-                app:cardCornerRadius="12dp">
-
-                <ImageView
-                    android:id="@+id/canteen_card_bg"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:foreground="#99000000"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/timeline_head_bg" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_weight="1"
-                            android:fontFamily="sans-serif-black"
-                            android:gravity="center|left"
-                            android:text="食堂排行"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:id="@+id/canteen_more"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom|right"
-                            android:clickable="false"
-                            android:focusable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:padding="16dp"
-                            android:tint="@color/material_backgroung_white"
-                            app:srcCompat="@drawable/bt_dlg_more" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:orientation="horizontal">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="72dp"
-                            android:layout_height="72dp"
-                            android:layout_gravity="center|left"
-                            android:layout_marginLeft="16dp"
-                            app:cardCornerRadius="36dp">
-
-                            <ImageView
-                                android:id="@+id/canteen_no1_img"
-                                android:layout_width="70dp"
-                                android:layout_height="70dp"
-                                android:layout_gravity="center"
-                                android:visibility="visible"
-                                tools:srcCompat="@tools:sample/avatars" />
-
-                        </androidx.cardview.widget.CardView>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:gravity="center|top"
-                            android:orientation="vertical"
-                            android:visibility="visible">
-
-                            <TextView
-                                android:id="@+id/canteen_no1_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center|left"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="荔园一食堂"
-                                android:textColor="@color/material_text_icon_white"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/canteen_no2_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center|left"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="荔园一食堂"
-                                android:textColor="@color/material_text_icon_white" />
-
-                            <TextView
-                                android:id="@+id/canteen_no3_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center|left"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="荔园一食堂"
-                                android:textColor="@color/material_text_icon_white"
-                                android:textSize="14sp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/canteen_update"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginRight="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:alpha="0.6"
-                        android:gravity="center|right"
-                        android:text="最后更新于：2019年5月25日"
-                        android:textColor="@color/material_text_icon_white"
-                        android:textSize="10sp" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -269,57 +22,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="80dp"
                 android:orientation="vertical"
                 app:layout_collapseMode="none"
                 app:layout_collapseParallaxMultiplier="0.95">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/navi_card_head"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:visibility="visible"
-                    app:cardCornerRadius="16dp">
-
-
-                    <ImageView
-                        android:id="@+id/navi_page_head_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="bottom"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/timeline_head_bg" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/navi_page_head_hint"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-black"
-                            android:text="今日哈工深"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="24sp" />
-
-                        <TextView
-                            android:id="@+id/navi_page_head_subhint"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="同学们好"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -327,7 +32,17 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginRight="16dp"
-                    app:cardCornerRadius="16dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="@color/material_backgroung_grey_50"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="6dp">
+
+                    <ImageView
+                        android:id="@+id/yx_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@drawable/timeline_head_bg" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -341,15 +56,104 @@
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginRight="16dp"
-                            android:layout_marginBottom="16dp"
+                            android:layout_marginBottom="24dp"
                             android:layout_weight="1"
                             android:fontFamily="sans-serif-black"
                             android:text="2019迎新"
-                            android:textColor="@color/material_secondary_text"
-                            android:textSize="18sp" />
+                            android:textColor="@color/material_text_icon_white"
+                            android:textSize="24sp" />
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="16dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <androidx.cardview.widget.CardView
+                                    android:id="@+id/navipage_card_yx_guide_toschool"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="#00FFFFFF"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:layout_width="36dp"
+                                        android:layout_height="36dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_business" />
+                                </androidx.cardview.widget.CardView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="去学校"
+                                    android:textColor="@color/material_text_icon_white"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <androidx.cardview.widget.CardView
+                                    android:id="@+id/navipage_card_yx_guide_tologin"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="#00FFFFFF"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:layout_width="36dp"
+                                        android:layout_height="36dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_yx_signup" />
+                                </androidx.cardview.widget.CardView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="去报到地点"
+                                    android:textColor="@color/material_text_icon_white"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginBottom="16dp"
                             android:layout_weight="1"
@@ -371,13 +175,13 @@
                                     android:layout_marginRight="16dp"
                                     android:clickable="true"
                                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardBackgroundColor="#00FFFFFF"
                                     app:cardCornerRadius="25dp"
                                     app:cardElevation="0dp">
 
                                     <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
+                                        android:layout_width="36dp"
+                                        android:layout_height="36dp"
                                         android:layout_gravity="center"
                                         android:layout_weight="1"
                                         android:tint="@color/material_text_icon_white"
@@ -391,84 +195,7 @@
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
                                     android:text="入学日程"
-                                    android:textSize="12sp" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <androidx.cardview.widget.CardView
-                                    android:id="@+id/navipage_card_yx_guide_toschool"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:layout_gravity="center"
-                                    android:layout_marginLeft="16dp"
-                                    android:layout_marginRight="16dp"
-                                    android:clickable="true"
-                                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                                    app:cardBackgroundColor="?attr/colorPrimary"
-                                    app:cardCornerRadius="25dp"
-                                    app:cardElevation="0dp">
-
-                                    <ImageView
-                                        android:layout_width="24dp"
-                                        android:layout_height="24dp"
-                                        android:layout_gravity="center"
-                                        android:layout_weight="1"
-                                        android:tint="@color/material_text_icon_white"
-                                        app:srcCompat="@drawable/ic_business" />
-                                </androidx.cardview.widget.CardView>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginTop="8dp"
-                                    android:gravity="center"
-                                    android:text="去学校"
-                                    android:textSize="12sp" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <androidx.cardview.widget.CardView
-                                    android:id="@+id/navipage_card_yx_guide_tologin"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:layout_gravity="center"
-                                    android:layout_marginLeft="16dp"
-                                    android:layout_marginRight="16dp"
-                                    android:clickable="true"
-                                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                                    app:cardBackgroundColor="?attr/colorPrimary"
-                                    app:cardCornerRadius="25dp"
-                                    app:cardElevation="0dp">
-
-                                    <ImageView
-                                        android:layout_width="24dp"
-                                        android:layout_height="24dp"
-                                        android:layout_gravity="center"
-                                        android:layout_weight="1"
-                                        android:tint="@color/material_text_icon_white"
-                                        app:srcCompat="@drawable/ic_yx_signup" />
-                                </androidx.cardview.widget.CardView>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginTop="8dp"
-                                    android:gravity="center"
-                                    android:text="去报到地点"
+                                    android:textColor="@color/material_text_icon_white"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -489,13 +216,13 @@
                                     android:layout_marginRight="16dp"
                                     android:clickable="true"
                                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardBackgroundColor="#00FFFFFF"
                                     app:cardCornerRadius="25dp"
                                     app:cardElevation="0dp">
 
                                     <ImageView
-                                        android:layout_width="24dp"
-                                        android:layout_height="24dp"
+                                        android:layout_width="36dp"
+                                        android:layout_height="36dp"
                                         android:layout_gravity="center"
                                         android:layout_weight="1"
                                         android:tint="@color/material_text_icon_white"
@@ -509,6 +236,7 @@
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
                                     android:text="辅导员"
+                                    android:textColor="@color/material_text_icon_white"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -522,10 +250,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="16dp">
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -533,20 +261,23 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/navi_page_head_hint2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
-                            android:layout_margin="16dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginBottom="8dp"
                             android:layout_weight="1"
                             android:fontFamily="sans-serif-black"
-                            android:text="校园服务"
-                            android:textColor="@color/material_secondary_text"
+                            android:text="教务功能"
+                            android:textColor="@color/material_primary_text"
                             android:textSize="18sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginTop="16dp"
                             android:layout_marginBottom="16dp"
                             android:layout_weight="1"
                             android:orientation="horizontal">
@@ -572,6 +303,12 @@
                                     app:cardElevation="0dp">
 
                                     <ImageView
+                                        android:id="@+id/imageView38"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+
+                                    <ImageView
                                         android:layout_width="24dp"
                                         android:layout_height="24dp"
                                         android:layout_gravity="center"
@@ -586,14 +323,175 @@
                                     android:layout_gravity="center"
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
-                                    android:text="教务系统"
+                                    android:text="掌上教务"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:visibility="visible">
+
+                                <androidx.cardview.widget.CardView
+                                    android:id="@+id/navipage_card_xl"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_dlg_timetable_date" />
+                                </androidx.cardview.widget.CardView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="校历"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:visibility="visible">
+
+                                <androidx.cardview.widget.CardView
+                                    android:id="@+id/navipage_card_empty_classroom"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:id="@+id/imageView41"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_dlg_tt_classroom" />
+                                </androidx.cardview.widget.CardView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="空教室"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/navipage_card_info_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:visibility="visible">
+
+                                <androidx.cardview.widget.CardView
+                                    android:id="@+id/navipage_card_info"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="16dp"
+                                    android:layout_marginRight="16dp"
+                                    android:clickable="true"
+                                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                                    app:cardBackgroundColor="?attr/colorPrimary"
+                                    app:cardCornerRadius="25dp"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:id="@+id/imageView43"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:tint="@color/material_text_icon_white"
+                                        app:srcCompat="@drawable/ic_menu_bulletin" />
+                                </androidx.cardview.widget.CardView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="8dp"
+                                    android:gravity="center"
+                                    android:text="信息窗口"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            android:fontFamily="sans-serif-black"
+                            android:text="校内服务"
+                            android:textColor="@color/material_primary_text"
+                            android:textSize="18sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
@@ -609,6 +507,12 @@
                                     app:cardBackgroundColor="?attr/colorPrimary"
                                     app:cardCornerRadius="25dp"
                                     app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:id="@+id/imageView39"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -650,6 +554,12 @@
                                     app:cardElevation="0dp">
 
                                     <ImageView
+                                        android:id="@+id/imageView40"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+
+                                    <ImageView
                                         android:layout_width="24dp"
                                         android:layout_height="24dp"
                                         android:layout_gravity="center"
@@ -673,54 +583,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:visibility="visible">
-
-                                <androidx.cardview.widget.CardView
-                                    android:id="@+id/navipage_card_empty_classroom"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:layout_gravity="center"
-                                    android:layout_marginLeft="16dp"
-                                    android:layout_marginRight="16dp"
-                                    android:clickable="true"
-                                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                                    app:cardBackgroundColor="?attr/colorPrimary"
-                                    app:cardCornerRadius="25dp"
-                                    app:cardElevation="0dp">
-
-                                    <ImageView
-                                        android:layout_width="24dp"
-                                        android:layout_height="24dp"
-                                        android:layout_gravity="center"
-                                        android:layout_weight="1"
-                                        android:tint="@color/material_text_icon_white"
-                                        app:srcCompat="@drawable/ic_dlg_tt_classroom" />
-                                </androidx.cardview.widget.CardView>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginTop="8dp"
-                                    android:gravity="center"
-                                    android:text="空教室"
-                                    android:textSize="12sp" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
                                 android:orientation="vertical">
 
                                 <androidx.cardview.widget.CardView
@@ -735,6 +597,12 @@
                                     app:cardBackgroundColor="?attr/colorPrimary"
                                     app:cardCornerRadius="25dp"
                                     app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:id="@+id/imageView42"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -752,47 +620,6 @@
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
                                     android:text="校内地点"
-                                    android:textSize="12sp" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/navipage_card_info_layout"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:visibility="visible">
-
-                                <androidx.cardview.widget.CardView
-                                    android:id="@+id/navipage_card_info"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp"
-                                    android:layout_gravity="center"
-                                    android:layout_marginLeft="16dp"
-                                    android:layout_marginRight="16dp"
-                                    android:clickable="true"
-                                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                                    app:cardBackgroundColor="?attr/colorPrimary"
-                                    app:cardCornerRadius="25dp"
-                                    app:cardElevation="0dp">
-
-                                    <ImageView
-                                        android:layout_width="24dp"
-                                        android:layout_height="24dp"
-                                        android:layout_gravity="center"
-                                        android:layout_weight="1"
-                                        android:tint="@color/material_text_icon_white"
-                                        app:srcCompat="@drawable/ic_menu_bulletin" />
-                                </androidx.cardview.widget.CardView>
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginTop="8dp"
-                                    android:gravity="center"
-                                    android:text="信息窗口"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -816,6 +643,12 @@
                                     app:cardBackgroundColor="?attr/colorPrimary"
                                     app:cardCornerRadius="25dp"
                                     app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:id="@+id/imageView44"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -881,7 +714,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:orientation="vertical">
+                                android:orientation="vertical"
+                                android:visibility="gone">
 
                                 <androidx.cardview.widget.CardView
                                     android:id="@+id/navi_card_university"
@@ -895,6 +729,12 @@
                                     app:cardBackgroundColor="?attr/colorPrimary"
                                     app:cardCornerRadius="25dp"
                                     app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:id="@+id/imageView45"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -921,6 +761,37 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="6dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <com.zhouwei.mzbanner.MZBannerView
+                    android:id="@+id/navi_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_marginBottom="18dp"
+                    android:clickable="true"
+                    android:focusableInTouchMode="false"
+                    android:visibility="visible"
+                    app:canLoop="false"
+                    app:middle_page_cover="true"
+                    app:open_mz_mode="false">
+
+                </com.zhouwei.mzbanner.MZBannerView>
+
             </LinearLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -942,6 +813,7 @@
         android:id="@+id/searchBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_behavior="com.lapism.searchview.widget.SearchBehavior"
         app:search_hint="发现"
         app:search_logo="google"

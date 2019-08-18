@@ -9,6 +9,8 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -48,6 +50,7 @@ public class ActivityTeacher extends BaseActivity {
     ImageView teacherAvatar;
     TextView name, school, gender, title, code, detail, phone, email;
     Teacher teacher;
+    CardView avatar_card;
     ProgressBar refresh;
     AppBarLayout appBarLayout;
 
@@ -147,6 +150,9 @@ public class ActivityTeacher extends BaseActivity {
                 teacherAvatar.setScaleX(scale);
                 teacherAvatar.setScaleY(scale);
                 teacherAvatar.setTranslationY(mHeadImgScale * verticalOffset);
+                avatar_card.setScaleX(scale);
+                avatar_card.setScaleY(scale);
+               avatar_card.setTranslationY(mHeadImgScale * verticalOffset);
             }
         });
     }
@@ -162,6 +168,7 @@ public class ActivityTeacher extends BaseActivity {
         detail = findViewById(R.id.teacher_detail);
         code = findViewById(R.id.teacher_code);
         teacherAvatar = findViewById(R.id.teacher_avatar);
+        avatar_card = findViewById(R.id.card_avatar);
     }
 
     void loadInfos() {
@@ -173,7 +180,8 @@ public class ActivityTeacher extends BaseActivity {
         email.setText(TextUtils.isEmpty(teacher.getEmail()) ? "无数据" : teacher.getEmail());
         detail.setText(TextUtils.isEmpty(teacher.getDetail()) ? "无数据" : teacher.getDetail());
         code.setText(teacher.getTeacherCode());
-        Glide.with(this).load(teacher.getPhotoLink()).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(teacherAvatar);
+        Glide.with(this).load(teacher.getPhotoLink())
+                .placeholder(R.drawable.ic_account_activated).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(teacherAvatar);
 
     }
 

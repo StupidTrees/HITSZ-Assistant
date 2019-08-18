@@ -2,7 +2,6 @@ package com.stupidtree.hita.activities;
 
 import android.Manifest;
 import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -15,10 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.airbnb.lottie.LottieComposition;
-import com.airbnb.lottie.LottieCompositionFactory;
-import com.airbnb.lottie.LottieListener;
-import com.airbnb.lottie.OnCompositionLoadedListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -295,6 +290,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         waveLineView.setVolume(0);
         if (mSpeechRecognizer.isListening()) mSpeechRecognizer.stopListening();
         if (waveLineView.isRunning()) waveLineView.stopAnim();
+        if(mSpeechSynthesizer.isSpeaking()) mSpeechSynthesizer.stopSpeaking();
     }
 
     //初始化讯飞语音各参数
@@ -876,7 +872,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                     c.set(Calendar.HOUR_OF_DAY, 23);
                     c.set(Calendar.MINUTE, 59);
                     List<EventItem> tempList = mainTimeTable.getEventFrom(now, c, -1);
-                    if(tempList==null) nextevent = null;
+                    if(tempList==null||tempList.size()==0) nextevent = null;
                     else {
                         Log.e("!!", tempList.toString());
                         for (EventItem ei : tempList) {
@@ -975,7 +971,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                     textToRead = "好的，提醒你"+ei.mainName;
                 }
             }else if(msg.get("function").getAsString().equals("search_task")){
-                List<Task> tl = mainTimeTable.getTasks();
+                List<Task> tl = mainTimeTable.getUnfinishedTasks();
                 messagge.setTaskList(tl);
                 if(tl.size()>0){
                     textOnShow = "还有如下"+tl.size()+"个待办任务";
@@ -1470,7 +1466,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
             toW = allCurriculum.get(thisCurriculumIndex).totalWeeks;
         toW = (toW > allCurriculum.get(thisCurriculumIndex).totalWeeks) ? allCurriculum.get(thisCurriculumIndex).totalWeeks : toW;
         System.out.println("解析出的待添加DDL为：name="+name+"fW=" + fromW + ",fDOW=" + fromDOW + ",fT=" + fromT.tellTime() + ",tW=" + toW + ",tDOW=" + toDOW + ",tT=" + toT.tellTime());
-       return  new EventItem(mainTimeTable.core.curriculumCode,TIMETABLE_EVENT_TYPE_REMIND,name,"提醒","无注释","无注释",fromT,fromT,fromW,fromDOW,wholeday);
+        return  new EventItem(null,mainTimeTable.core.curriculumCode,TIMETABLE_EVENT_TYPE_REMIND,name,"提醒","无注释","无注释",fromT,fromT,fromW,fromDOW,wholeday);
     }
 
 

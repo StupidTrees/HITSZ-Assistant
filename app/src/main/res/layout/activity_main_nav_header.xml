@@ -3,15 +3,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
 
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
 
     <ImageView
         android:id="@+id/drawer_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:foreground="#88FFFFFF"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:scaleType="centerCrop"
         android:visibility="visible"
         app:srcCompat="@drawable/timeline_head_bg_reverse" />
@@ -19,67 +21,81 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:orientation="vertical">
 
 
-        <FrameLayout
-            android:id="@+id/drawer_header"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
+            android:layout_gravity="bottom|left"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="false"
             android:fitsSystemWindows="false"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:gravity="bottom"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:theme="@style/button_ripple_white">
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/main_drawer_user_avatar_card"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="6dp">
+
+                <ImageView
+                    android:id="@+id/main_drawer_user_avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:transitionName="useravatar" />
+            </androidx.cardview.widget.CardView>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_margin="16dp"
-                android:clickable="false"
-                android:fitsSystemWindows="false"
-                android:gravity="center"
                 android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/main_drawer_user_avatar"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="36dp"
-                    android:clickable="false"
-                    android:focusableInTouchMode="false"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:foregroundGravity="center"
-                    android:scaleType="centerCrop"
-                    android:transitionName="useravatar"
-                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/main_drawer_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="2dp"
+                    android:layout_marginRight="24dp"
+                    android:fontFamily="sans-serif-black"
+                    android:singleLine="true"
                     android:text="杨涵丞"
-                    android:textColor="@color/material_primary_text"
-                    android:textSize="10sp" />
+                    android:textColor="@color/material_text_icon_white"
+                    android:textSize="18sp" />
 
+                <TextView
+                    android:id="@+id/main_drawer_user_signature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="2dp"
+                    android:layout_marginRight="24dp"
+                    android:alpha="0.8"
+                    android:singleLine="true"
+                    android:text="杨涵丞"
+                    android:textColor="@color/material_text_icon_white"
+                    android:textSize="14sp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="bottom"
-                android:background="@color/material_backgroung_grey_300"
-                android:visibility="gone"></View>
-
-        </FrameLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#88FFFFFF"
+            android:background="@drawable/drawer_radius_bg"
             android:gravity="center|top"
             android:orientation="horizontal">
 
@@ -95,12 +111,11 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
-                    android:layout_marginBottom="8dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="#00000000"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="0dp">
 
@@ -116,9 +131,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="16dp"
                     android:text="科目管理"
-                    android:textColor="@color/material_primary_text"
+                    android:textColor="@color/material_secondary_text"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -135,12 +149,11 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
-                    android:layout_marginBottom="8dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="#00000000"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="0dp">
 
@@ -157,9 +170,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="16dp"
                     android:text="课表管理"
-                    android:textColor="@color/material_primary_text"
+                    android:textColor="@color/material_secondary_text"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -176,18 +188,17 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
-                    android:layout_marginBottom="8dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="#00000000"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="0dp">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:tint="?attr/colorPrimary"
                         app:srcCompat="@drawable/ic_menu_theme" />
@@ -197,9 +208,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="16dp"
                     android:text="主题"
-                    android:textColor="@color/material_primary_text"
+                    android:textColor="@color/material_secondary_text"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -216,12 +226,11 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
-                    android:layout_marginBottom="8dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="#00000000"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="0dp">
 
@@ -237,23 +246,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="16dp"
                     android:text="动态日程"
-                    android:textColor="@color/material_primary_text"
+                    android:textColor="@color/material_secondary_text"
                     android:textSize="12sp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_gravity="bottom"
-            android:background="@color/material_backgroung_grey_300"
-            android:visibility="gone"></View>
-
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/drawer_bt_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|right|top"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="64dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="16dp"
+        android:tint="@color/material_text_icon_white"
+        app:srcCompat="@drawable/ic_settings"
+        app:theme="@style/button_ripple_white" />
 
 </FrameLayout>

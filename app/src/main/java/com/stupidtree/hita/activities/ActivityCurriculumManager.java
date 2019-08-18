@@ -120,7 +120,7 @@ public class ActivityCurriculumManager extends BaseActivity {
                                 }
                                 saveData(ActivityCurriculumManager.this);
                                 defaultSP.edit().putInt("thisCurriculum",thisCurriculumIndex).apply();
-                                timeWatcher.refreshProgress(false);
+                                timeWatcher.refreshProgress(false,true);
                                 finish();
                             }
                         }).create();

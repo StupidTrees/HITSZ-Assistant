@@ -13,6 +13,7 @@ import android.os.Bundle;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.core.util.Pair;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -37,6 +38,7 @@ import android.widget.Toast;
 import com.gelitenight.waveview.library.WaveView;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.google.android.material.snackbar.Snackbar;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.activities.ActivityUserCenter;
@@ -76,6 +78,7 @@ import static com.stupidtree.hita.TimeWatcher.nowProgress;
 import static com.stupidtree.hita.TimeWatcher.todaysEvents;
 
 import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_COURSE;
+import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE;
 import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC;
 import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_EXAM;
 import static com.stupidtree.hita.HITAApplication.*;
@@ -84,13 +87,14 @@ import static com.stupidtree.hita.HITAApplication.*;
 public class FragmentTimeLine extends BaseFragment implements
         RefreshBroadcastReceiver.ActionListener {
     public static final int TL_REFRESH_FROM_TIMETICK = 111;
+    public static final int TL_REFRESH_FROM_TASK = 114;
     public static final int TL_REFRESH_FROM_UNHIDE = 112;
     public static final int TL_REFRESH_FROM_DELETE = 113;
     boolean hasInit = false;
     boolean isFirst = false;
     CollapsingToolbarLayout mCollapsingToolbarLayout;
     AppBarLayout mAppBarLayout;
-    FrameLayout noneLayout;
+    NestedScrollView noneLayout;
     View[] heads;
     WaveView waveView;
     WaveViewHelper waveViewHelper;
@@ -98,7 +102,6 @@ public class FragmentTimeLine extends BaseFragment implements
     TimelineListAdapter TimeLineListAdapter;
     TimeLineWholedayAdapter timelineWholedayAdapter;
     RecyclerView TimeLineList,timelineWholedayList;
-    LayoutAnimationController layoutAnimationController;
     List<EventItem> timelineRes,wholeDayRes;
     ImageView bt_bar_timetable,bt_bar_addEvent;
     LinearLayout head_counting,head_goNow;
@@ -132,19 +135,18 @@ public class FragmentTimeLine extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments()!=null) isFirst = getArguments().getBoolean("isFirst");
-        layoutAnimationController = AnimationUtils.loadLayoutAnimation(FragmentTimeLine.this.getContext(), R.anim.recycler_layout_animation_falls_down);
+        //layoutAnimationController = AnimationUtils.loadLayoutAnimation(FragmentTimeLine.this.getContext(), R.anim.recycler_layout_animation_falls_down);
 
         initReciever();
     }
 
 
-    void initReciever(){
+    private void initReciever(){
         refreshReciever = new RefreshBroadcastReceiver();
         refreshReciever.setListener(this);
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter iF = new IntentFilter();
-        iF.addAction("COM.STUPIDTREE.HITA.TIMELINE_REFRESH_FROM_TIMETICK");
-        iF.addAction("COM.STUPIDTREE.HITA.TIMELINE_REFRESH_FROM_OTHER");
+        iF.addAction("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
         localBroadcastManager.registerReceiver(refreshReciever,iF);
     }
 
@@ -153,7 +155,7 @@ public class FragmentTimeLine extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_timeline, container, false);
-        timeWatcher.refreshProgress(true);
+        timeWatcher.refreshProgress(true,true);
         initViews(v);
         initListAndAdapter(v);
 
@@ -174,7 +176,7 @@ public class FragmentTimeLine extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        Refresh(TL_REFRESH_FROM_UNHIDE);
+        Refresh(TL_REFRESH_FROM_UNHIDE,false);
     }
 
     public void showHeadCard(){
@@ -231,8 +233,11 @@ public class FragmentTimeLine extends BaseFragment implements
 
     @Override
     public void receive(Context context, Intent intent) {
-        if(intent.getAction().equals("COM.STUPIDTREE.HITA.TIMELINE_REFRESH_FROM_TIMETICK")) Refresh(TL_REFRESH_FROM_TIMETICK);
-        else Refresh(TL_REFRESH_FROM_UNHIDE);
+        if(intent.getAction().equals("COM.STUPIDTREE.HITA.TIMELINE_REFRESH")){
+            if(intent.hasExtra("from")&&intent.getStringExtra("from").equals("time_tick")) Refresh(TL_REFRESH_FROM_TIMETICK,false);
+            else if(intent.hasExtra("from")&&intent.getStringExtra("from").equals("task")) Refresh(TL_REFRESH_FROM_TASK,false);
+            else Refresh(TL_REFRESH_FROM_UNHIDE,false);
+        }
     }
 
     @Override
@@ -394,7 +399,7 @@ public class FragmentTimeLine extends BaseFragment implements
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Refresh(TL_REFRESH_FROM_TIMETICK);
+                Refresh(TL_REFRESH_FROM_TIMETICK,true);
             }
         });
     }
@@ -439,7 +444,7 @@ public class FragmentTimeLine extends BaseFragment implements
             }else if(new HTime(now).compareTo(new HTime(8,15))<0&&new HTime(now).compareTo(new HTime(5,00))>0){
                 switchHeadView(head_image,R.drawable.ic_sunny);
                 titleToSet = HContext.getString(R.string.timeline_head_goodmorning_title);
-                subtitltToSet= "今天共有"+ TimeWatcher.getTodayCourseNum()+"节课";
+                subtitltToSet= "今天共有"+ timeWatcher.getTodayCourseNum()+"节课";
                 headCardClickListener.setMode(headCardClickListener.SHOW_NEXT);
             }else if(new HTime(now).compareTo(new HTime(12,15))>0&&new HTime(now).compareTo(new HTime(13,00))<0){
                 switchHeadView(head_image,R.drawable.ic_lunch);
@@ -521,33 +526,36 @@ public class FragmentTimeLine extends BaseFragment implements
 
     }
 
-    private void Refresh(int from) {
+    private void Refresh(int from,boolean swipe) {
         if(!hasInit) return;
         if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
-        pageTask = new RefreshTask(from);
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask = new RefreshTask(from,swipe);
+        pageTask.execute();
     }
 
     private class RefreshTask extends AsyncTask<String, Integer, Integer> {
         int from;
-        RefreshTask(int f) {
+        boolean swipe;
+        RefreshTask(int f,boolean swipe) {
+            this.swipe = swipe;
             from = f;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            timelineRes.clear();
-            wholeDayRes.clear();
-            swipeRefreshLayout.setRefreshing(true);
+            if(swipe)swipeRefreshLayout.setRefreshing(true);
         }
 
         @Override
         protected Integer doInBackground(String... strings) {
             correctData();
             if(!isThisTerm) return -2;
-            if (from != TL_REFRESH_FROM_TIMETICK) timeWatcher.refreshProgress(true);
+            boolean refreshTask = from!=TL_REFRESH_FROM_TASK;
+            if (from != TL_REFRESH_FROM_TIMETICK) timeWatcher.refreshProgress(true,refreshTask);
             if (getDataState() == DATA_STATE_NONE_CURRICULUM) return DATA_STATE_NONE_CURRICULUM;
+            timelineRes.clear();
+            wholeDayRes.clear();
             for(EventItem ei:todaysEvents){
               //  Log.e("ei:",ei.mainName+","+ei.isWholeDay);
                 if(ei.isWholeDay) wholeDayRes.add(ei);
@@ -580,8 +588,8 @@ public class FragmentTimeLine extends BaseFragment implements
             }
             timelineWholedayAdapter.notifyDataSetChanged();
                 if(from!=TL_REFRESH_FROM_DELETE) TimeLineListAdapter.notifyDataSetChanged();
-                if (from != TL_REFRESH_FROM_UNHIDE&&from!=TL_REFRESH_FROM_DELETE) {
-                    TimeLineList.setLayoutAnimation(layoutAnimationController);
+                if (from != TL_REFRESH_FROM_UNHIDE&&from!=TL_REFRESH_FROM_DELETE&&swipe) {
+                   // TimeLineList.setLayoutAnimation(layoutAnimationController);
                     TimeLineList.scheduleLayoutAnimation();
                 }
 
@@ -595,7 +603,7 @@ public class FragmentTimeLine extends BaseFragment implements
         }
         @Override
         protected Object doInBackground(Object[] objects) {
-            boolean res = mainTimeTable.deleteEvent(timelineRes.get(position),true);
+            boolean res = mainTimeTable.deleteEvent(timelineRes.get(position),timelineRes.get(position).eventType==TIMETABLE_EVENT_TYPE_DEADLINE);
             if(res){
                 todaysEvents.remove(timelineRes.get(position));
                 timelineRes.remove(position);
@@ -612,9 +620,14 @@ public class FragmentTimeLine extends BaseFragment implements
                 TimeLineListAdapter.notifyItemRemoved(position);
                 if(position != timelineRes.size()){ // 如果移除的是最后一个，忽略
                     TimeLineListAdapter.notifyItemRangeChanged(position, todaysEvents.size() - position);
+                }else{
+                    if(position-1>=0)TimeLineListAdapter.notifyItemChanged(position-1);
                 }
                 UpdateHeadView();
-
+                if(todaysEvents.size()==0) {
+                    noneLayout.setVisibility(View.VISIBLE);
+                    TimeLineList.setVisibility(View.GONE);
+                }
             }
             Intent mes = new Intent("COM.STUPIDTREE.HITA.TASK_REFRESH");
             localBroadcastManager.sendBroadcast(mes);
@@ -630,11 +643,15 @@ public class FragmentTimeLine extends BaseFragment implements
         }
         @Override
         protected Object doInBackground(Object[] objects) {
-            boolean res = mainTimeTable.deleteEvent(wholeDayRes.get(position),true);
+            boolean res = mainTimeTable.deleteEvent(wholeDayRes.get(position),wholeDayRes.get(position).eventType==TIMETABLE_EVENT_TYPE_DEADLINE);
             if(res){
                 timeWatcher.refreshNowAndNextEvent();
                 todaysEvents.remove(wholeDayRes.get(position));
                 wholeDayRes.remove(position);
+                if(todaysEvents.size()==0) {
+                    noneLayout.setVisibility(View.VISIBLE);
+                    TimeLineList.setVisibility(View.GONE);
+                }
             }
             return res;
 
@@ -733,9 +750,11 @@ public class FragmentTimeLine extends BaseFragment implements
         public void onClick(View v) {
             if (isDataAvailable()) {
                 if(isThisTerm)aef.show(getFragmentManager(), "add_event");
-                else   Toast.makeText(FragmentTimeLine.this.getContext(), "这学期还没开始呐，试着切换课表为已开始学期吧！", Toast.LENGTH_SHORT).show();
+                else Snackbar.make(v,"这学期还没开始呐，试着切换课表为已开始学期吧！",Snackbar.LENGTH_SHORT).show();
+                   // Toast.makeText(FragmentTimeLine.this.getContext(), , Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(FragmentTimeLine.this.getContext(), "请先导入课表！", Toast.LENGTH_SHORT).show();
+                Snackbar.make(v,"请先导入课表！",Snackbar.LENGTH_SHORT).show();
+               // Toast.makeText(FragmentTimeLine.this.getContext(), "请先导入课表！", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -842,6 +861,7 @@ public class FragmentTimeLine extends BaseFragment implements
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
             final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
             value1.setText(ei.tag2.isEmpty() ? "无" : ei.tag2);//标签1
+            value2.setText(ei.tag3.isEmpty() ? "无" : ei.tag3);//标签2
             value2.setText(ei.tag3.isEmpty() ? "无" : ei.tag3);//标签2
             value3.setText(ei.startTime.tellTime() + "-" + ei.endTime.tellTime());
         } else if (ei.eventType == TIMETABLE_EVENT_TYPE_EXAM) {

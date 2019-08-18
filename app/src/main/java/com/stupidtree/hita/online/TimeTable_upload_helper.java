@@ -26,6 +26,7 @@ public class TimeTable_upload_helper{
     String weeks = null;
     boolean is_whole_day;
     public String curriculum_code;
+    String uuid;
 
     public TimeTable_upload_helper(Cursor c){
         curriculum_code = c.getString(c.getColumnIndex("curriculum_code"));
@@ -40,7 +41,9 @@ public class TimeTable_upload_helper{
         to_minute = c.getInt(c.getColumnIndex("to_minute"));
         dow = c.getInt(c.getColumnIndex("dow"));
         weeks = c.getString(c.getColumnIndex("weeks"));
+        uuid = c.getString(c.getColumnIndex("uuid"));
         is_whole_day = c.getInt(c.getColumnIndex("is_whole_day"))!=0;
+
        // Log.e("nuh",toString());
     }
     
@@ -88,6 +91,7 @@ public class TimeTable_upload_helper{
         cv.put("tag4",tag4);
         cv.put("type",type);
         cv.put("is_whole_day",is_whole_day);
+        cv.put("uuid",uuid);
         return cv;
     }
 }

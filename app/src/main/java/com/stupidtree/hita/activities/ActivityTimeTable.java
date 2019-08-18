@@ -7,9 +7,10 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.ActionBarDrawerToggle;
+
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
@@ -21,7 +22,6 @@ import android.widget.Toast;
 
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.diy.AutoLocateHorizontalView;
 import com.stupidtree.hita.adapter.TimeTablePagerAdapter;
 import com.stupidtree.hita.fragments.FragmentTimeTablePage;
 
@@ -57,10 +57,8 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 
     public AppBarLayout mAppBarLayout;
     Toolbar mToolbar;
-    ActionBarDrawerToggle mActionBarDrawerToggle;
     LinearLayout invalidLayout;
     //Button invalidJump;
-    AutoLocateHorizontalView weekPicker;
 
     ViewPager viewPager;
     TimeTablePagerAdapter pagerAdapter;
@@ -268,7 +266,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
                 }
             }
             if (from == FROM_SPINNER_Curriculum || from == FROM_SPINNER_TIMETABLE || from == FROM_INIT) {
-                timeWatcher.refreshProgress(true);
+                timeWatcher.refreshProgress(true,true);
             }
             return 99;
         }
@@ -313,18 +311,20 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 //        getWindow().setEnterTransition(explode);
         setWindowParams(true,true,false);
         setContentView(R.layout.activity_time_table);
+        initAllViews();
         if (allCurriculum.size() <= 0) {
             pageWeekOfTerm = 1;
         } else {
             pageWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
             if (pageWeekOfTerm < 0) {
-                Toast.makeText(this, "这个学期还没有开始哟", Toast.LENGTH_SHORT).show();
+                Snackbar.make(fab_return,"这个学期还没有开始哟",Snackbar.LENGTH_LONG).show();
+                //Toast.makeText(this, , Toast.LENGTH_SHORT).show();
                 isThisTerm = false;
                 pageWeekOfTerm = 1;
 
             }
         }
-        initAllViews();
+
         InitTask it = new InitTask(this);
         it.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);

@@ -33,10 +33,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -81,14 +79,15 @@ public class ActivityMain extends BaseActivity
     DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
     ImageView drawerUserAvatar;
-    TextView drawerUserName;
-    FrameLayout drawerheader;
+    TextView drawerUserName,drawerSignature;
+    //FrameLayout drawerheader;
     ActionBarDrawerToggle mActionBarDrawerToggle;
     ViewPager mainPager;
     TabLayout mainTabs;
     MainPagerAdapter pagerAdapter;
     CardView drawer_card_profile,drawer_card_curriculummanager,drawer_card_theme,drawer_card_dynamic;
-    ImageView drawer_bg;
+    CardView avatar_card;
+    ImageView drawer_bg,drawer_bt_settings;
     boolean isFirst;
 
     @Override
@@ -374,15 +373,26 @@ public class ActivityMain extends BaseActivity
         mNavigationView = findViewById(R.id.drawer_navigationview);
         View headview = mNavigationView.inflateHeaderView(R.layout.activity_main_nav_header);
         drawerUserAvatar = headview.findViewById(R.id.main_drawer_user_avatar);
+        avatar_card = headview.findViewById(R.id.main_drawer_user_avatar_card);
         drawerUserName = headview.findViewById(R.id.main_drawer_user_name);
+        drawerSignature = headview.findViewById(R.id.main_drawer_user_signature);
         drawer_card_curriculummanager = headview.findViewById(R.id.drawer_card_curriculummanager);
         drawer_card_profile = headview.findViewById(R.id.drawer_card_profile);
         drawer_card_theme = headview.findViewById(R.id.drawer_card_theme);
         drawer_card_dynamic = headview.findViewById(R.id.drawer_card_dynamic);
-        drawerUserAvatar.setOnClickListener(new onUserAvatarClickListener());
+      //  drawerUserAvatar.setOnClickListener(new onUserAvatarClickListener());
         drawer_bg = headview.findViewById(R.id.drawer_bg);
-        drawerheader = headview.findViewById(R.id.drawer_header);
-        drawerheader.setOnClickListener(new onUserAvatarClickListener());
+        drawer_bg.setOnClickListener(new onUserAvatarClickListener());
+        drawer_bt_settings = headview.findViewById(R.id.drawer_bt_setting);
+//        drawerheader = headview.findViewById(R.id.drawer_header);
+//        drawerheader.setOnClickListener(new onUserAvatarClickListener());
+        drawer_bt_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ActivityMain.this,ActivitySetting.class);
+                startActivity(i);
+            }
+        });
         drawer_card_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -393,12 +403,12 @@ public class ActivityMain extends BaseActivity
         drawer_card_dynamic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(HContext,"敬请期待",Toast.LENGTH_SHORT).show();
-//                Intent pp = new Intent(ActivityMain.this,ActivityDynamicTable.class);
-//                ActivityMain.this.startActivity(pp);
+//                Toast.makeText(HContext,"敬请期待",Toast.LENGTH_SHORT).show();
+                Intent pp = new Intent(ActivityMain.this,ActivityDynamicTable.class);
+                ActivityMain.this.startActivity(pp);
             }
         });
-
+        avatar_card.setOnClickListener(new onUserAvatarClickListener());
         drawer_card_curriculummanager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -496,6 +506,7 @@ public class ActivityMain extends BaseActivity
             drawerUserAvatar.setImageResource(R.drawable.ic_account);
             //drawer_bg.setImageResource(R.drawable.timeline_head_bg);
             drawerUserName.setText("登录");
+            drawerSignature.setText("HITSZ账号");
         }else{
             if(TextUtils.isEmpty(CurrentUser.getAvatarUri())){
                 drawerUserAvatar.setImageResource(R.drawable.ic_account_activated);
@@ -516,6 +527,7 @@ public class ActivityMain extends BaseActivity
 //                        .into(drawer_bg);
             }
             drawerUserName.setText(CurrentUser.getNick());
+            drawerSignature.setText(TextUtils.isEmpty(CurrentUser.getSignature())?"无签名":CurrentUser.getSignature());
         }
     }
 

@@ -245,8 +245,8 @@ public class ActivityLocation extends BaseActivity {
     void initInfoList(){
         infoListRes = new ArrayList<>();
         infoList = findViewById(R.id.location_info_list);
-//        if(getIntent().getSerializableExtra("infos")!=null){
-//            infoListRes.addAll((Collection<? extends Map>) getIntent().getSerializableExtra("infos"));
+//        if(getAction().getSerializableExtra("infos")!=null){
+//            infoListRes.addAll((Collection<? extends Map>) getAction().getSerializableExtra("infos"));
 //        }
         infoListAdapter = new LocationInfoListAdapter(this,infoListRes,getColorPrimary());
         LinearLayoutManager lm = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);

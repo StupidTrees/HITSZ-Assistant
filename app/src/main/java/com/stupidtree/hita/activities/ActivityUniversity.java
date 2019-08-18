@@ -2,6 +2,7 @@ package com.stupidtree.hita.activities;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.diy.CornerTransform;
@@ -50,6 +52,8 @@ public class ActivityUniversity extends BaseActivity {
     private Animator.AnimatorListener animatorListener;
     private TextView descriptionView;
 
+    FloatingActionButton fab;
+
     @Override
     protected void stopTasks() {
 
@@ -68,6 +72,14 @@ public class ActivityUniversity extends BaseActivity {
         descriptionView = findViewById(R.id.descriptionView);
         timeView =  findViewById(R.id.timeView);
         bottomView =  findViewById(R.id.bottomImageView);
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ActivityUniversity.this,ActivityCampusLocations.class);
+                startActivity(i);
+            }
+        });
         initToolbar();
 
         animatorListener = new Animator.AnimatorListener() {
@@ -227,7 +239,7 @@ public class ActivityUniversity extends BaseActivity {
         return transitionValue;
     }
 
-    class ViewHolder {
+    private class ViewHolder {
         ImageView imageView;
     }
 }

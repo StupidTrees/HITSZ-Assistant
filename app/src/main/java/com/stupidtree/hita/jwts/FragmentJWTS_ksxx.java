@@ -122,7 +122,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
         lisRes = new ArrayList<>();
         listAdapter = new KSXXListAdapter(v.getContext(),lisRes);
         list.setAdapter(listAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext(),LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext(),RecyclerView.VERTICAL,false);
         list.setLayoutManager(layoutManager);
     }
 
@@ -193,7 +193,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
         tempTo.setTimeInMillis(to.getTime());
         int DOW = tempDate.get(Calendar.DAY_OF_WEEK)==1?7:tempDate.get(Calendar.DAY_OF_WEEK)-1;
         //Log.e("date",tempDate.toString());
-        EventItem add = new EventItem(allCurriculum.get(thisCurriculumIndex).curriculumCode,TimeTable.TIMETABLE_EVENT_TYPE_EXAM,name+"考试",place,"科目代码："+code,time,new HTime(tempFrom),new HTime(tempTo),allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(tempDate),DOW,false);
+        EventItem add = new EventItem(null,allCurriculum.get(thisCurriculumIndex).curriculumCode,TimeTable.TIMETABLE_EVENT_TYPE_EXAM,name+"考试",place,"科目代码："+code,time,new HTime(tempFrom),new HTime(tempTo),allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(tempDate),DOW,false);
         //Log.e("!!",add.toString());
         exams.add(add);
 

@@ -12,8 +12,10 @@ import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
+
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.text.TextUtils;
 
 import com.stupidtree.hita.activities.ActivityLogin;
@@ -24,6 +26,7 @@ import com.stupidtree.hita.core.TimeTable;
 import com.stupidtree.hita.core.TimeTableGenerator;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.HTime;
+import com.stupidtree.hita.core.timetable.Task;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -43,7 +46,7 @@ public class TimeWatcher {
     private NotificationManager notificationManager;
     NotificationCompat.Builder notificationBuilder;
     Notification notification;
-   // private FragmentTimeLine fragmentTimeLine = null;
+    // private FragmentTimeLine fragmentTimeLine = null;
     DecimalFormat df = new DecimalFormat("#.##%");
 
     public TimeWatcher(Application application) {
@@ -56,7 +59,7 @@ public class TimeWatcher {
         now.setTimeInMillis(System.currentTimeMillis());
         initNotification(application);
         todaysEvents = new ArrayList<>();
-        refreshProgress(false);
+        refreshProgress(false,true);
     }
 
     void initNotification(Application application) {
@@ -64,8 +67,8 @@ public class TimeWatcher {
 
         notificationManager = (NotificationManager) application.getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(application.getString(R.string.app_notification_channel_id),"hita channel", NotificationManager.IMPORTANCE_DEFAULT);
-            channel.enableLights(true); //是否在桌面icon右上角展示小红点    channel.setLightColor(Color.RED); //小红点颜色    channel.setShowBadge(true); //是否在久按桌面图标时显示此渠道的通知    notificationManager.createNotificationChannel(channel);}
+            NotificationChannel channel = new NotificationChannel(application.getString(R.string.app_notification_channel_id), "hita channel", NotificationManager.IMPORTANCE_DEFAULT);
+            channel.enableLights(false); //是否在桌面icon右上角展示小红点    channel.setLightColor(Color.RED); //小红点颜色    channel.setShowBadge(true); //是否在久按桌面图标时显示此渠道的通知    notificationManager.createNotificationChannel(channel);}
             channel.setImportance(NotificationManager.IMPORTANCE_DEFAULT);
             channel.enableVibration(false);
             channel.setVibrationPattern(new long[]{0});
@@ -99,29 +102,35 @@ public class TimeWatcher {
     }
 
 
-    public void refreshProgress(boolean fromOther) {
+    public void refreshProgress(boolean fromOther,boolean refreshTask) {
         try {
             thisWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
         } catch (Exception e) {
             thisWeekOfTerm = -1;
         }
         if (defaultSP.getBoolean("dynamicTimeTable", false) && isDataAvailable()) {
-            TimeTableGenerator.Dynamic_PreviewPlan(now, mainTimeTable);
+            TimeTableGenerator.Dynamic_PreviewPlan(now);
         } else if (isDataAvailable()) {
             mainTimeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC);
         }
         refreshTodaysEvents();
         refreshNowAndNextEvent();
+        updateTaskProgress();
         if (defaultSP.getBoolean("notification", true))
             sendNotification();
         if (!fromOther) {
-                Intent mes = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH_FROM_TIMETICK");
-                LocalBroadcastManager.getInstance(HContext).sendBroadcast(mes);
-                //fragmentTimeLine.Refresh(FragmentTimeLine.TL_REFRESH_FROM_TIMETICK);
+            Intent mes = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
+            mes.putExtra("from","time_tick");
+            LocalBroadcastManager.getInstance(HContext).sendBroadcast(mes);
+            //fragmentTimeLine.Refresh(FragmentTimeLine.TL_REFRESH_FROM_TIMETICK);
+        }
+        if(refreshTask){
+            Intent mes2 = new Intent("COM.STUPIDTREE.HITA.TASK_REFRESH");
+            LocalBroadcastManager.getInstance(HContext).sendBroadcast(mes2);
         }
     }
 
-    public static int getTodayCourseNum() {
+    public int getTodayCourseNum() {
         int result = 0;
         for (EventItem ei : todaysEvents) {
             if (ei.eventType == TimeTable.TIMETABLE_EVENT_TYPE_COURSE) {
@@ -131,7 +140,25 @@ public class TimeWatcher {
         return result;
     }
 
-    public static void refreshTodaysEvents() {
+    public void updateTaskProgress() {
+        if (!isDataAvailable()) return;
+        List<EventItem> events = mainTimeTable.getAllEvents();
+        for (EventItem ei : events) {
+            if (!ei.hasPassed(now) || ei.tag4.equals("null")) continue;
+            Task t = mainTimeTable.getTaskWithUUID(ei.tag4);
+            if (t != null) {
+                if (t.getEvent_map().get(ei.getUuid() + ":::" + ei.week)!=null&&!t.getEvent_map().get(ei.getUuid() + ":::" + ei.week)) {
+                    t.putEventMap(ei.getUuid() + ":::" + ei.week, true);
+                    float newProgress = (float) (100 * ((float) t.getProgress() / 100.0 * t.getLength() + ei.getDuration()) / t.getLength());
+                    t.updateProgress((int) newProgress);
+                    if(newProgress>=100f) mainTimeTable.finishTask(t);
+                }
+            }
+        }
+
+    }
+
+    public void refreshTodaysEvents() {
         if (!isDataAvailable()) return;
         int DOW = now.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : now.get(Calendar.DAY_OF_WEEK) - 1;
         todaysEvents.clear();
@@ -241,7 +268,7 @@ public class TimeWatcher {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setVibrate(null);
         notificationBuilder.setSound(null);
-        notificationBuilder.setLights(0,0,0);
+        notificationBuilder.setLights(0, 0, 0);
 
         notification = notificationBuilder.build();
 
@@ -253,7 +280,7 @@ public class TimeWatcher {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            refreshProgress(false);
+            refreshProgress(false,true);
             return null;
         }
     }

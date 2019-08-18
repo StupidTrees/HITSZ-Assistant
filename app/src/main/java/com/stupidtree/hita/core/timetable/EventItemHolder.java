@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import cn.bmob.v3.BmobObject;
 
@@ -25,6 +26,7 @@ public class EventItemHolder  {
     public ArrayList<Integer> weeks = null;
     public boolean isWholeDay;
     String curriculumCode;
+    String uuid;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -36,10 +38,10 @@ public class EventItemHolder  {
                 endTime.equals( that.endTime) &&
                 mainName.equals(that.mainName);
     }
-    public static String QUERY_SELECTION = "name=?  AND curriculum_code=? AND from_hour=? AND from_minute=? AND to_hour=?  AND to_minute =?";
+    public static String QUERY_SELECTION = "uuid=?";
     public String[] getQueryParams(){
         return new String[]{
-                mainName,curriculumCode,startTime.hour+"",startTime.minute+"",endTime.hour+"",endTime.minute+""
+                uuid
         };
     }
     @Override
@@ -47,6 +49,13 @@ public class EventItemHolder  {
         return Objects.hash(mainName,DOW, startTime, endTime, eventType,curriculumCode);
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     @Override
     public String toString() {
@@ -59,6 +68,7 @@ public class EventItemHolder  {
         String tag2 = c.getString(c.getColumnIndex("tag2"));
         String tag3 = c.getString(c.getColumnIndex("tag3"));
         String tag4 = c.getString(c.getColumnIndex("tag4"));
+        uuid = c.getString(c.getColumnIndex("uuid"));
         HTime start = new HTime(c.getInt(c.getColumnIndex("from_hour")),c.getInt(c.getColumnIndex("from_minute")));
         HTime end = new HTime(c.getInt(c.getColumnIndex("to_hour")),c.getInt(c.getColumnIndex("to_minute")));
         int DOW = c.getInt(c.getColumnIndex("dow"));
@@ -92,6 +102,7 @@ public class EventItemHolder  {
         this.curriculumCode = curriculumCode;
         this.isWholeDay = isWholeDay;
         weeks = new ArrayList<>();
+        uuid = String.valueOf(UUID.randomUUID());
     }
     public EventItemHolder(String curriculumCode,int type, String eventName, String tag2, String tag3, String tag4, HTime start, HTime end, int DOW, ArrayList<Integer> weeks,boolean isWholeDay) {
         eventType = type;
@@ -105,6 +116,7 @@ public class EventItemHolder  {
         this.curriculumCode = curriculumCode;
         this.weeks = new ArrayList<>(weeks);
         this.isWholeDay = isWholeDay;
+        uuid = String.valueOf(UUID.randomUUID());
     }
     public EventItemHolder(EventItem ei) {
         eventType = ei.eventType;
@@ -119,6 +131,7 @@ public class EventItemHolder  {
         weeks.add(ei.week);
         this.isWholeDay = ei.isWholeDay;
         this.curriculumCode = ei.curriculumCode;
+        uuid = ei.getUuid();
     }
 
     public void addWeek(int week){
@@ -138,7 +151,7 @@ public class EventItemHolder  {
         List<EventItem> result = new ArrayList<>();
         for (Integer i:weeks){
             if(!(i>=fromW&&i<=toW)) continue;
-            EventItem eiT = new EventItem(curriculumCode,eventType,mainName,tag2,tag3,tag4,startTime,endTime,i, DOW,isWholeDay);
+            EventItem eiT = new EventItem(uuid,curriculumCode,eventType,mainName,tag2,tag3,tag4,startTime,endTime,i, DOW,isWholeDay);
             result.add(eiT);
         }
         return result;
@@ -146,7 +159,7 @@ public class EventItemHolder  {
     public List<EventItem> getAllEvents(){
         List<EventItem> result = new ArrayList<>();
         for (Integer i:weeks){
-            EventItem eiT = new EventItem(curriculumCode,eventType,mainName,tag2,tag3,tag4,startTime,endTime,i, DOW,isWholeDay);
+            EventItem eiT = new EventItem(uuid,curriculumCode,eventType,mainName,tag2,tag3,tag4,startTime,endTime,i, DOW,isWholeDay);
             result.add(eiT);
         }
         return result;
@@ -166,6 +179,7 @@ public class EventItemHolder  {
         cv.put("tag4",tag4);
         cv.put("type",eventType);
         cv.put("is_whole_day",isWholeDay);
+        cv.put("uuid",uuid);
         return cv;
     }
 
