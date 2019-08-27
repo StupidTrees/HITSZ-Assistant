@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/background_color_bottom">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_post"
@@ -19,7 +19,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/material_backgroung_grey_50"
+            android:background="#00000000"
             app:elevation="0dp">
 
                 <androidx.appcompat.widget.Toolbar
@@ -27,9 +27,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:background="@color/material_backgroung_grey_50"
+                    android:background="#00000000"
                     android:minHeight="?attr/actionBarSize"
-                    android:theme="?attr/actionBarTheme"
+                    app:theme="?attr/toolbarStyle"
                     app:contentInsetStart="0dp"
                     app:contentInsetStartWithNavigation="0dp">
 
@@ -39,9 +39,9 @@
                             android:layout_height="match_parent"
                             app:tabIndicatorColor="#00000000"
                             app:tabMode="scrollable"
-                            app:tabSelectedTextColor="@color/material_primary_text"
+                            app:tabSelectedTextColor="?attr/text_color_primary"
                             app:tabTextAppearance="@style/MainTabsTextTheme"
-                            app:tabTextColor="#55000000">
+                            app:tabTextColor="?attr/text_color_secondary">
 
                                 <com.google.android.material.tabs.TabItem
                                     android:layout_width="wrap_content"
@@ -59,7 +59,6 @@
                                     android:text="Wednesday" />
                         </com.google.android.material.tabs.TabLayout>
                 </androidx.appcompat.widget.Toolbar>
-
 
 
         </com.google.android.material.appbar.AppBarLayout>

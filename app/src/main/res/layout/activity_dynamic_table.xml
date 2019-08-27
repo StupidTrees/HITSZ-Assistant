@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/timeline_head_bg"
+    android:background="?attr/color_primary_fade_background"
+    android:orientation="vertical"
     tools:context=".activities.ActivityDynamicTable">
 
     <androidx.appcompat.widget.Toolbar
@@ -18,50 +19,120 @@
         android:theme="?attr/actionBarTheme"
         app:theme="@style/ToolBarTheme_Light" />
 
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:tint="@color/material_text_icon_white"
+        app:srcCompat="@drawable/ic_dynamic" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="80dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="177dp"
-        tools:layout_editor_absoluteY="601dp">
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="240dp"
-            android:layout_height="240dp"
-            android:layout_marginTop="24dp"
-            android:tint="@color/material_text_icon_white"
-            app:srcCompat="@drawable/ic_dynamic" />
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/textView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:gravity="center"
+            android:text="学习助手"
+            android:textColor="@color/material_text_icon_white"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="更科学的时间规划方案"
+            android:textColor="@color/material_text_icon_white" />
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="?attr/background_color_second"
+        app:cardCornerRadius="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
+            <Switch
+                android:id="@+id/previewPlan"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="动态时间表"
-                android:textColor="@color/material_text_icon_white"
-                android:textSize="36sp" />
+                android:layout_margin="16dp"
+                android:text="自动生成预习任务"
+                android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="更智能的时间规划方案(目前很傻)"
-                android:textColor="@color/material_text_icon_white" />
+            <net.cachapa.expandablelayout.ExpandableLayout
+                android:id="@+id/expand_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="8dp"
+                            android:text="每天花" />
+
+                        <NumberPicker
+                            android:id="@+id/numberpicker_prevew_length"
+                            android:layout_width="wrap_content"
+                            android:layout_height="56dp"
+                            android:layout_gravity="center" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:text="分钟预习" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/switch_skip_no_exam"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:text="仅安排考试课"
+                        android:textColor="?attr/text_color_secondary" />
+                </LinearLayout>
+            </net.cachapa.expandablelayout.ExpandableLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
     <TextView
         android:id="@+id/textView12"
@@ -71,8 +142,8 @@
         android:layout_margin="30dp"
         android:alpha="0.8"
         android:gravity="center"
-        android:text="APP将综合各科目的学分信息以及用户对每堂课的自我评分，加上考试成绩，动态地生成课程的学习与复习计划。并根据用户添加的DDL和任务安排，生成DDL解决方案。开启后系统将自动为用户制定当日计划。"
+        android:text="APP将综合科目信息与用户喜好，为重要性强的科目安排预习复习等任务，也会为任务自动分配处理事件，帮助你的学习生活么么哒"
         android:textColor="@color/material_text_icon_white"
         android:textSize="15sp" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

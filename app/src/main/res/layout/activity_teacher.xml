@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/background_color_bottom">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -20,7 +21,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/timeline_head_bg" />
+                app:srcCompat="?attr/color_primary_fade_background" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -55,7 +56,8 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="40dp"
                     android:layout_marginRight="16dp"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="?attr/background_color_second">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -84,7 +86,7 @@
                                 android:layout_width="16dp"
                                 android:layout_height="16dp"
                                 android:layout_gravity="center"
-                                android:tint="@color/material_secondary_text"
+                                android:tint="?attr/text_color_secondary"
                                 app:srcCompat="@drawable/ic_university" />
 
                             <TextView
@@ -94,7 +96,7 @@
                                 android:layout_gravity="center"
                                 android:layout_margin="8dp"
                                 android:text="-"
-                                android:textColor="@color/material_secondary_text"
+                                android:textColor="?attr/text_color_secondary"
                                 android:textSize="14sp" />
                         </LinearLayout>
 
@@ -115,6 +117,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:text="性别"
+                                    android:textColor="?attr/text_color_secondary"
                                     android:textSize="12sp" />
 
                                 <TextView
@@ -123,7 +126,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:text="-"
-                                    android:textColor="@color/material_primary_text"
+                                    android:textColor="?attr/text_color_primary"
                                     android:textSize="16sp" />
                             </LinearLayout>
 
@@ -138,6 +141,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:text="职称"
+                                    android:textColor="?attr/text_color_secondary"
                                     android:textSize="12sp" />
 
                                 <TextView
@@ -146,7 +150,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:text="-"
-                                    android:textColor="@color/material_primary_text"
+                                    android:textColor="?attr/text_color_primary"
                                     android:textSize="16sp" />
                             </LinearLayout>
 
@@ -161,6 +165,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:text="代码"
+                                    android:textColor="?attr/text_color_secondary"
                                     android:textSize="12sp" />
 
                                 <TextView
@@ -169,7 +174,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:text="-"
-                                    android:textColor="@color/material_primary_text"
+                                    android:textColor="?attr/text_color_primary"
                                     android:textSize="16sp" />
                             </LinearLayout>
 
@@ -190,6 +195,7 @@
                     android:layout_width="82dp"
                     android:layout_height="82dp"
                     android:layout_gravity="center|top"
+                    app:cardBackgroundColor="?attr/background_color_second"
                     app:cardCornerRadius="41dp"
                     app:cardElevation="6dp"
                     app:cardMaxElevation="6dp">
@@ -209,7 +215,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
+                android:layout_marginRight="16dp"
+                app:cardBackgroundColor="?attr/background_color_second">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -225,7 +232,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_margin="16dp"
-                            android:tint="@color/material_secondary_text"
+                            android:tint="?attr/text_color_secondary"
                             app:srcCompat="@drawable/ic_local_phone" />
 
                         <LinearLayout
@@ -237,7 +244,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="16dp"
-                                android:text="电话号码" />
+                                android:text="电话号码"
+                                android:textColor="?attr/text_color_secondary" />
 
                             <TextView
                                 android:id="@+id/teacher_phone"
@@ -247,7 +255,7 @@
                                 android:layout_marginBottom="16dp"
                                 android:autoLink="phone"
                                 android:text="-"
-                                android:textColor="@color/material_primary_text"
+                                android:textColor="?attr/text_color_primary"
                                 android:textSize="16sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -260,7 +268,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_margin="16dp"
-                            android:tint="@color/material_secondary_text"
+                            android:tint="?attr/text_color_secondary"
                             app:srcCompat="@drawable/ic_email" />
 
                         <LinearLayout
@@ -272,7 +280,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="16dp"
-                                android:text="电子邮箱" />
+                                android:text="电子邮箱"
+                                android:textColor="?attr/text_color_secondary" />
 
                             <TextView
                                 android:id="@+id/teacher_email"
@@ -282,7 +291,7 @@
                                 android:layout_marginBottom="16dp"
                                 android:autoLink="email"
                                 android:text="-"
-                                android:textColor="@color/material_primary_text"
+                                android:textColor="?attr/text_color_primary"
                                 android:textSize="16sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -295,7 +304,8 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="?attr/background_color_second">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -308,7 +318,8 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
                         android:fontFamily="sans-serif-black"
-                        android:text="教师介绍" />
+                        android:text="教师介绍"
+                        android:textColor="?attr/text_color_secondary" />
 
                     <TextView
                         android:id="@+id/teacher_detail"
@@ -319,7 +330,7 @@
                         android:layout_marginBottom="16dp"
                         android:fontFamily="sans-serif-black"
                         android:text="-"
-                        android:textColor="@color/material_primary_text" />
+                        android:textColor="?attr/text_color_primary" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

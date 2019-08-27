@@ -11,8 +11,9 @@
         android:layout_height="80dp"
         android:paddingTop="24dp"
         android:transitionName="notestoolbar"
-        app:theme="@style/ToolBarTheme_notes"
-        app:title="高等数学"></androidx.appcompat.widget.Toolbar>
+        app:theme="@style/ToolBarTheme"
+        app:title="高等数学"
+        app:titleTextColor="?attr/text_color_primary"></androidx.appcompat.widget.Toolbar>
 
 
     <LinearLayout
@@ -46,6 +47,7 @@
             android:layout_weight="1" />
 
         <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
             android:id="@+id/note_textcard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

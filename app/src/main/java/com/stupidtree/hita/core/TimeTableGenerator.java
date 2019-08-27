@@ -25,6 +25,7 @@ import java.util.Stack;
 
 import static android.content.pm.SharedLibraryInfo.TYPE_DYNAMIC;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
@@ -56,7 +57,7 @@ public class TimeTableGenerator {
 //    }
 
     public static void Dynamic_PreviewPlan(Calendar present) {
-        int totalLength =  60; //每天花一小时预习
+        int totalLength =  defaultSP.getInt("dtt_preview_length",60); //每天花一小时预习
         Calendar from = (Calendar) present.clone();
         Calendar to = (Calendar) present.clone();
         from.set(Calendar.HOUR_OF_DAY, 0);
@@ -69,9 +70,10 @@ public class TimeTableGenerator {
         HashMap<EventItem,Float> courseMap = new HashMap<>();
         List<EventItem> courses = mainTimeTable.getEventFrom(from,to,TimeTable.TIMETABLE_EVENT_TYPE_COURSE);
         if(courses==null||courses.size()==0) return;
+        boolean skipNoExam = defaultSP.getBoolean("dtt_preview_skip_no_exam",true);
         for(EventItem ei:courses){
             Subject subject = mainTimeTable.core.getSubjectByCourse(ei);
-            if(!subject.exam)  toRemove.add(ei);
+            if((!subject.exam)&&skipNoExam)  toRemove.add(ei);
             else courseMap.put(ei,subject.getPriority());
         }
         float total = 0;
@@ -96,24 +98,33 @@ public class TimeTableGenerator {
 
     }
 
-    public static SparseArray<HTime> autoAdd_getTime(int week, int dow, int duration) {
+    public static SparseArray<HTime> autoAdd_getTime(Calendar now,int week, int dow, int duration) {
         int minDURATION = 40;
         Calendar date = mainTimeTable.core.getDateAtWOT(week, dow);
-        Calendar from = (Calendar) date.clone();
-        Calendar to = (Calendar) date.clone();
-        from.set(Calendar.HOUR_OF_DAY, 0);
-        from.set(Calendar.MINUTE, 0);
+        Calendar from,to;
+        if(now!=null&&date.get(Calendar.YEAR)==now.get(Calendar.YEAR)&&date.get(Calendar.DAY_OF_YEAR)==now.get(Calendar.DAY_OF_YEAR)){
+            from = (Calendar) now.clone();
+            to = (Calendar) date.clone();
+        }else{
+            from = (Calendar) date.clone();
+            to = (Calendar) date.clone();
+            from.set(Calendar.HOUR_OF_DAY, 0);
+            from.set(Calendar.MINUTE, 0);
+        }
         to.set(Calendar.HOUR_OF_DAY, 23);
         to.set(Calendar.MINUTE, 59);
-        mainTimeTable.deleteEvent(from, to, TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC);
+        //mainTimeTable.deleteEvent(from, to, TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC);
         List<TimePeriod> breakTime = getBreakTime();
+        List<EventItem> breakTemp = new ArrayList<>();
         for (TimePeriod tp : breakTime) {
-            mainTimeTable.addEvent(thisWeekOfTerm, TimeTable.getDOW(now), TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break", "", "", "", tp.start, tp.end, false);
+            breakTemp.add(new EventItem("",mainTimeTable.core.curriculumCode,TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break","", "", "",tp.start, tp.end, week,dow, false));
         }
-        List<TimePeriod> spaces = mainTimeTable.getSpaces(from, to, minDURATION, -1);
-        mainTimeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break");
+        List<TimePeriod> spaces = mainTimeTable.getSpaces(breakTemp,from, to, minDURATION, -1);
+       // Log.e("spaces", String.valueOf(spaces));
+        //mainTimeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break");
         Collections.sort(spaces);
-        TimePeriod tp = spaces.get(spaces.size() - 1);
+        if(spaces==null||spaces.size()==0) return null;
+        TimePeriod tp = spaces.get(spaces.size()-1);
         String uuid = null;
         for(int i = spaces.size()-1;i>=0;i--){
             if(spaces.get(i).getLength()>duration){
@@ -273,7 +284,7 @@ public class TimeTableGenerator {
         breakT.add(m2);
         breakT.add(m3);
 
-        Collections.sort(breakT);
+        //Collections.sort(breakT);
         return breakT;
     }
 

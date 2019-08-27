@@ -53,6 +53,8 @@ public class ActivityNewsDetail extends BaseActivity {
         title = findViewById(R.id.detail_title);
         time = findViewById(R.id.detail_time);
         wv = findViewById(R.id.webview);
+        //wv.setBackgroundColor(0);
+
         title.setText(getIntent().getStringExtra("title"));
         //支持javascript
         wv.getSettings().setJavaScriptEnabled(true);

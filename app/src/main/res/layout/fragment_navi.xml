@@ -9,7 +9,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_backgroung_grey_50"
+        android:background="#00000000"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -33,7 +33,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="@color/material_backgroung_grey_50"
+                    app:cardBackgroundColor="?attr/background_color_second"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="6dp">
 
@@ -42,7 +42,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/timeline_head_bg" />
+                        app:srcCompat="@drawable/gradient_bg" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -252,6 +252,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="?attr/background_color_second"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp">
 
@@ -271,7 +272,7 @@
                             android:layout_weight="1"
                             android:fontFamily="sans-serif-black"
                             android:text="教务功能"
-                            android:textColor="@color/material_primary_text"
+                            android:textColor="?attr/text_color_primary"
                             android:textSize="18sp" />
 
                         <LinearLayout
@@ -306,7 +307,7 @@
                                         android:id="@+id/imageView38"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+                                        app:srcCompat="@drawable/gradient_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -324,6 +325,7 @@
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
                                     android:text="掌上教务"
+                                    android:textColor="?attr/text_color_secondary"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -351,7 +353,7 @@
                                     <ImageView
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+                                        app:srcCompat="@drawable/gradient_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -369,6 +371,7 @@
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
                                     android:text="校历"
+                                    android:textColor="?attr/text_color_secondary"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -397,7 +400,7 @@
                                         android:id="@+id/imageView41"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+                                        app:srcCompat="@drawable/gradient_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -415,6 +418,7 @@
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
                                     android:text="空教室"
+                                    android:textColor="?attr/text_color_secondary"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -444,7 +448,7 @@
                                         android:id="@+id/imageView43"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+                                        app:srcCompat="@drawable/gradient_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -462,6 +466,7 @@
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
                                     android:text="信息窗口"
+                                    android:textColor="?attr/text_color_secondary"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -479,7 +484,7 @@
                             android:layout_weight="1"
                             android:fontFamily="sans-serif-black"
                             android:text="校内服务"
-                            android:textColor="@color/material_primary_text"
+                            android:textColor="?attr/text_color_primary"
                             android:textSize="18sp" />
 
                         <LinearLayout
@@ -512,7 +517,7 @@
                                         android:id="@+id/imageView39"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+                                        app:srcCompat="@drawable/gradient_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -530,6 +535,7 @@
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
                                     android:text="失物寻物"
+                                    android:textColor="?attr/text_color_secondary"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -557,7 +563,7 @@
                                         android:id="@+id/imageView40"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+                                        app:srcCompat="@drawable/gradient_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -575,6 +581,7 @@
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
                                     android:text="排行榜"
+                                    android:textColor="?attr/text_color_secondary"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -602,7 +609,7 @@
                                         android:id="@+id/imageView42"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+                                        app:srcCompat="@drawable/gradient_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -620,6 +627,7 @@
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
                                     android:text="校内地点"
+                                    android:textColor="?attr/text_color_secondary"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -648,7 +656,7 @@
                                         android:id="@+id/imageView44"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+                                        app:srcCompat="@drawable/gradient_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -666,6 +674,7 @@
                                     android:layout_marginTop="8dp"
                                     android:gravity="center"
                                     android:text="探索模式"
+                                    android:textColor="?attr/text_color_secondary"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -734,7 +743,7 @@
                                         android:id="@+id/imageView45"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        app:srcCompat="@drawable/timeline_head_bg_reverse" />
+                                        app:srcCompat="@drawable/gradient_bg_reverse" />
 
                                     <ImageView
                                         android:layout_width="24dp"
@@ -767,6 +776,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:visibility="gone"
+                    app:cardBackgroundColor="?attr/background_color_second"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="6dp">
 
@@ -785,7 +795,7 @@
                     android:layout_marginBottom="18dp"
                     android:clickable="true"
                     android:focusableInTouchMode="false"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:canLoop="false"
                     app:middle_page_cover="true"
                     app:open_mz_mode="false">
@@ -805,7 +815,7 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:tabMode="fixed"
             app:tabSelectedTextColor="?attr/colorPrimary"
-            app:tabTextColor="@color/material_secondary_text" />
+            app:tabTextColor="@android:color/darker_gray" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -826,6 +836,5 @@
         android:id="@+id/hitszinfo_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/material_backgroung_grey_50"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

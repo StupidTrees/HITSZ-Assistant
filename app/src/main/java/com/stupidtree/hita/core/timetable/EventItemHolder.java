@@ -164,6 +164,10 @@ public class EventItemHolder  {
         }
         return result;
     }
+    public EventItem getEventAtWeek(int week){
+        EventItem eiT = new EventItem(uuid,curriculumCode,eventType,mainName,tag2,tag3,tag4,startTime,endTime,week, DOW,isWholeDay);
+        return eiT;
+    }
     public ContentValues getContentValues(){
         ContentValues cv = new ContentValues();
         cv.put("curriculum_code",curriculumCode);

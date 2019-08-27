@@ -12,6 +12,7 @@
         tools:context=".fragments.FragmentFDY">
 
         <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp">
@@ -32,7 +33,7 @@
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-black"
                     android:text="辅导员"
-                    android:textColor="@color/material_secondary_text"
+                    android:textColor="?attr/text_color_secondary"
                     android:textSize="18sp" />
 
                 <LinearLayout
@@ -65,7 +66,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="刘老师"
-                            android:textColor="@color/material_primary_text"
+                            android:textColor="?attr/text_color_primary"
                             android:textSize="16sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -100,7 +101,7 @@
                             android:layout_height="wrap_content"
                             android:autoLink="phone"
                             android:text="110"
-                            android:textColor="@color/material_primary_text"
+                            android:textColor="?attr/text_color_primary"
                             android:textSize="16sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -135,7 +136,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="110"
-                            android:textColor="@color/material_primary_text"
+                            android:textColor="?attr/text_color_primary"
                             android:textSize="16sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -145,6 +146,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -167,7 +169,7 @@
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-black"
                     android:text="新生群"
-                    android:textColor="@color/material_secondary_text"
+                    android:textColor="?attr/text_color_secondary"
                     android:textSize="18sp" />
 
                 <LinearLayout

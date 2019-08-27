@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
@@ -240,8 +241,9 @@ public class TimeTable{
                 mSQLiteDatabase.update("timetable",cv,"uuid=?",new String[]{ei.getUuid()});
             }
             if(deleteTask){
-                mSQLiteDatabase.delete("task","uuid=?",
-                        new String[]{eih.tag4});
+                deleteTask(eih.tag4,false);
+//                mSQLiteDatabase.delete("task","uuid=?",
+//                        new String[]{eih.tag4});
             }
         }else{
             c.close();
@@ -289,13 +291,44 @@ public class TimeTable{
         return temp.size()>0;
     }
     public boolean deleteTask(Task ta){
+        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
         try {
             if (ta.has_deadline&&!ta.ddlName.equals("null")) {
                 String ddlUUID = ta.ddlName.split(":::")[0];
                 int week = Integer.parseInt(ta.ddlName.split(":::")[1]);
                 mainTimeTable.deleteEvent(ddlUUID,week);
             }
-            SQLiteDatabase sd = mDBHelper.getWritableDatabase();
+            for(String key:ta.getEvent_map().keySet()){
+                String EIuuid = key.split(":::")[0];
+                sd.delete("timetable","uuid=?",new String[]{EIuuid});
+            }
+            return sd.delete("task",Task.QUERY_SELECTION,ta.getQueryParams())!=0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean deleteTask(String uuid,boolean deleteDDL){
+        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
+        Task ta;
+        Cursor c = sd.query("task",null,"uuid=?",new String[]{uuid},null,null,null);
+        if(c.moveToNext()){
+            ta = new Task(c);
+            c.close();
+        }else{
+            c.close();
+            return false;
+        }
+        try {
+            if (deleteDDL&&ta.has_deadline&&!ta.ddlName.equals("null")) {
+                String ddlUUID = ta.ddlName.split(":::")[0];
+                int week = Integer.parseInt(ta.ddlName.split(":::")[1]);
+                mainTimeTable.deleteEvent(ddlUUID,week);
+            }
+            for(String key:ta.getEvent_map().keySet()){
+                String EIuuid = key.split(":::")[0];
+                sd.delete("timetable","uuid=?",new String[]{EIuuid});
+            }
             return sd.delete("task",Task.QUERY_SELECTION,ta.getQueryParams())!=0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -321,6 +354,20 @@ public class TimeTable{
     public void clearEvent(int type){
         SQLiteDatabase mSQLiteDatabase = mDBHelper.getWritableDatabase();
         mSQLiteDatabase.delete("timetable","type=?",new String[]{type+""});
+    }
+    public void clearTask(String tagContains){
+        SQLiteDatabase mSQLiteDatabase = mDBHelper.getWritableDatabase();
+        Cursor c = mSQLiteDatabase.query("task",null,"tag like?",new String[]{"%"+tagContains+"%"},null,null,null);
+        while (c.moveToNext()){
+            Task t = new Task(c);
+            for(String x:t.getEvent_map().keySet()){
+                String uuid = x.split(":::")[0];
+                mSQLiteDatabase.delete("timetable","uuid=?",new String[]{uuid});
+            }
+            mSQLiteDatabase.delete("task","uuid=?",new String[]{t.getUuid()});
+        }
+        c.close();
+
     }
     public void clearEvent(int type,String name){
         SQLiteDatabase mSQLiteDatabase = mDBHelper.getWritableDatabase();
@@ -490,6 +537,17 @@ public class TimeTable{
         c.close();
         return result;
     }
+
+    public EventItemHolder getEventItemHolderWithUUID(String uuid){
+        EventItemHolder result = null;
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        Cursor c = sd.query("timetable",null,"uuid=?",new String[]{uuid},null,null,null);
+        if(c.moveToNext()){
+            result = new EventItemHolder(c);
+        }
+        c.close();
+        return result;
+    }
 //    public void addTask(String name){
 //        Task t = new Task(core.curriculumCode,name);
 //        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
@@ -641,6 +699,78 @@ public class TimeTable{
                 }
 
             }
+        Collections.sort(result);
+        return result;
+    }
+
+    public List<TimePeriod> getSpaces(List<EventItem> breakT,Calendar from, Calendar to, int minDurationMinute, int type){
+        if(from.after(to)||from.get(Calendar.DAY_OF_MONTH)!=to.get(Calendar.DAY_OF_MONTH)) return null;
+        List<TimePeriod> result = new ArrayList<>();
+        List<EventItem> temp = getEventFrom(from,to,type);
+        temp.addAll(breakT);
+        Collections.sort(temp);
+        if(temp==null||temp.size()==0){
+            TimePeriod m = new TimePeriod();
+            m.start = new HTime(from);
+            m.end = new HTime(to);
+            result.add(m);
+        }else if(temp.size()==1) {
+            if(temp.get(0).startTime.after(new HTime(from))&&temp.get(0).startTime.getDuration(new HTime(from))>=minDurationMinute){
+                TimePeriod m = new TimePeriod();
+                m.start = new HTime(from);
+                m.end = temp.get(0).startTime;
+                result.add(m);
+            }
+            if(temp.get(0).endTime.before(new HTime(to))&&temp.get(0).endTime.getDuration(new HTime(to))>=minDurationMinute){
+                TimePeriod m2 = new TimePeriod();
+                m2.end = new HTime(to);
+                m2.start = temp.get(0).endTime;
+                result.add(m2);
+            }
+        }else{
+            for(int i=0;i<temp.size();i++){
+                TimePeriod m = new TimePeriod();
+                Log.e("event:",temp.get(i).toString());
+                if(i==0){
+                    if(temp.get(i).startTime.after(new HTime(from))&&temp.get(i).startTime.getDuration(new HTime(from))>=minDurationMinute){
+                        m.start = new HTime(from);
+                        m.end = temp.get(0).startTime;
+                        Log.e("add:first",m.toString());
+                        result.add(m);
+                    }
+                }else if(i==temp.size()-1){
+                    if(temp.get(i).endTime.before(new HTime(to))&&temp.get(i).endTime.getDuration(new HTime(to))>=minDurationMinute){
+                        m.end = new HTime(to);
+                        m.start = temp.get(i).endTime;
+                        result.add(m);
+                        Log.e("add:last",m.toString());
+                    }
+                }
+
+                if(i+1<temp.size()&&temp.get(i).endTime.getDuration(temp.get(i+1).startTime)>=minDurationMinute){
+                    TimePeriod m3 = new TimePeriod();
+                    m3.start = temp.get(i).endTime;
+                    m3.end = temp.get(i+1).startTime;
+                    Log.e("add:normal",m3.toString());
+                    result.add(m3);
+
+                }
+
+            }
+
+        }
+        HTime fromH = new HTime(from);
+        HTime toH = new HTime(to);
+        //Log.e("spaces_beforeRemove", String.valueOf(result));
+        List<TimePeriod> tpToRemove = new ArrayList<>();
+        for(TimePeriod tp:result){
+            if(tp.before(fromH)) tpToRemove.add(tp);
+            if(tp.hasCross(fromH)){
+                tp.start.setTime(fromH.hour,fromH.minute);
+            }
+            if(tp.hasCross(toH)) tp.end.setTime(toH.hour,toH.minute);
+        }
+        result.removeAll(tpToRemove);
         Collections.sort(result);
         return result;
     }

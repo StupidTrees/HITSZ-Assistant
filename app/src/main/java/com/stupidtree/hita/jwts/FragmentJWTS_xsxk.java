@@ -90,6 +90,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
         Map m4 = new HashMap();
         Map m5 = new HashMap();
         Map m6 = new HashMap();
+        Map m7 = new HashMap();
         m1.put("name", "必修");
         m1.put("value", "bx");
         m2.put("name", "限选");
@@ -102,7 +103,9 @@ public class FragmentJWTS_xsxk extends BaseFragment {
         m5.put("value", "cxsy");
         m6.put("name", "体育");
         m6.put("value", "ty");
-        Map[] m = new Map[]{m1, m2, m3, m4, m5, m6};
+        m7.put("name","MOOC");
+        m7.put("value","mooc");
+        Map[] m = new Map[]{m1, m2, m3, m4, m5, m6,m7};
         spinnerOptionsTYPE.addAll(Arrays.<Map<String, String>>asList(m));
         ArrayList<String> typeStr = new ArrayList<>();
         for (Map<String, String> ma : spinnerOptionsTYPE) typeStr.add(ma.get("name"));
@@ -164,7 +167,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
         listAdapter = new XSXKListAdapter(v.getContext(), lisRes);
         listButtonOptions = new ArrayList<>();
         list.setAdapter(listAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext(), RecyclerView.VERTICAL, false);
         list.setLayoutManager(layoutManager);
         listAdapter.setmOnOperateClickListsner(new XSXKListAdapter.OnOperateClickListener() {
             @Override

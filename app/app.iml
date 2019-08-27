@@ -159,7 +159,6 @@
     <orderEntry type="library" name="Gradle: com.squareup.okio:okio:2.1.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.media:media:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.amap.api:location:4.7.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.gelitenight.waveview:waveview:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.tencent.bugly:crashreport_upgrade:1.4.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.coordinatorlayout:coordinatorlayout:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.cncoderx.wheelview:library:1.2.2@aar" level="project" />

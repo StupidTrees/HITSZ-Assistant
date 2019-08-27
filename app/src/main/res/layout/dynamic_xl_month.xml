@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="?attr/background_color_second"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
@@ -19,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="12月"
-            android:textColor="@color/material_primary_text"
+            android:textColor="?attr/text_color_primary"
             android:textSize="24sp" />
 
         <LinearLayout
@@ -33,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.9"
                 android:fontFamily="sans-serif-black"
-                android:textColor="@color/material_secondary_text" />
+                android:textColor="?attr/text_color_secondary" />
 
             <TextView
                 android:id="@+id/mon"
@@ -41,7 +43,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Mon" />
+                android:text="Mon"
+                android:textColor="?attr/text_color_secondary" />
 
             <TextView
                 android:id="@+id/tue"
@@ -49,7 +52,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Tue" />
+                android:text="Tue"
+                android:textColor="?attr/text_color_secondary" />
 
             <TextView
                 android:id="@+id/wed"
@@ -57,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Wed" />
+                android:text="Wed"
+                android:textColor="?attr/text_color_secondary" />
 
             <TextView
                 android:id="@+id/thu"
@@ -65,7 +70,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Thu" />
+                android:text="Thu"
+                android:textColor="?attr/text_color_secondary" />
 
             <TextView
                 android:id="@+id/fri"
@@ -73,7 +79,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Fri" />
+                android:text="Fri"
+                android:textColor="?attr/text_color_secondary" />
 
             <TextView
                 android:id="@+id/sat"
@@ -81,7 +88,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Sat" />
+                android:text="Sat"
+                android:textColor="?attr/text_color_secondary" />
 
             <TextView
                 android:id="@+id/sun"
@@ -89,7 +97,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Sun" />
+                android:text="Sun"
+                android:textColor="?attr/text_color_secondary" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

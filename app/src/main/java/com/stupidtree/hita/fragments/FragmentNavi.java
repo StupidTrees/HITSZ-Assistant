@@ -19,20 +19,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.JsonObject;
-import com.lapism.searchview.Search;
-import com.lapism.searchview.database.SearchHistoryTable;
-import com.lapism.searchview.widget.SearchAdapter;
 import com.lapism.searchview.widget.SearchItem;
-import com.lapism.searchview.widget.SearchView;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityCampusLocations;
 import com.stupidtree.hita.activities.ActivityRankBoard;
 import com.stupidtree.hita.activities.ActivityEmptyClassroom;
 import com.stupidtree.hita.activities.ActivityExplore;
@@ -44,27 +36,21 @@ import com.stupidtree.hita.activities.ActivityYX_FDY;
 import com.stupidtree.hita.activities.ActivityYX_ToSchool;
 import com.stupidtree.hita.adapter.HITSZInfoPagerAdapter;
 
-import com.stupidtree.hita.diy.CornerTransform;
 import com.stupidtree.hita.online.BannerItem;
 
-import com.stupidtree.hita.online.Canteen;
-import com.stupidtree.hita.online.Infos;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZHolderCreator;
 import com.zhouwei.mzbanner.holder.MZViewHolder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
-import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.adapter.IpNewsListAdapter.dip2px;
 
 public class FragmentNavi extends BaseFragment {
 
@@ -405,7 +391,7 @@ public class FragmentNavi extends BaseFragment {
         public void onBind(Context context, int i, final BannerItem bannerItem) {
            // Log.e("bind",bannerItem.getTitle());
             Glide.with(context).load(bannerItem.getImageUri()).centerCrop()
-                    .placeholder(R.drawable.timeline_head_bg)
+                    .placeholder(R.drawable.gradient_bg)
                    .into(image);
             title.setText(bannerItem.getTitle());
             subtitle.setText(bannerItem.getSubtitle());

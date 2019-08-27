@@ -431,7 +431,7 @@ public class ActivityEmptyClassroom extends BaseActivity {
             if((mBeans.get(i).get("available")!=null&&(Boolean)mBeans.get(i).get("available"))){
 //                detailViewHolder.lamp.setCardBackgroundColor(ContextCompat.getColor(HContext,R.color.green_primary));
 //            }else{
-                detailViewHolder.lamp.setCardBackgroundColor(ContextCompat.getColor(HContext,R.color.material_backgroung_grey_300));
+                detailViewHolder.lamp.setCardBackgroundColor(ContextCompat.getColor(HContext,R.color.material_background_grey_300));
             }
         }
 

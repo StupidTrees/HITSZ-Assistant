@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/background_color_bottom"
     tools:context=".activities.ActivityExplore">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_backgroung_grey_50">
+        android:background="?attr/background_color_bottom">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:background="@color/material_backgroung_grey_50"
+            android:background="#00000000"
             android:elevation="0dp"
             android:minHeight="?attr/actionBarSize"
-            app:theme="@style/ToolBarTheme_Dark">
+            app:theme="?attr/toolbarStyle"
+            app:titleTextColor="?attr/text_color_primary">
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -52,7 +53,7 @@
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif-black"
                     android:singleLine="true"
-                    android:textColor="@color/material_primary_text"
+                    android:textColor="?attr/text_color_primary"
                     android:textSize="16sp" />
 
                 <TextView
@@ -62,7 +63,7 @@
                     android:layout_below="@+id/firstline"
                     android:gravity="right"
                     android:singleLine="true"
-                    android:textColor="@color/material_secondary_text"
+                    android:textColor="?attr/text_color_secondary"
                     android:textSize="13sp"
                     android:visibility="visible" />
             </LinearLayout>
@@ -99,10 +100,12 @@
 
 
     </com.google.android.material.appbar.AppBarLayout>
+
     <FrameLayout
         android:id="@+id/mainFram"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.amap.api.maps.MapView
             android:id="@+id/map"
             android:layout_width="match_parent"
@@ -115,10 +118,10 @@
                 android:layout_gravity="bottom"
                 android:background="#FFFFFF"
                 android:text="昼"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textStyle="bold"
                 android:typeface="normal"
-                android:visibility="visible"
+                android:visibility="gone"
                 tools:visibility="visible" />
 
         </com.amap.api.maps.MapView>
@@ -137,16 +140,16 @@
         android:tint="@color/material_text_icon_white" />
 
     <!--<me.wangyuwei.particleview.ParticleView-->
-        <!--android:id="@+id/welcome"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="1"-->
-        <!--android:background="#0867AB"-->
-        <!--app:pv_host_text="校园访客指引"-->
-        <!--app:pv_host_text_size="42sp"-->
-        <!--app:pv_particle_text="HIT"-->
-        <!--app:pv_particle_text_size="42sp"-->
-        <!--app:pv_text_anim_time="1500" />-->
+    <!--android:id="@+id/welcome"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="#0867AB"-->
+    <!--app:pv_host_text="校园访客指引"-->
+    <!--app:pv_host_text_size="42sp"-->
+    <!--app:pv_particle_text="HIT"-->
+    <!--app:pv_particle_text_size="42sp"-->
+    <!--app:pv_text_anim_time="1500" />-->
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

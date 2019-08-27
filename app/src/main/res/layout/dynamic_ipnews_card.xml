@@ -10,7 +10,7 @@
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:minHeight="100dp"
     android:transitionName="cardview"
-    app:cardBackgroundColor="@color/material_backgroung_grey_50"
+    app:cardBackgroundColor="#00000000"
     app:cardCornerRadius="8dp"
     app:cardElevation="0dp">
 
@@ -44,7 +44,7 @@
                 android:maxLines="3"
                 android:singleLine="false"
                 android:text="传递榜样力量 践行榜样精神 刘永坦院士先进事迹报告团走进校区 置顶"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="18sp" />
 
             <TextView
@@ -74,6 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="2019-4-17"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -88,7 +89,7 @@
         android:focusable="true"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:padding="16dp"
-        android:tint="@color/material_secondary_text"
+        android:tint="?attr/text_color_secondary"
         app:srcCompat="@drawable/ic_more" />
 
 </androidx.cardview.widget.CardView>

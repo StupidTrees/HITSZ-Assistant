@@ -223,7 +223,7 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     void loadAvatar(){
         if(TextUtils.isEmpty(CurrentUser.getAvatarUri())){
             avatar.setImageResource(R.drawable.ic_account_activated);
-            //appbarBg.setImageResource(R.drawable.timeline_head_bg);
+            //appbarBg.setImageResource(R.drawable.gradient_bg);
         }else {
             if(this.isDestroyed()) return;
             Glide.with(ActivityUserCenter.this).load(CurrentUser.getAvatarUri())

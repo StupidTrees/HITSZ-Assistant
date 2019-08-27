@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:pile="http://schemas.android.com/apk/res-auto"
     xmlns:scene="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+
+    android:background="?attr/background_color_bottom"
+    app:ignore="NamespaceTypo">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_backgroung_white"
+        android:background="#00000000"
         pile:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            app:theme="?attr/toolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:background="#00000000"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
+
             pile:contentInsetStartWithNavigation="0dp">
 
             <LinearLayout
@@ -34,10 +39,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    scene:layoutTextColor="#424242"
+                    pile:layoutTextColor="?attr/text_color_secondary"
                     scene:layoutTextSize="22"
-                    scene:leftDistance="100dp"
 
+                    scene:leftDistance="100dp"
                     scene:rightDistance="100dp" />
 
 
@@ -56,7 +61,8 @@
                         android:layout_height="38dp"
                         android:layout_gravity="center_vertical|right"
                         android:scaleType="centerInside"
-                        android:src="@drawable/right" />
+                        scene:srcCompat="@drawable/right" />
+
 
                 </com.stupidtree.hita.diy.HorizontalTransitionLayout>
 
@@ -66,115 +72,115 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#fff"
-        pile:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-    android:orientation="vertical"
-    android:paddingTop="24dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000"
+        android:orientation="vertical"
+        android:paddingTop="24dp"
+        pile:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-    <View
-        android:id="@+id/positionView"
-        android:layout_width="1dp"
-        android:layout_height="1dp" />
+        <View
+            android:id="@+id/positionView"
+            android:layout_width="1dp"
+            android:layout_height="1dp" />
 
 
         <com.stupidtree.hita.diy.PileLayout
-        android:id="@+id/pileLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        pile:displayCount="1.8"
-        pile:interval="10dp"
-        pile:scaleStep="0.32"
-        pile:sizeRatio="1.12" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@drawable/ic_star_border" />
-
-        <com.stupidtree.hita.diy.VerticalTransitionLayout
-            android:id="@+id/addressView"
+            android:id="@+id/pileLayout"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            scene:layoutTextColor="#555"
-            scene:layoutTextSize="18"
-            scene:verticalDistance="15dp" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/descriptionView"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="20dp"
-        android:ellipsize="end"
-        android:lineSpacingExtra="10dp"
-        android:lines="3"
-        android:minHeight="50dp"
-        android:textColor="#999"
-        android:textSize="14sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="10dp"
-        android:background="#ddd" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.stupidtree.hita.diy.FadeTransitionImageView
-            android:id="@+id/bottomImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/white_gradient" />
-
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            pile:displayCount="1.8"
+            pile:interval="10dp"
+            pile:scaleStep="0.32"
+            pile:sizeRatio="1.12" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="-6dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:src="@drawable/ic_access_time"
-                android:tint="@color/material_secondary_text" />
+                android:src="@drawable/ic_star_border" />
 
             <com.stupidtree.hita.diy.VerticalTransitionLayout
-                android:id="@+id/timeView"
+                android:id="@+id/addressView"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
-                scene:layoutTextColor="#888"
-                scene:layoutTextSize="13"
-                scene:verticalDistance="25dp" />
+                scene:layoutTextColor="#555"
+                scene:layoutTextSize="18"
+                scene:verticalDistance="15dp" />
 
         </LinearLayout>
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/descriptionView"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="20dp"
+            android:ellipsize="end"
+            android:lineSpacingExtra="10dp"
+            android:lines="3"
+            android:minHeight="50dp"
+            android:textColor="#999"
+            android:textSize="14sp" />
 
-</LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:background="#ddd" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.stupidtree.hita.diy.FadeTransitionImageView
+                android:id="@+id/bottomImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/white_gradient" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="-6dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/ic_access_time"
+                    android:tint="?attr/text_color_secondary" />
+
+                <com.stupidtree.hita.diy.VerticalTransitionLayout
+                    android:id="@+id/timeView"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
+                    scene:layoutTextColor="#888"
+                    scene:layoutTextSize="13"
+                    scene:verticalDistance="25dp" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

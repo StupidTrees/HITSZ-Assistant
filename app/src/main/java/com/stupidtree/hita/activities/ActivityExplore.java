@@ -1,6 +1,7 @@
 package com.stupidtree.hita.activities;
 
-import  java.lang.String;
+import java.lang.String;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,6 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.SparseArray;
@@ -66,16 +69,15 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
     private Button btn1;
     private Toolbar mToolbar;
     FloatingActionButton fab;
-    MapView mapView=null;
-    private AMap aMap=null;
-    int click_darkmode=0; //昼夜模式开关
-    private MarkerOptions mStartMarker,mEndMarker;
+    MapView mapView = null;
+    private AMap aMap = null;
+    int click_darkmode = 0; //昼夜模式开关
+    private MarkerOptions mStartMarker, mEndMarker;
 
     //导航变量
-    NaviLatLng mStartPointNavi
-            ,mEndPointNavi;
-    LatLonPoint mStartPoint=null,
-            mEndPoint=null;
+    NaviLatLng mStartPointNavi, mEndPointNavi;
+    LatLonPoint mStartPoint = null,
+            mEndPoint = null;
     private final int ROUTE_TYPE_WALK = 3;
     private RouteSearch mRouteSearch;
     private WalkRouteResult mWalkRouteResult;
@@ -87,7 +89,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
     String terminal;//目的地字符串
     boolean longClickAvailable;
     boolean first = true;
-    List<Map<String,String>> lectureList;
+    List<Map<String, String>> lectureList;
 
     @Override
     protected void stopTasks() {
@@ -97,16 +99,16 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true,true,false);
+        setWindowParams(true, true, false);
         setContentView(R.layout.activity_explore);
         terminal = getIntent().getStringExtra("terminal");
         lectureList = new ArrayList<>();
         //if(terminal==null||terminal.isEmpty()) mToolbar.setTitle("探索");
         //else mToolbar.setTitle("前往:"+terminal);
-        longClickAvailable = terminal==null||terminal.isEmpty();//只有在探索模式才能长按导航
+        longClickAvailable = terminal == null || terminal.isEmpty();//只有在探索模式才能长按导航
         //设置状态栏透明 添加返回图标
         mToolbar = findViewById(R.id.toolbar);
-        if(!longClickAvailable)  mToolbar.setTitle("前往"+terminal);
+        if (!longClickAvailable) mToolbar.setTitle("前往" + terminal);
         else mToolbar.setTitle("探索模式");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
@@ -122,14 +124,14 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mStartPoint==null) return;
-                LatLng ll= new LatLng(mStartPoint.getLatitude(),mStartPoint.getLongitude());//定位点
+                if (mStartPoint == null) return;
+                LatLng ll = new LatLng(mStartPoint.getLatitude(), mStartPoint.getLongitude());//定位点
                 aMap.moveCamera(newLatLng(ll));
-                aMap.moveCamera(CameraUpdateFactory.zoomTo((float)16.7));//设置地图的放缩级别
+                aMap.moveCamera(CameraUpdateFactory.zoomTo((float) 16.7));//设置地图的放缩级别
             }
         });
         //显示地图，定位
-        mapView =  findViewById(R.id.map);
+        mapView = findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         if (aMap == null) {
             Init_map();
@@ -138,36 +140,36 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
         }
         new LoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         changeDayAndNight();//昼夜模式
-        if(defaultSP.getBoolean("firstOpen_explore",true)&&longClickAvailable){
+        if (defaultSP.getBoolean("firstOpen_explore", true) && longClickAvailable) {
             Guide();
-            defaultSP.edit().putBoolean("firstOpen_explore",false).apply();
+            defaultSP.edit().putBoolean("firstOpen_explore", false).apply();
         }
     }
 
 
-    void Guide(){
+    void Guide() {
         TapTargetSequence tts = new TapTargetSequence(this).targets(
-                TapTarget.forView(mapView,"欢迎使用探索模式","发现大学城每一天的惊喜") .drawShadow(true)
+                TapTarget.forView(mapView, "欢迎使用探索模式", "发现大学城每一天的惊喜").drawShadow(true)
                         .cancelable(false)
                         .tintTarget(true)
                         .transparentTarget(false)
                         .outerCircleColor(R.color.blue_accent)
                         .titleTextSize(24)
                         .icon(getDrawable(R.drawable.bt_done)),
-                TapTarget.forView(fab,"使用该按钮定位到当前位置","请允许HITSZ助手使用位置权限") .drawShadow(true)
-                .cancelable(false)
-                .tintTarget(true)
-                .transparentTarget(false)
-                .outerCircleColor(R.color.blue_accent)
-                .titleTextSize(24),
-                TapTarget.forView(mapView,"长按地图上的任意点进行寻路规划").drawShadow(true)
+                TapTarget.forView(fab, "使用该按钮定位到当前位置", "请允许HITSZ助手使用位置权限").drawShadow(true)
+                        .cancelable(false)
+                        .tintTarget(true)
+                        .transparentTarget(false)
+                        .outerCircleColor(R.color.blue_accent)
+                        .titleTextSize(24),
+                TapTarget.forView(mapView, "长按地图上的任意点进行寻路规划").drawShadow(true)
                         .cancelable(false)
                         .tintTarget(true)
                         .transparentTarget(false)
                         .outerCircleColor(R.color.blue_accent)
                         .titleTextSize(24)
                         .icon(getDrawable(R.drawable.ic_location)),
-                TapTarget.forView(mapView,"每天的事件、讲座将会以图标形式显示在地图上！")
+                TapTarget.forView(mapView, "每天的事件、讲座将会以图标形式显示在地图上！")
                         .drawShadow(true)
                         .cancelable(false)
                         .tintTarget(true)
@@ -175,7 +177,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
                         .outerCircleColor(R.color.blue_accent)
                         .titleTextSize(24)
                         .icon(getDrawable(R.drawable.ic_meeting)),
-                TapTarget.forView(mapView,"开始使用吧！")            .drawShadow(true)
+                TapTarget.forView(mapView, "开始使用吧！").drawShadow(true)
                         .cancelable(false)
                         .tintTarget(true)
                         .transparentTarget(false)
@@ -187,13 +189,11 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
     }
 
 
-
-
-    private void Init_map(){
+    private void Init_map() {
         aMap = mapView.getMap();
-        LatLng ll= new LatLng(22.587458,113.971198);//学校
+        LatLng ll = new LatLng(22.587458, 113.971198);//学校
         aMap.moveCamera(newLatLng(ll));//程序启动移至学校
-        aMap.moveCamera(CameraUpdateFactory.zoomTo((float)16.7));//设置地图的放缩级别
+        aMap.moveCamera(CameraUpdateFactory.zoomTo((float) 16.7));//设置地图的放缩级别
         //设置默认定位按钮是否显示，非必需设置。
         aMap.getUiSettings().setMyLocationButtonEnabled(true);
         // 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
@@ -203,7 +203,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
         //连续定位、蓝点不会移动到地图中心点，定位点依照设备方向旋转，并且蓝点会跟随设备移动。
         myLocationStyle.interval(2000);
-        myLocationStyle.radiusFillColor(Color.argb(50,0,204,255));
+        myLocationStyle.radiusFillColor(Color.argb(50, 0, 204, 255));
 
         //
         myLocationStyle.strokeColor(Color.parseColor("#00FFFF"));
@@ -242,10 +242,10 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
                     String link = x.select("a").attr("href");
                     String title = x.select("a").text();
                     Map m = new HashMap();
-                    m.put("place",place);
-                    m.put("date",date);
-                    m.put("link",link);
-                    m.put("title",title);
+                    m.put("place", place);
+                    m.put("date", date);
+                    m.put("link", link);
+                    m.put("title", title);
                     lectureList.add(m);
                 }
                 return true;
@@ -257,34 +257,34 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            for(Map<String,String> m:lectureList){
-                whetherAddToMap(m.get("place"), m.get("date"),m.get("title"));
+            for (Map<String, String> m : lectureList) {
+                whetherAddToMap(m.get("place"), m.get("date"), m.get("title"));
             }
 
         }
     }
 
-    void whetherAddToMap(String place,String date,String title){
+    void whetherAddToMap(String place, String date, String title) {
         //判定当日日程
-        Calendar calendar=Calendar.getInstance();
-        String month,day;
+        Calendar calendar = Calendar.getInstance();
+        String month, day;
         //判断月份
-        month=date.substring(0,2);
-        int real_mon=(month.charAt(0)-'0')*10 +(month.charAt(1)-'0');
-        if(real_mon!=calendar.get(Calendar.MONTH)+1)   return;
+        month = date.substring(0, 2);
+        int real_mon = (month.charAt(0) - '0') * 10 + (month.charAt(1) - '0');
+        if (real_mon != calendar.get(Calendar.MONTH) + 1) return;
         //判断日期
-        day=date.substring(4,6);
-        int real_day=(day.charAt(0)-'0')*10 +(day.charAt(1)-'0');
-        if(real_day!=calendar.get(Calendar.DAY_OF_MONTH))    return;
+        day = date.substring(4, 6);
+        int real_day = (day.charAt(0) - '0') * 10 + (day.charAt(1) - '0');
+        if (real_day != calendar.get(Calendar.DAY_OF_MONTH)) return;
         //对地点进行处理
         MarkerOptions markerOption;
-        LatLonPoint latLonPoint=null;
-        if(place.contains("A"))latLonPoint =new LatLonPoint(22.5880360000,113.9697940000);
-        else if(place.contains("T5"))latLonPoint =new LatLonPoint(22.586149,113.974271);
+        LatLonPoint latLonPoint = null;
+        if (place.contains("A")) latLonPoint = new LatLonPoint(22.5880360000, 113.9697940000);
+        else if (place.contains("T5")) latLonPoint = new LatLonPoint(22.586149, 113.974271);
         //标识当日会议
-        if(latLonPoint!=null) {
+        if (latLonPoint != null) {
             //设置图标
-            markerOption=new MarkerOptions()
+            markerOption = new MarkerOptions()
                     .position(AMapUtil.convertToLatLng(latLonPoint))
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.meeting));
             markerOption.draggable(false);//设置Marker不可拖动
@@ -295,34 +295,53 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
             aMap.addMarker(markerOption);
         }
     }
-   private void changeDayAndNight(){
+
+    private void changeDayAndNight() {
         btn1 = findViewById(R.id.button1);
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(click_darkmode==0){ click_darkmode++;  btn1.setText("夜");
+                if (click_darkmode == 0) {
+                    click_darkmode++;
+                    btn1.setText("夜");
                     btn1.setBackgroundColor(Color.parseColor("#1A237E"));
                     btn1.setTextColor(Color.parseColor("#000000"));
-                    aMap.setMapType(AMap.MAP_TYPE_NIGHT);}//夜景地图，aMap是地图控制器对象。
-                else{ click_darkmode=0; aMap.setMapType(AMap.MAP_TYPE_NORMAL);   btn1.setText("昼");
+                    aMap.setMapType(AMap.MAP_TYPE_NIGHT);
+                }//夜景地图，aMap是地图控制器对象。
+                else {
+                    click_darkmode = 0;
+                    aMap.setMapType(AMap.MAP_TYPE_NORMAL);
+                    btn1.setText("昼");
                     btn1.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                    btn1.setTextColor(Color.parseColor("#1A237E"));}
+                    btn1.setTextColor(Color.parseColor("#1A237E"));
+                }
             }
         });
+        if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+            btn1.setText("昼");
+            btn1.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            btn1.setTextColor(Color.parseColor("#1A237E"));
+        } else {
+            btn1.setText("夜");
+            btn1.setBackgroundColor(Color.parseColor("#1A237E"));
+            btn1.setTextColor(Color.parseColor("#000000"));
+            aMap.setMapType(AMap.MAP_TYPE_NIGHT);//夜景地图，aMap是地图控制器对象。
+        }
+
     }
 
     private void setfromandtoMarker() {
-        mStartMarker=new MarkerOptions()
+        mStartMarker = new MarkerOptions()
                 .position(AMapUtil.convertToLatLng(mStartPoint))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.start));
-        mEndMarker=new MarkerOptions()
+        mEndMarker = new MarkerOptions()
                 .position(AMapUtil.convertToLatLng(mEndPoint))
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.end));
         aMap.addMarker(mStartMarker);
         aMap.addMarker(mEndMarker);
     }
 
-    private void Init_walkpath(){
+    private void Init_walkpath() {
 
         aMap.setOnMapClickListener(ActivityExplore.this);
         aMap.setOnMarkerClickListener(ActivityExplore.this);
@@ -331,7 +350,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
         mRouteSearch = new RouteSearch(this);
         mRouteSearch.setRouteSearchListener(this);
         //让主布局消失
-        mBottomLayout =  findViewById(R.id.head_layout);
+        mBottomLayout = findViewById(R.id.head_layout);
         //mHeadLayout= (FrameLayout)findViewById(R.id.mainFram);
         mBottomLayout.setVisibility(View.GONE);
         mRotueTimeDes = (TextView) findViewById(R.id.firstline);
@@ -339,10 +358,10 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
 
 
     }
+
     /**
      * 对触摸地图事件回调
      */
-
 
 
     @Override
@@ -355,7 +374,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
                     mWalkRouteResult = result;
                     final WalkPath walkPath = mWalkRouteResult.getPaths()
                             .get(0);
-                    if(walkPath == null) {
+                    if (walkPath == null) {
                         return;
                     }
                     WalkRouteOverlay walkRouteOverlay = new WalkRouteOverlay(
@@ -368,7 +387,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
                     mBottomLayout.setVisibility(View.VISIBLE);
                     int dis = (int) walkPath.getDistance();
                     int dur = (int) walkPath.getDuration();
-                    String des = AMapUtil.getFriendlyTime(dur)+"("+AMapUtil.getFriendlyLength(dis)+")";
+                    String des = AMapUtil.getFriendlyTime(dur) + "(" + AMapUtil.getFriendlyLength(dis) + ")";
                     mRotueTimeDes.setText(des);
                     mRouteDetailDes.setVisibility(View.GONE);
                     mBottomLayout.setOnClickListener(new View.OnClickListener() {
@@ -379,13 +398,13 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
                             intent.putExtra("walk_path", walkPath);
                             intent.putExtra("walk_result",
                                     mWalkRouteResult);
-                            intent.putExtra("start",mStartPointNavi);
-                            intent.putExtra("end",mEndPointNavi);
+                            intent.putExtra("start", mStartPointNavi);
+                            intent.putExtra("end", mEndPointNavi);
                             startActivity(intent);
                         }
                     });
                 } else if (result != null && result.getPaths() == null) {
-                    ToastUtil.show(HContext,R.string.no_result);
+                    ToastUtil.show(HContext, R.string.no_result);
                 }
             } else {
                 mBottomLayout.setVisibility(View.GONE);
@@ -403,18 +422,21 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
         mapView.onDestroy();
         //since 1.6.0 不再在naviview destroy的时候自动执行AMapNavi.stopNavi();请自行执行
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         //在activity执行onResume时执行mMapView.onResume ()，重新绘制加载地图
         mapView.onResume();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         //在activity执行onPause时执行mMapView.onPause ()，暂停地图的绘制
         mapView.onPause();
     }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -441,7 +463,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
             return;
         }
         setfromandtoMarker();
-        // showProgressDialog();
+// showProgressDialog();
         final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
                 mStartPoint, mEndPoint);
         if (routeType == ROUTE_TYPE_WALK) {// 步行路径规划
@@ -449,6 +471,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
             mRouteSearch.calculateWalkRouteAsyn(query);// 异步路径规划步行模式查询
         }
     }
+
     /**
      * 显示进度框
      */
@@ -462,6 +485,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
         progDialog.setMessage("正在搜索");
         progDialog.show();
     }
+
     /**
      * 隐藏进度框
      */
@@ -473,10 +497,10 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        if(!longClickAvailable) return;
+        if (!longClickAvailable) return;
         //mEndPointNavi = new NaviLatLng(latLng.latitude,latLng.longitude);
-        mEndPoint = new LatLonPoint(latLng.latitude,latLng.longitude);
-        mEndPointNavi=new NaviLatLng(latLng.latitude,latLng.longitude);
+        mEndPoint = new LatLonPoint(latLng.latitude, latLng.longitude);
+        mEndPointNavi = new NaviLatLng(latLng.latitude, latLng.longitude);
         //获取AMapNavi实例
 //添加监听回调，用于处理算路成功
         //初始化query对象，fromAndTo是包含起终点信息，walkMode是步行路径规划的模式
@@ -553,15 +577,15 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
     @Override
     public void onMyLocationChange(Location location) {
         //位置改变的时候更新导航起点信息
-        mStartPointNavi = new NaviLatLng(location.getLatitude(),location.getLongitude());
-        mStartPoint=new LatLonPoint(location.getLatitude(),location.getLongitude());
-        if(first){
-            if(!longClickAvailable){
+        mStartPointNavi = new NaviLatLng(location.getLatitude(), location.getLongitude());
+        mStartPoint = new LatLonPoint(location.getLatitude(), location.getLongitude());
+        if (first) {
+            if (!longClickAvailable) {
                 SparseArray<Double> sa = getTerminalInfo(terminal);
                 double latitude = sa.get(0);
                 double longitude = sa.get(1);
-                mEndPoint = new LatLonPoint(latitude,longitude);
-                mEndPointNavi=new NaviLatLng(latitude,longitude);
+                mEndPoint = new LatLonPoint(latitude, longitude);
+                mEndPointNavi = new NaviLatLng(latitude, longitude);
                 Init_walkpath();
                 searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);
             }
@@ -570,50 +594,52 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
     }
 
 
-    SparseArray<Double> getTerminalInfo(String classroom){
+    SparseArray<Double> getTerminalInfo(String classroom) {
         double des_Latitute = 0;
         double des_Longtitude = 0;
-        String title = "",snippet="";
+        String title = "", snippet = "";
         if (classroom.contains("T3")) {
             des_Latitute = 22.5858370000;
             des_Longtitude = 113.9723130000;
-        }else if(classroom.contains("T4")){
+        } else if (classroom.contains("T4")) {
             des_Latitute = 22.5852590000;
             des_Longtitude = 113.9723000000;
 
-        }else if(classroom.contains("T5")){
+        } else if (classroom.contains("T5")) {
             des_Latitute = 22.5852840000;
             des_Longtitude = 113.9732760000;
 
-        }else if(classroom.contains("T6")){
+        } else if (classroom.contains("T6")) {
             des_Latitute = 22.5851010000;
             des_Longtitude = 113.9738560000;
 
-        }else if(classroom.contains("T2")){
+        } else if (classroom.contains("T2")) {
             des_Latitute = 22.5861260000;
             des_Longtitude = 113.9743360000;
 
-        }else if(classroom.contains("H")){
-            des_Latitute =22.5860810000;
+        } else if (classroom.contains("H")) {
+            des_Latitute = 22.5860810000;
             des_Longtitude = 113.9733010000;
 
-        }else if(classroom.contains("K")){
-            des_Latitute =22.5869310000;
+        } else if (classroom.contains("K")) {
+            des_Latitute = 22.5869310000;
             des_Longtitude = 113.9728850000;
 
-        }else if(classroom.contains("L")){
-            des_Latitute =22.5879050000;
+        } else if (classroom.contains("L")) {
+            des_Latitute = 22.5879050000;
             des_Longtitude = 113.9728200000;
 
-        }else if(classroom.contains("A")){
-            des_Latitute =22.5880360000;
+        } else if (classroom.contains("A")) {
+            des_Latitute = 22.5880360000;
             des_Longtitude = 113.9697940000;
         }
-        if(getIntent().getDoubleExtra("longitude",-1.0)>0) des_Longtitude = getIntent().getDoubleExtra("longitude",-1);
-        if(getIntent().getDoubleExtra("latitude",-1.0)>0) des_Latitute = getIntent().getDoubleExtra("latitude",-1);
+        if (getIntent().getDoubleExtra("longitude", -1.0) > 0)
+            des_Longtitude = getIntent().getDoubleExtra("longitude", -1);
+        if (getIntent().getDoubleExtra("latitude", -1.0) > 0)
+            des_Latitute = getIntent().getDoubleExtra("latitude", -1);
         SparseArray res = new SparseArray();
-        res.put(0,des_Latitute);
-        res.put(1,des_Longtitude);
+        res.put(0, des_Latitute);
+        res.put(1, des_Longtitude);
         return res;
 
     }

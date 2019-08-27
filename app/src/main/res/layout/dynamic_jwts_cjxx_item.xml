@@ -16,7 +16,7 @@
         android:layout_weight="1"
         android:gravity="center|left"
         android:text="计算机专业导论"
-        android:textColor="@color/material_primary_text" />
+        android:textColor="?attr/text_color_primary" />
 
     <TextView
         android:id="@+id/cjxx_info"
@@ -47,7 +47,7 @@
         android:gravity="center|left"
         android:singleLine="false"
         android:text="99"
-        android:textColor="@color/material_primary_text" />
+        android:textColor="?attr/text_color_primary" />
 
     <TextView
         android:id="@+id/cjxx_score"

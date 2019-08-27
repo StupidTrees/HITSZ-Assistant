@@ -98,7 +98,6 @@
             android:name=".activities.ActivitySubjectManager"
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.ActivityDynamicTable" />
-        <activity android:name=".activities.ActivityTheme" />
         <activity
             android:name=".activities.ActivityCourse"
             android:label="@string/title_activity_couse"
@@ -158,15 +157,15 @@
         <activity
             android:name=".activities.ActivitySplash"
             android:theme="@style/SplashTheme">
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
+            <!--<meta-data-->
+                <!--android:name="android.app.shortcuts"-->
+                <!--android:resource="@xml/shortcuts" />-->
         </activity>
         <activity
             android:name=".activities.ActivityUserCenter"

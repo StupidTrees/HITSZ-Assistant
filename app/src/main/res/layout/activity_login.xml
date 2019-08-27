@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/timeline_head_bg_reverse">
+    android:background="?attr/color_primary_fade_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -32,6 +32,7 @@
                     android:layout_width="90dp"
                     android:layout_height="90dp"
                     android:layout_gravity="center"
+                    app:cardBackgroundColor="?attr/background_color_second"
                     app:cardCornerRadius="45dp"
                     app:cardElevation="10dp">
 
@@ -49,7 +50,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
                     android:text="HITSZ助手账号"
-                    android:textColor="@color/material_backgroung_white"
+                    android:textColor="@color/material_background_white"
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
@@ -59,7 +60,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="only for HITers"
-                    android:textColor="@color/material_backgroung_white"
+                    android:textColor="@color/material_background_white"
                     android:textSize="14sp" />
 
             </LinearLayout>

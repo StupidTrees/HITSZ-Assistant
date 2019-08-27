@@ -4,13 +4,17 @@
     <color name="material_primary_text">#212121</color>
     <color name="material_secondary_text">#757575</color>
     <color name="material_text_icon_white">#FFFFFF</color>
-    <color name="material_backgroung_white">#FFFFFF</color>
-    <color name="material_backgroung_grey_50">#FAFAFA</color>
-    <color name="material_backgroung_grey_100">#F5F5F5</color>
-    <color name="material_backgroung_grey_300">#E0E0E0</color>
+    <color name="material_text_icon_white_secondary">#66FFFFFF</color>
+    <color name="material_background_white">#FFFFFF</color>
+    <color name="material_background_grey_50">#FAFAFA</color>
+    <color name="material_background_grey_100">#F5F5F5</color>
+    <color name="material_background_grey_300">#E0E0E0</color>
     <color name="transparent_none">#00000000</color>
     <color name="transparent_dark">#BB000000</color>
-
+    <color name="user_center_scrim_color">#66FFFFFF</color>
+    <color name="user_center_foreground_color">#33FFFFFF</color>
+    <color name="main_tans_unselected_color">#55000000</color>
+    <color name="main_tans_selected_color">#212121</color>
     <!-- 分割线背景色 -->
     <color name="white">#FFFFFF</color>
     <color name="colorBGChatbot">#00000000</color>
@@ -68,6 +72,7 @@
     <color name="green_accent">#8BC34A</color>
     <color name="green_fade">#7cb342</color>
     <color name="green_primary_light">#81c784</color>
+
 
     <color name="deep_orange_primary">#FF5722</color>
     <color name="deep_orange_primary_dark">#E64A19</color>

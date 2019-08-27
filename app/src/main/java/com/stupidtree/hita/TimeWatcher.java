@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -108,10 +109,11 @@ public class TimeWatcher {
         } catch (Exception e) {
             thisWeekOfTerm = -1;
         }
-        if (defaultSP.getBoolean("dynamicTimeTable", false) && isDataAvailable()) {
+        if (defaultSP.getBoolean("dtt_preview", false) && isDataAvailable()) {
             TimeTableGenerator.Dynamic_PreviewPlan(now);
         } else if (isDataAvailable()) {
-            mainTimeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC);
+            mainTimeTable.clearTask(":::");
+           // mainTimeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC);
         }
         refreshTodaysEvents();
         refreshNowAndNextEvent();
@@ -154,6 +156,12 @@ public class TimeWatcher {
                     if(newProgress>=100f) mainTimeTable.finishTask(t);
                 }
             }
+        }
+        List<Task> taks = mainTimeTable.getUnfinishedTasks();
+        for(Task t:taks){
+            if(!t.has_deadline) continue;
+            Calendar end = mainTimeTable.core.getDateAt(t.tW,t.tDOW,t.eTime);
+            if(end.before(now)) mainTimeTable.finishTask(t);
         }
 
     }

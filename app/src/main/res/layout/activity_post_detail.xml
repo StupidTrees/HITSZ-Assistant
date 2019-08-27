@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/background_color_bottom"
     tools:context=".activities.ActivityPostDetail">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_backgroung_grey_50"
+        android:background="#00000000"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
@@ -17,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:theme="@style/ToolBarTheme_Dark" />
+            app:theme="?attr/toolbarStyle" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -90,7 +91,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
+                android:layout_marginRight="16dp"
+                app:cardBackgroundColor="?attr/background_color_second">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -106,7 +108,7 @@
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="8dp"
                         android:fontFamily="sans-serif-black"
-                        android:textColor="@color/material_primary_text"
+                        android:textColor="?attr/text_color_primary"
                         android:textSize="18sp" />
 
                     <TextView
@@ -117,7 +119,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginBottom="16dp"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="18sp"
                         android:visibility="visible" />
 

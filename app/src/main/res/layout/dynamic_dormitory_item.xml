@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second" xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dormitory_card"
     android:layout_width="match_parent"
@@ -29,7 +30,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="16dp"
                 android:text="荔园一食堂"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -40,7 +41,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="16dp"
                 android:text="4.8/5"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:visibility="gone" />
@@ -65,7 +66,7 @@
             android:focusable="true"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:padding="16dp"
-            android:tint="@color/material_secondary_text"
+            android:tint="?attr/text_color_secondary"
             app:srcCompat="@drawable/ic_navigation" />
 
     </LinearLayout>

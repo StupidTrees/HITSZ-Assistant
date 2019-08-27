@@ -61,7 +61,7 @@ public class ChatBotListTaskListAdapater extends RecyclerView.Adapter<ChatBotLis
         return mList.size();
     }
 
-    class mHolder extends RecyclerView.ViewHolder{
+    public class mHolder extends RecyclerView.ViewHolder{
         TextView text;
         LinearLayout itemLayout;
         ImageView icon;

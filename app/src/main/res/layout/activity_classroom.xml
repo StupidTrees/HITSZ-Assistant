@@ -35,6 +35,7 @@
     </com.amap.api.maps.MapView>
 
     <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/background_color_bottom">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_backgroung_grey_50"
+        android:background="#00000000"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
@@ -18,6 +19,7 @@
             android:layout_marginTop="24dp"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
+            app:theme="?attr/toolbarStyle"
             app:contentInsetStartWithNavigation="0dp">
 
             <com.google.android.material.tabs.TabLayout
@@ -25,14 +27,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="top"
+                android:background="#00000000"
                 android:contextClickable="true"
                 app:layout_scrollFlags="scroll|enterAlways"
+                app:tabIndicatorColor="#00000000"
                 app:tabMode="scrollable"
-                app:tabSelectedTextColor="@color/material_primary_text"
+                app:tabSelectedTextColor="@color/main_tans_selected_color"
                 app:tabTextAppearance="@style/MainTabsTextTheme"
-                app:tabTextColor="@color/material_secondary_text" />
+                app:tabTextColor="@color/main_tans_unselected_color" />
         </androidx.appcompat.widget.Toolbar>
-
 
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -41,7 +44,6 @@
         android:id="@+id/hitszinfo_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/material_backgroung_grey_50"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

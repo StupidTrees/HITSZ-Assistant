@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
+import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
 
 public class Task {
@@ -83,6 +84,15 @@ public class Task {
         uuid = String.valueOf(UUID.randomUUID());
     }
 
+    public int getDealtTime_All(){
+        int result = 0;
+        for(String x:event_map.keySet()){
+            String uuid = x.split(":::")[0];
+            EventItemHolder eih = mainTimeTable.getEventItemHolderWithUUID(uuid);
+            result+=eih.startTime.getDuration(eih.endTime);
+        }
+        return result;
+    }
     public Task(Cursor c){
         this.curriculumCode = c.getString(c.getColumnIndex("curriculum_code"));
         this.name = c.getString(c.getColumnIndex("name"));

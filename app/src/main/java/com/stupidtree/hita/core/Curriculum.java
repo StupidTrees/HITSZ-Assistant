@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.core.timetable.HTime;
 import com.stupidtree.hita.online.HITAUser;
 
 import java.io.Serializable;
@@ -232,6 +233,16 @@ public class Curriculum extends BmobObject {
         temp.set(start_year, start_month - 1,start_day);
         temp.add(Calendar.DATE, daysToPlus);
         temp.add(Calendar.DAY_OF_MONTH, DOW - 1);
+        return temp;
+    }
+    public Calendar getDateAt(int WeekOfTerm, int DOW, HTime time) {
+        Calendar temp = Calendar.getInstance();
+        int daysToPlus = (WeekOfTerm - 1) * 7;
+        temp.set(start_year, start_month - 1,start_day);
+        temp.add(Calendar.DATE, daysToPlus);
+        temp.add(Calendar.DAY_OF_MONTH, DOW - 1);
+        temp.set(Calendar.HOUR_OF_DAY,time.hour);
+        temp.set(Calendar.MINUTE,time.minute);
         return temp;
     }
 

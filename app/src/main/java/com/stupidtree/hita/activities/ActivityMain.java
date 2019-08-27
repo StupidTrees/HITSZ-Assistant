@@ -18,6 +18,8 @@ import androidx.annotation.Nullable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
@@ -33,8 +35,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -49,11 +54,14 @@ import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.fragments.FragmentAddEvent;
 import com.stupidtree.hita.fragments.FragmentNavi;
 import com.stupidtree.hita.fragments.FragmentTasks;
+import com.stupidtree.hita.fragments.FragmentTheme;
 import com.stupidtree.hita.fragments.FragmentTimeLine;
 import com.stupidtree.hita.fragments.FragmentTimeTablePage;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.FileOperator;
 import com.tencent.bugly.beta.Beta;
+
+import org.ansj.splitWord.analysis.ToAnalysis;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,6 +79,7 @@ public class ActivityMain extends BaseActivity
 {
 
 
+    public static boolean app_task_enabled;
     FragmentTimeLine tlf;
     FragmentNavi nvf;
     FragmentTasks tskf;
@@ -88,6 +97,7 @@ public class ActivityMain extends BaseActivity
     CardView drawer_card_profile,drawer_card_curriculummanager,drawer_card_theme,drawer_card_dynamic;
     CardView avatar_card;
     ImageView drawer_bg,drawer_bt_settings;
+    MenuItem dark_mode_menu;
     boolean isFirst;
 
     @Override
@@ -100,11 +110,12 @@ public class ActivityMain extends BaseActivity
         super.onCreate(savedInstanceState);
         setWindowParams(true,true,false);
         isFirst =  defaultSP.getBoolean("firstOpen",true);
+        app_task_enabled = defaultSP.getBoolean("app_task_enabled",true);
         tlf = FragmentTimeLine.newInstance(isFirst);
         nvf = new FragmentNavi();
-        tskf = new FragmentTasks();
+        if(app_task_enabled) tskf = new FragmentTasks();
         checkAPPPermission();
-        setContentView(R.layout.activity_main_drawer);
+        setContentView(R.layout.activity_main);
         fabmain = findViewById(R.id.fab_main);
         fabmain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +125,6 @@ public class ActivityMain extends BaseActivity
                 startActivity(i);
             }
         });
-
         if(defaultSP.getBoolean("autoCheckUpdate",true)) checkUpdate(this);
         initDrawer();
         initToolBar();
@@ -126,7 +136,13 @@ public class ActivityMain extends BaseActivity
                 e.printStackTrace();
             }
         }
-
+        new InitTask(this).execute();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ToAnalysis.parse("abc");
+            }
+        }).start();
 
     }
 
@@ -141,7 +157,6 @@ public class ActivityMain extends BaseActivity
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle); //3.监听变化.
         getSupportActionBar().setTitle("");
         mToolbar.inflateMenu(R.menu.toolbar_main);
-        mToolbar.setBackgroundColor(ContextCompat.getColor(this,R.color.material_backgroung_grey_50));
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -162,7 +177,7 @@ public class ActivityMain extends BaseActivity
         ArrayList fragments = new ArrayList();
         fragments.add(nvf);
         fragments.add(tlf);
-        fragments.add(tskf);
+        if(tskf!=null& app_task_enabled)fragments.add(tskf);
         mainTabs.setSelectedTabIndicatorColor(Color.parseColor("#00000000"));
         pagerAdapter = new MainPagerAdapter(getSupportFragmentManager(),fragments,new String[]{"校园","今日","任务"});
         mainTabs.setupWithViewPager(mainPager);
@@ -386,6 +401,22 @@ public class ActivityMain extends BaseActivity
         drawer_bt_settings = headview.findViewById(R.id.drawer_bt_setting);
 //        drawerheader = headview.findViewById(R.id.drawer_header);
 //        drawerheader.setOnClickListener(new onUserAvatarClickListener());
+        Menu menu = mNavigationView.getMenu();
+        dark_mode_menu = menu.findItem(R.id.drawer_nav_darkmode);
+        dark_mode_menu.setActionView(R.layout.action_switch_darkmode);
+        Switch switchA = dark_mode_menu.getActionView().findViewById(R.id.switch_darkmode);
+        switchA.setChecked(defaultSP.getBoolean("is_dark_mode",false));
+        switchA.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                defaultSP.edit().putBoolean("is_dark_mode",isChecked).apply();
+                if(isChecked)AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                else  AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                recreate();
+            }
+        });
+
+
         drawer_bt_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -403,9 +434,14 @@ public class ActivityMain extends BaseActivity
         drawer_card_dynamic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(HContext,"敬请期待",Toast.LENGTH_SHORT).show();
-                Intent pp = new Intent(ActivityMain.this,ActivityDynamicTable.class);
-                ActivityMain.this.startActivity(pp);
+                if(!app_task_enabled){
+                    Toast.makeText(HContext,"开启任务模块方可使用！",Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent pp = new Intent(ActivityMain.this,ActivityDynamicTable.class);
+                    ActivityMain.this.startActivity(pp);
+                }
+//
+
             }
         });
         avatar_card.setOnClickListener(new onUserAvatarClickListener());
@@ -419,8 +455,7 @@ public class ActivityMain extends BaseActivity
         drawer_card_theme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent p = new Intent(ActivityMain.this,ActivityTheme.class);
-                ActivityMain.this.startActivity(p);
+                new FragmentTheme().show(getSupportFragmentManager(),"fragment_theme");
             }
         });
         mDrawerLayout.setStatusBarBackgroundColor(Color.parseColor("#00000000"));
@@ -465,7 +500,7 @@ public class ActivityMain extends BaseActivity
 //                        drawerUserAvatar.callOnClick();
 //                        break;
 //                    case R.id.drawer_nav_theme:
-//                        Intent p = new Intent(ActivityMain.this,ActivityTheme.class);
+//                        Intent p = new Intent(ActivityMain.this,FragmentTheme.class);
 //                        ActivityMain.this.startActivity(p);
 //                        break;
 //                    case R.id.drawer_nav_dynamictimetable:
@@ -503,14 +538,15 @@ public class ActivityMain extends BaseActivity
 
     protected  void refreshDrawerHeader(){
         if(CurrentUser==null){
-            drawerUserAvatar.setImageResource(R.drawable.ic_account);
-            //drawer_bg.setImageResource(R.drawable.timeline_head_bg);
+            drawerUserAvatar.
+                    setImageResource(R.drawable.ic_account);
+            //drawer_bg.setImageResource(R.drawable.gradient_bg);
             drawerUserName.setText("登录");
             drawerSignature.setText("HITSZ账号");
         }else{
             if(TextUtils.isEmpty(CurrentUser.getAvatarUri())){
                 drawerUserAvatar.setImageResource(R.drawable.ic_account_activated);
-               // drawer_bg.setImageResource(R.drawable.timeline_head_bg);
+               // drawer_bg.setImageResource(R.drawable.gradient_bg);
             }else{
                 Glide.with(ActivityMain.this)
                         .load(CurrentUser.getAvatarUri())
@@ -528,6 +564,12 @@ public class ActivityMain extends BaseActivity
             }
             drawerUserName.setText(CurrentUser.getNick());
             drawerSignature.setText(TextUtils.isEmpty(CurrentUser.getSignature())?"无签名":CurrentUser.getSignature());
+        }
+
+        if(defaultSP.getString("dark_mode_mode","dark_mode_normal").equals("dark_mode_normal")){
+            dark_mode_menu.setVisible(true);
+        }else{
+            dark_mode_menu.setVisible(false);
         }
     }
 
@@ -549,6 +591,7 @@ public class ActivityMain extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+
         //Glide.with(ActivityMain.this).load(userInfos.get("头像")).into(drawerUserAvatar);
         //if(tlf.hasInit) tlf.Refresh(FragmentTimeLine.TL_REFRESH_FROM_UNHIDE);
         refreshDrawerHeader();
@@ -580,15 +623,20 @@ public class ActivityMain extends BaseActivity
         }
         @Override
         protected Object doInBackground(Object[] objects) {
-            FileOperator.verifyStoragePermissions(context);
-            SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-            for(Curriculum c:allCurriculum){
-                if(sd.update("curriculum",c.getContentValues(),"curriculum_code=?",new String[]{c.curriculumCode})==0){
-                    sd.insert("curriculum",null,c.getContentValues());
+            try {
+                FileOperator.verifyStoragePermissions(context);
+                SQLiteDatabase sd = mDBHelper.getWritableDatabase();
+                for(Curriculum c:allCurriculum){
+                    if(sd.update("curriculum",c.getContentValues(),"curriculum_code=?",new String[]{c.curriculumCode})==0){
+                        sd.insert("curriculum",null,c.getContentValues());
+                    }
                 }
-            }
 
-            return saveDataToCloud(false);
+                return saveDataToCloud(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 
@@ -621,4 +669,33 @@ public class ActivityMain extends BaseActivity
             startActivity(intent);
         }
     }
+
+
+    static class InitTask extends AsyncTask{
+
+        Activity activity;
+        InitTask(Activity f){
+            activity = f;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //Log.e("time_test","initialize:begin");
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            initCoreData();
+            timeWatcher.refreshProgress(true,true);
+            //Log.e("time_test","initialize:end");
+            Intent i = new Intent();
+            i.setAction("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
+            activity.sendBroadcast(i);
+
+            return null;
+        }
+
+    }
+
 }

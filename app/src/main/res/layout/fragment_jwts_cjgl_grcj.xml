@@ -16,6 +16,7 @@
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp">
@@ -32,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:text="期中成绩"
-                    android:textColor="@color/material_primary_text" />
+                    android:textColor="?attr/text_color_primary" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -47,7 +48,7 @@
                         android:layout_weight="1"
                         android:gravity="center|left"
                         android:text="课程名称"
-                        android:textColor="@color/material_secondary_text" />
+                        android:textColor="?attr/text_color_secondary" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -57,7 +58,7 @@
                         android:gravity="center|left"
                         android:singleLine="false"
                         android:text="性质"
-                        android:textColor="@color/material_secondary_text" />
+                        android:textColor="?attr/text_color_secondary" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -67,7 +68,7 @@
                         android:gravity="center|left"
                         android:singleLine="false"
                         android:text="学分"
-                        android:textColor="@color/material_secondary_text" />
+                        android:textColor="?attr/text_color_secondary" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -77,7 +78,7 @@
                         android:gravity="center|left"
                         android:singleLine="false"
                         android:text="成绩"
-                        android:textColor="@color/material_secondary_text" />
+                        android:textColor="?attr/text_color_secondary" />
 
                 </LinearLayout>
 
@@ -104,6 +105,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp">
@@ -118,7 +120,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="期末成绩"
-                    android:textColor="@color/material_primary_text" />
+                    android:textColor="?attr/text_color_primary" />
 
                 <Spinner
                     android:id="@+id/qmcj_xnxq_spinner"
@@ -140,7 +142,7 @@
                         android:layout_weight="1"
                         android:gravity="center|left"
                         android:text="课程名称"
-                        android:textColor="@color/material_secondary_text" />
+                        android:textColor="?attr/text_color_secondary" />
 
                     <TextView
                         android:id="@+id/性质"
@@ -151,7 +153,7 @@
                         android:gravity="center|left"
                         android:singleLine="false"
                         android:text="性质"
-                        android:textColor="@color/material_secondary_text" />
+                        android:textColor="?attr/text_color_secondary" />
 
                     <TextView
                         android:id="@+id/学分"
@@ -162,7 +164,7 @@
                         android:gravity="center|left"
                         android:singleLine="false"
                         android:text="学分"
-                        android:textColor="@color/material_secondary_text" />
+                        android:textColor="?attr/text_color_secondary" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -172,7 +174,7 @@
                         android:gravity="center|left"
                         android:singleLine="false"
                         android:text="排名"
-                        android:textColor="@color/material_secondary_text" />
+                        android:textColor="?attr/text_color_secondary" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -182,7 +184,7 @@
                         android:gravity="center|left"
                         android:singleLine="false"
                         android:text="成绩"
-                        android:textColor="@color/material_secondary_text" />
+                        android:textColor="?attr/text_color_secondary" />
 
                 </LinearLayout>
 

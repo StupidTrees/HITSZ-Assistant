@@ -22,7 +22,7 @@
         android:maxEms="12"
         android:singleLine="false"
         android:text="你好，我是希塔"
-        android:textColor="@color/material_primary_text"
+        android:textColor="?attr/text_color_primary"
         android:textSize="24sp" />
 
     <TextView

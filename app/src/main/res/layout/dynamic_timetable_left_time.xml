@@ -14,6 +14,6 @@
         android:layout_gravity="center|top"
         android:gravity="center|top"
         android:text="12:00"
-        android:textColor="@color/material_secondary_text"
+        android:textColor="?attr/text_color_secondary"
         android:textSize="8sp" />
 </LinearLayout>

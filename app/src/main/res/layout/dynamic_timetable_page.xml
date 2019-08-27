@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_backgroung_white"
         android:orientation="vertical">
 
         <LinearLayout
@@ -34,7 +33,7 @@
                 android:gravity="center"
                 android:paddingLeft="6dp"
                 android:text="月"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="8sp"
                 android:visibility="gone" />
 
@@ -46,7 +45,7 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="16"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="12sp" />
 
             <TextView
@@ -57,7 +56,7 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="17"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="12sp" />
 
             <TextView
@@ -68,7 +67,7 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="18"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="12sp" />
 
             <TextView
@@ -79,7 +78,7 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="19"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="12sp" />
 
             <TextView
@@ -90,7 +89,7 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="20"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="12sp" />
 
             <TextView
@@ -101,7 +100,7 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="21"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="12sp" />
 
             <TextView
@@ -112,7 +111,7 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="22"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -143,7 +142,7 @@
                 android:alpha="0.6"
                 android:gravity="center"
                 android:text="一"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="8sp" />
 
             <TextView
@@ -153,7 +152,7 @@
                 android:alpha="0.6"
                 android:gravity="center"
                 android:text="二"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="8sp" />
 
             <TextView
@@ -163,7 +162,7 @@
                 android:alpha="0.6"
                 android:gravity="center"
                 android:text="三"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="8sp" />
 
             <TextView
@@ -173,7 +172,7 @@
                 android:alpha="0.6"
                 android:gravity="center"
                 android:text="四"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="8sp" />
 
             <TextView
@@ -183,7 +182,7 @@
                 android:alpha="0.6"
                 android:gravity="center"
                 android:text="五"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="8sp" />
 
             <TextView
@@ -193,7 +192,7 @@
                 android:alpha="0.6"
                 android:gravity="center"
                 android:text="六"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="8sp" />
 
             <TextView
@@ -203,7 +202,7 @@
                 android:alpha="0.6"
                 android:gravity="center"
                 android:text="日"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="8sp" />
         </LinearLayout>
 
@@ -211,7 +210,6 @@
             android:id="@+id/wholeday_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/material_backgroung_white"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -224,7 +222,7 @@
                 android:minHeight="0dp"
                 android:paddingLeft="6dp"
                 android:text="全天"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="8sp" />
 
             <FrameLayout

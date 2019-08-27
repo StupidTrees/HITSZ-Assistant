@@ -10,6 +10,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.core.app.ActivityOptionsCompat;
@@ -22,6 +25,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Layout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -35,7 +39,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gelitenight.waveview.library.WaveView;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.material.snackbar.Snackbar;
@@ -60,7 +63,6 @@ import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.HTime;
 import com.stupidtree.hita.diy.MaterialCircleAnimator;
 import com.stupidtree.hita.adapter.TimelineListAdapter;
-import com.stupidtree.hita.diy.WaveViewHelper;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.RefreshBroadcastReceiver;
 
@@ -96,8 +98,9 @@ public class FragmentTimeLine extends BaseFragment implements
     AppBarLayout mAppBarLayout;
     NestedScrollView noneLayout;
     View[] heads;
-    WaveView waveView;
-    WaveViewHelper waveViewHelper;
+    ArcProgress circleProgress;
+   // WaveView waveView;
+   // WaveViewHelper waveViewHelper;
     DecimalFormat df = new DecimalFormat("#.#%");
     TimelineListAdapter TimeLineListAdapter;
     TimeLineWholedayAdapter timelineWholedayAdapter;
@@ -288,13 +291,14 @@ public class FragmentTimeLine extends BaseFragment implements
 
     @SuppressLint("ClickableViewAccessibility")
     public void initHead(View v){
-        waveView = v.findViewById(R.id.timeline_head_waveview);
-        waveViewHelper = new WaveViewHelper(waveView, nowProgress);
-        waveView.setShapeType(WaveView.ShapeType.CIRCLE);
-        waveView.setBorder(8,Color.WHITE);
-        waveView.setWaveColor(
-                Color.WHITE,Color.WHITE
-        );
+        circleProgress = v.findViewById(R.id.circle_progress);
+//        waveView = v.findViewById(R.id.timeline_head_waveview);
+//        waveViewHelper = new WaveViewHelper(waveView, nowProgress);
+//        waveView.setShapeType(WaveView.ShapeType.CIRCLE);
+//        waveView.setBorder(8,Color.WHITE);
+//        waveView.setWaveColor(
+//                Color.WHITE,Color.parseColor("#66FFFFFF")
+//        );
         findClassroom = v.findViewById(R.id.find_classroom);
         headCardClickListener = new headCardClickListener();
 
@@ -311,7 +315,7 @@ public class FragmentTimeLine extends BaseFragment implements
 
         head_card.setOnClickListener(headCardClickListener);
         head_counting = v.findViewById(R.id.head_counting);
-        heads = new View[]{head_image,head_goNow,waveView};
+        heads = new View[]{head_image,head_goNow,circleProgress};
         head_counting_name = v.findViewById(R.id.tl_head_counting_name);
         head_counting_image = v.findViewById(R.id.tl_head_counting_image);
         head_counting_middle = v.findViewById(R.id.tl_head_counting_middle);
@@ -430,10 +434,14 @@ public class FragmentTimeLine extends BaseFragment implements
             switchHeadView(head_image,R.drawable.ic_timeline_head_free);
             headCardClickListener.setMode(headCardClickListener.SHOW_NEXT);
         } else if(nowEvent!=null){
-            switchHeadView(waveView,-1);
+            switchHeadView(circleProgress,-1);
             titleToSet= nowEvent.mainName;
-            subtitltToSet = "进度:"+df.format(nowProgress);
-            waveView.setWaterLevelRatio(nowProgress);
+            subtitltToSet = "正在进行";
+            circleProgress.setProgress((int) (nowProgress*100));
+//
+//            waveView.setWaterLevelRatio(nowProgress);
+//            waveViewHelper.start();
+
             headCardClickListener.setMode(headCardClickListener.SHOW_NEXT);
         }else{
             if(new HTime(now).compareTo(new HTime(5,0))<0&&new HTime(now).compareTo(new HTime(0,0))>0){
@@ -512,11 +520,6 @@ public class FragmentTimeLine extends BaseFragment implements
             else heads[i].setVisibility(View.GONE);
         }
         if(view instanceof ImageView)((ImageView)view).setImageResource(imageId);
-        if(view instanceof WaveView){
-            waveViewHelper.start();
-        }else{
-            waveViewHelper.cancel();
-        }
         head_counting.post(new Runnable() {
             @Override
             public void run() {
@@ -760,12 +763,13 @@ public class FragmentTimeLine extends BaseFragment implements
     }
 
 
-    public static void showEventDialog(final Activity a, final EventItem ei, final View transitionCard, View transitionName) {
+    public static void showEventDialog(final Context a, final EventItem ei, final View transitionCard, View transitionName) {
         View dlgView = null;
+        LayoutInflater inflater =  LayoutInflater.from(a);
         final AlertDialog dialog = new AlertDialog.Builder(a).create();
         if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
             //Log.e("======!!!", String.valueOf(ei));
-            dlgView = a.getLayoutInflater().inflate(R.layout.dialog_timetable_course, null);
+            dlgView =inflater.inflate(R.layout.dialog_timetable_course, null);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
             final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
             final TextView value4 = dlgView.findViewById(R.id.tt_dlg_value4);
@@ -785,7 +789,7 @@ public class FragmentTimeLine extends BaseFragment implements
             detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ActivityOptionsCompat ops = ActivityOptionsCompat.makeSceneTransitionAnimation(a,card,"card");
+                    //ActivityOptionsCompat ops = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) a,card,"card");
                     Intent i = new Intent(a, ActivityCourse.class);
                     Bundle b = new Bundle();
                     b.putSerializable("eventitem",ei);
@@ -853,7 +857,7 @@ public class FragmentTimeLine extends BaseFragment implements
 
         }else if (ei.eventType == TIMETABLE_EVENT_TYPE_DYNAMIC) {
             //Log.e("======!!!", String.valueOf(ei));
-            dlgView = a.getLayoutInflater().inflate(R.layout.dialog_timetable_dynamic, null);
+            dlgView = inflater.inflate(R.layout.dialog_timetable_dynamic, null);
             final TextView name = dlgView.findViewById(R.id.tt_dlg_name);
             //dialog.setTitle(ei.mainName);
             name.setText(ei.mainName);
@@ -865,7 +869,7 @@ public class FragmentTimeLine extends BaseFragment implements
             value2.setText(ei.tag3.isEmpty() ? "无" : ei.tag3);//标签2
             value3.setText(ei.startTime.tellTime() + "-" + ei.endTime.tellTime());
         } else if (ei.eventType == TIMETABLE_EVENT_TYPE_EXAM) {
-            dlgView = a.getLayoutInflater().inflate(R.layout.dialog_timetable_exam, null);
+            dlgView = inflater.inflate(R.layout.dialog_timetable_exam, null);
             final TextView name = dlgView.findViewById(R.id.tt_dlg_name);
             final TextView value1 = dlgView.findViewById(R.id.tt_dlg_value1);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
@@ -891,7 +895,7 @@ public class FragmentTimeLine extends BaseFragment implements
                 }
             });
         } else if (ei.eventType == TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT) {
-            dlgView = a.getLayoutInflater().inflate(R.layout.dialog_timetable_arrangement, null);
+            dlgView =inflater.inflate(R.layout.dialog_timetable_arrangement, null);
             final TextView value1 = dlgView.findViewById(R.id.tt_dlg_value1);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
             final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
@@ -900,7 +904,7 @@ public class FragmentTimeLine extends BaseFragment implements
             value2.setText(ei.tag3.isEmpty() ? "无" : ei.tag3);//标签2
             value3.setText(ei.startTime.tellTime() + "-" + ei.endTime.tellTime());
         } else if (ei.eventType == TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE) {
-            dlgView = a.getLayoutInflater().inflate(R.layout.dialog_timetable_deadline, null);
+            dlgView =inflater.inflate(R.layout.dialog_timetable_deadline, null);
             final TextView value1 = dlgView.findViewById(R.id.tt_dlg_value1);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
             final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
@@ -909,7 +913,7 @@ public class FragmentTimeLine extends BaseFragment implements
             value2.setText(ei.tag3.isEmpty() ? "无" : ei.tag3);//标签2
             value3.setText(ei.startTime.tellTime());
         } else if (ei.eventType == TimeTable.TIMETABLE_EVENT_TYPE_REMIND) {
-            dlgView = a.getLayoutInflater().inflate(R.layout.dialog_timetable_remind, null);
+            dlgView = inflater.inflate(R.layout.dialog_timetable_remind, null);
 
             final TextView value1 = dlgView.findViewById(R.id.tt_dlg_value1);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);

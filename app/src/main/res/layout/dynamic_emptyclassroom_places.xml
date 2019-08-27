@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second" xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card"
     android:layout_width="match_parent"
@@ -25,7 +26,7 @@
             android:layout_weight="1"
             android:fontFamily="sans-serif-black"
             android:text="TextView"
-            android:textColor="@color/material_primary_text"
+            android:textColor="?attr/text_color_primary"
             android:textSize="18sp" />
 
     </LinearLayout>

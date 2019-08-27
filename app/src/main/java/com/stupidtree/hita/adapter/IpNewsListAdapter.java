@@ -63,7 +63,7 @@ public class IpNewsListAdapter extends RecyclerView.Adapter<IpNewsListAdapter.Ne
         //newsViewHolder.views.setText(mBeans.get(i).get("views"));
         if(mBeans.get(i).get("image")==null||mBeans.get(i).get("image").isEmpty()){
             newsViewHolder.image.setVisibility(View.GONE);
-            //newsViewHolder.image.setImageResource(R.drawable.timeline_head_bg);
+            //newsViewHolder.image.setImageResource(R.drawable.gradient_bg);
         }else{
             newsViewHolder.image.setVisibility(View.VISIBLE);
 

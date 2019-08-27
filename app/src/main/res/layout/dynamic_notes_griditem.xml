@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/notes_cardview"
     android:layout_width="match_parent"
@@ -45,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="30"
-            android:textColor="@color/material_backgroung_white"
+            android:textColor="@color/material_background_white"
             android:textSize="16sp" />
     </androidx.cardview.widget.CardView>
 </androidx.cardview.widget.CardView>

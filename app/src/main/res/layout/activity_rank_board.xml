@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/background_color_bottom">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_backgroung_grey_50"
+        android:background="#00000000"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
@@ -17,19 +18,20 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginTop="24dp"
+            android:background="#00000000"
             app:layout_collapseMode="pin"
-            app:theme="@style/ToolBarTheme_Dark">
+            app:theme="?attr/toolbarStyle">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tablayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|left"
-                android:background="@color/material_backgroung_grey_50"
+                android:background="#00000000"
                 app:tabGravity="fill"
                 app:tabIndicatorFullWidth="false"
                 app:tabMode="scrollable"
-                app:tabSelectedTextColor="@color/material_primary_text"
+                app:tabSelectedTextColor="?attr/text_color_primary"
                 app:tabTextAppearance="@style/MainTabsTextTheme"
                 app:tabTextColor="#66000000" />
         </androidx.appcompat.widget.Toolbar>

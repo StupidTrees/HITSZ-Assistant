@@ -11,7 +11,6 @@
         android:id="@+id/subject_courseItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_backgroung_grey_50"
         android:clickable="false"
         android:paddingLeft="8dp"
         android:paddingTop="16dp"
@@ -26,7 +25,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="名称"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
         <TextView
             android:layout_width="match_parent"
@@ -35,7 +34,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="学年"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
         <TextView
             android:id="@+id/textView7"
@@ -45,7 +44,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="学期"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
         <TextView
             android:layout_width="match_parent"
@@ -54,7 +53,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="性质"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
         <TextView
             android:layout_width="match_parent"
@@ -63,7 +62,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="学分"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
 
         <TextView
@@ -73,7 +72,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="总学时"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
         <TextView
             android:id="@+id/pyjh_exam"
@@ -83,7 +82,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="考试课"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
     </LinearLayout>
 

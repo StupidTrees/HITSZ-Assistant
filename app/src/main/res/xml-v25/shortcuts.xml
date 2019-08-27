@@ -3,56 +3,56 @@
 
 
     <shortcut
-        android:shortcutId="shortcut_timetable"
         android:enabled="true"
         android:icon="@drawable/shortcut_timetable"
-        android:shortcutShortLabel="@string/shortcut_timetable_short"
-        android:shortcutLongLabel="@string/shortcut_timetable_long">
+        android:shortcutId="shortcut_timetable"
+        android:shortcutLongLabel="@string/shortcut_timetable_long"
+        android:shortcutShortLabel="@string/shortcut_timetable_short">
 
         <action
             android:action="android.action.action.VIEW"
-            android:targetPackage="com.stupidtree.hita"
-            android:targetClass="com.stupidtree.hita.activities.ActivityTimeTable" />
-        <categories android:name="android.shortcut.conversation"/>
+            android:targetClass="com.stupidtree.hita.activities.ActivityTimeTable"
+            android:targetPackage="com.stupidtree.hita" />
+        <categories android:name="android.shortcut.conversation" />
     </shortcut>
     <shortcut
-        android:shortcutId="shortcut_news"
         android:enabled="true"
         android:icon="@drawable/shortcut_news"
-        android:shortcutShortLabel="@string/shortcut_news_short"
-        android:shortcutLongLabel="@string/shortcut_news_long">
+        android:shortcutId="shortcut_news"
+        android:shortcutLongLabel="@string/shortcut_news_long"
+        android:shortcutShortLabel="@string/shortcut_news_short">
 
         <action
             android:action="android.action.action.VIEW"
-            android:targetPackage="com.stupidtree.hita"
-            android:targetClass="com.stupidtree.hita.activities.ActivityHITSZInfo" />
-        <categories android:name="android.shortcut.conversation"/>
+            android:targetClass="com.stupidtree.hita.activities.ActivityHITSZInfo"
+            android:targetPackage="com.stupidtree.hita" />
+        <categories android:name="android.shortcut.conversation" />
     </shortcut>
 
     <shortcut
-        android:shortcutId="shortcut_empty_classroom"
         android:enabled="true"
         android:icon="@drawable/shortcut_empty_classroom"
-        android:shortcutShortLabel="@string/shortcut_empty_classroom_short"
-        android:shortcutLongLabel="@string/shortcut_empty_classroom_long">
+        android:shortcutId="shortcut_empty_classroom"
+        android:shortcutLongLabel="@string/shortcut_empty_classroom_long"
+        android:shortcutShortLabel="@string/shortcut_empty_classroom_short">
 
         <action
             android:action="android.action.action.VIEW"
-            android:targetPackage="com.stupidtree.hita"
-            android:targetClass="com.stupidtree.hita.activities.ActivityEmptyClassroom" />
-        <categories android:name="android.shortcut.conversation"/>
+            android:targetClass="com.stupidtree.hita.activities.ActivityEmptyClassroom"
+            android:targetPackage="com.stupidtree.hita" />
+        <categories android:name="android.shortcut.conversation" />
     </shortcut>
     <shortcut
-        android:shortcutId="shortcut_explore"
         android:enabled="true"
         android:icon="@drawable/shortcut_explore"
-        android:shortcutShortLabel="@string/shortcut_explore_short"
-        android:shortcutLongLabel="@string/shortcut_explore_long">
+        android:shortcutId="shortcut_explore"
+        android:shortcutLongLabel="@string/shortcut_explore_long"
+        android:shortcutShortLabel="@string/shortcut_explore_short">
 
         <action
             android:action="android.action.action.VIEW"
-            android:targetPackage="com.stupidtree.hita"
-            android:targetClass="com.stupidtree.hita.activities.ActivityExplore" />
-        <categories android:name="android.shortcut.conversation"/>
+            android:targetClass="com.stupidtree.hita.activities.ActivityExplore"
+            android:targetPackage="com.stupidtree.hita" />
+        <categories android:name="android.shortcut.conversation" />
     </shortcut>
 </shortcuts>

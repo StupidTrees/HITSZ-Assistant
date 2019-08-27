@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="绑定学号"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="16sp" />
 
             <TextView
@@ -42,7 +42,7 @@
                 android:layout_weight="1"
                 android:gravity="center|right"
                 android:text="180110324"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="16sp" />
 
             <ImageView
@@ -72,7 +72,7 @@
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="昵称"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="16sp" />
 
             <TextView
@@ -82,7 +82,7 @@
                 android:layout_weight="1"
                 android:gravity="center|right"
                 android:text="StupidTree"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="16sp" />
 
             <ImageView
@@ -112,7 +112,7 @@
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="个性签名"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="16sp" />
 
             <TextView
@@ -122,7 +122,7 @@
                 android:layout_weight="1"
                 android:gravity="center|right"
                 android:text="哈哈哈"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="16sp" />
 
             <ImageView
@@ -148,7 +148,7 @@
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="账号"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="16sp" />
 
             <TextView
@@ -158,7 +158,7 @@
                 android:layout_weight="1"
                 android:gravity="center|right"
                 android:text="15159128923"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -177,7 +177,7 @@
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="学院"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="16sp" />
 
             <TextView
@@ -187,7 +187,7 @@
                 android:layout_weight="1"
                 android:gravity="center|right"
                 android:text="格兰芬多"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -206,7 +206,7 @@
                 android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="姓名"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="16sp" />
 
             <TextView
@@ -216,7 +216,7 @@
                 android:layout_weight="1"
                 android:gravity="center|right"
                 android:text="杨涵丞"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>

@@ -102,7 +102,7 @@
         android:layout_marginRight="20dp"
         android:lineSpacingMultiplier="1.2"
         android:text="现阶段Hita的问答将直接从对话库中检索，所有用户上传问答后将直接生效，请只上传有关哈工深的问答与个性语句，注意不要出现答案不固定的问题，也禁止上传包含个人隐私或不良言论的信息，否则将会依照管理条例进行上报处罚"
-        android:textColor="@color/material_secondary_text"
+        android:textColor="?attr/text_color_secondary"
         android:textSize="12sp" />
 
     <LinearLayout

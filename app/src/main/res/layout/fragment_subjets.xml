@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_backgroung_grey_100"
     tools:context=".fragments.FragmentSubjects">
 
     <!-- TODO: Update blank fragment layout -->
@@ -13,7 +12,6 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="false"
         android:animationCache="false"
-        android:background="@color/material_backgroung_grey_50"
         android:paddingLeft="4dp"
         android:paddingRight="4dp" />
 

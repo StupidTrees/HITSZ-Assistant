@@ -47,12 +47,12 @@ public class HDatePickerDialog {
         this.context = context;
         this.showDate = showDate;
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context,themeID);// your app theme here
-        final View view = context.getLayoutInflater().cloneInContext(contextThemeWrapper).inflate(R.layout.dialog_addevent_pickdate,null);
+        final View view = context.getLayoutInflater().cloneInContext(contextThemeWrapper).inflate(R.layout.dialog_pickdate,null);
         picker_week = view.findViewById(R.id.ade_weekpicker_week);
         picker_dow = view.findViewById(R.id.ade_weekpicker_dow);
         calendarView = view.findViewById(R.id.ade_calendarview);
         dialogTitle = view.findViewById(R.id.dialog_title);
-        calendarView.setMinDate(allCurriculum.get(thisCurriculumIndex).getFirstDateAtWOT(1).getTimeInMillis());
+        calendarView.setMinDate(now.getTimeInMillis());
         calendarView.setMaxDate(allCurriculum.get(thisCurriculumIndex).getFirstDateAtWOT(3000).getTimeInMillis());
         calendarDateChangeListener = new mCalendarDateChangeListener();
         weekWheelListener = new mWheelChangedListener();

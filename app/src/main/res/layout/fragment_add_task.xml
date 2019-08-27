@@ -27,7 +27,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
                 android:text="添加任务"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -52,13 +52,14 @@
                     android:layout_height="20dp"
                     android:layout_marginRight="16dp"
                     android:scaleType="fitCenter"
-                    android:tint="@color/material_secondary_text"
+                    android:tint="?attr/text_color_secondary"
                     app:srcCompat="@drawable/ic_dlg_tt_tag1" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:textColorHint="?attr/text_color_secondary">
 
                     <AutoCompleteTextView
                         android:id="@+id/adt_name"
@@ -79,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
-                android:text="每日任务" />
+                android:text="每日任务"
+                android:visibility="gone" />
 
             <Switch
                 android:id="@+id/adt_switch"
@@ -88,7 +90,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_weight="1"
-                android:text="有期限任务" />
+                android:text="有期限任务"
+                android:textColor="?attr/text_color_primary" />
 
             <LinearLayout
                 android:id="@+id/adt_arrangetime"
@@ -127,7 +130,7 @@
                             android:layout_marginLeft="4dp"
                             android:layout_weight="1"
                             android:text="设置开始日期"
-                            android:textColor="@color/material_secondary_text"
+                            android:textColor="?attr/text_color_secondary"
                             android:textSize="16sp" />
 
                         <ImageView
@@ -154,7 +157,7 @@
                             android:layout_marginLeft="4dp"
                             android:layout_weight="1"
                             android:text="设置起始时间"
-                            android:textColor="@color/material_secondary_text"
+                            android:textColor="?attr/text_color_secondary"
                             android:textSize="16sp" />
 
                         <ImageView
@@ -181,7 +184,7 @@
                             android:layout_marginLeft="4dp"
                             android:layout_weight="1"
                             android:text="设置结束日期"
-                            android:textColor="@color/material_secondary_text"
+                            android:textColor="?attr/text_color_secondary"
                             android:textSize="16sp" />
 
                         <ImageView
@@ -208,7 +211,7 @@
                             android:layout_marginLeft="4dp"
                             android:layout_weight="1"
                             android:text="设置结束时间"
-                            android:textColor="@color/material_secondary_text"
+                            android:textColor="?attr/text_color_secondary"
                             android:textSize="16sp" />
 
                         <ImageView
@@ -229,7 +232,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:layout_weight="1"
-                android:text="有时长任务" />
+                android:text="有时长任务"
+                android:textColor="?attr/text_color_primary" />
 
             <LinearLayout
                 android:id="@+id/adt_arrangelength"
@@ -262,7 +266,7 @@
                         android:layout_marginBottom="8dp"
                         android:layout_weight="1"
                         android:text="设置任务时长"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="16sp" />
 
                     <LinearLayout

@@ -50,6 +50,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setWindowParams(true,false,false);
         setContentView(R.layout.activity_empty_classroom_detail);
         webView = findViewById(R.id.webview);
         lh = getIntent().getStringExtra("lh");
@@ -168,7 +169,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
             for (int i = 0; i < 6; i++) {
                 txs[i].setText("-");
                 txs[i].setTextColor(ContextCompat.getColor(HContext, R.color.material_secondary_text));
-                lamps[i].setCardBackgroundColor(ContextCompat.getColor(HContext, R.color.material_backgroung_grey_300));
+                lamps[i].setCardBackgroundColor(ContextCompat.getColor(HContext, R.color.material_background_grey_300));
             }
             xnxq_txt.setText("查询学期："+xnxq);
         }
@@ -217,7 +218,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
                 } else {
                     txs[i].setText("空闲");
                     txs[i].setTextColor(ContextCompat.getColor(HContext, R.color.material_secondary_text));
-                    lamps[i].setCardBackgroundColor(ContextCompat.getColor(HContext, R.color.material_backgroung_grey_300));
+                    lamps[i].setCardBackgroundColor(ContextCompat.getColor(HContext, R.color.material_background_grey_300));
                 }
             }
             //webView.postUrl();

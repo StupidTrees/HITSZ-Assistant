@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second" xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lecture_card"
@@ -42,7 +43,7 @@
                 android:fontFamily="sans-serif-black"
                 android:singleLine="false"
                 android:text="母猪的产后护理"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="18sp" />
 
             <TextView
@@ -54,7 +55,7 @@
                 android:layout_marginRight="16dp"
                 android:singleLine="false"
                 android:text="演讲人：赵本山"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="13sp"
                 android:visibility="gone" />
 
@@ -67,7 +68,7 @@
                 android:layout_marginRight="16dp"
                 android:singleLine="false"
                 android:text="讲座时间：今晚"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="13sp" />
 
             <TextView
@@ -79,7 +80,7 @@
                 android:layout_marginRight="16dp"
                 android:singleLine="false"
                 android:text="地点：T3"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="13sp" />
         </LinearLayout>
 

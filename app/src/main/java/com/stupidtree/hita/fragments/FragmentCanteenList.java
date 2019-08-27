@@ -143,15 +143,15 @@ public class FragmentCanteenList extends BaseFragment {
                         if (number != null) rank_number.setText(number);
                         if (board != null) rank_board.setText(board);
                         if(imageUrl!=null){
-                            Glide.with(getContext()).load(imageUrl).placeholder(R.drawable.timeline_head_bg)
+                            Glide.with(getContext()).load(imageUrl).placeholder(R.drawable.gradient_bg)
                                     .into(head_bg);
-                        }else head_bg.setImageResource(R.drawable.timeline_head_bg);
+                        }else head_bg.setImageResource(R.drawable.gradient_bg);
 
                     }
                 } else {
                     rank_number.setText("-");
                     rank_board.setText("-");
-                    head_bg.setImageResource(R.drawable.timeline_head_bg);
+                    head_bg.setImageResource(R.drawable.gradient_bg);
                 }
             }
         });

@@ -1,6 +1,7 @@
 package com.stupidtree.hita.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
@@ -50,7 +51,7 @@ public class ActivityUtils {
         i.putExtra("circle_reveal_image",false);
         from.startActivity(i,options.toBundle());
     }
-    public static void startLocationActivity_name(Activity from, String name) {
+    public static void startLocationActivity_name(Context from, String name) {
         Intent i = new Intent(from, ActivityLocation.class);
         i.putExtra("name",name);
         from.startActivity(i);
@@ -85,7 +86,7 @@ public class ActivityUtils {
         }
         from.startActivity(i, op.toBundle());
     }
-    
+
     public static void startJWTSActivity(final Activity from){
         Intent k;
         if(login){

@@ -131,7 +131,7 @@ public class ActivityJWTS extends BaseActivity implements  FragmentJWTS_grkb.OnF
         });
         collaspinglayout = findViewById(R.id.collapsingtoolbar);
         collaspinglayout.setExpandedTitleColor(Color.parseColor("#00000000"));
-        collaspinglayout.setCollapsedTitleTextColor(ContextCompat.getColor(this,R.color.material_primary_text));
+        collaspinglayout.setCollapsedTitleTextColor(getTextColorPrimary());
         toolbar.inflateMenu(R.menu.toolbar_jwts);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override

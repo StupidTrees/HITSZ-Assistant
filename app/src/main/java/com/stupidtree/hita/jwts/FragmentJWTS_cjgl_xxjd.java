@@ -147,7 +147,7 @@ public class FragmentJWTS_cjgl_xxjd extends BaseFragment {
                     listRes.add(m);
                 }
                 return null;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return "加载学习进度失败！";
             }
 

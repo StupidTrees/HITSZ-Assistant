@@ -48,4 +48,15 @@
         <item>大学城会议中心</item>
         <item>清华大学新能源与环境大楼</item>
     </string-array>
+
+    <string-array name="preference_dark_mode">
+        <item>手动开关</item>
+        <item>跟随系统</item>
+        <item>按时间自动开关</item>
+    </string-array>
+    <string-array name="preference_dark_mode_values">
+        <item>dark_mode_normal</item>
+        <item>dark_mode_follow</item>
+        <item>dark_mode_auto</item>
+    </string-array>
 </resources>

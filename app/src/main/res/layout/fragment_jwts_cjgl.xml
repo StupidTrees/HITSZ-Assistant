@@ -11,12 +11,12 @@
         android:id="@+id/cjgl_tabs"
         android:layout_width="match_parent"
         android:layout_height="@dimen/jwts_second_tab_height"
-        android:background="@color/material_backgroung_grey_50"
+        android:background="#00000000"
         app:tabIndicatorColor="#00000000"
         app:tabIndicatorFullWidth="false"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="?attr/colorPrimary"
-        app:tabTextColor="#66000000"
+        app:tabTextColor="?attr/text_color_secondary"
         app:tabUnboundedRipple="true">
 
         <com.google.android.material.tabs.TabItem

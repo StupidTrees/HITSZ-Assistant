@@ -3,6 +3,7 @@ package com.stupidtree.hita.util;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -207,7 +208,7 @@ public class FileOperator {
             location.getParentFile().mkdirs();
             return null;
         }
-        String curriculumText = "";
+        StringBuilder curriculumText = new StringBuilder();
         Map<String, List<List<String>>> m = analyzeXls(location.toString());
         for (Map.Entry<String, List<List<String>>> table : m.entrySet()) {
             cl = new CurriculumHelper("from_excel_"+table.getValue().get(0).get(0),sY, sM, sD, table.getValue().get(0).get(0));
@@ -235,13 +236,13 @@ public class FileOperator {
                         break;
                 }
                 for (int j = 2; j <= 8; j++) {
-                    if (row.get(j).equals("")) {
-                        continue;
-                    }
-                    String text = null;
+//                    if (row.get(j).equals("")) {
+//                        continue;
+//                    }
+                    String text;
                     text = row.get(j);
                     List<Map<String, String>> courseList = analyseTableText(text);
-                    curriculumText+=text+"#";
+                    curriculumText.append(text).append("#");
                     for (Map<String, String> map : courseList) {
                         if (map.get("teacher").equals("null")) {
                             cl.ExamGeneraor(j - 1, map.get("name"), map.get("time"),  map.get("classroom"),begin, 2, map.get("week").split("-"));
@@ -253,14 +254,14 @@ public class FileOperator {
 
             }
         }
-        cl.curriculumText = curriculumText;
+        cl.curriculumText = curriculumText.toString();
         return cl;
     }
 
 
     public static CurriculumHelper loadCurriculumHelperFromCloud(String curriculumCode,Map<String,Object> m, int sY, int sM, int sD) {
         CurriculumHelper cl= null;
-        String curriculumText = "";
+        StringBuilder curriculumText = new StringBuilder();
         String name = (String) m.get("name");
         List<List<String>> table = (List<List<String>>) m.get("table");
             cl = new CurriculumHelper(curriculumCode,sY, sM, sD,name);
@@ -294,7 +295,7 @@ public class FileOperator {
                     String text = null;
                     text = row.get(j-2);
                     List<Map<String, String>> courseList = analyseTableText(text);
-                    curriculumText+=text+"#";
+                    curriculumText.append(text).append("#");
                     for (Map<String, String> map : courseList) {
                         if (map.get("teacher").equals("null")) {
                             cl.ExamGeneraor(j - 1, map.get("name"), map.get("time"),  map.get("classroom"),begin, 2, map.get("week").split("-"));
@@ -305,14 +306,14 @@ public class FileOperator {
                 }
 
             }
-            cl.curriculumText = curriculumText;
+            cl.curriculumText = curriculumText.toString();
         return cl;
     }
 
     public static CurriculumHelper loadCurriculumHelperFromCurriculumText(Curriculum ci_bmob) {
         CurriculumHelper cl;
         String name = ci_bmob.name;
-        String[] tableText = ci_bmob.curriculumText.split("#");
+        String[] tableText = ci_bmob.curriculumText.split("#",-1);
         cl = new CurriculumHelper(ci_bmob.curriculumCode,ci_bmob.start_year, ci_bmob.start_month, ci_bmob.start_day,name);
         for (int i = 0; i < 6; i++) {
             for(int j = 0;j<7;j++){
@@ -462,6 +463,7 @@ public class FileOperator {
     public static List<Map<String, String>> analyseTableText(String rawText){
         List<String> textSplit = new ArrayList<>();
         List<Map<String, String>> result = new ArrayList<>();
+        if(TextUtils.isEmpty(rawText)) return result;
         try {
             String text = rawText.replaceAll("<br>","</br>").replaceAll("双]","]双").replaceAll("单]","]单");
             // System.out.println("block:\n"+text);

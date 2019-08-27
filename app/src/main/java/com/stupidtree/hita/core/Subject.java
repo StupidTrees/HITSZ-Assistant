@@ -105,7 +105,7 @@ public class Subject implements Comparable{
         credit = jo.get("credit").getAsString();
         compulsory = jo.get("compulsory").getAsString();
         totalCourses = jo.get("total_courses").getAsString();
-        code = jo.get("code").getAsString();
+        code = jo.get("code")==null?jo.get("code").getAsString():null;
         curriculumCode = jo.get("curriculum_code").getAsString();
         getScroesFromString(jo.get("scores").toString());
         getRatesFromString(jo.get("rates").toString());

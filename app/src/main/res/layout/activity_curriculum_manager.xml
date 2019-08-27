@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/import_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/background_color_bottom">
 
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_backgroung_grey_50"
+        android:background="#00000000"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="0dp">
 
@@ -22,7 +23,8 @@
             android:layout_marginTop="24dp"
             app:layout_collapseMode="pin"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:theme="@style/ToolBarTheme_Dark"></androidx.appcompat.widget.Toolbar>
+            app:theme="?attr/toolbarStyle"
+            app:titleTextColor="?attr/text_color_primary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

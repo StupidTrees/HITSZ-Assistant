@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
+
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +46,7 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
@@ -155,7 +158,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .data("fhlj", "kbcx/queryXszkb")
                 .data("xnxq", xnxq)
-                .data("pageSize","1000")
+                .data("pageSize", "1000")
                 .ignoreContentType(true)
                 .post();
         Elements table = page.getElementsByClass("bot_line");
@@ -247,22 +250,22 @@ public class FragmentJWTS_grkb extends BaseFragment {
                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .ignoreContentType(true)
-                .data("pageSize","1000")
+                .data("pageSize", "1000")
                 .get();
-       // System.out.println(page);
+        // System.out.println(page);
         Elements table = page.getElementsByClass("bot_line");
         Elements subjects = table.select("tr");
         subjects.remove(0);
         for (Element e : subjects) {
             Elements rows = e.getElementsByTag("td");
-             for (Subject s : ci.Subjects) {
-                 //Log.e("compare:",s.code+"-->"+rows.get(0).text());
-                 if (rows.get(0).text().equals(s.code)) {
+            for (Subject s : ci.Subjects) {
+                //Log.e("compare:",s.code+"-->"+rows.get(0).text());
+                if (rows.get(0).text().equals(s.code)) {
                     // Log.e("找到了！",s.name+"-->"+rows);
-                     s.exam = rows.get(12).text().contains("是");
-                     s.Default = false;
-                 }
-             }
+                    s.exam = rows.get(12).text().contains("是");
+                    s.Default = false;
+                }
+            }
 
         }
 
@@ -270,17 +273,18 @@ public class FragmentJWTS_grkb extends BaseFragment {
     }
 
 
-    protected void getTeacherInfos(String type,String xnxq) throws IOException {
+    protected void getTeacherInfos(String type, String xnxq) throws IOException {
         Document page = Jsoup.connect(" http://jwts.hitsz.edu.cn/xsxk/queryYxkc").cookies(cookies).timeout(30000)
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .ignoreContentType(true)
-                .data("pageXklb",type)
+                .data("pageXklb", type)
                 .data("pageXnxq", xnxq)
                 .post();
         final Elements links = page.select("a[onclick^=javascript:queryJsxxDiv]");
         //System.out.println(links);
+        List<Teacher> teacherList = new ArrayList<>();
         for (Element e : links) {
             String onclick = e.attr("onclick");
             final String teacherCode = onclick.substring(onclick.indexOf("('") + 2, onclick.indexOf("')"));
@@ -299,28 +303,35 @@ public class FragmentJWTS_grkb extends BaseFragment {
             String phone = rows.get(5).select("td").first().text();
             String email = rows.get(6).select("td").first().text();
             String detail = rows.get(7).select("td").first().text();
-             final Teacher t = new Teacher(teacherCode,name, gender, title, school, phone, email, detail);
+            final Teacher t = new Teacher(teacherCode, name, gender, title, school, phone, email, detail);
+            if (!teacherList.contains(t)) teacherList.add(t);
+        }
+        // Log.e("ts",teacherList.toString());
+        for (final Teacher t : teacherList) {
             BmobQuery<Teacher> bq = new BmobQuery<>();
-            bq.addWhereEqualTo("name",name);
+            bq.addWhereEqualTo("name", t.getName());
+            // Log.e("外部查找教师：",t.getName());
             bq.findObjects(new FindListener<Teacher>() {
                 @Override
                 public void done(List<Teacher> list, BmobException e) {
-                    if(list!=null&&list.size()>0){
-                        new uploadTeacherTask(t,list.get(0)).execute();
-                    }
-                    else{
-                        new uploadTeacherTask(t).execute();
+                    try {
+                        if (e == null && list != null && list.size() > 0) {
+                            new uploadTeacherTask(t, list.get(0)).execute();
+                        } else {
+                            new uploadTeacherTask(t).execute();
+                        }
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
                     }
                 }
             });
-
         }
 
     }
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
     }
 
     @Override
@@ -461,14 +472,14 @@ public class FragmentJWTS_grkb extends BaseFragment {
                         //Log.e("all:", String.valueOf(curriculumItems));
                         getSubjectsInfo(s, s.curriculumCode);
                         getSubjectsInfo2(s, s.curriculumCode);
-                        if(uploadTeacher.isChecked()) {
-                            getTeacherInfos("bx",s.curriculumCode);//必修
-                            getTeacherInfos("qxrx",s.curriculumCode);//文理通识
-                            getTeacherInfos("qxrx",s.curriculumCode);//文理通识
-                            getTeacherInfos("ty",s.curriculumCode);//体育
-                            getTeacherInfos("xx",s.curriculumCode);//限选
-                            getTeacherInfos("cxyx",s.curriculumCode);//创新研修
-                            getTeacherInfos("kzy",s.curriculumCode);//跨专业
+                        if (uploadTeacher.isChecked()) {
+                            getTeacherInfos("bx", s.curriculumCode);//必修
+                            getTeacherInfos("qxrx", s.curriculumCode);//文理通识
+                            getTeacherInfos("qxrx", s.curriculumCode);//文理通识
+                            getTeacherInfos("ty", s.curriculumCode);//体育
+                            getTeacherInfos("xx", s.curriculumCode);//限选
+                            getTeacherInfos("cxyx", s.curriculumCode);//创新研修
+                            getTeacherInfos("kzy", s.curriculumCode);//跨专业
 
                         }
                         if (HITAApplication.addCurriculumToTimeTable(s)) {
@@ -507,47 +518,58 @@ public class FragmentJWTS_grkb extends BaseFragment {
         }
     }
 
-    class uploadTeacherTask extends AsyncTask{
+    class uploadTeacherTask extends AsyncTask {
 
         Teacher t;
         Teacher old = null;
-        uploadTeacherTask(Teacher t){
+
+        uploadTeacherTask(Teacher t) {
+
             this.t = t;
         }
 
-        uploadTeacherTask(Teacher t,Teacher old){
+        uploadTeacherTask(Teacher t, Teacher old) {
+            // Log.e("开始上传：",t.getName());
             this.t = t;
             this.old = old;
         }
 
         @Override
         protected Object doInBackground(final Object[] objects) {
-           // Log.e("add teacher:",t.getName());
+            // Log.e("add teacher:",t.getName());
             try {
-                String photo = "http://jwts.hitsz.edu.cn/xxgl/showPhoto?zgh=" + t.getTeacherCode();
-                byte[] teacherPhoto;
-                teacherPhoto = Jsoup.connect(photo).cookies(cookies).ignoreContentType(true).execute().bodyAsBytes();
-                String path = getActivity().getExternalCacheDir().toString() + "/tpt/teacher:" + t.getTeacherCode() + ".png";
-                FileOperator.saveByteImageToFile(path, BitmapFactory.decodeByteArray(teacherPhoto, 0, teacherPhoto.length));
-                final BmobFile bf = new BmobFile(new File(path));
-                bf.upload(new UploadFileListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        t.setPhotoLink(bf.getFileUrl());
-                        if(old!=null) {
-                            t.setObjectId(old.getObjectId());
-                            BmobFile oldImg = new BmobFile();
-                            oldImg.setUrl(old.getPhotoLink());
-                            oldImg.delete();
-                        }
-                        t.save(new SaveListener<String>() {
-                            @Override
-                            public void done(String s, BmobException e) {
-                                Log.e("save teacher",t.getName());
+                if (old == null) {
+                    String photo = "http://jwts.hitsz.edu.cn/xxgl/showPhoto?zgh=" + t.getTeacherCode();
+                    byte[] teacherPhoto;
+                    teacherPhoto = Jsoup.connect(photo).cookies(cookies).ignoreContentType(true).execute().bodyAsBytes();
+                    String path = getActivity().getCacheDir().toString() + "/tpt/teacher:" + t.getTeacherCode() + ".png";
+                    FileOperator.saveByteImageToFile(path, BitmapFactory.decodeByteArray(teacherPhoto, 0, teacherPhoto.length));
+                    final BmobFile bf = new BmobFile(new File(path));
+                    bf.upload(new UploadFileListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                t.setPhotoLink(bf.getUrl());
+                                t.save(new SaveListener<String>() {
+                                    @Override
+                                    public void done(String s, BmobException e) {
+                                        Log.e("save new teacher", t.getName());
+                                    }
+                                });
                             }
-                        });
-                    }
-                });
+                        }
+                    });
+                }else{
+                    t.setObjectId(old.getObjectId());
+                    t.setPhotoLink(old.getPhotoLink());
+                    t.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            Log.e("update teacher", t.getName());
+                        }
+                    });
+                }
+
             } catch (IOException e1) {
                 return false;
             }

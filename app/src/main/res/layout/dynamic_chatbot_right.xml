@@ -23,6 +23,7 @@
 		android:textSize="18sp" />
 
 	<androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
 		android:id="@+id/chatbot_right_card"
 		android:layout_width="40dp"
 		android:layout_height="40dp"

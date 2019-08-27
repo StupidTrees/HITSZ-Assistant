@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -52,10 +53,11 @@ import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
+import static com.stupidtree.hita.HITAApplication.getDataState;
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
-import static com.stupidtree.hita.HITAApplication.todaysEvents;
+import static com.stupidtree.hita.activities.ActivityMain.app_task_enabled;
 import static com.stupidtree.hita.core.TimeTable.contains_integer;
 
 @SuppressLint("ValidFragment")
@@ -94,9 +96,15 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         View view = View.inflate(getContext(), R.layout.fragment_add_event, null);
         dialog.setContentView(view);
         ((View) view.getParent()).setBackgroundColor(Color.TRANSPARENT);
+        dateSet = false;
+        fromTSet = false;
+        toTSet = false;
+        courseSet = false;
+        taskSet = false;
         initViews(view);
         return dialog;
     }
+
 
     @Override
     public void onStart() {
@@ -110,6 +118,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         tag2 = v.findViewById(R.id.ade_tag2);
         tag3 = v.findViewById(R.id.ade_tag3);
         dealWithTask = v.findViewById(R.id.ade_switch_dealwithtask);
+        if(!app_task_enabled) dealWithTask.setVisibility(View.GONE);
         taskShow = v.findViewById(R.id.ade_choose_deal_task);
         nameLayout = v.findViewById(R.id.ade_namelayout);
         pickCourseLayout = v.findViewById(R.id.ade_courselayout);
@@ -137,17 +146,23 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         autoAllocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!dateSet){
+                    Toast.makeText(HContext,"请先设置日期！",Toast.LENGTH_SHORT).show();
+                    autoAllocation.setChecked(!isChecked);
+                    return;
+                }
                 if (isChecked) {
-                    wholeDaySwitch.setChecked(false);
-                    wholeDaySwitch.setVisibility(View.GONE);
-                    SparseArray<HTime> times = TimeTableGenerator.autoAdd_getTime(week,dow,40);
+                    SparseArray<HTime> times = TimeTableGenerator.autoAdd_getTime(now,week,dow,40);
                     if(times!=null){
                         setFromTime(times.get(0).hour,times.get(0).minute);
                         setToTime(times.get(1).hour,times.get(1).minute);
                     }else{
                         Toast.makeText(HContext,"没有找到合适的分配时间！",Toast.LENGTH_SHORT).show();
                         autoAllocation.setChecked(false);
+                        return;
                     }
+                    wholeDaySwitch.setChecked(false);
+                    wholeDaySwitch.setVisibility(View.GONE);
                 } else {
                     wholeDaySwitch.setChecked(false);
                     wholeDaySwitch.setVisibility(View.VISIBLE);
@@ -174,7 +189,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                         case R.id.ade_arrange:
                             pickFromTimeLayout.setVisibility(View.VISIBLE);
                             pickToTimeLayout.setVisibility(View.VISIBLE);
-                            dealWithTask.setVisibility(View.VISIBLE);
+                            if(app_task_enabled)dealWithTask.setVisibility(View.VISIBLE);
                             break;
                         case R.id.ade_remind:
                             pickFromTimeLayout.setVisibility(View.VISIBLE);
@@ -222,7 +237,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                 switch (checkedId) {
                     case R.id.ade_arrange:
                         pickTaskLayout.setVisibility(View.GONE);
-                        dealWithTask.setVisibility(View.VISIBLE);
+                        if(app_task_enabled) dealWithTask.setVisibility(View.VISIBLE);
                         wholeDaySwitch.setVisibility(View.VISIBLE);
                         autoAllocation.setVisibility(View.VISIBLE);
                         pickCourseLayout.setVisibility(View.GONE);
@@ -448,12 +463,17 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
     class showTasksDialogTask extends AsyncTask {
         ArrayList<Task> tasks;
         String[] res;
+        int[] dealtTime;
 
         @Override
         protected Object doInBackground(Object[] objects) {
             tasks = mainTimeTable.getUnfinishedTaskWithLength();
             res = new String[tasks.size()];
+            dealtTime = new int[tasks.size()];
             for (int i = 0; i < tasks.size(); i++) {
+                int dealt = tasks.get(i).getDealtTime_All();
+                dealtTime[i] = dealt;
+               // Log.e("task:",tasks.get(i).name+",all:"+tasks.get(i).getLength()+",dealt:"+delt);
                 res[i] = tasks.get(i).name;
             }
             if(res.length==0) return false;

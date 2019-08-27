@@ -135,7 +135,7 @@ public class FragmentTimeTablePage extends BaseFragment {
             }
             view.setLayoutParams(params);
             text = view.findViewById(R.id.tt_left_time_text);
-            text.setText(i + ":0");
+            text.setText(i + ":00");
             classNumberLayout.addView(view);
         }
 
@@ -323,7 +323,7 @@ public class FragmentTimeTablePage extends BaseFragment {
                 if (thisDaysEvents == null || thisDaysEvents.size() == 0) continue;
                 List<EventItem> wholeDayList = new ArrayList<>();
                 for (final EventItem ei : thisDaysEvents) {
-                    Log.e("e:", ei.mainName + "," + ei.isWholeDay);
+                   // Log.e("e:", ei.mainName + "," + ei.isWholeDay);
                     if (ei.isWholeDay) {
                         wholeDayList.add(ei);
                         hasWholedayWholeWeek = true;
@@ -365,13 +365,12 @@ public class FragmentTimeTablePage extends BaseFragment {
                     view.setLayoutParams(params);
                     TextView text_block_name = view.findViewById(R.id.tt_card_coursename);//格子中显示课程名的TextView
                     TextView text_block_place = view.findViewById(R.id.tt_card_place);//格子中显示上课地点的TextView
-                    TextView text_block_type = view.findViewById(R.id.tt_card_head_text);//格子中显示事件类型的TextView
-                    CardView card_block_head = view.findViewById(R.id.tt_card_head_card);//格子头头的卡片
+                  //CardView card_block_head = view.findViewById(R.id.tt_card_head_card);//格子头头的卡片
                     if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
-                        card_block_head.setCardBackgroundColor(((BaseActivity) getActivity()).getColorPrimary());
+                        //card_block_head.setCardBackgroundColor(((BaseActivity) getActivity()).getColorPrimary());
                         text_block_place.setText(ei.tag2);//显示地点
                     } else if (ei.eventType == TIMETABLE_EVENT_TYPE_EXAM) {
-                        card_block_head.setCardBackgroundColor(((BaseActivity) getActivity()).getColorAccent());
+                        //card_block_head.setCardBackgroundColor(((BaseActivity) getActivity()).getColorAccent());
                         text_block_place.setText(ei.tag2);//显示地点
                     }
 
@@ -446,6 +445,8 @@ public class FragmentTimeTablePage extends BaseFragment {
                                 mainTimeTable.deleteEvent(ei, ei.eventType== TIMETABLE_EVENT_TYPE_DEADLINE);
                                 ExplosionField ef = ExplosionField.attach2Window(FragmentTimeTablePage.this.getActivity());
                                 ef.explode(v);
+                                v.setVisibility(View.GONE);
+
                             }
                         }).
                                 create();

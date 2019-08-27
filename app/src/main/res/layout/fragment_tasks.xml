@@ -8,10 +8,11 @@
     android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_backgroung_grey_50"
+        android:background="#00000000"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -20,6 +21,7 @@
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed">
 
             <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
@@ -34,7 +36,7 @@
                     android:id="@+id/imageView18"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/timeline_head_bg" />
+                    app:srcCompat="@drawable/gradient_bg" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -96,158 +98,130 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:minHeight="160dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:cardMaxElevation="6dp">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:fontFamily="sans-serif-black"
-                        android:maxEms="10"
-                        android:singleLine="false"
-                        android:text="正在进行"
-                        android:textColor="@color/material_secondary_text"
-                        android:textSize="18sp" />
-
-                    <ImageView
-                        android:id="@+id/none_img1"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
-                        android:tint="#11000000"
-                        android:tintMode="src_in"
-                        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-                        app:srcCompat="@drawable/ic_task" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/task_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="16dp"
-                        android:overScrollMode="never"
-                        android:visibility="visible">
-
-                    </androidx.recyclerview.widget.RecyclerView>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:minHeight="160dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:cardMaxElevation="6dp">
-
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="32dp"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="sans-serif-black"
+                    android:maxEms="10"
+                    android:singleLine="false"
+                    android:text="正在进行"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:fontFamily="sans-serif-black"
-                        android:maxEms="10"
-                        android:singleLine="false"
-                        android:text="未开始"
-                        android:textColor="@color/material_secondary_text"
-                        android:textSize="18sp" />
+                <ImageView
+                    android:id="@+id/none_img1"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:tint="?attr/background_icon_color"
+                    android:tintMode="src_in"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                    app:srcCompat="@drawable/ic_task" />
 
-                    <ImageView
-                        android:id="@+id/none_img2"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
-                        android:tint="#11000000"
-                        android:tintMode="src_in"
-                        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-                        app:srcCompat="@drawable/ic_empty" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/task_recycler_not_yet"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:overScrollMode="never"
-                        android:visibility="visible">
-
-                    </androidx.recyclerview.widget.RecyclerView>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:minHeight="160dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:cardMaxElevation="6dp">
-
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/task_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="16dp"
+                    android:overScrollMode="never"
+                    android:visibility="visible">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:fontFamily="sans-serif-black"
-                        android:maxEms="10"
-                        android:singleLine="false"
-                        android:text="已完成"
-                        android:textColor="@color/material_secondary_text"
-                        android:textSize="18sp" />
+                </androidx.recyclerview.widget.RecyclerView>
 
-                    <ImageView
-                        android:id="@+id/none_img3"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
-                        android:tint="#11000000"
-                        android:tintMode="src_in"
-                        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-                        app:srcCompat="@drawable/ic_empty" />
+            </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/task_recycler_done"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:overScrollMode="never"
-                        android:visibility="visible">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                    </androidx.recyclerview.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/textView28"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="sans-serif-black"
+                    android:maxEms="10"
+                    android:singleLine="false"
+                    android:text="未开始"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="18sp" />
 
-                </LinearLayout>
+                <ImageView
+                    android:id="@+id/none_img2"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:tint="?attr/background_icon_color"
+                    android:tintMode="src_in"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                    app:srcCompat="@drawable/ic_empty" />
 
-            </androidx.cardview.widget.CardView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/task_recycler_not_yet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:overScrollMode="never"
+                    android:visibility="visible">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView30"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="32dp"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="sans-serif-black"
+                    android:maxEms="10"
+                    android:singleLine="false"
+                    android:text="已完成"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/none_img3"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:tint="?attr/background_icon_color"
+                    android:tintMode="src_in"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                    app:srcCompat="@drawable/ic_empty" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/task_recycler_done"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:overScrollMode="never"
+                    android:visibility="visible">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

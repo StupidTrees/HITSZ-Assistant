@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu tools:showIn="navigation_view" xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:title="功能">
+<item android:title="功能"
+    >
     <menu>
     <!--<item android:title="个人中心" android:id="@+id/drawer_nav_user" android:icon="@drawable/ic_menu_user" />-->
     <!--<item android:title="课表管理" android:id="@+id/drawer_nav_datamanage" android:icon="@drawable/ic_menu_timetable" />-->
@@ -10,12 +11,16 @@
         <item android:title="信息窗口" android:id="@+id/drawer_nav_info" android:icon="@drawable/ic_menu_bulletin"/>
         <item android:title="失物招领" android:id="@+id/drawer_nav_laf" android:icon="@drawable/ic_lostandfound"/>
         <item android:title="排行榜" android:id="@+id/drawer_nav_campusservice" android:icon="@drawable/ic_menu_food"/>
-    </menu>
+   </menu>
 </item>
 
     <item android:title="其他">
         <menu>
-        <item android:title="设置" android:id="@+id/drawer_nav_settings" android:icon="@drawable/ic_menu_manage"/>
+            <item  android:id="@+id/drawer_nav_darkmode" android:icon="@drawable/ic_moon"
+                android:actionLayout="@layout/action_switch_darkmode"
+                android:title="深色模式" />
+
+            <item android:title="设置" android:id="@+id/drawer_nav_settings" android:icon="@drawable/ic_menu_manage"/>
         <item android:title="关于" android:id="@+id/drawer_nav_about" android:icon="@drawable/ic_info_black_24dp" />
 </menu>
     </item>

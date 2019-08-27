@@ -14,6 +14,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.core.CurriculumHelper;
 import com.stupidtree.hita.core.HITADBHelper;
@@ -23,7 +25,6 @@ import com.stupidtree.hita.online.TimeTable_upload_helper;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.core.Subject;
 import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.hita.ChatBotMessageItem;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.util.FileOperator;
@@ -62,18 +63,16 @@ public class HITAApplication extends Application {
     public static int themeID;
 
     /*重要变量*/
-    public static Calendar now = Calendar.getInstance();
+    public static Calendar now;
     public static boolean isThisTerm = true;
     public static int thisWeekOfTerm = -1;
     /*核心的变量*/
     public static ArrayList<Curriculum> allCurriculum;
-
     public static HashMap<String, String> cookies = null;
     public static boolean login = false;
     public static TimeTable mainTimeTable;
     public static SharedPreferences defaultSP;
     public static int thisCurriculumIndex;
-    public static List<EventItem> todaysEvents;
     /*刻画数据状态的标志常量*/
     public static int DATA_STATE_NULL = 13;
     public static int DATA_STATE_NONE_CURRICULUM = 14;
@@ -88,6 +87,7 @@ public class HITAApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        now = Calendar.getInstance();
         HContext = getApplicationContext();
         defaultSP = PreferenceManager.getDefaultSharedPreferences(this);
         mDBHelper = new HITADBHelper(HContext);
@@ -95,24 +95,11 @@ public class HITAApplication extends Application {
         ChatBotListRes = new ArrayList<>();
         timeWatcher = new TimeWatcher(this);
         mainTimeTable = new TimeTable(null);
-        todaysEvents = new ArrayList<>();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                initCoreData();
-                timeWatcher.refreshTodaysEvents();
-                Intent mes = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH_FROM_OTHER");
-                sendBroadcast(mes);
-                ToAnalysis.parse("");
-                //System.out.println(ToAnalysis.parse("6：30分"));
-            }
-        }).start();
         initUpgradeDialog();
         Bugly.init(this, "7c0e87536a", false);//务必最后再init
         Bmob.initialize(this, "9c9c53cd53b3c7f02c37b7a3e6fd9145");
-        getThemeID();
         CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
+        getThemeID();
     }
 
     public boolean copyAssetsSingleFile(File file, String fileName) {
@@ -161,7 +148,7 @@ public class HITAApplication extends Application {
         /**
          * 设置启动延时为1s（默认延时3s），APP启动1s后初始化SDK，避免影响APP启动速度;
          */
-        Beta.initDelay = 2 * 1000;
+        Beta.initDelay = 3 * 1000;
         /**
          * 设置通知栏大图标，largeIconId为项目中的图片资源;
          */
@@ -245,7 +232,17 @@ public class HITAApplication extends Application {
     }
 
     public static void getThemeID() {
-       switch (defaultSP.getInt("theme_id", 3)) {
+        String mode = defaultSP.getString("dark_mode_mode","dark_mode_normal");
+        if(mode.equals("dark_mode_normal")){
+            if(defaultSP.getBoolean("is_dark_mode",false)) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            else  AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }else if(mode.equals("dark_mode_follow")){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
+
+        switch (defaultSP.getInt("theme_id", 3)) {
             case 0:
                 themeID = R.style.RedTheme;
                 break;
@@ -353,8 +350,9 @@ public class HITAApplication extends Application {
         }
     }
 
-    private void initCoreData(){
-        ArrayList temp1 = new ArrayList();
+    public static void initCoreData(){
+        allCurriculum.clear();
+        ArrayList<Curriculum> temp1 = new ArrayList<>();
         SQLiteDatabase sd = mDBHelper.getReadableDatabase();
         Cursor c = sd.query("curriculum",null,null,null,null,null,null);
         //ArrayList temp1 = FileOperator.loadCurriculumFromFile(this.getFilesDir());
@@ -571,6 +569,7 @@ public class HITAApplication extends Application {
                 return true;
 
             } catch (Exception e1) {
+                e1.printStackTrace();
                return false;
             }
 

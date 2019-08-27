@@ -1,45 +1,72 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="外观设置">
+        <ListPreference
+            android:dialogTitle="设置大可莫得开启时机"
+            android:entries="@array/preference_dark_mode"
+            android:entryValues="@array/preference_dark_mode_values"
+            android:key="dark_mode_mode"
+            android:title="深色模式选项"></ListPreference>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="navi_show_news"
+            android:summary="给你一个干净的主页(重启生效)"
+            android:textColor="?attr/text_color_primary"
+            android:textColorHint="?attr/text_color_secondary"
+            android:title="校园页面显示讲座新闻" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="match_parent"
+        android:title="功能开关">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="app_task_enabled"
+            android:summary="开启后方可使用学习助手"
+            android:textColor="?attr/text_color_primary"
+            android:textColorHint="?attr/text_color_secondary"
+            android:title="任务模块" />
+    </PreferenceCategory>
     <PreferenceCategory
         android:layout_width="match_parent"
         android:title="应用设置">
+
         <SwitchPreference
             android:defaultValue="true"
             android:key="autoCheckUpdate"
             android:summary="建议开启"
+            android:textColor="?attr/text_color_primary"
+            android:textColorHint="?attr/text_color_secondary"
             android:title="进入app自动检查更新" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="autoDownloadInWifi"
             android:summary="建议开启"
+            android:textColor="?attr/text_color_primary"
+            android:textColorHint="?attr/text_color_secondary"
             android:title="Wifi自动下载更新" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="notification"
             android:summary="重启后生效"
+            android:textColor="?attr/text_color_primary"
+            android:textColorHint="?attr/text_color_secondary"
             android:title="常驻通知栏" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="主页设置">
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="navi_show_news"
-            android:summary="给你一个干净的主页(重启生效)"
-            android:title="校园页面显示讲座新闻" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="问答系统设置">
+    <PreferenceCategory android:title="希塔设置">
         <SwitchPreference
             android:defaultValue="true"
             android:key="ChatBot_speakNow"
             android:summary="speak now!"
+            android:textColor="?attr/text_color_primary"
+            android:textColorHint="?attr/text_color_secondary"
             android:title="自动播放回复" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="ChatBot_useKeyboard"
             android:summary="建议使用语音"
-            android:title="聊天机器人使用键盘输入" />
+            android:textColor="?attr/text_color_primary"
+            android:textColorHint="?attr/text_color_secondary"
+            android:title="使用键盘输入" />
     </PreferenceCategory>
 
 

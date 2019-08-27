@@ -12,7 +12,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/jwts_second_tab_height"
-        android:background="@color/material_backgroung_grey_50"
         android:orientation="horizontal">
 
         <Spinner
@@ -46,7 +45,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_backgroung_grey_50"
         android:clickable="false"
         android:paddingLeft="8dp"
         android:paddingTop="16dp"
@@ -60,7 +58,7 @@
             android:layout_weight="1.1"
             android:gravity="center"
             android:text="名称"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
         <TextView
             android:id="@+id/xsxk_point"
@@ -71,7 +69,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="学分"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
         <TextView
             android:id="@+id/xsxk_type"
@@ -82,7 +80,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="类别"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
         <TextView
             android:id="@+id/totalcoursesOrResult"
@@ -93,7 +91,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="总学时"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
         <TextView
             android:id="@+id/xsxk_content"
@@ -104,7 +102,7 @@
             android:gravity="center"
             android:singleLine="false"
             android:text="已选/容量"
-            android:textColor="@color/material_secondary_text" />
+            android:textColor="?attr/text_color_secondary" />
 
         <TextView
             android:id="@+id/xsxk_blank"
@@ -121,7 +119,6 @@
         android:fontFamily="sans-serif-black"
         android:gravity="center"
         android:padding="16dp"
-        android:text="TextView"
         android:textColor="?attr/colorPrimary" />
 
     <FrameLayout

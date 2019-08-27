@@ -22,7 +22,7 @@
             android:elevation="0dp"
             android:visibility="gone"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:theme="@style/ToolBarTheme_timetable">
+            app:theme="@style/ToolBarTheme_Light">
 
             <LinearLayout
                 android:layout_width="wrap_content"

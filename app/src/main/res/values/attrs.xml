@@ -6,7 +6,15 @@
          necessary to support previous API levels. -->
     <attr name="colorFade" format="color" />
     <attr name="colorPrimaryLight" format="color" />
-
+    <attr name="text_color_primary" format="color" />
+    <attr name="text_color_secondary" format="color" />
+    <attr name="text_color_iconic" format="color" />
+    <attr name="background_color_bottom" format="color" />
+    <attr name="background_color_second" format="color" />
+    <attr name="background_icon_color" format="color"/>
+    <attr name="toolbar_icon_color" format="color"/>
+    <attr name="drawer_header_background" format="reference" />
+    <attr name="color_primary_fade_background" format="reference" />
     <!--PileLayout的参数-->
     <declare-styleable name="pile">
         <attr name="interval" format="dimension" />

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second" xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/canteen_card"
@@ -18,7 +19,7 @@
         android:layout_gravity="bottom"
         android:foreground="#66000000"
         android:scaleType="centerCrop"
-        android:src="@drawable/timeline_head_bg"
+        android:src="@drawable/gradient_bg"
         android:visibility="gone" />
 
     <LinearLayout
@@ -52,7 +53,7 @@
                 android:layout_gravity="center|left"
                 android:singleLine="true"
                 android:text="荔园一食堂"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -65,7 +66,7 @@
                 android:maxEms="6"
                 android:singleLine="true"
                 android:text="快乐时间"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -96,7 +97,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="4.8/5"
-                    android:textColor="@color/material_secondary_text"
+                    android:textColor="?attr/text_color_secondary"
                     android:textSize="12sp" />
 
                 <ImageView
@@ -117,7 +118,7 @@
                 android:layout_marginTop="4dp"
                 android:gravity="center|start"
                 android:text="排名第一"
-                android:textColor="@color/material_secondary_text"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 

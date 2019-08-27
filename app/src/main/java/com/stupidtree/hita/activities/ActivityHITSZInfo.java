@@ -57,10 +57,6 @@ public class ActivityHITSZInfo extends BaseActivity {
             }
         });
         tab = findViewById(R.id.hitszinfo_tab);
-        tab.setBackgroundColor(ContextCompat.getColor(this,R.color.material_backgroung_grey_50));
-        tab.setTabTextColors(Color.parseColor("#55000000"),ContextCompat.getColor(this,R.color.material_primary_text));
-        tab.setSelectedTabIndicatorColor(getColorPrimary());
-        tab.setSelectedTabIndicatorColor(Color.parseColor("#00000000"));
         pager = findViewById(R.id.hitszinfo_pager);
         fragments = new ArrayList<>();
         fragments.add(new FragmentNewsLecture());

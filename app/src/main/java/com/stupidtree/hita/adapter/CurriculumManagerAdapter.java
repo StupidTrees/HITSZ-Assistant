@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -85,6 +86,14 @@ public class CurriculumManagerAdapter extends RecyclerView.Adapter<CurriculumMan
                 pm.show();
             }
         });
+        cmViewHolder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog ad = new AlertDialog.Builder(mContext).setTitle("课表详情").
+                        setMessage("课表名称："+name+"\n课表代码："+mBeans.get(i).curriculumCode).create();
+                ad.show();
+            }
+        });
     }
 
     @Override
@@ -98,6 +107,7 @@ public class CurriculumManagerAdapter extends RecyclerView.Adapter<CurriculumMan
         TextView from;
         TextView totalWeeks;
         ImageView image,more;
+        CardView card;
         public CMViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.cm_name);
@@ -105,6 +115,7 @@ public class CurriculumManagerAdapter extends RecyclerView.Adapter<CurriculumMan
             totalWeeks = itemView.findViewById(R.id.cm_totalweek);
             image = itemView.findViewById(R.id.cm_image);
             more = itemView.findViewById(R.id.cm_more);
+            card = itemView.findViewById(R.id.card);
         }
     }
 

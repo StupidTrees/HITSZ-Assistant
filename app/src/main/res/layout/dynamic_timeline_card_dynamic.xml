@@ -12,12 +12,12 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:layout_marginLeft="16dp"
-        app:endLineColor="#11000000"
+        app:endLineColor="?attr/background_icon_color"
         app:lineWidth="4dp"
         app:marker="@drawable/timeline_marker"
         app:markerInCenter="false"
         app:markerSize="16dp"
-        app:startLineColor="#11000000" />
+        app:startLineColor="?attr/background_icon_color" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,11 +31,12 @@
             android:layout_gravity="top"
             android:layout_marginLeft="16dp"
             android:text="10:15-10:32"
-            android:textColor="@color/material_secondary_text"
+            android:textColor="?attr/text_color_secondary"
             android:textSize="12sp"
             android:transitionName="course_time" />
 
         <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
             android:id="@+id/tl_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,12 +80,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
                         android:layout_marginTop="8dp"
-                        android:fontFamily="sans-serif-black"
                         android:gravity="left"
                         android:maxEms="10"
                         android:singleLine="true"
                         android:text="学习"
-                        android:textColor="@color/material_primary_text"
+                        android:textColor="?attr/text_color_primary"
                         android:textSize="16sp" />
 
                     <TextView
@@ -94,7 +94,7 @@
                         android:layout_gravity="left"
                         android:layout_marginTop="8dp"
                         android:text="34min"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>
 

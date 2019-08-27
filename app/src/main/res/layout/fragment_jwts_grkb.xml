@@ -8,6 +8,7 @@
     tools:context=".jwts.FragmentJWTS_grkb">
 
     <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -22,7 +23,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="选择导入课表：" />
+                android:text="选择导入课表："
+                android:textColor="?attr/text_color_primary" />
 
             <Spinner
                 android:id="@+id/spinner_grkb"
@@ -36,13 +38,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="帮助完善教师数据库" />
+                android:text="帮助完善教师数据库"
+                android:textColor="?attr/text_color_primary" />
 
             <TextView
                 android:id="@+id/textView17"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="如果教师信息不全，请开启后导入，这将耗费一些缓存和处理时间，但会帮助我们将教务系统上的教师信息保存到云教师库" />
+                android:text="如果教师信息不全，请开启后导入，这将耗费一些缓存和处理时间，但会帮助我们将教务系统上的教师信息保存到云教师库"
+                android:textColor="?attr/text_color_secondary" />
 
             <com.stupidtree.hita.diy.ButtonLoading
                 android:id="@+id/button_import_grkb"

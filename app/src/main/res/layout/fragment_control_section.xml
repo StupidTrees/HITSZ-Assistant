@@ -18,6 +18,7 @@
         app:titleTextColor="@color/material_text_icon_white" />
 
     <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
@@ -100,6 +101,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
@@ -164,6 +166,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"

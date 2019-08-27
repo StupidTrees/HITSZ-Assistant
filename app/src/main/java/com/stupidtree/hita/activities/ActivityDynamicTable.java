@@ -8,17 +8,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.NumberPicker;
 import android.widget.Switch;
 
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 
 public class ActivityDynamicTable extends BaseActivity {
 
     Toolbar toolbar;
-
+    Switch preViewPlan,preview_skip_no_exam;
+    NumberPicker preview_length_picker;
+    ExpandableLayout preview_expand;
     @Override
     protected void stopTasks() {
 
@@ -30,9 +35,9 @@ public class ActivityDynamicTable extends BaseActivity {
         setContentView(R.layout.activity_dynamic_table);
         setWindowParams(true,false,false);
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("动态时间表生成");
+        toolbar.setTitle("学习助手");
 
-        toolbar.inflateMenu(R.menu.toolbar_dynamic_timetable);
+       // toolbar.inflateMenu(R.menu.toolbar_dynamic_timetable);
         toolbar.setBackgroundColor(getColorPrimary());
         toolbar.setTitleTextColor(ContextCompat.getColor(this,R.color.material_text_icon_white));
         setSupportActionBar(toolbar);
@@ -50,22 +55,48 @@ public class ActivityDynamicTable extends BaseActivity {
 //            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 //             }
 //        });
+        initPreview();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_dynamic_timetable,menu);
-                MenuItem item = (MenuItem) menu.findItem(R.id.action_dynamic_switch);
-        item.setActionView(R.layout.util_dynamictimetable_toolbar_actionlayout);
-        final Switch switchA = item
-                .getActionView().findViewById(R.id.action_layout_switch);
-        switchA.setChecked(defaultSP.getBoolean("dynamicTimeTable",false));
-        switchA.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    void initPreview(){
+        preview_expand = findViewById(R.id.expand_preview);
+        preViewPlan = findViewById(R.id.previewPlan);
+        preview_skip_no_exam = findViewById(R.id.switch_skip_no_exam);
+        preview_length_picker = findViewById(R.id.numberpicker_prevew_length);
+        preview_length_picker.setMaxValue(180);
+        preview_skip_no_exam.setChecked(defaultSP.getBoolean("dtt_preview_skip_no_exam",true));
+        preview_length_picker.setValue(defaultSP.getInt("dtt_preview_length",60));
+        preViewPlan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                  defaultSP.edit().putBoolean("dynamicTimeTable",isChecked).commit();
+                if(isChecked) preview_expand.expand();
+                else preview_expand.collapse();
+                defaultSP.edit().putBoolean("dtt_preview",isChecked).apply();
             }
         });
-        return super.onCreateOptionsMenu(menu);
+        preViewPlan.setChecked(defaultSP.getBoolean("dtt_preview",false));
+        preview_skip_no_exam.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                defaultSP.edit().putBoolean("dtt_preview_skip_no_exam",isChecked).apply();
+            }
+        });
+        preview_length_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                defaultSP.edit().putInt("dtt_preview_length",newVal).apply();
+            }
+        });
     }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.toolbar_dynamic_timetable,menu);
+//                MenuItem item = (MenuItem) menu.findItem(R.id.action_dynamic_switch);
+//       // item.setActionView(R.layout.util_dynamictimetable_toolbar_actionlayout);
+////        final Switch switchA = item
+////                .getActionView().findViewById(R.id.action_layout_switch);
+//
+//        return super.onCreateOptionsMenu(menu);
+//    }
 }

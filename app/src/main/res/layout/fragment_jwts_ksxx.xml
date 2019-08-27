@@ -20,6 +20,7 @@
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
@@ -63,7 +64,7 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_menu_jwts"
-                android:tint="@color/material_secondary_text" />
+                android:tint="?attr/text_color_secondary" />
 
             <TextView
                 android:id="@+id/textView14"

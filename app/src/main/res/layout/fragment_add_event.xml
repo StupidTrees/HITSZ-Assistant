@@ -29,7 +29,7 @@
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-black"
                 android:text="添加事件"
-                android:textColor="@color/material_primary_text"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="20sp" />
 
             <ImageView
@@ -70,7 +70,8 @@
                     android:drawableTop="@drawable/select_add_event_arrange"
                     android:drawablePadding="8dp"
                     android:gravity="center"
-                    android:text="事务" />
+                    android:text="事务"
+                    android:textColor="?attr/text_color_primary" />
 
                 <RadioButton
                     android:id="@+id/ade_ddl"
@@ -81,7 +82,8 @@
                     android:drawableTop="@drawable/select_add_event_ddl"
                     android:drawablePadding="8dp"
                     android:gravity="center"
-                    android:text="DDL" />
+                    android:text="DDL"
+                    android:textColor="?attr/text_color_primary" />
 
                 <RadioButton
                     android:id="@+id/ade_remind"
@@ -92,7 +94,8 @@
                     android:drawableTop="@drawable/select_add_event_remind"
                     android:drawablePadding="8dp"
                     android:gravity="center"
-                    android:text="提醒" />
+                    android:text="提醒"
+                    android:textColor="?attr/text_color_primary" />
 
                 <RadioButton
                     android:id="@+id/ade_exam"
@@ -104,7 +107,8 @@
                     android:drawablePadding="8dp"
                     android:drawableTintMode="src_in"
                     android:gravity="center"
-                    android:text="考试" />
+                    android:text="考试"
+                    android:textColor="?attr/text_color_primary" />
 
             </RadioGroup>
 
@@ -120,7 +124,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginRight="16dp"
                     android:scaleType="fitCenter"
-                    android:tint="@color/material_secondary_text"
+                    android:tint="?attr/text_color_secondary"
                     app:srcCompat="@drawable/ic_settings" />
 
                 <LinearLayout
@@ -138,7 +142,7 @@
                         android:layout_marginRight="8dp"
                         android:layout_marginBottom="8dp"
                         android:text="帮我安排时间"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="16sp" />
 
                     <Switch
@@ -149,7 +153,7 @@
                         android:layout_marginRight="8dp"
                         android:layout_marginBottom="8dp"
                         android:text="全天事件"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="16sp" />
 
                     <Switch
@@ -160,7 +164,7 @@
                         android:layout_marginRight="8dp"
                         android:layout_marginBottom="8dp"
                         android:text="处理任务"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="16sp" />
 
                     <LinearLayout
@@ -185,7 +189,7 @@
                                 android:layout_marginRight="16dp"
                                 android:layout_marginBottom="8dp"
                                 android:layout_weight="1"
-                                android:textColor="@color/material_secondary_text"
+                                android:textColor="?attr/text_color_secondary"
                                 android:textSize="16sp" />
 
                             <ImageView
@@ -243,7 +247,7 @@
                             android:layout_weight="1"
                             android:gravity="center|left"
                             android:text="选择处理任务"
-                            android:textColor="@color/material_secondary_text"
+                            android:textColor="?attr/text_color_secondary"
                             android:textSize="16sp" />
 
                         <ImageView
@@ -275,7 +279,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginRight="16dp"
                     android:scaleType="fitCenter"
-                    android:tint="@color/material_secondary_text"
+                    android:tint="?attr/text_color_secondary"
                     app:srcCompat="@drawable/ic_addevent_date" />
 
                 <LinearLayout
@@ -300,7 +304,7 @@
                             android:layout_weight="1"
                             android:gravity="center|left"
                             android:text="设置事件日期"
-                            android:textColor="@color/material_secondary_text"
+                            android:textColor="?attr/text_color_secondary"
                             android:textSize="16sp" />
 
                         <ImageView
@@ -332,7 +336,7 @@
                             android:layout_weight="1"
                             android:gravity="center|left"
                             android:text="设置起始时间"
-                            android:textColor="@color/material_secondary_text"
+                            android:textColor="?attr/text_color_secondary"
                             android:textSize="16sp" />
 
                         <ImageView
@@ -364,7 +368,7 @@
                             android:layout_marginBottom="8dp"
                             android:layout_weight="1"
                             android:text="设置结束时间"
-                            android:textColor="@color/material_secondary_text"
+                            android:textColor="?attr/text_color_secondary"
                             android:textSize="16sp" />
 
                         <ImageView
@@ -395,7 +399,7 @@
                     android:layout_height="20dp"
                     android:layout_marginRight="16dp"
                     android:scaleType="fitCenter"
-                    android:tint="@color/material_secondary_text"
+                    android:tint="?attr/text_color_secondary"
                     app:srcCompat="@drawable/ic_dlg_tt_tag1" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -451,7 +455,7 @@
                             android:layout_height="20dp"
                             android:layout_marginRight="16dp"
                             android:scaleType="fitCenter"
-                            android:tint="@color/material_secondary_text"
+                            android:tint="?attr/text_color_secondary"
                             app:srcCompat="@drawable/ic_dlg_tag2" />
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -482,12 +486,13 @@
                             android:layout_height="20dp"
                             android:layout_marginRight="16dp"
                             android:scaleType="fitCenter"
-                            android:tint="@color/material_secondary_text"
+                            android:tint="?attr/text_color_secondary"
                             app:srcCompat="@drawable/ic_dlg_tag2" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:textColorHint="?attr/text_color_secondary">
 
                             <AutoCompleteTextView
                                 android:id="@+id/ade_tag3"
@@ -496,7 +501,8 @@
                                 android:hint="标签3"
                                 android:inputType="text"
                                 android:maxLines="1"
-                                android:singleLine="true" />
+                                android:singleLine="true"
+                                android:textColor="?attr/text_color_primary" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                     </LinearLayout>

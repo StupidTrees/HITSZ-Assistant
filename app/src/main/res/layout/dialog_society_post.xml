@@ -19,7 +19,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="4dp"
             android:text="丢失"
-            android:textColor="@color/material_primary_text"
+            android:textColor="?attr/text_color_primary"
             android:textSize="18sp" />
 
         <EditText

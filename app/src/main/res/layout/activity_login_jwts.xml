@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/timeline_head_bg_reverse">
+    android:background="?attr/color_primary_fade_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -83,8 +83,9 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_margin="16dp"
+
+            app:cardBackgroundColor="?attr/background_color_second"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp">
 
@@ -114,19 +115,22 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:textColorHint="?attr/text_color_secondary">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/username"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="账号"
-                                android:singleLine="true" />
+                                android:singleLine="true"
+                                android:textColor="?attr/text_color_primary" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:textColorHint="?attr/text_color_secondary">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/password"
@@ -134,7 +138,8 @@
                                 android:layout_height="wrap_content"
                                 android:hint="密码"
                                 android:inputType="textPassword"
-                                android:singleLine="true" />
+                                android:singleLine="true"
+                                android:textColor="?attr/text_color_primary" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <TextView
@@ -156,14 +161,16 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
-                                android:layout_weight="2">
+                                android:layout_weight="2"
+                                android:textColorHint="?attr/text_color_secondary">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/safecode"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:hint="验证码"
-                                    android:singleLine="true" />
+                                    android:singleLine="true"
+                                    android:textColor="?attr/text_color_primary" />
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <ImageView
@@ -200,7 +207,7 @@
                         android:background="?attr/colorAccent"
                         android:gravity="center"
                         android:text="加载失败！"
-                        android:textColor="@color/material_backgroung_white"
+                        android:textColor="@color/material_background_white"
                         android:textSize="30sp"
                         android:visibility="invisible" />
 
@@ -221,7 +228,7 @@
                         android:layout_marginBottom="8dp"
                         android:gravity="center"
                         android:text="若加载不成功，请注意："
-                        android:textColor="@color/material_primary_text"
+                        android:textColor="?attr/text_color_primary"
                         android:textSize="16dp" />
 
                     <TextView
@@ -232,7 +239,7 @@
                         android:gravity="center|start"
                         android:paddingLeft="16dp"
                         android:text="使用校园网wifi（HITSZ）进入本页面"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="14sp" />
 
                     <ImageView
@@ -250,7 +257,7 @@
                         android:gravity="start"
                         android:paddingLeft="16dp"
                         android:text="2.若使用移动网络，请先跳转登录学校的vpn"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="14sp"
                         android:visibility="gone" />
 
@@ -273,7 +280,7 @@
                         android:layout_marginTop="6dp"
                         android:gravity="center"
                         android:text="账号为不带333的学号，初始密码同账号"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="14sp"
                         android:visibility="gone" />
 
@@ -294,7 +301,7 @@
                         android:layout_marginBottom="32dp"
                         android:gravity="center"
                         android:text="登录vpn后重新进入本页面"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="14sp"
                         android:visibility="gone" />
 

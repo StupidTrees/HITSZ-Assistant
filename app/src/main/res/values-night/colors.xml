@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="user_center_scrim_color">#202020</color>
+    <color name="user_center_foreground_color">#33000000</color>
+    <color name="main_tans_unselected_color">#55FFFFFF</color>
+    <color name="main_tans_selected_color">#FFFFFF</color>
+</resources>

@@ -65,7 +65,7 @@ public class ActivityLocation extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true,false,false);
+        setWindowParams(true,true,false);
         setContentView(R.layout.activity_location);
         initToolbar();
         initViews();
@@ -165,8 +165,8 @@ public class ActivityLocation extends BaseActivity {
             }
         });
 
-        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor("#FFFFFF"));
-        collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#FFFFFF"));
+        collapsingToolbarLayout.setCollapsedTitleTextColor(getTextColorIconic());
+        collapsingToolbarLayout.setExpandedTitleColor(getTextColorIconic());
         collapsingToolbarLayout.setScrimAnimationDuration(200);
     }
     void initViews(){
@@ -249,7 +249,7 @@ public class ActivityLocation extends BaseActivity {
 //            infoListRes.addAll((Collection<? extends Map>) getAction().getSerializableExtra("infos"));
 //        }
         infoListAdapter = new LocationInfoListAdapter(this,infoListRes,getColorPrimary());
-        LinearLayoutManager lm = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager lm = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
         infoList.setAdapter(infoListAdapter);
         infoList.setLayoutManager(lm);
     }

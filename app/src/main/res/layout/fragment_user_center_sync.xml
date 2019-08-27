@@ -14,6 +14,7 @@
     tools:context=".fragments.FragmentUserCenter_sync">
 
     <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
         android:id="@+id/save_to_cloud"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +27,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/timeline_head_bg" />
+            app:srcCompat="@drawable/gradient_bg" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,6 +56,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
         android:id="@+id/load_from_cloud"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,7 +69,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/timeline_head_bg" />
+            app:srcCompat="@drawable/gradient_bg" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -97,6 +99,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="?attr/background_color_second"
         android:id="@+id/clear_cloud"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -110,7 +113,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/timeline_head_bg" />
+            android:src="@drawable/gradient_bg" />
 
         <LinearLayout
             android:layout_width="match_parent"

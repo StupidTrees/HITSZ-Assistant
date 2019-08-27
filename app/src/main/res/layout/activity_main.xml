@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ActivityMain"
+    tools:openDrawer="start">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/mainpage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/background_color_bottom"
+        android:fitsSystemWindows="false"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:elevation="0dp"
+            app:elevation="0dp">
+
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:minHeight="?attr/actionBarSize"
+                android:paddingTop="24dp"
+                app:theme="?attr/toolbarStyle">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/mainTabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginRight="32dp"
+                    app:tabRippleColor="?attr/colorPrimary"
+                    app:tabSelectedTextColor="@color/main_tans_selected_color"
+                    app:tabTextAppearance="@style/MainTabsTextTheme"
+                    app:tabTextColor="@color/main_tans_unselected_color"
+                    app:tabUnboundedRipple="true" />
+
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/mainPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="@dimen/material_fab_margin"
+            android:clickable="true"
+            android:transitionName="fab"
+            android:visibility="visible"
+            app:fabCustomSize="60dp"
+            app:fab_shadowColor="?attr/colorPrimary"
+            app:fab_shadowRadius="16dp"
+            app:fab_showShadow="true"
+            app:srcCompat="@drawable/bt_timeline_toolbar_timetable" />
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!--android:background="?attr/background_color_second"-->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/drawer_navigationview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|center|start"
+
+        android:background="?attr/background_color_second"
+        app:itemIconPadding="16dp"
+        app:itemIconTint="?attr/text_color_secondary"
+        app:itemTextColor="?attr/text_color_secondary"
+        app:menu="@menu/drawer_main" />
+</androidx.drawerlayout.widget.DrawerLayout>

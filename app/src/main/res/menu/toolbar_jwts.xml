@@ -7,7 +7,7 @@
         android:id="@+id/action_logout"
         android:orderInCategory="100"
         android:title="注销教务登录状态"
-        android:iconTint="@color/material_primary_text"
-        app:showAsAction="always" />
+        android:iconTint="?attr/text_color_primary"
+        app:showAsAction="never" />
 
 </menu>

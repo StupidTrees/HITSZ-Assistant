@@ -84,7 +84,7 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
             });
         }
         Glide.with(mContext).load(mBeans.get(i).getImageURL()).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(foodViewHolder.image);
-        //Glide.with(mContext).load(mBeans.get(i).getImageURL()).placeholder(R.drawable.timeline_head_bg).apply(RequestOptions.bitmapTransform(new mBlurTransformation(mContext))).into(foodViewHolder.background);
+        //Glide.with(mContext).load(mBeans.get(i).getImageURL()).placeholder(R.drawable.gradient_bg).apply(RequestOptions.bitmapTransform(new mBlurTransformation(mContext))).into(foodViewHolder.background);
 
 
     }

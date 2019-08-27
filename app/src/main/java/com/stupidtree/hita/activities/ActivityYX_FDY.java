@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -78,13 +79,17 @@ public class ActivityYX_FDY extends BaseActivity {
         bq.getObject("EnPB777A", new QueryListener<Infos>() {
             @Override
             public void done(Infos infos, BmobException e) {
-                pagerRes.clear();
-                fragments.clear();
-                for(JsonElement je:infos.getJsonArray()){
-                    pagerRes.add(je.getAsJsonObject());
-                    fragments.add(FragmentFDY.newInstance(je.getAsJsonObject()));
+                if(e==null&&infos!=null){
+                    pagerRes.clear();
+                    fragments.clear();
+                    for(JsonElement je:infos.getJsonArray()){
+                        pagerRes.add(je.getAsJsonObject());
+                        fragments.add(FragmentFDY.newInstance(je.getAsJsonObject()));
+                    }
+                    pagerAdapter.notifyDataSetChanged();
+                }else{
+                    Snackbar.make(pager,"加载失败",Snackbar.LENGTH_SHORT).show();
                 }
-                pagerAdapter.notifyDataSetChanged();
             }
         });
         Glide.with(this).load("https://bmob-cdn-26359.bmobpay.com/2019/08/08/39c4b4f240c73aa6808fdbf6d0789148.jpg")

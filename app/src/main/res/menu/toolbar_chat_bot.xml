@@ -7,7 +7,7 @@
         <!--android:id="@+id/action_keyboard"-->
         <!--android:orderInCategory="100"-->
         <!--android:title="切换输入模式"-->
-        <!--android:iconTint="@color/material_primary_text"-->
+        <!--android:iconTint="?attr/text_color_primary"-->
         <!--android:icon="@drawable/bt_chatbot_toolbar_keyboard"-->
         <!--app:showAsAction="always" />-->
     <item

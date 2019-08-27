@@ -12,7 +12,7 @@
         android:layout_weight="0.9"
         android:fontFamily="sans-serif-black"
         android:text="第三周"
-        android:textColor="@color/material_secondary_text" />
+        android:textColor="?attr/text_color_secondary" />
 
     <TextView
         android:id="@+id/mon"
@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="13" />
+        android:text="13"
+        android:textColor="?attr/text_color_secondary" />
 
     <TextView
         android:id="@+id/tue"
@@ -28,7 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="13" />
+        android:text="13"
+        android:textColor="?attr/text_color_secondary" />
 
     <TextView
         android:id="@+id/wed"
@@ -36,7 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="13" />
+        android:text="13"
+        android:textColor="?attr/text_color_secondary" />
 
     <TextView
         android:id="@+id/thu"
@@ -44,7 +47,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="13" />
+        android:text="13"
+        android:textColor="?attr/text_color_secondary" />
 
     <TextView
         android:id="@+id/fri"
@@ -52,7 +56,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="13" />
+        android:text="13"
+        android:textColor="?attr/text_color_secondary" />
 
     <TextView
         android:id="@+id/sat"
@@ -60,7 +65,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="13" />
+        android:text="13"
+        android:textColor="?attr/text_color_secondary" />
 
     <TextView
         android:id="@+id/sun"
@@ -68,5 +74,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="13" />
+        android:text="13"
+        android:textColor="?attr/text_color_secondary" />
 </LinearLayout>
