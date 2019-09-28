@@ -12,12 +12,14 @@ import com.google.gson.JsonParser;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.EventItemHolder;
 import com.stupidtree.hita.online.HITAUser;
+import com.stupidtree.hita.util.ColorBox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
 
 public class Subject implements Comparable{
@@ -51,7 +53,9 @@ public class Subject implements Comparable{
         this.name = name;
         this.teacher = teacher;
         this.curriculumCode = curriculumCode;
-    }
+        if(defaultSP.getInt("color:"+name,-1)==-1){
+            defaultSP.edit().putInt("color:"+name, ColorBox.getRandomColor_Material()).apply();
+        } }
 
     public Subject(Cursor c) {
          ratingMap = new HashMap<Integer, Double>();
@@ -70,28 +74,12 @@ public class Subject implements Comparable{
         totalCourses = c.getString(c.getColumnIndex("total_courses"));
         code = c.getString(c.getColumnIndex("code"));
         curriculumCode = c.getString(c.getColumnIndex("curriculum_code"));
+        if(defaultSP.getInt("color:"+name,-1)==-1){
+            defaultSP.edit().putInt("color:"+name, ColorBox.getRandomColor_Material()).apply();
+        }
     }
 
     public Subject(String x){
-         Log.e("新建Subject",x);
-//        String[] c = x.split("##",-1); //-1支持末尾空串
-//        ratingMap = new HashMap<>();
-//        //Scores = new HashMap<>();
-//        this.name = c[0];
-//        this.type = c[1];
-//        isMOOC = Boolean.parseBoolean(c[2]);
-//        exam = Boolean.parseBoolean(c[3]);
-//        Default = Boolean.parseBoolean(c[4]);
-//        xnxq = c[5];
-//        school = c[6];
-//        credit = c[7];
-//        compulsory = c[8];
-//        totalCourses = c[9];
-//        code = c[10];
-//        curriculumCode = c[11];
-//        getScroesFromString(c[12]);
-//        getRatesFromString(c[13]);
-        
         JsonObject jo = new JsonParser().parse(x).getAsJsonObject();
         ratingMap = new HashMap<>();
         Scores = new HashMap<>();
@@ -109,6 +97,14 @@ public class Subject implements Comparable{
         curriculumCode = jo.get("curriculum_code").getAsString();
         getScroesFromString(jo.get("scores").toString());
         getRatesFromString(jo.get("rates").toString());
+        if(jo.get("color")!=null){
+            if(jo.get("color").getAsInt()!=-1){
+                defaultSP.edit().putInt("color:"+name,jo.get("color").getAsInt()).apply();
+            }else{
+                defaultSP.edit().putInt("color:"+name, ColorBox.getRandomColor_Material()).apply();
+            }
+        }
+
     }
 
     @Override
@@ -132,11 +128,12 @@ public class Subject implements Comparable{
         jo.addProperty("credit", credit);
         jo.addProperty("compulsory",compulsory);
         jo.addProperty("total_courses",totalCourses);
-        jo.addProperty("code", code );
+        jo.addProperty("code", code);
         jo.addProperty("curriculum_code",curriculumCode);
         Gson gson = new Gson();
         jo.add("scores",gson.toJsonTree(Scores));
         jo.add("rates",gson.toJsonTree(ratingMap));
+        jo.addProperty("color",defaultSP.getInt("color:"+name,-1));
         //return name+"##"+type+"##"+isMOOC+"##"+exam+"##"+Default+"##"+xnxq+"##"+school+"##"+ credit +"##"+ compulsory +"##"+totalCourses+"##"+code+"##"+curriculumCode+"##"+scoresToString()+"##"+ratesToString();
         return jo.toString();
     }
@@ -191,7 +188,7 @@ public class Subject implements Comparable{
         cv.put("point", credit);
         cv.put("compulsory", compulsory);
         cv.put("total_courses", totalCourses);
-        cv.put("code", code);
+        cv.put("code",code);
         cv.put("curriculum_code", curriculumCode);
         cv.put("scores", scoresToString());
         cv.put("rates", ratesToString());
@@ -213,14 +210,18 @@ public class Subject implements Comparable{
 
     public EventItem getFirstCourse() {
         EventItem result = null;
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        Cursor c = sd.query("timetable", null, "name=? and type=?",
-                new String[]{name, TimeTable.TIMETABLE_EVENT_TYPE_COURSE + ""}, null, null, null);
-        if (c.moveToNext()) {
-            EventItemHolder eih = new EventItemHolder(c);
-            result = eih.getAllEvents().get(0);
+        try {
+            SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+            Cursor c = sd.query("timetable", null, "name=? and type=?",
+                    new String[]{name, TimeTable.TIMETABLE_EVENT_TYPE_COURSE + ""}, null, null, null);
+            if (c.moveToNext()) {
+                EventItemHolder eih = new EventItemHolder(c);
+                result = eih.getAllEvents().get(0);
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        c.close();
         return result;
     }
 

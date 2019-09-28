@@ -296,8 +296,7 @@ public class ActivityXL extends BaseActivity {
                             days.get(4).text(), days.get(5).text(), days.get(6).text()
                     );
                     if (listRes.size() > 0) listRes.get(listRes.size() - 1).addWeek(wr);
-                    //if (listRes.size() > 0) Log.e("addWeek:", name + "->>>" + listRes.get(listRes.size() - 1).name);
-                }
+                     }
             } catch (Exception e) {
                 e.printStackTrace();
             }

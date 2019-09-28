@@ -16,14 +16,13 @@ import android.view.ViewGroup;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityNewsDetail;
-import com.stupidtree.hita.adapter.IpNewsListAdapter;
+import com.stupidtree.hita.adapter.NewsIpNewsListAdapter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,14 +32,37 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
     RecyclerView list;
     int offset = 0;
     List<Map<String,String>> listRes;
-    IpNewsListAdapter listAdapter;
+    NewsIpNewsListAdapter listAdapter;
     SwipeRefreshLayout pullRefreshLayout;
+    String pageCode;
     boolean first = true;
     LoadTask pageTask;
+
+    public String getPageCode() {
+        return pageCode;
+    }
+
+    public void setPageCode(String pageCode) {
+        this.pageCode = pageCode;
+    }
+
+    FragmentNewsIPNews() {
+    }
+    public static FragmentNewsIPNews getInstance(String pageCode){
+        FragmentNewsIPNews r = new FragmentNewsIPNews();
+        r.setPageCode(pageCode);
+        return r;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_news_ipnews,container,false);
+        View v = inflater.inflate(R.layout.fragment_news,container,false);
         initList(v);
 
         return v;
@@ -58,11 +80,11 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
 
     void initList(View v){
         pullRefreshLayout = v.findViewById(R.id.pullrefresh);
-        list = v.findViewById(R.id.news_list);
+        list = v.findViewById(R.id.list);
         listRes = new ArrayList<>();
-        listAdapter = new IpNewsListAdapter(this.getContext(),listRes);
+        listAdapter = new NewsIpNewsListAdapter(this.getContext(),listRes);
         list.setAdapter(listAdapter);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext(),LinearLayoutManager.VERTICAL,false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext(),RecyclerView.VERTICAL,false);
         list.setLayoutManager(layoutManager);
         list.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -83,7 +105,7 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
                 }
             }
         });
-        listAdapter.setOnItemClickListener(new IpNewsListAdapter.OnItemClickListener() {
+        listAdapter.setOnItemClickListener(new NewsIpNewsListAdapter.OnItemClickListener() {
             @Override
             public void OnClick(View v, int pos) {
                 //ActivityOptionsCompat op = ActivityOptionsCompat.makeSceneTransitionAnimation(FragmentNewsIPNews.this.getActivity(),v,"cardview");
@@ -110,7 +132,7 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
         if(pageTask!=null&&!pageTask.isCancelled())pageTask.cancel(true);
         pageTask = new LoadTask(false);
         pageTask.execute();
@@ -132,7 +154,7 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
         @Override
         protected Object doInBackground(Object[] objects) {
             try {
-                Document d = Jsoup.connect("http://www.hitsz.edu.cn/article/id-116.html?maxPageItems=20&keywords=&pager.offset="+offset)
+                Document d = Jsoup.connect("http://www.hitsz.edu.cn/article/id-"+pageCode+".html?maxPageItems=20&keywords=&pager.offset="+offset)
                         .header("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("X-Requested-With","XMLHttpRequest")
                         .get();
@@ -154,7 +176,7 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
                     listRes.add(news);
                 }
                 return true;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return false;
             }
         }
@@ -162,12 +184,16 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            pullRefreshLayout.setRefreshing(false);
-            listAdapter.notifyDataSetChanged();
-            if(first) {
-                //MaterialCircleAnimator.animShow(list, 700);
-                list.scheduleLayoutAnimation();
-                first = false;
+            try {
+                pullRefreshLayout.setRefreshing(false);
+                listAdapter.notifyDataSetChanged();
+                if(first) {
+                    //MaterialCircleAnimator.animShow(list, 700);
+                    list.scheduleLayoutAnimation();
+                    first = false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }

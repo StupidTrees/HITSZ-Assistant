@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.stupidtree.hita.core.timetable.EventItem;
@@ -57,7 +58,7 @@ public class TimeTable{
     }
     public void addCurriculum(CurriculumHelper cl){
         SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
-        mDatabase.delete("timetable","curriculum_code=?",new String[]{cl.curriculumCode});
+        mDatabase.delete("timetable","curriculum_code=? and type=?",new String[]{cl.curriculumCode,TimeTable.TIMETABLE_EVENT_TYPE_COURSE+""});
         for(CurriculumHelper.CurriculumItem ci:cl.CurriculumList){
             if(ci.type == CURRICULUM_TYPE_COURSE){
                 String tag4 = ci.begin+"";
@@ -144,6 +145,15 @@ public class TimeTable{
         c.close();
         return uuid;
     }
+    public String addEvents(List<Integer> weeks, int DOW, int type, String eventName, String tag2, String tag3, String tag4, int begin, int last,boolean isWholeDay) {
+       Log.e("add",weeks+",dow:"+DOW+",event:"+eventName+",from:"+begin+",last:"+last);
+        SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
+        EventItemHolder temp = new EventItemHolder(core.curriculumCode,type,eventName,tag2,tag3,tag4,getTimeAtNumber(begin,last).get(0),getTimeAtNumber(begin,last).get(1),DOW,isWholeDay);
+        temp.weeks.addAll(weeks);
+        mDatabase.insert("timetable",null,temp.getContentValues());
+        return temp.getUuid();
+    }
+
     public String addEvent(int week, int DOW, int type, String eventName, String tag2, String tag3, String tag4, HTime start,HTime end,boolean isWholeDay) {
         SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
         if (week > core.totalWeeks) core.totalWeeks = week;
@@ -375,7 +385,7 @@ public class TimeTable{
     }
     public void clearCurriculum(String curriculumCode){
         SQLiteDatabase mSQLiteDatabase = mDBHelper.getWritableDatabase();
-        mSQLiteDatabase.delete("timetable","curriculum_code=? and type=?",new String[]{curriculumCode+"",TIMETABLE_EVENT_TYPE_COURSE+""});
+        mSQLiteDatabase.delete("timetable","curriculum_code=? AND type=?",new String[]{curriculumCode+"",TIMETABLE_EVENT_TYPE_COURSE+""});
     }
 
     public static boolean contains_integer(int[] array,int object){
@@ -529,12 +539,17 @@ public class TimeTable{
 
     public Task getTaskWithUUID(String uuid){
         Task result = null;
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        Cursor c = sd.query("task",null,"uuid=?",new String[]{uuid},null,null,null);
-        if(c.moveToNext()){
-            result = new Task(c);
+        if(uuid==null|| TextUtils.isEmpty(uuid)) return null;
+        try {
+            SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+            Cursor c = sd.query("task",null,"uuid=?",new String[]{uuid},null,null,null);
+            if(c.moveToNext()){
+                result = new Task(c);
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        c.close();
         return result;
     }
 

@@ -10,9 +10,10 @@
     <dimen name="material_appbar_height">56dp</dimen>
     <dimen name="material_toolbar_top_margin">24dp</dimen>
     <dimen name="material_fab_margin">16dp</dimen>
-
-
-
+    <dimen name="navi_page_card_margin_top_bottom">16dp</dimen>
+    <dimen name="navi_page_card_elevation">6dp</dimen>
+    <dimen name="timeline_card_elevation">4dp</dimen>
+    <dimen name="timeline_card_margin_top_bottom">16dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>

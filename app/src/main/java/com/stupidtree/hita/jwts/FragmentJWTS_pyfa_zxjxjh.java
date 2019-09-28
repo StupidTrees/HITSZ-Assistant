@@ -9,6 +9,8 @@ import android.os.Bundle;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +74,7 @@ public class FragmentJWTS_pyfa_zxjxjh extends BaseFragment {
         zxjxjhList = v.findViewById(R.id.jwts_zxjxjh_lish);
         zxjxjhAdapter = new ZXJXJHListAdapter(this.getContext(), subjectsItems);
         zxjxjhList.setAdapter(zxjxjhAdapter);
-        zxjxjhList.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
+        zxjxjhList.setLayoutManager(new LinearLayoutManager(this.getContext(),RecyclerView.VERTICAL, false));
 
     }
 
@@ -106,7 +108,7 @@ public class FragmentJWTS_pyfa_zxjxjh extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
         stopTasks();
         pageTask = new getZXJXJHTask();
         pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -125,6 +127,7 @@ public class FragmentJWTS_pyfa_zxjxjh extends BaseFragment {
         protected Object doInBackground(Object[] objects) {
             Document page = null;
             try {
+                subjectsItems.clear();
                 page = Jsoup.connect("http://jwts.hitsz.edu.cn/zxjh/queryZxkc").cookies(cookies).timeout(20000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
@@ -132,9 +135,7 @@ public class FragmentJWTS_pyfa_zxjxjh extends BaseFragment {
                         .ignoreContentType(true)
                         .data("pageSize", "200")
                         .post();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
             Elements es = page.getElementsByClass("bot_line").select("tr");
             for (Element e : es) {
                 if (e.toString().contains("option")) continue;
@@ -159,6 +160,9 @@ public class FragmentJWTS_pyfa_zxjxjh extends BaseFragment {
                 cv.put("is_default", false);
                 sd.update("subject", cv, "code=?", new String[]{m2.get("code")});
             }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
@@ -170,7 +174,8 @@ public class FragmentJWTS_pyfa_zxjxjh extends BaseFragment {
             //System.out.println(o);
             //Toast.makeText(ActivityJWTS.this,"已抓取到尽可能多的课程信息",Toast.LENGTH_SHORT).show();
             zxjxjhAdapter.notifyDataSetChanged();
-            ActivityMain.saveData(FragmentJWTS_pyfa_zxjxjh.this.getActivity());
+            Log.e("执行计划获取完成：","同步数据");
+            ActivityMain.saveData();
 
         }
     }

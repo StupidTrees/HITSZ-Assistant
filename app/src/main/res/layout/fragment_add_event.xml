@@ -95,7 +95,8 @@
                     android:drawablePadding="8dp"
                     android:gravity="center"
                     android:text="提醒"
-                    android:textColor="?attr/text_color_primary" />
+                    android:textColor="?attr/text_color_primary"
+                    android:visibility="gone" />
 
                 <RadioButton
                     android:id="@+id/ade_exam"

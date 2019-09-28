@@ -7,12 +7,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
+import com.stupidtree.hita.BaseFragment;
+
 import java.util.List;
 
 public class JWTSPagerAdapter extends FragmentPagerAdapter {
-    List<Fragment> mBeans;
+    List<BaseFragment> mBeans;
     String[] titles;
-    public JWTSPagerAdapter(FragmentManager fm,List<Fragment> res,String[] titles) {
+    public JWTSPagerAdapter(FragmentManager fm, List<BaseFragment> res, String[] titles) {
         super(fm);
         mBeans = res;
         this.titles = titles;

@@ -153,6 +153,7 @@ public class HITADBHelper extends SQLiteOpenHelper {
         sd.delete("curriculum", null, null);
         sd.delete("task", null, null);
         sd.delete("subject", null, null);
+
     }
 
 

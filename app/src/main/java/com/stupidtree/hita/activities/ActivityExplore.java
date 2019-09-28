@@ -29,7 +29,6 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
-import com.amap.api.navi.model.NaviLatLng;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.BusRouteResult;
@@ -75,7 +74,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
     private MarkerOptions mStartMarker, mEndMarker;
 
     //导航变量
-    NaviLatLng mStartPointNavi, mEndPointNavi;
+    //NaviLatLng mStartPointNavi, mEndPointNavi;
     LatLonPoint mStartPoint = null,
             mEndPoint = null;
     private final int ROUTE_TYPE_WALK = 3;
@@ -103,8 +102,6 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
         setContentView(R.layout.activity_explore);
         terminal = getIntent().getStringExtra("terminal");
         lectureList = new ArrayList<>();
-        //if(terminal==null||terminal.isEmpty()) mToolbar.setTitle("探索");
-        //else mToolbar.setTitle("前往:"+terminal);
         longClickAvailable = terminal == null || terminal.isEmpty();//只有在探索模式才能长按导航
         //设置状态栏透明 添加返回图标
         mToolbar = findViewById(R.id.toolbar);
@@ -249,7 +246,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
                     lectureList.add(m);
                 }
                 return true;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return false;
             }
         }
@@ -384,25 +381,23 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
                     walkRouteOverlay.removeFromMap();
                     walkRouteOverlay.addToMap();
                     walkRouteOverlay.zoomToSpan();
-                    mBottomLayout.setVisibility(View.VISIBLE);
+                    //mBottomLayout.setVisibility(View.VISIBLE);
                     int dis = (int) walkPath.getDistance();
                     int dur = (int) walkPath.getDuration();
                     String des = AMapUtil.getFriendlyTime(dur) + "(" + AMapUtil.getFriendlyLength(dis) + ")";
                     mRotueTimeDes.setText(des);
                     mRouteDetailDes.setVisibility(View.GONE);
-                    mBottomLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(HContext,
-                                    ActivityWalkRouteDetail.class);
-                            intent.putExtra("walk_path", walkPath);
-                            intent.putExtra("walk_result",
-                                    mWalkRouteResult);
-                            intent.putExtra("start", mStartPointNavi);
-                            intent.putExtra("end", mEndPointNavi);
-                            startActivity(intent);
-                        }
-                    });
+//                    mBottomLayout.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent intent = new Intent(HContext,
+//                                    ActivityWalkRouteDetail.class);
+//                            intent.putExtra("walk_path", walkPath);
+//                            intent.putExtra("walk_result",
+//                                    mWalkRouteResult);
+//                            startActivity(intent);
+//                        }
+//                    });
                 } else if (result != null && result.getPaths() == null) {
                     ToastUtil.show(HContext, R.string.no_result);
                 }
@@ -500,7 +495,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
         if (!longClickAvailable) return;
         //mEndPointNavi = new NaviLatLng(latLng.latitude,latLng.longitude);
         mEndPoint = new LatLonPoint(latLng.latitude, latLng.longitude);
-        mEndPointNavi = new NaviLatLng(latLng.latitude, latLng.longitude);
+        //mEndPointNavi = new NaviLatLng(latLng.latitude, latLng.longitude);
         //获取AMapNavi实例
 //添加监听回调，用于处理算路成功
         //初始化query对象，fromAndTo是包含起终点信息，walkMode是步行路径规划的模式
@@ -577,7 +572,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
     @Override
     public void onMyLocationChange(Location location) {
         //位置改变的时候更新导航起点信息
-        mStartPointNavi = new NaviLatLng(location.getLatitude(), location.getLongitude());
+        //mStartPointNavi = new NaviLatLng(location.getLatitude(), location.getLongitude());
         mStartPoint = new LatLonPoint(location.getLatitude(), location.getLongitude());
         if (first) {
             if (!longClickAvailable) {
@@ -585,7 +580,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
                 double latitude = sa.get(0);
                 double longitude = sa.get(1);
                 mEndPoint = new LatLonPoint(latitude, longitude);
-                mEndPointNavi = new NaviLatLng(latitude, longitude);
+               // mEndPointNavi = new NaviLatLng(latitude, longitude);
                 Init_walkpath();
                 searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);
             }

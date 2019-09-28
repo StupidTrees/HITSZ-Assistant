@@ -153,7 +153,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
         stopTasks();
         pageTask =  new refreshListTask();
         pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -239,7 +239,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
                     addExamEvent(name,code,place,time);
                     lisRes.add(m);
                 }
-                return true;
+                return lisRes.size()>0;
             } catch (Exception e) {
                return false;
             }
@@ -254,7 +254,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
                 listLayout.setVisibility(View.VISIBLE);
                 loadingView.setVisibility(View.INVISIBLE);
                 listAdapter.notifyDataSetChanged();
-                ActivityMain.saveData(FragmentJWTS_ksxx.this.getActivity());
+                //ActivityMain.saveData(FragmentJWTS_ksxx.this.getActivity());
             }else {
                 loadingView.setVisibility(View.INVISIBLE);
                 invalidLayout.setVisibility(View.VISIBLE);
@@ -294,7 +294,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
             if(bt_import_exam!=null) bt_import_exam.setProgress(false);
             if((Boolean) o){
                 Toast.makeText(FragmentJWTS_ksxx.this.getContext(),"导入成功！",Toast.LENGTH_SHORT).show();
-                ActivityMain.saveData(FragmentJWTS_ksxx.this.getActivity());
+                ActivityMain.saveData();
             }else{
                 Toast.makeText(FragmentJWTS_ksxx.this.getContext(),"导入失败！",Toast.LENGTH_SHORT).show();
             }

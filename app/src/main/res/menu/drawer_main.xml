@@ -9,9 +9,8 @@
     <!--<item android:title="主题" android:id="@+id/drawer_nav_theme" android:icon="@drawable/ic_menu_theme"/>-->
         <item android:title="教务系统" android:id="@+id/drawer_nav_jwts" android:icon="@drawable/ic_menu_jwts"/>
         <item android:title="信息窗口" android:id="@+id/drawer_nav_info" android:icon="@drawable/ic_menu_bulletin"/>
-        <item android:title="失物招领" android:id="@+id/drawer_nav_laf" android:icon="@drawable/ic_lostandfound"/>
-        <item android:title="排行榜" android:id="@+id/drawer_nav_campusservice" android:icon="@drawable/ic_menu_food"/>
-   </menu>
+        <item android:title="搜索" android:id="@+id/drawer_nav_search" android:icon="@drawable/ic_search"/>
+      </menu>
 </item>
 
     <item android:title="其他">
@@ -19,10 +18,11 @@
             <item  android:id="@+id/drawer_nav_darkmode" android:icon="@drawable/ic_moon"
                 android:actionLayout="@layout/action_switch_darkmode"
                 android:title="深色模式" />
-
             <item android:title="设置" android:id="@+id/drawer_nav_settings" android:icon="@drawable/ic_menu_manage"/>
-        <item android:title="关于" android:id="@+id/drawer_nav_about" android:icon="@drawable/ic_info_black_24dp" />
-</menu>
+         <item android:title="意见反馈" android:id="@+id/drawer_nav_report" android:icon="@drawable/ic_bug_report" />
+            <item android:title="关于" android:id="@+id/drawer_nav_about" android:icon="@drawable/ic_info_black_24dp" />
+
+        </menu>
     </item>
         <!--<item android:title="高级操作" android:id="@+id/drawer_nav_control" />-->
 

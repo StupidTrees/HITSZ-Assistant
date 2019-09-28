@@ -1,37 +1,37 @@
 package com.stupidtree.hita.activities;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -47,8 +47,8 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
-import com.iflytek.cloud.ui.RecognizerDialogListener;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.core.Subject;
 import com.stupidtree.hita.hita.ChatBotA;
 import com.stupidtree.hita.hita.ChatBotB;
 import com.stupidtree.hita.hita.TextTools;
@@ -58,13 +58,16 @@ import com.stupidtree.hita.core.timetable.HTime;
 import com.stupidtree.hita.adapter.ChatBotListAdapter;
 import com.stupidtree.hita.core.timetable.Task;
 import com.stupidtree.hita.hita.ChatBotMessageItem;
-import com.stupidtree.hita.diy.RevealAnimation;
 import com.stupidtree.hita.online.ChatMessage;
 import com.stupidtree.hita.online.Infos;
+import com.stupidtree.hita.online.Teacher;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.IatSettings;
 import com.stupidtree.hita.util.JsonParser;
 
+import org.ansj.domain.Result;
+import org.ansj.domain.Term;
+import org.ansj.splitWord.analysis.ToAnalysis;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -76,6 +79,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import cn.bmob.v3.BmobQuery;
@@ -93,11 +98,9 @@ import static com.stupidtree.hita.hita.TextTools.T_BEFORE;
 import static com.stupidtree.hita.hita.TextTools.T_NEXT;
 import static com.stupidtree.hita.HITAApplication.ChatBotListRes;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
-import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.isDataAvailable;
 import static com.stupidtree.hita.HITAApplication.isThisTerm;
-import static com.stupidtree.hita.HITAApplication.login;
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
@@ -119,11 +122,9 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     private final int VIEW_TYPE_LEFT = -10;
     private final int VIEW_TYPE_RIGHT = -11;
     private EditText mEtMessageInput;
-    private ImageView mBtnSend;//btSpeak;
-    //private FloatingActionButton btSpeak;
-    private ArrayList<HashMap<Integer, Object>> mItems = null;
+    private ImageView mBtnSend;
     Toolbar mToolbar;
-    LinearLayout textInputLayout;
+    LinearLayout textInputLayout,voiceInputLayout;
     LottieAnimationView animationView;
     FloatingActionButton fab_shutup;
     ChatBotA chatbotA;
@@ -141,10 +142,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     private static HashMap<String, String> mIatResults = new LinkedHashMap<>();
     //语音合成对象
     private static SpeechSynthesizer mSpeechSynthesizer;
-    //缓冲进度
-    private int mPercentForBuffering = 0;
-    //播放进度
-    private int mPercentForPlaying = 0;
+
     //存储数据对象
     private SharedPreferences mSharedPreferences;
     private String mEngineType = SpeechConstant.TYPE_CLOUD;
@@ -165,68 +163,67 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     public final static int STATE_NORMAL = 22;
 
     CoordinatorLayout rootLayout;
-    private RevealAnimation mRevealAnimation;
-    private int revealX;
-    private int revealY;
+
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        setWindowParams(true,true,false);
+        setWindowParams(true, true, false);
         initXfVoice();
         chatbotA = new ChatBotA(this);
         chatbotB = new ChatBotB();
-        //setTheme(R.style.ChatBotTheme);
-        //getWindow().getDecorView().setBackground(getDrawable(R.color.transparent_none));
         setContentView(R.layout.activity_chatbot);
         initViews();
         initListAndAdapter();
-        mRevealAnimation = new RevealAnimation(rootLayout, getIntent(), this);
-        onAnimateLayout(savedInstanceState, getIntent());
-//        waveLineView.startAnim();
-//        waveLineView.setVolume(0);
+        if (!defaultSP.getBoolean("ChatBot_useKeyboard", false)) {
+            waveLineView.setVolume(0);
+            waveLineView.startAnim();
+        }
         checkPermissions();
         initIFlyParams();
         initChatBotInfo();
-
-
         //onClick(rootLayout);
 
     }
 
-    void initChatBotInfo(){
+    void initChatBotInfo() {
         BmobQuery<Infos> bq = new BmobQuery<>();
-        bq.addWhereEqualTo("name","chatbot_info");
+        bq.addWhereEqualTo("name", "chatbot_info");
         bq.findObjects(new FindListener<Infos>() {
             @Override
             public void done(List<Infos> list, BmobException e) {
-                if(e==null&&list!=null&&list.size()>0){
-                    chatBotInfos =  list.get(0).getJson();
-                }else{
-                    Log.e("Bmob错误",e.toString());
+                if (e == null && list != null && list.size() > 0) {
+                    chatBotInfos = list.get(0).getJson();
+                } else {
+                    Log.e("Bmob错误", e.toString());
                     chatBotInfos = new JsonObject();
-                    chatBotInfos.addProperty("message_show","你好，我是希塔");
-                    chatBotInfos.addProperty("hint","获取提示失败");
+                    chatBotInfos.addProperty("message_show", "你好，我是希塔");
+                    chatBotInfos.addProperty("hint", "获取提示失败");
                 }
-                if(ChatBotListRes.size()==0) addMessageView(chatBotInfos,VIEW_TYPE_LEFT,false);
+                if (ChatBotListRes.size() == 0) {
+                    ChatBotMessageItem cmi = new ChatBotMessageItem(VIEW_TYPE_LEFT, chatBotInfos.get("message_show").getAsString());
+                    cmi.setHint(chatBotInfos.get("hint").getAsString());
+                    addMessageView(cmi, cmi.message, null, false);
+                }
                 initHitaAnimation();
             }
         });
     }
 
 
-    void initHitaAnimation(){
-        animationView= findViewById(R.id.hita_animation_view);
+    void initHitaAnimation() {
+        animationView = findViewById(R.id.hita_animation_view);
         animationView.setImageAssetsFolder("hita_animation/");
-        if(chatBotInfos.has("animation")) animationView.setAnimationFromJson(chatBotInfos.get("animation").getAsJsonObject().getAsString(),"animation");
-        else{
-            Log.e("animation load failed","没有找到在线动画");
+        if (chatBotInfos.has("animation"))
+            animationView.setAnimationFromJson(chatBotInfos.get("animation").getAsJsonObject().getAsString(), "animation");
+        else {
+            Log.e("animation load failed", "没有找到在线动画");
             animationView.setAnimation("hita_animation/hita_normal.json");
         }
 
@@ -236,30 +233,10 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     private void initXfVoice() {
         SpeechUtility.createUtility(getApplicationContext(), SpeechConstant.APPID + "=5c4aa1d3");
     }
+
     @Override
     public void onBackPressed() {
-        mRevealAnimation.unRevealActivity(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                waveLineView.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-
-                //waveLineView.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
+        super.onBackPressed();
     }
 
     @Override
@@ -290,7 +267,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         waveLineView.setVolume(0);
         if (mSpeechRecognizer.isListening()) mSpeechRecognizer.stopListening();
         if (waveLineView.isRunning()) waveLineView.stopAnim();
-        if(mSpeechSynthesizer.isSpeaking()) mSpeechSynthesizer.stopSpeaking();
+        if (mSpeechSynthesizer.isSpeaking()) mSpeechSynthesizer.stopSpeaking();
     }
 
     //初始化讯飞语音各参数
@@ -328,29 +305,6 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         }
     };
 
-
-    //讯飞的语音对话框
-    private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
-        @Override
-        public void onResult(RecognizerResult recognizerResult, boolean b) {
-            if (mTranslateEnale) {
-                translateInputDone(recognizerResult);
-                Log.d(TAG, "听写UI打印翻译结果");
-            } else {
-                voiceInputDone(recognizerResult);
-                Log.d(TAG, "听写UI打印普通结果");
-            }
-        }
-
-        @Override
-        public void onError(SpeechError speechError) {
-            if (mTranslateEnale && speechError.getErrorCode() == 14002) {
-                Toast.makeText(ActivityChatbot.this.getApplicationContext(), speechError.getPlainDescription(true) + "\n请确认是否已经开通了翻译功能", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(ActivityChatbot.this.getApplicationContext(), speechError.getPlainDescription(true), Toast.LENGTH_LONG).show();
-            }
-        }
-    };
 
     private SynthesizerListener mTtsListener = new SynthesizerListener() {
         @Override
@@ -433,23 +387,16 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         @Override
         public void onVolumeChanged(int i, byte[] bytes) {
             waveLineView.setVolume(30 + i * 20);
-//           Log.e("volume:",i+"");
-//            Toast.makeText(ActivityChatbot.this.getApplicationContext(), "当前正在说话，音量大小是：" + i, Toast.LENGTH_LONG).show();
-//            Log.d(TAG, "返回音频数据：" + bytes.length);
         }
 
         @Override
         public void onBeginOfSpeech() {
             waveLineView.setVolume(30);
-            //voiceRippleBackground.startRippleAnimation();
-            //Toast.makeText(ActivityChatbot.this.getApplicationContext(), "开始说话", Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void onEndOfSpeech() {
             waveLineView.setVolume(0);
-            // voiceRippleBackground.stopRippleAnimation();
-            //Toast.makeText(ActivityChatbot.this.getApplicationContext(), "结束说话", Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -583,13 +530,13 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     }
 
     private void initViews() {
-        mItems = new ArrayList<>();
         waveLineView = findViewById(R.id.waveLineView);
         mEtMessageInput = findViewById(R.id.edit_send);
         mBtnSend = findViewById(R.id.btn_send);
         //btSpeak = findViewById(R.id.fab_speak);
         fab_shutup = findViewById(R.id.fab_shutup);
         textInputLayout = findViewById(R.id.textInput);
+        voiceInputLayout = findViewById(R.id.voiceInput);
         rootLayout = findViewById(R.id.chatbot_root_layout);
         fab_shutup.hide();
         fab_shutup.setOnClickListener(new View.OnClickListener() {
@@ -619,11 +566,11 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         if (defaultSP.getBoolean("ChatBot_useKeyboard", false)) {
             textInputLayout.setVisibility(View.VISIBLE);
             //btSpeak.hide();
-            waveLineView.setVisibility(View.GONE);
+            voiceInputLayout.setVisibility(View.GONE);
         } else {
             textInputLayout.setVisibility(View.GONE);
             //btSpeak.show();
-            waveLineView.setVisibility(View.VISIBLE);
+            voiceInputLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -634,8 +581,6 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         ChatList.setLayoutManager(layoutManager);
         ChatList.setAdapter(ListAdapter);
         ChatList.scrollToPosition(ListAdapter.getItemCount() - 1);
-//        ChatList.setLayoutAnimation(layoutAnimationController);
-//        ChatList.scheduleLayoutAnimation();
         ListAdapter.setOnUserAvatarClickListener(new ChatBotListAdapter.OnUserAvatarClickListener() {
             @Override
             public void onClick(View v, int position) {
@@ -670,411 +615,50 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     }
 
 
-    private void onAnimateLayout(Bundle savedInstanceState, Intent intent) {
-        if (savedInstanceState == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-                intent.hasExtra(EXTRA_CIRCULAR_REVEAL_X) &&
-                intent.hasExtra(EXTRA_CIRCULAR_REVEAL_Y)) {
-            rootLayout.setVisibility(View.INVISIBLE);
-
-            revealX = intent.getIntExtra(EXTRA_CIRCULAR_REVEAL_X, 0);
-            revealY = intent.getIntExtra(EXTRA_CIRCULAR_REVEAL_Y, 0);
-
-            ViewTreeObserver viewTreeObserver = rootLayout.getViewTreeObserver();
-            if (viewTreeObserver.isAlive()) {
-                viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        mRevealAnimation.revealActivity(revealX, revealY, new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-
-                                if(!defaultSP.getBoolean("ChatBot_useKeyboard", false)){
-                                    waveLineView.setVolume(0);
-                                    waveLineView.startAnim();
-//                                    mSpeechRecognizer.startListening(mRecognizerListener);
-                                }
-                            }
-
-                            @Override
-                            public void onAnimationCancel(Animator animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {
-
-                            }
-                        });
-                        rootLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                    }
-                });
-            }
-        } else {
-            rootLayout.setVisibility(View.VISIBLE);
-        }
-    }
-
     //****将消息加入当前聊天中****
     public void addMessageToChat_Right(String msg) {
         JsonObject message = new JsonObject();
         message.addProperty("message_show", msg);
-        addMessageView(message, VIEW_TYPE_RIGHT, defaultSP.getBoolean("ChatBot_speakNow", true));
+        ChatBotMessageItem cmi = new ChatBotMessageItem(VIEW_TYPE_RIGHT, msg);
+        addMessageView(cmi, msg, null, false);
         postToChatBot(msg);
-    }
-
-    public void addMessageToChat_Left(JsonObject msg) {
-        addMessageView(msg, VIEW_TYPE_LEFT, defaultSP.getBoolean("ChatBot_speakNow", true));
     }
 
 
     //把消息post给聊天机器人线程
-    private void postToChatBot(final String message) {
-        BmobQuery<ChatMessage> chatMessageBmobQuery = new BmobQuery<>();
-        chatMessageBmobQuery.addWhereEqualTo("queryText",message);
-        Log.e("message:",message);
-        chatMessageBmobQuery.findObjects(new FindListener<ChatMessage>() {
-            @Override
-            public void done(List<ChatMessage> list, BmobException e) {
-                if(ActivityChatbot.this.isDestroyed()) return;
-                if(e==null&&list!=null&&list.size()>0){
-                    com.google.gson.JsonParser jp = new com.google.gson.JsonParser();
-                    String[] answers = list.get(0).getAnswer().split("\\$\\$");
-                    if(answers.length>1){
-                        int index = new Random(System.currentTimeMillis()).nextInt(answers.length);
-                        JsonObject jo = jp.parse(answers[index]).getAsJsonObject();
-                        getReply(jo);
+    private void postToChatBot(final String raw) {
+        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask = new ChatBotIteractTask(raw, ActivityChatbot.this);
+        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-                    }else{
-                        JsonObject jo = jp.parse(list.get(0).getAnswer()).getAsJsonObject();
-                        getReply(jo);
-                    }
-
-                }else{
-                    if(e!=null) Log.e("!",e.toString());
-                    if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
-                    pageTask = new ChatBotIteractTask(message,ActivityChatbot.this);
-                    pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-            }
-        });
 
     }
 
 
     //收到聊天机器人的回复后
     private void getReply(JsonObject received) {
-        addMessageToChat_Left(received);
+        new ProcessReplyMessageTask(received).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         setVoiceParam();
     }
 
 
-    private void addMessageView(JsonObject msg, int msgType, boolean willSpeak) {
-        ChatBotMessageItem messagge = new ChatBotMessageItem(msgType, "");
-        String textOnShow = null;
-        String textToRead = null;
-        if(msg.has("hint")){
-            messagge.setHint(msg.get("hint").getAsString());
-        }
-        if (msg.has("function")) {
-            if (msg.get("function").getAsString().equals("search_event_ww")) {
-                List<EventItem> courseList;
-                final int tag = msg.get("tag").getAsInt();
-                if (!isDataAvailable()) {
-                    textOnShow = "请先导入数据或选择当前日程表！";
-                } else if(!isThisTerm) {
-                    textOnShow = "别急着问啊，这学期还没开始";
-                }else {
-                    courseList = propcessSerchEvents(msg);
-                    if (courseList == null || courseList.size() <= 0) {
-                        String textTemp_onlyOne = "东西";
-                        switch (tag) {
-                            case ChatBotA.FUN_SEARCH_EVENT_ALL:
-                                textTemp_onlyOne = "事件";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_COURSE:
-                                textTemp_onlyOne = "课程";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
-                                textTemp_onlyOne = "规划";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_REMIND:
-                                textTemp_onlyOne = "提醒";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_EXAM:
-                                textTemp_onlyOne = "考试";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_DDL:
-                                textTemp_onlyOne = "DDL";
-                                break;
-                        }
-                        textOnShow = "没有" + textTemp_onlyOne + "哦！";
-                    } else {
-                        if (courseList.size() > 1) State = STATE_SEARCH_COURSE_LIST;
-                        else if (courseList.size() == 1) State = STATE_SEARCH_COURSE_SINGLE;
-                        StateEventList = courseList;
-                        Collections.sort(courseList);
-                        if (courseList.size() == 1) {
-                            String textTemp_onlyOne = "件事";
-                            switch (tag) {
-                                case ChatBotA.FUN_SEARCH_EVENT_ALL:
-                                    textTemp_onlyOne = "件事";
-                                    break;
-                                case ChatBotA.FUN_SEARCH_EVENT_COURSE:
-                                    textTemp_onlyOne = "节课";
-                                    break;
-                                case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
-                                    textTemp_onlyOne = "件事";
-                                    break;
-                                case ChatBotA.FUN_SEARCH_EVENT_REMIND:
-                                    textTemp_onlyOne = "条提醒";
-                                    break;
-                                case ChatBotA.FUN_SEARCH_EVENT_EXAM:
-                                    textTemp_onlyOne = "场考试";
-                                    break;
-                                case ChatBotA.FUN_SEARCH_EVENT_DDL:
-                                    textTemp_onlyOne = "个DDL";
-                                    break;
-                            }
-                            textToRead = "只有一" + textTemp_onlyOne + "，为" + "周" + courseList.get(0).DOW + " " + courseList.get(0).startTime.tellTime() + " 的" + courseList.get(0).mainName;
-//                                textOnShow = "只有这"+textTemp_onlyOne+":";
-                            textOnShow = "就是他啦！";
-//                                textToRead = "就是他啦";
-                        } else if (courseList.size() <= 3) {
-                            String resultText = "分别是：";
-                            for (EventItem cs : courseList) {
-                                resultText += "\n" + "周" + cs.DOW + " " + cs.startTime.tellTime() + " 的" + cs.mainName;
-                            }
-                            textOnShow = "分别是";
-                            textToRead = resultText;
-                        } else {
-                            textOnShow = ("共查找到如下" + courseList.size() + "个事件:");
-                        }
-                        messagge.setCourseList(courseList);
-                    }
-                }
-
-            } else if (msg.get("function").getAsString().equals("search_event_nextone")) {
-
-                final int tag = msg.get("tag").getAsInt();
-                if (!isDataAvailable()) {
-                    textOnShow = "请先导入数据或选择当前日程表！";
-                } else if(!isThisTerm) {
-                    textOnShow = "别急着问啊，这学期还没开始";
-                }else {
-                    EventItem nextevent = null;
-                    Calendar c = Calendar.getInstance();
-                    c.set(Calendar.HOUR_OF_DAY, 23);
-                    c.set(Calendar.MINUTE, 59);
-                    List<EventItem> tempList = mainTimeTable.getEventFrom(now, c, -1);
-                    if(tempList==null||tempList.size()==0) nextevent = null;
-                    else {
-                        Log.e("!!", tempList.toString());
-                        for (EventItem ei : tempList) {
-                            Log.e("!!", ei.toString());
-                            if (ei.startTime.compareTo(new HTime(now)) < 0) continue;
-                            int eventTypeFilter = -99;
-                            switch (tag) {
-                                case ChatBotA.FUN_SEARCH_EVENT_COURSE:
-                                    eventTypeFilter = TIMETABLE_EVENT_TYPE_COURSE;
-                                    break;
-                                case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
-                                    eventTypeFilter = TIMETABLE_EVENT_TYPE_ARRANGEMENT;
-                                    break;
-                                case ChatBotA.FUN_SEARCH_EVENT_REMIND:
-                                    eventTypeFilter = TIMETABLE_EVENT_TYPE_REMIND;
-                                    break;
-                                case ChatBotA.FUN_SEARCH_EVENT_EXAM:
-                                    eventTypeFilter = TIMETABLE_EVENT_TYPE_EXAM;
-                                    break;
-                                case ChatBotA.FUN_SEARCH_EVENT_DDL:
-                                    eventTypeFilter = TIMETABLE_EVENT_TYPE_DEADLINE;
-                                    break;
-                            }
-                            if (eventTypeFilter != -99) {
-                                if (ei.eventType != eventTypeFilter) continue;
-                            }
-                            nextevent = ei;
-                            break;
-                        }
-                    }
-                    if (nextevent == null) {
-                        String textTemp_onlyOne = "东西";
-                        switch (tag) {
-                            case ChatBotA.FUN_SEARCH_EVENT_ALL:
-                                textTemp_onlyOne = "事件";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_COURSE:
-                                textTemp_onlyOne = "课程";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
-                                textTemp_onlyOne = "规划";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_REMIND:
-                                textTemp_onlyOne = "提醒";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_EXAM:
-                                textTemp_onlyOne = "考试";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_DDL:
-                                textTemp_onlyOne = "DDL";
-                                break;
-                        }
-                        textOnShow = "接下来没有" + textTemp_onlyOne + "了哟！";
-                    } else {
-                        State = STATE_SEARCH_COURSE_SINGLE;
-                        String textTemp_onlyOne = "件事";
-                        switch (tag) {
-                            case ChatBotA.FUN_SEARCH_EVENT_ALL:
-                                textTemp_onlyOne = "件事";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_COURSE:
-                                textTemp_onlyOne = "节课";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
-                                textTemp_onlyOne = "件事";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_REMIND:
-                                textTemp_onlyOne = "条提醒";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_EXAM:
-                                textTemp_onlyOne = "场考试";
-                                break;
-                            case ChatBotA.FUN_SEARCH_EVENT_DDL:
-                                textTemp_onlyOne = "个DDL";
-                                break;
-                        }
-                        textToRead = "下一" + textTemp_onlyOne + "为:" + nextevent.startTime.tellTime() + " 的" + nextevent.mainName;
-                        textOnShow = "下一" + textTemp_onlyOne + "为:";
-                        List<EventItem> courseList = new ArrayList<>();
-                        courseList.add(nextevent);
-                        messagge.setCourseList(courseList);
-                    }
-                }
-
-            }else if(msg.get("function").getAsString().equals("add_event_remind")){
-                EventItem ei = propcessAddRemind(msg);
-                if(TextUtils.isEmpty(ei.mainName)){
-                    textOnShow = "给我个提醒的名字鸭";
-                    textToRead = "给我个提醒的名字鸭";
-                }else{
-                    mainTimeTable.addEvent(ei);
-                    List<EventItem> add = new ArrayList<>();
-                    add.add(ei);
-                    messagge.setCourseList(add);
-                    textOnShow = "已添加提醒：";
-                    textToRead = "好的，提醒你"+ei.mainName;
-                }
-            }else if(msg.get("function").getAsString().equals("search_task")){
-                List<Task> tl = mainTimeTable.getUnfinishedTasks();
-                messagge.setTaskList(tl);
-                if(tl.size()>0){
-                    textOnShow = "还有如下"+tl.size()+"个待办任务";
-                    textToRead = "你还有"+tl.size()+"个待办任务";
-                }else {
-                    textOnShow = "目前没有任务！";
-                    textToRead = textOnShow;
-                }
-
-            }else if(msg.get("function").getAsString().equals("intent_explore")){
-                textOnShow = "好的，启动探索模式";
-                textToRead = "好的，启动探索模式";
-                Intent i = new Intent(this,ActivityExplore.class);
-                startActivity(i);
-            }else if(msg.get("function").getAsString().equals("intent_canteen")){
-                textOnShow = "好的，发现校内服务";
-                textToRead = "好的，发现校内服务";
-                Intent i = new Intent(this, ActivityRankBoard.class);
-                startActivity(i);
-            }else if(msg.get("function").getAsString().equals("intent_jwts")){
-                textOnShow = "好的，进入教务系统";
-                textToRead = "好的，进入教务系统";
-                Intent k;
-                if(login){
-                    k = new Intent(HContext, ActivityJWTS.class);
-                    startActivity(k);
-                } else{
-                    if(CurrentUser==null){
-                        AlertDialog ad = new AlertDialog.Builder(HContext).setTitle("提示").setMessage("请先登录HITSZ助手账号并绑定学号！").setPositiveButton("好的", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(HContext, ActivityLogin.class);
-                                startActivity(i);
-                            }
-                        }).create();
-                        ad.show();
-                    }else if(CurrentUser.getStudentnumber()==null||CurrentUser.getStudentnumber().isEmpty()){
-
-                        AlertDialog ad = new AlertDialog.Builder(HContext).setTitle("提示").setMessage("请先绑定学号后再使用教务系统").setPositiveButton("好的", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(HContext,ActivityLogin.class);
-                                startActivity(i);
-                            }
-                        }).create();
-                        ad.show();
-                    }else{
-                        k = new Intent(HContext, ActivityLoginJWTS.class);
-                        startActivity(k);
-                    }
-                }
-            }else if(msg.get("function").getAsString().equals("search_location")){
-                textOnShow = "好的，进入校内地点页";
-                if(msg.get("location_objectId")!=null){
-                    String id = msg.get("location_objectId").getAsString();
-                    ActivityUtils.startLocationActivity_objectId(ActivityChatbot.this,id);
-                }else if(msg.get("location_name")!=null){
-                    String name = msg.get("location_name").getAsString();
-                    ActivityUtils.startLocationActivity_name(ActivityChatbot.this,name);
-                }else{
-                    textOnShow = "抱歉，处理地点信息错误";
-                }
-            }else if(msg.get("function").getAsString().equals("say_my_name")){
-                if(CurrentUser==null){
-                    textOnShow = "你好像还没有登录的亚子，我怎么知道你是谁啊";
-                }else {
-                    if(TextUtils.isEmpty(CurrentUser.getNick())){
-                        if(TextUtils.isEmpty(CurrentUser.getRealname())) textOnShow = "你说你没有设置昵称也没有绑定学号登教务，我怎么寄到你叫什么嘛！";
-                        else textOnShow = "不介意的话，我就叫你"+CurrentUser.getRealname()+"了";
-                    }else textOnShow = "出于礼貌，我就不直呼你的大名了，"+CurrentUser.getNick();
-                }
-                textToRead = textOnShow;
-            }
-            if (msg.get("function").getAsString().equals("search_event_context2_classroom")) {
-                if (State == STATE_SEARCH_COURSE_SINGLE) {
-                    textOnShow = "就在" + StateEventList.get(0).tag2 + "啊！";
-                    State = STATE_NORMAL;
-                }
-            }
-
-        }
-        if(msg.has("message_show")) textOnShow = String.valueOf(msg.get("message_show").getAsString());
-        if(msg.has("message_read")) textToRead = String.valueOf(msg.get("message_read").getAsString());
-        if(msg.has("image_url")) messagge.setImageURI(msg.get("image_url").getAsString());
+    private void addMessageView(ChatBotMessageItem message, String textOnShow,
+                                String textToRead, boolean willSpeak) {
         if (textToRead == null) textToRead = textOnShow;
         /*语音广播*/
-        if (willSpeak && msgType == VIEW_TYPE_LEFT) {
+        if (willSpeak && message.type == VIEW_TYPE_LEFT) {
             int code = mSpeechSynthesizer.startSpeaking(textToRead, mTtsListener);
             if (code != ErrorCode.SUCCESS) {
                 Toast.makeText(ActivityChatbot.this, "语音合成失败，错误码是：" + code, Toast.LENGTH_LONG).show();
             }
         }
-        if(messagge.type==VIEW_TYPE_RIGHT) messagge.setMessage("“"+textOnShow+"”");
-        else  messagge.setMessage(textOnShow);
-        ListAdapter.addMessage(messagge);
-        //ChatBotListRes.add(messagge);
-        if(messagge.type==VIEW_TYPE_RIGHT){
-            ListAdapter.deleteBefore(ChatBotListRes.size()-1);
+        if (message.type == VIEW_TYPE_RIGHT) message.setMessage("“" + textOnShow + "”");
+        else message.setMessage(textOnShow);
+        ListAdapter.addMessage(message);
+        if (message.type == VIEW_TYPE_RIGHT) {
+            ListAdapter.deleteBefore(ChatBotListRes.size() - 1);
         }
-
-        //ListAdapter.notifyDataSetChanged();
-        ChatList.scrollToPosition(ListAdapter.getItemCount() - 1);
-
+       // ChatList.scrollToPosition(ListAdapter.getItemCount() - 1);
     }
 
     private List<EventItem> propcessSerchEvents(JsonObject values) {
@@ -1288,6 +872,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
             return result;
         }
     }
+
     private EventItem propcessAddRemind(JsonObject values) {
         String name = values.get("name").getAsString();
         int fromW = (int) values.get("fW").getAsInt();
@@ -1465,8 +1050,8 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         if (toW > allCurriculum.get(thisCurriculumIndex).totalWeeks)
             toW = allCurriculum.get(thisCurriculumIndex).totalWeeks;
         toW = (toW > allCurriculum.get(thisCurriculumIndex).totalWeeks) ? allCurriculum.get(thisCurriculumIndex).totalWeeks : toW;
-        System.out.println("解析出的待添加DDL为：name="+name+"fW=" + fromW + ",fDOW=" + fromDOW + ",fT=" + fromT.tellTime() + ",tW=" + toW + ",tDOW=" + toDOW + ",tT=" + toT.tellTime());
-        return  new EventItem(null,mainTimeTable.core.curriculumCode,TIMETABLE_EVENT_TYPE_REMIND,name,"提醒","无注释","无注释",fromT,fromT,fromW,fromDOW,wholeday);
+        System.out.println("解析出的待添加DDL为：name=" + name + "fW=" + fromW + ",fDOW=" + fromDOW + ",fT=" + fromT.tellTime() + ",tW=" + toW + ",tDOW=" + toDOW + ",tT=" + toT.tellTime());
+        return new EventItem(null, mainTimeTable.core.curriculumCode, TIMETABLE_EVENT_TYPE_REMIND, name, "提醒", "无注释", "无注释", fromT, fromT, fromW, fromDOW, wholeday);
     }
 
 
@@ -1475,8 +1060,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         String message;
         WeakReference<Activity> activity;
 
-        ChatBotIteractTask(String message,Activity a)
-        {
+        ChatBotIteractTask(String message, Activity a) {
             this.message = message;
             activity = new WeakReference(a);
         }
@@ -1492,19 +1076,53 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
 
         @Override
         protected JsonObject doInBackground(String... strings) {
-
             if (chatbotA.simpleJudge(message, ActivityChatbot.this)) {
                 return chatbotA.Interact(message);
             } else {
                 State = STATE_NORMAL;
-                if (defaultSP.getBoolean("ChatBot_useTulin", true)) {
-                    JsonObject jo = chatbotB.InteractTulin(message);
-                    if (jo.get("message_show").toString().contains("请求次数"))
-                        return chatbotB.InteractQ(message);
-                    else return jo;
+                BmobQuery<ChatMessage> cmb = new BmobQuery<>();
+                String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+                Pattern p = Pattern.compile(regEx);
+                Matcher m = p.matcher(message);
+                final String message = m.replaceAll("").trim();
+                if (message.length() <= 3) {
+                    cmb.addWhereEqualTo("queryText", message);
+                } else if (message.length() <= 5) {
+                    cmb.addWhereContains("queryText", message);
                 } else {
-                    return chatbotB.InteractQ(message);
+                    Result x = ToAnalysis.parse(message);
+                    List<String> strs = new ArrayList<>();
+                    for (Term t : x.getTerms()) {
+                        strs.add(t.getName());
+                    }
+                    cmb.addWhereContainsAll("queryArray", strs);
                 }
+                // Log.e("where:",chatMessageBmobQuery.getWhere().toString());
+                //chatMessageBmobQuery.addWhereEqualTo("queryText",message);
+                //Log.e("message:",message);
+                List<ChatMessage> dbRespond = cmb.findObjectsSync(ChatMessage.class);
+                if (dbRespond != null && dbRespond.size() > 0) {
+                    com.google.gson.JsonParser jp = new com.google.gson.JsonParser();
+                    String[] answers = dbRespond.get(0).getAnswer().split("\\$\\$");
+                    JsonObject jo;
+                    if (answers.length > 1) {
+                        int index = new Random(System.currentTimeMillis()).nextInt(answers.length);
+                        jo = jp.parse(answers[index]).getAsJsonObject();
+                    } else {
+                        jo = jp.parse(dbRespond.get(0).getAnswer()).getAsJsonObject();
+                    }
+                    return jo;
+                } else {
+                    if (defaultSP.getBoolean("ChatBot_useTulin", true)) {
+                        JsonObject jo = chatbotB.InteractTulin(message);
+                        if (jo.get("message_show").toString().contains("请求次数"))
+                            return chatbotB.InteractQ(message);
+                        else return jo;
+                    } else {
+                        return chatbotB.InteractQ(message);
+                    }
+                }
+
 
             }
         }
@@ -1520,7 +1138,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
 //            animationView.setColorFilter(getColorPrimary());
 //            animationView.setAnimation("hita_animation/hita_normal.json");
 //            animationView.playAnimation();
-            if(activity.get()!=null&&(!activity.get().isDestroyed())){
+            if (activity.get() != null && (!activity.get().isDestroyed())) {
                 try {
                     getReply(s);
                 } catch (Exception e) {
@@ -1531,22 +1149,362 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         }
     }
 
+    class ProcessReplyMessageTask extends AsyncTask {
+        JsonObject msg;
+        ChatBotMessageItem messagge;
+        String textOnShow, textToRead;
+
+        public ProcessReplyMessageTask(JsonObject msg) {
+            this.msg = msg;
+            messagge = new ChatBotMessageItem(VIEW_TYPE_LEFT, "");
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+
+            if (msg.has("hint")) {
+                messagge.setHint(msg.get("hint").getAsString());
+            }
+            if (msg.has("function")) {
+                if (msg.get("function").getAsString().equals("search_event_ww")) {
+                    List<EventItem> courseList;
+                    final int tag = msg.get("tag").getAsInt();
+                    if (!isDataAvailable()) {
+                        textOnShow = "请先导入数据或选择当前日程表！";
+                    } else if (!isThisTerm) {
+                        textOnShow = "别急着问啊，这学期还没开始";
+                    } else {
+                        courseList = propcessSerchEvents(msg);
+                        if (courseList == null || courseList.size() <= 0) {
+                            String textTemp_onlyOne = "东西";
+                            switch (tag) {
+                                case ChatBotA.FUN_SEARCH_EVENT_ALL:
+                                    textTemp_onlyOne = "事件";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_COURSE:
+                                    textTemp_onlyOne = "课程";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
+                                    textTemp_onlyOne = "规划";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_REMIND:
+                                    textTemp_onlyOne = "提醒";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_EXAM:
+                                    textTemp_onlyOne = "考试";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_DDL:
+                                    textTemp_onlyOne = "DDL";
+                                    break;
+                            }
+                            textOnShow = "没有" + textTemp_onlyOne + "哦！";
+                        } else {
+                            if (courseList.size() > 1) State = STATE_SEARCH_COURSE_LIST;
+                            else if (courseList.size() == 1) State = STATE_SEARCH_COURSE_SINGLE;
+                            StateEventList = courseList;
+                            Collections.sort(courseList);
+                            if (courseList.size() == 1) {
+                                String textTemp_onlyOne = "件事";
+                                switch (tag) {
+                                    case ChatBotA.FUN_SEARCH_EVENT_ALL:
+                                        textTemp_onlyOne = "件事";
+                                        break;
+                                    case ChatBotA.FUN_SEARCH_EVENT_COURSE:
+                                        textTemp_onlyOne = "节课";
+                                        break;
+                                    case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
+                                        textTemp_onlyOne = "件事";
+                                        break;
+                                    case ChatBotA.FUN_SEARCH_EVENT_REMIND:
+                                        textTemp_onlyOne = "条提醒";
+                                        break;
+                                    case ChatBotA.FUN_SEARCH_EVENT_EXAM:
+                                        textTemp_onlyOne = "场考试";
+                                        break;
+                                    case ChatBotA.FUN_SEARCH_EVENT_DDL:
+                                        textTemp_onlyOne = "个DDL";
+                                        break;
+                                }
+                                textToRead = "只有一" + textTemp_onlyOne + "，为" + "周" + courseList.get(0).DOW + " " + courseList.get(0).startTime.tellTime() + " 的" + courseList.get(0).mainName;
+//                                textOnShow = "只有这"+textTemp_onlyOne+":";
+                                textOnShow = "就是他啦！";
+//                                textToRead = "就是他啦";
+                            } else if (courseList.size() <= 3) {
+                                String resultText = "分别是：";
+                                for (EventItem cs : courseList) {
+                                    resultText += "\n" + "周" + cs.DOW + " " + cs.startTime.tellTime() + " 的" + cs.mainName;
+                                }
+                                textOnShow = "分别是";
+                                textToRead = resultText;
+                            } else {
+                                textOnShow = ("共查找到如下" + courseList.size() + "个事件:");
+                            }
+                            messagge.setCourseList(courseList);
+                        }
+                    }
+
+                } else if (msg.get("function").getAsString().equals("search_event_nextone")) {
+
+                    final int tag = msg.get("tag").getAsInt();
+                    if (!isDataAvailable()) {
+                        textOnShow = "请先导入数据或选择当前日程表！";
+                    } else if (!isThisTerm) {
+                        textOnShow = "别急着问啊，这学期还没开始";
+                    } else {
+                        EventItem nextevent = null;
+                        Calendar c = Calendar.getInstance();
+                        c.set(Calendar.HOUR_OF_DAY, 23);
+                        c.set(Calendar.MINUTE, 59);
+                        List<EventItem> tempList = mainTimeTable.getEventFrom(now, c, -1);
+                        if (tempList == null || tempList.size() == 0) nextevent = null;
+                        else {
+                            Log.e("!!", tempList.toString());
+                            for (EventItem ei : tempList) {
+                                Log.e("!!", ei.toString());
+                                if (ei.startTime.compareTo(new HTime(now)) < 0) continue;
+                                int eventTypeFilter = -99;
+                                switch (tag) {
+                                    case ChatBotA.FUN_SEARCH_EVENT_COURSE:
+                                        eventTypeFilter = TIMETABLE_EVENT_TYPE_COURSE;
+                                        break;
+                                    case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
+                                        eventTypeFilter = TIMETABLE_EVENT_TYPE_ARRANGEMENT;
+                                        break;
+                                    case ChatBotA.FUN_SEARCH_EVENT_REMIND:
+                                        eventTypeFilter = TIMETABLE_EVENT_TYPE_REMIND;
+                                        break;
+                                    case ChatBotA.FUN_SEARCH_EVENT_EXAM:
+                                        eventTypeFilter = TIMETABLE_EVENT_TYPE_EXAM;
+                                        break;
+                                    case ChatBotA.FUN_SEARCH_EVENT_DDL:
+                                        eventTypeFilter = TIMETABLE_EVENT_TYPE_DEADLINE;
+                                        break;
+                                }
+                                if (eventTypeFilter != -99) {
+                                    if (ei.eventType != eventTypeFilter) continue;
+                                }
+                                nextevent = ei;
+                                break;
+                            }
+                        }
+                        if (nextevent == null) {
+                            String textTemp_onlyOne = "东西";
+                            switch (tag) {
+                                case ChatBotA.FUN_SEARCH_EVENT_ALL:
+                                    textTemp_onlyOne = "事件";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_COURSE:
+                                    textTemp_onlyOne = "课程";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
+                                    textTemp_onlyOne = "规划";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_REMIND:
+                                    textTemp_onlyOne = "提醒";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_EXAM:
+                                    textTemp_onlyOne = "考试";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_DDL:
+                                    textTemp_onlyOne = "DDL";
+                                    break;
+                            }
+                            textOnShow = "接下来没有" + textTemp_onlyOne + "了哟！";
+                        } else {
+                            State = STATE_SEARCH_COURSE_SINGLE;
+                            String textTemp_onlyOne = "件事";
+                            switch (tag) {
+                                case ChatBotA.FUN_SEARCH_EVENT_ALL:
+                                    textTemp_onlyOne = "件事";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_COURSE:
+                                    textTemp_onlyOne = "节课";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
+                                    textTemp_onlyOne = "件事";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_REMIND:
+                                    textTemp_onlyOne = "条提醒";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_EXAM:
+                                    textTemp_onlyOne = "场考试";
+                                    break;
+                                case ChatBotA.FUN_SEARCH_EVENT_DDL:
+                                    textTemp_onlyOne = "个DDL";
+                                    break;
+                            }
+                            textToRead = "下一" + textTemp_onlyOne + "为:" + nextevent.startTime.tellTime() + " 的" + nextevent.mainName;
+                            textOnShow = "下一" + textTemp_onlyOne + "为:";
+                            List<EventItem> courseList = new ArrayList<>();
+                            courseList.add(nextevent);
+                            messagge.setCourseList(courseList);
+                        }
+                    }
+
+                } else if (msg.get("function").getAsString().equals("add_event_remind")) {
+                    EventItem ei = propcessAddRemind(msg);
+                    if (TextUtils.isEmpty(ei.mainName)) {
+                        textOnShow = "给我个提醒的名字鸭";
+                        textToRead = "给我个提醒的名字鸭";
+                    } else {
+                        mainTimeTable.addEvent(ei);
+                        List<EventItem> add = new ArrayList<>();
+                        add.add(ei);
+                        messagge.setCourseList(add);
+                        textOnShow = "已添加提醒：";
+                        textToRead = "好的，提醒你" + ei.mainName;
+                    }
+                } else if (msg.get("function").getAsString().equals("search_task")) {
+                    List<Task> tl = mainTimeTable.getUnfinishedTasks();
+                    messagge.setTaskList(tl);
+                    if (tl.size() > 0) {
+                        textOnShow = "还有如下" + tl.size() + "个待办任务";
+                        textToRead = "你还有" + tl.size() + "个待办任务";
+                    } else {
+                        textOnShow = "目前没有任务！";
+                        textToRead = textOnShow;
+                    }
+
+                } else if (msg.get("function").getAsString().equals("intent_explore")) {
+                    textOnShow = "好的，启动探索模式";
+                    textToRead = "好的，启动探索模式";
+                    Intent i = new Intent(ActivityChatbot.this, ActivityExplore.class);
+                    startActivity(i);
+                } else if (msg.get("function").getAsString().equals("intent_canteen")) {
+                    textOnShow = "好的，发现校内服务";
+                    textToRead = "好的，发现校内服务";
+                    Intent i = new Intent(ActivityChatbot.this, ActivityRankBoard.class);
+                    startActivity(i);
+                } else if (msg.get("function").getAsString().equals("intent_jwts")) {
+                    textOnShow = "好的，进入教务系统";
+                    textToRead = "好的，进入教务系统";
+                    ActivityUtils.startJWTSActivity(ActivityChatbot.this);
+                } else if (msg.get("function").getAsString().equals("intent_laf")) {
+                    textOnShow = "好的，进入失物招领";
+                    textToRead = "好的，进入失物招领";
+                    Intent i = new Intent(ActivityChatbot.this, ActivityLostAndFound.class);
+                    startActivity(i);
+                } else if (msg.get("function").getAsString().equals("intent_infos")) {
+                    textOnShow = "好的，进入信息窗口";
+                    textToRead = "好的，进入信息窗口";
+                    Intent i = new Intent(ActivityChatbot.this, ActivityHITSZInfo.class);
+                    startActivity(i);
+                } else if (msg.get("function").getAsString().equals("search_location")) {
+                    textOnShow = "好的，进入校内地点页";
+                    if (msg.get("location_objectId") != null) {
+                        String id = msg.get("location_objectId").getAsString();
+                        ActivityUtils.startLocationActivity_objectId(ActivityChatbot.this, id);
+                    } else if (msg.get("location_name") != null) {
+                        String name = msg.get("location_name").getAsString();
+                        ActivityUtils.startLocationActivity_name(ActivityChatbot.this, name);
+                    } else {
+                        textOnShow = "抱歉，处理地点信息错误";
+                    }
+                }else if(msg.get("function").getAsString().equals("query_subject_number_of_subject")){
+                   String type = msg.get("type").getAsString();
+                   List<Subject> result = null;
+                   String desc = "课";
+                   if(type!=null){
+                       if(type.equals("exam")){
+                           result = mainTimeTable.core.getSubjects_Exam();
+                           //Log.e("exam---", String.valueOf(result));
+                           desc = "考试课";
+                       }else if(type.equals("mooc")){
+                           result = mainTimeTable.core.getSubjects_Mooc();
+                           desc = "慕课";
+                       }else if(type.equals("no_exam")){
+                           result = mainTimeTable.core.getSubjects_No_Exam();
+                           desc = "考查课";
+                       }else if(type.equals("comp")){
+                           result = mainTimeTable.core.getSubjects_Comp();
+                           desc = "必修课";
+                       }else if(type.equals("alt")){
+                           result = mainTimeTable.core.getSubjects_Alt();
+                           desc = "选秀课";
+                       }else if(type.equals("wtv")){
+                           result = mainTimeTable.core.getSubjects_WTV();
+                           desc = "任选课";
+                       }else result = mainTimeTable.core.getSubjects();
+                   }
+                    if(result!=null&&result.size()>0){
+                        messagge.setSubjectList(result);
+                        textOnShow = "这学期共有"+result.size()+"门"+desc;
+                    }else{
+                        textOnShow = "没有~";
+                    }
+                }
+                else if (msg.get("function").getAsString().equals("say_my_name")) {
+                    if (CurrentUser == null) {
+                        textOnShow = "你好像还没有登录的亚子，我怎么知道你是谁啊";
+                    } else {
+                        if (TextUtils.isEmpty(CurrentUser.getNick())) {
+                            if (TextUtils.isEmpty(CurrentUser.getRealname()))
+                                textOnShow = "你说你没有设置昵称也没有绑定学号登教务，我怎么寄到你叫什么嘛！";
+                            else textOnShow = "不介意的话，我就叫你" + CurrentUser.getRealname() + "了";
+                        } else textOnShow = "出于礼貌，我就不直呼你的大名了，" + CurrentUser.getNick();
+                    }
+                    textToRead = textOnShow;
+                } else if (msg.get("function").getAsString().equals("search_people")) {
+                    if (msg.has("name")) {
+                        BmobQuery bq = new BmobQuery();
+                        bq.addWhereStartsWith("name",msg.get("name").getAsString());
+                        List result = bq.findObjectsSync(Teacher.class);
+                        if(result==null||result.size()==0){
+                            textOnShow = "没有找到TA的信息(ㆁωㆁ*)";
+                            textToRead = "没有找到她的信息";
+                        }else{
+                            messagge.setTeacherList(result);
+                            if(result.size()>1){
+                                textOnShow = "共找到"+result.size()+"个结果";
+                            }else{
+                                textOnShow = "你要找的是不是TA？";
+                                textToRead = "你要找的是不是他？";
+                            }
+                        }
+                    } else {
+                        textOnShow = "给我个有效的名字啊";
+                    }
+                }
+                if (msg.get("function").getAsString().equals("search_event_context2_classroom")) {
+                    if (State == STATE_SEARCH_COURSE_SINGLE) {
+                        textOnShow = "就在" + StateEventList.get(0).tag2 + "啊！";
+                        State = STATE_NORMAL;
+                    }
+                }
+
+            }
+            if (msg.has("message_show"))
+                textOnShow = String.valueOf(msg.get("message_show").getAsString());
+            if (msg.has("message_read"))
+                textToRead = String.valueOf(msg.get("message_read").getAsString());
+            if (msg.has("image_url")) messagge.setImageURI(msg.get("image_url").getAsString());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            addMessageView(messagge, textOnShow, textToRead, true);
+        }
+    }
+
     class OnToolbarMenuClickListener implements Toolbar.OnMenuItemClickListener {
 
-       BottomSheetDialog ad;
-        EditText query,show;
-        android.widget.Button cancel,upload;
-        OnToolbarMenuClickListener(){
-            View v = getLayoutInflater().inflate(R.layout.dialog_chatbot_builddb,null);
+        BottomSheetDialog ad;
+        EditText query, show;
+        android.widget.Button cancel, upload;
+
+        OnToolbarMenuClickListener() {
+            View v = getLayoutInflater().inflate(R.layout.dialog_chatbot_builddb, null);
             query = v.findViewById(R.id.query);
             show = v.findViewById(R.id.show);
             cancel = v.findViewById(R.id.cancel);
             upload = v.findViewById(R.id.upload);
             ad = new BottomSheetDialog(ActivityChatbot.this);
-            ad .setContentView(v);
+            ad.setContentView(v);
             try {
                 // hack bg color of the BottomSheetDialog
-                ViewGroup parent = (ViewGroup)v.getParent();
+                ViewGroup parent = (ViewGroup) v.getParent();
                 parent.setBackgroundResource(android.R.color.transparent);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1554,36 +1512,37 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
             upload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(TextUtils.isEmpty(query.getText())||TextUtils.isEmpty(show.getText())){
-                        Toast.makeText(ActivityChatbot.this,"请补全信息",Toast.LENGTH_SHORT).show();
+                    if (TextUtils.isEmpty(query.getText()) || TextUtils.isEmpty(show.getText())) {
+                        Toast.makeText(ActivityChatbot.this, "请补全信息", Toast.LENGTH_SHORT).show();
                         return;
-                    }else{
+                    } else {
 
-                        for(String query:query.getText().toString().split("@@")){
+                        for (String query : query.getText().toString().split("@@")) {
                             ChatMessage cm = new ChatMessage();
                             cm.setQueryText(String.valueOf(query));
-                            if(show.getText().toString().contains("@@")){
+                            if (show.getText().toString().contains("@@")) {
                                 StringBuilder sb = new StringBuilder();
-                                for(String s:show.getText().toString().split("@@")){
+                                for (String s : show.getText().toString().split("@@")) {
                                     JsonObject jo = new JsonObject();
-                                    jo.addProperty("message_show",s);
+                                    jo.addProperty("message_show", s);
                                     sb.append(jo.toString()).append("$$");
                                 }
                                 cm.setAnswer(sb.toString());
-                            }else{
+                            } else {
                                 JsonObject jo = new JsonObject();
-                                jo.addProperty("message_show",show.getText().toString());
+                                jo.addProperty("message_show", show.getText().toString());
                                 cm.setAnswer(jo.toString());
                             }
                             cm.save(new SaveListener<String>() {
                                 @Override
                                 public void done(String s, BmobException e) {
-                                    if(e==null){
-                                        Toast.makeText(ActivityChatbot.this,"上传成功！",Toast.LENGTH_SHORT).show();
+                                    if (e == null) {
+                                        Toast.makeText(ActivityChatbot.this, "上传成功！", Toast.LENGTH_SHORT).show();
                                         ad.dismiss();
-                                    }else if(e.getErrorCode()==401){
-                                        Toast.makeText(ActivityChatbot.this,"该问题已经存在！",Toast.LENGTH_SHORT).show();
-                                    }else Toast.makeText(ActivityChatbot.this,"上传失败！"+e.toString(),Toast.LENGTH_SHORT).show();
+                                    } else if (e.getErrorCode() == 401) {
+                                        Toast.makeText(ActivityChatbot.this, "该问题已经存在！", Toast.LENGTH_SHORT).show();
+                                    } else
+                                        Toast.makeText(ActivityChatbot.this, "上传失败！" + e.toString(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -1606,7 +1565,6 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
             return true;
         }
     }
-
 
 }
 

@@ -34,6 +34,7 @@ public class FragmentJWTS_cjgl extends BaseFragment {
 
     ViewPager pager;
     TabLayout tabs;
+    List<BaseFragment> fragments;
 
     public FragmentJWTS_cjgl() {
         // Required empty public constructor
@@ -62,7 +63,7 @@ public class FragmentJWTS_cjgl extends BaseFragment {
     void initViews(View v){
         pager = v.findViewById(R.id.cjgl_pager);
         tabs = v.findViewById(R.id.cjgl_tabs);
-        List<Fragment> fragments = new ArrayList<>();
+       fragments = new ArrayList<>();
         fragments.add(new FragmentJWTS_cjgl_xxjd());
         fragments.add(new FragmentJWTS_cjgl_grcj());
         fragments.add(new FragmentJWTS_cjgl_xfj());
@@ -95,8 +96,8 @@ public class FragmentJWTS_cjgl extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
-
+    public void Refresh() {
+        fragments.get(pager.getCurrentItem()).Refresh();
     }
 
     public interface OnFragmentInteractionListener {
@@ -106,9 +107,9 @@ public class FragmentJWTS_cjgl extends BaseFragment {
 
     private class pagerAdapter extends FragmentPagerAdapter{
 
-        List<Fragment> mBeans;
+        List<BaseFragment> mBeans;
         String[] title;
-        public pagerAdapter(FragmentManager fm,List<Fragment> res,String[] title) {
+        public pagerAdapter(FragmentManager fm,List<BaseFragment> res,String[] title) {
             super(fm);
             this.title = title;
             mBeans = res;

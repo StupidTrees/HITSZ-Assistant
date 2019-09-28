@@ -19,6 +19,7 @@ import cn.bmob.v3.listener.UpdateListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 
 public class FragmentUserCenter_Info extends BaseFragment {
 
@@ -119,7 +120,7 @@ public class FragmentUserCenter_Info extends BaseFragment {
                 final String oldStuNumBackUp = CurrentUser.getStudentnumber();
                 fbs.setBindStuNumCallBackListener(new FragmentBindStuNum.BindStuNumCallBackListener() {
                     @Override
-                    public void callBack(String stuNum) {
+                    public void callBack(String stuNum, final String password) {
                         studentnumber.setText(stuNum);
                         CurrentUser.setStudentnumber(stuNum);
                         CurrentUser.update(new UpdateListener() {
@@ -129,6 +130,10 @@ public class FragmentUserCenter_Info extends BaseFragment {
                                 if (e == null) {
                                     Toast.makeText(HContext, "绑定学号成功", Toast.LENGTH_SHORT).show();
                                     studentnumber.setText(CurrentUser.getStudentnumber());
+                                    school.setText(CurrentUser.getSchool());
+                                    realname.setText(CurrentUser.getRealname());
+                                    defaultSP.edit().putString(CurrentUser.getStudentnumber()+".password",password).apply();;
+
                                 } else {
                                     studentnumber.setText(showText(CurrentUser.getStudentnumber()));
                                     CurrentUser.setStudentnumber(oldStuNumBackUp);
@@ -186,7 +191,7 @@ public class FragmentUserCenter_Info extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
 
     }
 }

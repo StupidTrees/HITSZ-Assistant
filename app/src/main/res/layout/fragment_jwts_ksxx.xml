@@ -64,7 +64,8 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_menu_jwts"
-                android:tint="?attr/text_color_secondary" />
+                android:tint="?attr/background_icon_color"
+                android:tintMode="src_in" />
 
             <TextView
                 android:id="@+id/textView14"

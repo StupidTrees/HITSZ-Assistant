@@ -21,7 +21,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:fitsSystemWindows="true"
         android:orientation="vertical">
 
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="48dp"
             android:layout_marginBottom="16dp"
             android:clickable="false"
             android:fitsSystemWindows="false"
@@ -39,7 +39,6 @@
             app:theme="@style/button_ripple_white">
 
             <androidx.cardview.widget.CardView
-        app:cardBackgroundColor="?attr/background_color_second"
                 android:id="@+id/main_drawer_user_avatar_card"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
@@ -47,6 +46,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="?attr/background_color_second"
                 app:cardCornerRadius="28dp"
                 app:cardElevation="6dp">
 
@@ -99,44 +99,6 @@
             android:background="@drawable/drawer_radius_bg"
             android:gravity="center|top"
             android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/drawer_card_profile"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="16dp"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    app:cardBackgroundColor="#00000000"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="0dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:tint="?attr/colorPrimary"
-                        app:srcCompat="@drawable/ic_menu_subject" />
-                </androidx.cardview.widget.CardView>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="科目管理"
-                    android:textColor="?attr/text_color_secondary"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -210,6 +172,45 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="学习助手"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/drawer_card_hita"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    app:cardBackgroundColor="#00000000"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:tint="?attr/colorPrimary"
+                        app:srcCompat="@drawable/hita_face1" />
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="希塔"
                     android:textColor="?attr/text_color_secondary"
                     android:textSize="12sp" />
 

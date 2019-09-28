@@ -5,13 +5,13 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        app:cardBackgroundColor="?attr/background_color_second"
         android:id="@+id/card"
-        android:layout_width="300dp"
-        android:layout_height="400dp"
+        android:layout_width="320dp"
+        android:layout_height="180dp"
         android:layout_margin="24dp"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackgroundBorderless"
+        app:cardBackgroundColor="?attr/background_color_second"
         app:cardCornerRadius="16dp"
         app:cardElevation="6dp">
 
@@ -60,14 +60,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:padding="36dp"
+                android:padding="8dp"
                 android:tint="@color/material_text_icon_white"
                 app:srcCompat="@drawable/ic_spring" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -87,16 +89,10 @@
                     android:textColor="@color/material_text_icon_white"
                     android:textSize="16sp" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:orientation="horizontal">
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
                 <ImageView
                     android:id="@+id/imageView24"

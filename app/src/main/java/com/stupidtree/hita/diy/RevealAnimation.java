@@ -47,6 +47,24 @@ public class RevealAnimation {
             view.setVisibility(View.VISIBLE);
         }
     }
+    public void revealActivity(int x, int y, Animator.AnimatorListener listener,int duration) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            float finalRadius = (float) (Math.max(mView.getWidth(), mView.getHeight()) * 1.1);
+
+            // create the animator for this view (the start radius is zero)
+            Animator circularReveal = ViewAnimationUtils.createCircularReveal(mView, x, y, 0, finalRadius);
+            circularReveal.setDuration(duration);
+            circularReveal.setInterpolator(new AccelerateInterpolator());
+
+            // make the view visible and start the animation
+            mView.setVisibility(View.VISIBLE);
+            if(listener!=null) circularReveal.addListener(listener);
+            circularReveal.start();
+
+        } else {
+            mActivity.finish();
+        }
+    }
     public void revealActivity(int x, int y, Animator.AnimatorListener listener) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             float finalRadius = (float) (Math.max(mView.getWidth(), mView.getHeight()) * 1.1);
@@ -58,7 +76,7 @@ public class RevealAnimation {
 
             // make the view visible and start the animation
             mView.setVisibility(View.VISIBLE);
-            circularReveal.addListener(listener);
+            if(listener!=null) circularReveal.addListener(listener);
             circularReveal.start();
 
         } else {
@@ -111,6 +129,27 @@ public class RevealAnimation {
                     mView, revealX, revealY, finalRadius, 0);
 
             circularReveal.setDuration(350);
+            circularReveal.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mView.setVisibility(View.INVISIBLE);
+                    mActivity.finish();
+                    mActivity.overridePendingTransition(0, 0);
+                }
+            });
+
+            circularReveal.start();
+        }
+    }
+    public void unRevealActivity(int duration) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            mActivity.finish();
+        } else {
+            float finalRadius = (float) (Math.max(mView.getWidth(), mView.getHeight()) * 1.1);
+            Animator circularReveal = ViewAnimationUtils.createCircularReveal(
+                    mView, revealX, revealY, finalRadius, 0);
+
+            circularReveal.setDuration(duration);
             circularReveal.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {

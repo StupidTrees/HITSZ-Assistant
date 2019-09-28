@@ -31,6 +31,7 @@ import com.stupidtree.hita.adapter.CourseNoteGridAdapter;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.FileOperator;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -74,6 +75,7 @@ public class ActivityCourse extends BaseActivity {
         super.onCreate(savedInstanceState);
         setWindowParams(true,true,false);
         setContentView(R.layout.activity_course);
+        FileOperator.verifyStoragePermissions(this);
         toolbar = findViewById(R.id.toolbar);
         noteText = findViewById(R.id.text_note);
 
@@ -151,10 +153,10 @@ public class ActivityCourse extends BaseActivity {
         bt_subject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityOptionsCompat op = ActivityOptionsCompat.makeSceneTransitionAnimation(ActivityCourse.this);
+              //  ActivityOptionsCompat op = ActivityOptionsCompat.makeSceneTransitionAnimation(ActivityCourse.this,subjectCard,"card");
                 Intent i = new Intent(ActivityCourse.this, ActivitySubject.class);
                 i.putExtra("subject", subject.name);
-                ActivityCourse.this.startActivity(i, op.toBundle());
+                ActivityCourse.this.startActivity(i);
             }
         });
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -192,7 +194,7 @@ public class ActivityCourse extends BaseActivity {
             value2Detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String cr[] = ei.tag2.split("，");
+                    final String cr[] = ei.tag2.split("，\\[");
                     final ArrayList<String> classRooms = new ArrayList<>(Arrays.asList(cr));
                     if(classRooms.size()>1){
                         ArrayList<String> toRemove = new ArrayList<>();
@@ -268,11 +270,15 @@ public class ActivityCourse extends BaseActivity {
             syncNoteWithFile();
             subject = allCurriculum.get(thisCurriculumIndex).getSubjectByCourse(ei);
             Map<String, Integer> res = new HashMap<>();
-            List courses = subject.getCourses();
-            res.put("total", courses.size());
-            Collections.sort(courses);
-            int now = courses.indexOf(ei) + 1;
-            res.put("now", now);
+            try {
+                List courses = subject.getCourses();
+                res.put("total", courses.size());
+                Collections.sort(courses);
+                int now = courses.indexOf(ei) + 1;
+                res.put("now", now);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return res;
         }
 

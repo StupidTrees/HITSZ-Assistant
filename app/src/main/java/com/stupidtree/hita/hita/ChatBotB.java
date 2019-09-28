@@ -2,15 +2,23 @@
 package com.stupidtree.hita.hita;
 
 
+import android.util.Log;
+
+import com.airbnb.lottie.L;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.stupidtree.hita.online.ChatMessage;
 
+import org.ansj.domain.Term;
+import org.ansj.splitWord.analysis.ToAnalysis;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
@@ -75,6 +83,9 @@ public class ChatBotB {
                     re.addProperty("message_show",reply);
                     if(!reply.contains("请求次数")){
                         ChatMessage cm = new ChatMessage();
+                        List<String> arr = new ArrayList();
+                        for(Term t: ToAnalysis.parse(text)) arr.add(t.getName());
+                        cm.setQueryArray((ArrayList<String>) arr);
                         cm.setQueryText(text);
                         cm.setAnswer(re.toString());
                         cm.save(new SaveListener<String>() {
@@ -146,12 +157,17 @@ public class ChatBotB {
                     result.addProperty("message_show",reply);
                     if(!reply.contains("请求次数")){
                         ChatMessage cm = new ChatMessage();
+                        List<String> arr = new ArrayList();
+                        for(Term t: ToAnalysis.parse(text)) arr.add(t.getName());
+                        cm.setQueryArray(arr);
                         cm.setQueryText(text);
                         cm.setAnswer(result.toString());
+                        Log.e("提取数据到云：", String.valueOf(arr));
                         cm.save(new SaveListener<String>() {
                             @Override
                             public void done(String s, BmobException e) {
-
+                                if(e==null) Log.e("提取成功",s);
+                                else Log.e("提取失败：",e.toString());
                             }
                         });
                     }

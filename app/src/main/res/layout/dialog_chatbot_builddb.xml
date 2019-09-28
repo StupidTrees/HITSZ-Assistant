@@ -52,7 +52,7 @@
         android:layout_marginTop="48dp"
         android:layout_marginRight="16dp">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/query"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/show"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

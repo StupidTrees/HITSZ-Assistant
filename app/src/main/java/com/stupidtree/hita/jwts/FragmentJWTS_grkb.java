@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
@@ -111,7 +112,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
             @Override
             public void onClick() {
                 if (curriculumItems.size() > 0)
-                    new importGRKBTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new importGRKBTask().execute();
 
             }
 
@@ -335,7 +336,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
         stopTasks();
         pageTask = new refreshPageTask();
         pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -371,7 +372,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                     curriculumItems.add(m);
                 }
                 result.put("spinneritem", curriculumItems);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return null;
             }
             return result;
@@ -384,6 +385,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                 Map m = (Map<String, Object>) o;
                 if (m.get("spinneritem") != null) {
                     List<Map> l = (List) m.get("spinneritem");
+                    spinnerItems.clear();
                     for (Map<String, String> x : l) {
                         spinnerItems.add(x.get("name"));
                     }
@@ -483,7 +485,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
 
                         }
                         if (HITAApplication.addCurriculumToTimeTable(s)) {
-                            ActivityMain.saveData(FragmentJWTS_grkb.this.getActivity());
+                            ActivityMain.saveData();
                             return "导入成功！";
                         } else {
                             return "导入失败！";
@@ -491,7 +493,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                     } else return "获取失败！";
                 }
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return "导入失败！";
             }
         }
@@ -518,6 +520,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
         }
     }
 
+
     class uploadTeacherTask extends AsyncTask {
 
         Teacher t;
@@ -542,7 +545,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                     String photo = "http://jwts.hitsz.edu.cn/xxgl/showPhoto?zgh=" + t.getTeacherCode();
                     byte[] teacherPhoto;
                     teacherPhoto = Jsoup.connect(photo).cookies(cookies).ignoreContentType(true).execute().bodyAsBytes();
-                    String path = getActivity().getCacheDir().toString() + "/tpt/teacher:" + t.getTeacherCode() + ".png";
+                    String path = Objects.requireNonNull(getActivity()).getCacheDir().toString() + "/tpt/teacher:" + t.getTeacherCode() + ".png";
                     FileOperator.saveByteImageToFile(path, BitmapFactory.decodeByteArray(teacherPhoto, 0, teacherPhoto.length));
                     final BmobFile bf = new BmobFile(new File(path));
                     bf.upload(new UploadFileListener() {
@@ -570,7 +573,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                     });
                 }
 
-            } catch (IOException e1) {
+            } catch (Exception e1) {
                 return false;
             }
             return true;

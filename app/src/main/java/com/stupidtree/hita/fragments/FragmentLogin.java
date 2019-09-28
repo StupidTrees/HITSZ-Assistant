@@ -73,7 +73,7 @@ public class FragmentLogin extends BaseFragment {
                         public void done(HITAUser hitaUser, BmobException e) {
                             login.setProgress(false);
                             if (e == null) {
-                                Toast.makeText(HContext, "登录成功!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(HContext, "登录成功,正在同步用户数据……", Toast.LENGTH_SHORT).show();
                                 CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
                                 loadDataFromCloud(getActivity());
                             } else {
@@ -106,7 +106,7 @@ public class FragmentLogin extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
 
     }
 

@@ -13,20 +13,20 @@ import java.util.Objects;
 import cn.bmob.v3.BmobObject;
 
 public class TimeTable_upload_helper{
-    int dow;
-    int  from_hour;
-    int from_minute;
-    int to_hour;
-    int to_minute;
+    private int dow;
+    private int  from_hour;
+    private int from_minute;
+    private int to_hour;
+    private int to_minute;
     public int  type = 0;
     public String name = null;
-    String tag2 = null;
-    String tag3 = null;
-    String tag4 = null;
-    String weeks = null;
-    boolean is_whole_day;
+    private String tag2 = null;
+    private String tag3 = null;
+    private String tag4 = null;
+    private String weeks = null;
+    private boolean is_whole_day;
     public String curriculum_code;
-    String uuid;
+    private String uuid;
 
     public TimeTable_upload_helper(Cursor c){
         curriculum_code = c.getString(c.getColumnIndex("curriculum_code"));

@@ -9,6 +9,8 @@
         android:id="@+id/teachers_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layoutAnimation="@anim/recycler_layout_animation_slide_from_right"
+        android:overScrollMode="never" />
 </FrameLayout>

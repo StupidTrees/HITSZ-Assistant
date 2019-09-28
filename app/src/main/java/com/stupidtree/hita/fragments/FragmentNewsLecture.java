@@ -18,14 +18,13 @@ import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityExplore;
 import com.stupidtree.hita.activities.ActivityNewsDetail;
-import com.stupidtree.hita.adapter.LectureListAdapter;
+import com.stupidtree.hita.adapter.NewsLectureListAdapter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +34,7 @@ public class FragmentNewsLecture extends BaseFragment  {
     RecyclerView list;
     int offset = 0;
     List<Map<String, String>> listRes;
-    LectureListAdapter listAdapter;
+    NewsLectureListAdapter listAdapter;
     SwipeRefreshLayout pullRefreshLayout;
     boolean first = true;
     LoadTask pageTask;
@@ -44,7 +43,7 @@ public class FragmentNewsLecture extends BaseFragment  {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_news_lecture, container, false);
+        View v = inflater.inflate(R.layout.fragment_news, container, false);
         initList(v);
 
         return v;
@@ -62,11 +61,11 @@ public class FragmentNewsLecture extends BaseFragment  {
 
     void initList(View v) {
         pullRefreshLayout = v.findViewById(R.id.pullrefresh);
-        list = v.findViewById(R.id.lecture_list);
+        list = v.findViewById(R.id.list);
         listRes = new ArrayList<>();
-        listAdapter = new LectureListAdapter(this.getContext(), listRes);
+        listAdapter = new NewsLectureListAdapter(this.getContext(), listRes);
         list.setAdapter(listAdapter);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext(),RecyclerView.VERTICAL, false);
         list.setLayoutManager(layoutManager);
         list.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -85,7 +84,7 @@ public class FragmentNewsLecture extends BaseFragment  {
                 }
             }
         });
-        listAdapter.setOnItemClickListener(new LectureListAdapter.OnItemClickListener() {
+        listAdapter.setOnItemClickListener(new NewsLectureListAdapter.OnItemClickListener() {
             @Override
             public void OnClick(View v, int pos) {
                 //ActivityOptionsCompat op = ActivityOptionsCompat.makeSceneTransitionAnimation(FragmentNewsLecture.this.getActivity(),v,"cardview");
@@ -95,7 +94,7 @@ public class FragmentNewsLecture extends BaseFragment  {
                 FragmentNewsLecture.this.getActivity().startActivity(i);
             }
         });
-        listAdapter.setmOnNaviClickListener(new LectureListAdapter.OnNaviClickListener() {
+        listAdapter.setmOnNaviClickListener(new NewsLectureListAdapter.OnNaviClickListener() {
 
             @Override
             public void OnClick(View v, String termial) {
@@ -120,7 +119,7 @@ public class FragmentNewsLecture extends BaseFragment  {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
         if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
         pageTask = new LoadTask(false);
         pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -150,7 +149,7 @@ public class FragmentNewsLecture extends BaseFragment  {
                 Elements e = d.select("ul[class^=lecture_n]");
                 Elements ee = e.select("li");
                 for (Element x : ee) {
-                    Map lecture = new HashMap();
+                    Map<String, String> lecture = new HashMap<>();
                     String title = x.select("a").text();
                     String link = x.select("a").attr("href");
                     String host, place, time;
@@ -173,7 +172,7 @@ public class FragmentNewsLecture extends BaseFragment  {
                     listRes.add(lecture);
                 }
                 return true;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return false;
             }
         }

@@ -23,10 +23,7 @@ public class ActivitySubjectManager extends BaseActivity implements FragmentSubj
         FragmentJWTS_info.OnListFragmentInteractionListener,FragmentTeachers.OnFragmentInteractionListener
 {
 
-    ViewPager viewpager;
-    SubjectsManagerPagerAdapter pagerAdapter;
-    List<Fragment> fragments;
-    TabLayout tabLayout;
+
 
     @Override
     protected void stopTasks() {
@@ -39,7 +36,7 @@ public class ActivitySubjectManager extends BaseActivity implements FragmentSubj
         setContentView(R.layout.activity_subject_manager);
         setWindowParams(true,true,false);
         initToolbar();
-        initPager();
+
 
     }
     void initToolbar(){
@@ -55,22 +52,6 @@ public class ActivitySubjectManager extends BaseActivity implements FragmentSubj
             }
         });
     }
-
-    void initPager(){
-        tabLayout = findViewById(R.id.subjects_tablayout);
-        viewpager = findViewById(R.id.subjects_viewpager);
-        String[] titles= {"科目","教师"};
-        fragments = new ArrayList<>();
-        fragments.add(new FragmentSubjects());
-        fragments.add(FragmentTeachers.newInstance());
-        pagerAdapter = new SubjectsManagerPagerAdapter(getSupportFragmentManager(),fragments,Arrays.asList(titles));
-        viewpager.setAdapter(pagerAdapter);
-        tabLayout.setupWithViewPager(viewpager);
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.setTabIndicatorFullWidth(false);
-        //tabLayout.setTabTextColors(ColorStateList.valueOf(getColorPrimary()));
-    }
-
 
     @Override
     public void onFragmentInteraction(Uri uri) {

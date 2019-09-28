@@ -140,6 +140,7 @@ public class ActivityUserProfile extends BaseActivity
         if(studentNumber.startsWith("SZ16")) return "16级";
         else if(studentNumber.startsWith("SZ17")) return "17级";
         else if(studentNumber.startsWith("18")) return "18级";
+        else if(studentNumber.startsWith("19")) return "19级";
         else return "未知年级";
      }
 

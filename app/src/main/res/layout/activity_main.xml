@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/background_color_bottom"
-        android:fitsSystemWindows="false"
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -23,16 +22,15 @@
             android:elevation="0dp"
             app:elevation="0dp">
 
-
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00000000"
                 android:elevation="0dp"
+                android:fitsSystemWindows="true"
                 android:gravity="center"
                 android:minHeight="?attr/actionBarSize"
-                android:paddingTop="24dp"
                 app:theme="?attr/toolbarStyle">
 
                 <com.google.android.material.tabs.TabLayout
@@ -41,12 +39,13 @@
                     android:layout_height="56dp"
                     android:layout_marginRight="32dp"
                     app:tabRippleColor="?attr/colorPrimary"
-                    app:tabSelectedTextColor="@color/main_tans_selected_color"
+                    app:tabSelectedTextColor="@color/main_tabs_selected_color"
                     app:tabTextAppearance="@style/MainTabsTextTheme"
-                    app:tabTextColor="@color/main_tans_unselected_color"
+                    app:tabTextColor="@color/main_tabs_unselected_color"
                     app:tabUnboundedRipple="true" />
 
             </androidx.appcompat.widget.Toolbar>
+
         </com.google.android.material.appbar.AppBarLayout>
 
 

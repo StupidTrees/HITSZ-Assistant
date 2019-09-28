@@ -43,6 +43,20 @@ public class EventItem implements Serializable, Comparable {
         this.uuid = uuid;
      }
 
+     public boolean equalsEvent(String text){
+        try{
+            String[] xs = text.split(":::");
+            String uuid = xs[0];
+            String word = xs[1];
+            return uuid.equals(this.uuid)&&word.equals(String.valueOf(week));
+        }catch (Exception e){
+            return false;
+        }
+     }
+
+     public String getEventsIdStr(){
+        return getUuid()+":::"+week;
+     }
      public int getDuration(){
         return startTime.getDuration(endTime);
      }

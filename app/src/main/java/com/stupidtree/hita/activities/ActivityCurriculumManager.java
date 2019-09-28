@@ -10,13 +10,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.recyclerview.widget.RecyclerView;
+
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,50 +28,55 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
-import com.azoft.carousellayoutmanager.CarouselLayoutManager;
-import com.azoft.carousellayoutmanager.CarouselZoomPostLayoutListener;
+import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.adapter.CurriculumManagerAdapter;
+import com.stupidtree.hita.adapter.CurriculuManagerPagerAdapter;
+import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.core.CurriculumHelper;
+import com.stupidtree.hita.fragments.FragmentCurriculum;
+import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.FileOperator;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 import static com.stupidtree.hita.activities.ActivityMain.saveData;
 import static com.stupidtree.hita.HITAApplication.*;
 
-public class ActivityCurriculumManager extends BaseActivity {
+public class ActivityCurriculumManager extends BaseActivity implements FragmentCurriculum.OnFragmentInteractionListener{
 
     private static final int CHOOSE_FILE_CODE = 0;
     FloatingActionButton fab;
     Toolbar mToolbar;
-    RecyclerView curriculumList;
-    CurriculumManagerAdapter listAdapter;
     LinearLayout noneLayout;
-
-    int pageSelectedIndex;
-
+    ViewPager pager;
+    CurriculuManagerPagerAdapter curriculuManagerPagerAdapter;
+    List<BaseFragment> pagerRes;
+    TabLayout tabs;
 
     @Override
     protected void stopTasks() {
 
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true,true,false);
+        setWindowParams(true, true, false);
         setContentView(R.layout.activity_curriculum_manager);
         initToolbar();
         initViews();
-        initList();
-        Refresh();
+        initPager();
+        //Refresh();
     }
 
-    void initToolbar(){
+    void initToolbar() {
 
         Toolbar toolbar = findViewById(R.id.main_tool_bar);
         toolbar.setTitle("选择当前课表");
@@ -82,20 +91,45 @@ public class ActivityCurriculumManager extends BaseActivity {
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-           @Override
-           public boolean onMenuItemClick(MenuItem menuItem) {
-               switch (menuItem.getItemId()){
-                   case R.id.action_import_from_jwts:
-                       Intent i = new Intent(ActivityCurriculumManager.this, ActivityLoginJWTS.class);
-                       ActivityCurriculumManager.this.startActivity(i);
-                       break;
-                   case R.id.action_import_from_excel:
-                       chooseFile(ActivityCurriculumManager.this.getExternalFilesDir(null));
-                       break;
-               }
-               return true;
-           }
-       });
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.action_import_from_jwts:
+                        ActivityUtils.startJWTSActivity(ActivityCurriculumManager.this);
+                        break;
+                    case R.id.action_import_from_excel:
+                        chooseFile(ActivityCurriculumManager.this.getExternalFilesDir(null));
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    void initPager(){
+        tabs = findViewById(R.id.tabs);
+        pager = findViewById(R.id.pager);
+        pagerRes = new ArrayList<>();
+        curriculuManagerPagerAdapter = new CurriculuManagerPagerAdapter(getSupportFragmentManager(),pagerRes);
+        pager.setAdapter(curriculuManagerPagerAdapter);
+        tabs.setupWithViewPager(pager);
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position!=thisCurriculumIndex) fab.show();
+                else fab.hide();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     void initViews() {
@@ -107,71 +141,55 @@ public class ActivityCurriculumManager extends BaseActivity {
             public void onClick(View v) {
                 AlertDialog ad = new AlertDialog.Builder(ActivityCurriculumManager.this).
                         setTitle("提示")
-                        .setMessage("确定更换当前课表为\n"+allCurriculum.get(pageSelectedIndex).name+"\n吗？").
-                        setNegativeButton("取消",null).
-                        setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                thisCurriculumIndex = pageSelectedIndex;
-                                mainTimeTable.core = allCurriculum.get(thisCurriculumIndex);
-                                thisWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
-                                if(thisWeekOfTerm>allCurriculum.get(thisCurriculumIndex).totalWeeks){
-                                    allCurriculum.get(thisCurriculumIndex).totalWeeks = thisWeekOfTerm;
-                                }
-                                saveData(ActivityCurriculumManager.this);
-                                defaultSP.edit().putInt("thisCurriculum",thisCurriculumIndex).apply();
-                                timeWatcher.refreshProgress(false,true);
-                                finish();
-                            }
-                        }).create();
+                        .setMessage("确定更换当前课表为\n" + allCurriculum.get(pager.getCurrentItem()).name + "\n吗？").
+                                setNegativeButton("取消", null).
+                                setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        thisCurriculumIndex = pager.getCurrentItem();
+                                        mainTimeTable.core = allCurriculum.get(thisCurriculumIndex);
+                                        thisWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
+                                        if (thisWeekOfTerm > allCurriculum.get(thisCurriculumIndex).totalWeeks) {
+                                            allCurriculum.get(thisCurriculumIndex).totalWeeks = thisWeekOfTerm;
+                                        }
+                                        saveData();
+                                        defaultSP.edit().putInt("thisCurriculum", thisCurriculumIndex).apply();
+                                        timeWatcher.refreshProgress(false, true);
+                                        finish();
+                                    }
+                                }).create();
                 ad.show();
 
 
-
             }
         });
 
 
     }
-
-    void initList(){
-        pageSelectedIndex = thisCurriculumIndex;
-        curriculumList = findViewById(R.id.cm_list);
-        listAdapter = new CurriculumManagerAdapter(this,allCurriculum);
-        curriculumList.setAdapter(listAdapter);
-        final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL);
-        layoutManager.setMaxVisibleItems(1);
-        layoutManager.addOnItemSelectionListener(new CarouselLayoutManager.OnCenterItemSelectionListener() {
-            @Override
-            public void onCenterItemChanged(int adapterPosition) {
-                pageSelectedIndex = adapterPosition;
-                if(adapterPosition==thisCurriculumIndex) fab.hide();
-                else fab.show();
-            }
-        });
-        layoutManager.setPostLayoutListener(new CarouselZoomPostLayoutListener());
-        curriculumList.setLayoutManager(layoutManager);
-        layoutManager.scrollToPosition(thisCurriculumIndex);
-    }
-
-
 
 
     public void Refresh() {
-        if(isDataAvailable()){
-            curriculumList.setVisibility(View.VISIBLE);
+        pagerRes.clear();
+       // curriculuManagerPagerAdapter.notifyDataSetChanged();
+        for(Curriculum c:allCurriculum){
+            pagerRes.add(FragmentCurriculum.newInstance(c));
+        }
+        curriculuManagerPagerAdapter.notifyDataSetChanged();
+        if (pagerRes.size()>0) {
+            pager.setVisibility(View.VISIBLE);
             noneLayout.setVisibility(View.GONE);
-            listAdapter.notifyDataSetChanged();
-        }else {
-            curriculumList.setVisibility(View.GONE);
+        } else {
+            pager.setVisibility(View.GONE);
             noneLayout.setVisibility(View.VISIBLE);
             fab.hide();
         }
+        pager.setCurrentItem(thisCurriculumIndex);
+        fab.hide();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_curriculum_manager,menu);
+        getMenuInflater().inflate(R.menu.toolbar_curriculum_manager, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -293,32 +311,21 @@ public class ActivityCurriculumManager extends BaseActivity {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == CHOOSE_FILE_CODE) {
                 Uri uri = data.getData();
-                String sPath1 ;
+                String sPath1;
                 sPath1 = getPath(this, uri); // Paul Burke写的函数，根据Uri获得文件路径
                 final File file = new File(sPath1);
-                DatePickerDialog DPD = new DatePickerDialog(this,null,now.get(Calendar.YEAR),now.get(Calendar.MONTH),now.get(Calendar.DAY_OF_MONTH));
+                DatePickerDialog DPD = new DatePickerDialog(this, null, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
                 DPD.setButton(DialogInterface.BUTTON_POSITIVE, "添加课程表", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         int y = 0, m = 0, d = 0;
-                        y = ((DatePickerDialog)dialog).getDatePicker().getYear();
-                        m = ((DatePickerDialog)dialog).getDatePicker().getMonth()+1;
-                        d = ((DatePickerDialog)dialog).getDatePicker().getDayOfMonth();
-                        CurriculumHelper Curriculum = FileOperator.loadCurriculumHelperFromExcel(file, y, m, d);
-                        if (Curriculum != null) {
-                            if (addCurriculumToTimeTable(Curriculum)) {
-                                Toast.makeText(ActivityCurriculumManager.this, "已添加课表：" + Curriculum.name, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(ActivityCurriculumManager.this, "添加失败！", Toast.LENGTH_SHORT).show();
-                            }
-                            Refresh();
-                            saveData(ActivityCurriculumManager.this);
-                        } else {
-                            Toast.makeText(ActivityCurriculumManager.this, "文件不存在或读取失败！", Toast.LENGTH_SHORT).show();
-                        }
+                        y = ((DatePickerDialog) dialog).getDatePicker().getYear();
+                        m = ((DatePickerDialog) dialog).getDatePicker().getMonth() + 1;
+                        d = ((DatePickerDialog) dialog).getDatePicker().getDayOfMonth();
+                        new loadCurriculumTask(file, y, m, d).execute();
                     }
                 });
-                Toast.makeText(this,"请设置课表起始日期",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "请设置课表起始日期", Toast.LENGTH_LONG).show();
                 DPD.setCancelable(false);
                 DPD.setButton(DialogInterface.BUTTON_NEGATIVE, "算了", new DialogInterface.OnClickListener() {
                     @Override
@@ -339,6 +346,46 @@ public class ActivityCurriculumManager extends BaseActivity {
     }
 
     @Override
+    public void onFragmentInteraction() {
+        Refresh();
+    }
+
+    class loadCurriculumTask extends AsyncTask {
+
+        int y, m, d;
+        File file;
+
+        public loadCurriculumTask(File f, int y, int m, int d) {
+            this.y = y;
+            this.m = m;
+            this.d = d;
+            this.file = f;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            CurriculumHelper Curriculum = FileOperator.loadCurriculumHelperFromExcel(file, y, m, d);
+            if (Curriculum != null) {
+                return addCurriculumToTimeTable(Curriculum);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if ((Boolean) o) {
+                Toast.makeText(ActivityCurriculumManager.this, "已添加课表", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ActivityCurriculumManager.this, "添加失败！", Toast.LENGTH_SHORT).show();
+            }
+            Refresh();
+            saveData();
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
 
@@ -349,9 +396,9 @@ public class ActivityCurriculumManager extends BaseActivity {
         super.onResume();
         Refresh();
     }
+
+
 }
-
-
 
 
 

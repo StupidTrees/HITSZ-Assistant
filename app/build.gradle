@@ -6,21 +6,22 @@ android {
     defaultConfig {
         ndk {
             //设置支持的SO库架构
-            abiFilters 'armeabi'//,'x86'//'armeabi-v7a','arm64-v8a'//,'armeabi-v7a',// 'x86', , 'x86_64',
+            abiFilters 'armeabi-v7a'//, 'x86'
+//,'arm64-v8a'//,'x86'//'armeabi-v7a'//,'armeabi-v7a',// 'x86', , 'x86_64',
         }
         applicationId "com.stupidtree.hita"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 20190823
-        versionName "测试版（迎新）8.23"
+        versionCode 20190916
+        versionName "9.16"
     }
     sourceSets {
         main.jniLibs.srcDirs = ['libs']
     }
     buildTypes {
         release {
-            minifyEnabled false
-            //shrinkResources true
+            minifyEnabled  false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -36,10 +37,10 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.preference:preference:1.0.0' //preferenceFragmentCompat要特别声明
+    implementation 'androidx.preference:preference:1.1.0' //preferenceFragmentCompat要特别声明
     //implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     //implementation 'com.gelitenight.waveview:waveview:1.0.0'
 
@@ -55,6 +56,7 @@ dependencies {
     //可展开fab菜单
 
     //implementation 'com.ashokvarma.android:bottom-navigation-bar:1.2.0'
+    //implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
     implementation 'tyrantgit:explosionfield:1.0.1'
@@ -126,16 +128,14 @@ dependencies {
     implementation 'com.amap.api:location:latest.integration'
     implementation 'com.amap.api:search:latest.integration'
 
-    //implementation 'com.amap.api:3dmap:latest.integration'
-    implementation 'com.amap.api:navi-3dmap:latest.integration'
+    implementation 'com.amap.api:3dmap:latest.integration'
+    //implementation 'com.amap.api:navi-3dmap:latest.integration'
 
     //implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
-    implementation 'com.github.vipulasri:timelineview:1.1.0'
-
+    //implementation 'com.github.vipulasri:timelineview:1.1.0'
+    implementation 'com.github.alorma:timelineview:2.3.0'
     //时间轴绘制器
-    implementation 'com.lapism:searchview:28.0.0'
 
-    //搜索视图
 
     implementation 'jp.wasabeef:glide-transformations:2.0.1' //高斯模糊
 
@@ -150,6 +150,12 @@ dependencies {
     implementation 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
     //implementation 'com.youth.banner:banner:1.4.10'//图片轮播
     implementation "com.airbnb.android:lottie:3.0.7"//Json动画
+
+    implementation 'com.rmtheis:tess-two:9.0.0'
+    //OCR识别
+
+    implementation "com.github.skydoves:colorpickerview:2.1.5"
+    //颜色选择器
 
 
 }

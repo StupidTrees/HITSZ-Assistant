@@ -198,7 +198,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
                 }
                 //System.out.println(page);
                 return result;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 //Toast.makeText(ActivityEmptyClassroomDetail.this,"加载出错",Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 return result;

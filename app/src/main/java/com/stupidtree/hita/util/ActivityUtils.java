@@ -7,6 +7,8 @@ import android.content.Intent;
 
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.appcompat.app.AlertDialog;
+
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -18,12 +20,23 @@ import com.stupidtree.hita.activities.ActivityLogin;
 import com.stupidtree.hita.activities.ActivityLoginJWTS;
 import com.stupidtree.hita.activities.ActivityPhotoDetail;
 import com.stupidtree.hita.activities.ActivityPostDetail;
+import com.stupidtree.hita.activities.ActivitySubject;
 import com.stupidtree.hita.activities.ActivityTeacher;
+import com.stupidtree.hita.activities.ActivityTimeTable;
 import com.stupidtree.hita.activities.ActivityUserCenter;
 import com.stupidtree.hita.activities.ActivityUserProfile;
+import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.fragments.FragmentTimeTable;
+import com.stupidtree.hita.fragments.FragmentTimeTablePage;
+import com.stupidtree.hita.online.Canteen;
+import com.stupidtree.hita.online.Classroom;
+import com.stupidtree.hita.online.Dormitory;
+import com.stupidtree.hita.online.Facility;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.online.Location;
 import com.stupidtree.hita.online.LostAndFound;
+import com.stupidtree.hita.online.Scenery;
+import com.stupidtree.hita.online.Teacher;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
@@ -35,10 +48,33 @@ public class ActivityUtils {
         Intent i = new Intent(from, ActivityPhotoDetail.class);
         i.putExtra("imagePath",imageurl);
         transition.setTransitionName("image");
-        ActivityOptionsCompat ip = ActivityOptionsCompat.makeSceneTransitionAnimation(from,transition,"image");
+        ActivityOptionsCompat ip = ActivityOptionsCompat.makeSceneTransitionAnimation(from);
         from.startActivity(i,ip.toBundle());
     }
-    public static void   startLocationActivity(Activity from, Location c) {
+    public static void startSubjectActivity_name(Context from,String name){
+        Intent i = new Intent(from, ActivitySubject.class);
+        i.putExtra("useCode",false);
+        i.putExtra("subject",name);
+        from.startActivity(i);
+    }
+    public static void startSubjectActivity_code(Context from,String code){
+        Intent i = new Intent(from, ActivitySubject.class);
+        i.putExtra("useCode",true);
+        i.putExtra("subject",code);
+        from.startActivity(i);
+    }
+    public static void   startLocationActivity(Context from, Location c) {
+        if(c.getType().equals("canteen")&&!(c instanceof Canteen)){
+            c = new Canteen(c);
+        }else if(c.getType().equals("scenery")&&!(c instanceof Scenery)){
+            c = new Scenery(c);
+        }else if(c.getType().equals("classroom")&&!(c instanceof Classroom)){
+            c = new Classroom(c);
+        }else if(c.getType().equals("dormitory")&&!(c instanceof Dormitory)){
+            c = new Dormitory(c);
+        }else if(c.getType().equals("facility")&&!(c instanceof Facility)){
+            c = new Facility(c);
+        }
         Intent i = new Intent(from, ActivityLocation.class);
         i.putExtra("location",c);
         from.startActivity(i);
@@ -62,6 +98,7 @@ public class ActivityUtils {
         from.startActivity(i);
     }
     public static void startExploreActivity_forNavi(Activity from, String terminal, double longitude, double latitude) {
+
         Intent i = new Intent(from, ActivityExplore.class);
         i.putExtra("longitude", longitude);
         i.putExtra("latitude", latitude);
@@ -87,7 +124,7 @@ public class ActivityUtils {
         from.startActivity(i, op.toBundle());
     }
 
-    public static void startJWTSActivity(final Activity from){
+    public static void startJWTSActivity(final Context from){
         Intent k;
         if(login){
             k = new Intent(HContext, ActivityJWTS.class);
@@ -118,10 +155,50 @@ public class ActivityUtils {
             }
         }
     }
+    public static void startJWTSActivity_forPage(final Context from,int page){
+        Intent k;
+        if(login){
+            k = new Intent(HContext, ActivityJWTS.class);
+            k.putExtra("terminal",page+"");
+            from.startActivity(k);
+        } else{
+            if(CurrentUser==null){
+                AlertDialog ad = new AlertDialog.Builder(from).setTitle("提示").setMessage("请先登录HITSZ助手账号并绑定学号！").setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i = new Intent(from, ActivityLogin.class);
+                        from.startActivity(i);
+                    }
+                }).create();
+                ad.show();
+            }else if(CurrentUser.getStudentnumber()==null||CurrentUser.getStudentnumber().isEmpty()){
+
+                AlertDialog ad = new AlertDialog.Builder(from).setTitle("提示").setMessage("请先绑定学号后再使用教务系统").setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i = new Intent(from,ActivityUserCenter.class);
+                        from.startActivity(i);
+                    }
+                }).create();
+                ad.show();
+            }else{
+                k = new Intent(HContext, ActivityLoginJWTS.class);
+
+                from.startActivity(k);
+            }
+        }
+    }
 
     public static void startTeacherActivity(Activity from,String name){
         Intent i = new Intent(from, ActivityTeacher.class);
         i.putExtra("name",name);
+        from.startActivity(i);
+    }
+    public static void startTeacherActivity(Context from, Teacher t){
+        Intent i = new Intent(from, ActivityTeacher.class);
+        Bundle b = new Bundle();
+        b.putSerializable("teacher",t);
+        i.putExtras(b);
         from.startActivity(i);
     }
     public static void startPostDetailActivity(Activity from, LostAndFound laf, HITAUser author){

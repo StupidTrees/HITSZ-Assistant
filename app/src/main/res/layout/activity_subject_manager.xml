@@ -19,32 +19,9 @@
             android:layout_height="?attr/actionBarSize"
             android:layout_marginTop="@dimen/material_toolbar_top_margin"
             app:layout_collapseMode="none"
-            app:theme="?attr/toolbarStyle">
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/subjects_tablayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|start"
-                android:foreground="?attr/selectableItemBackground"
-                app:tabGravity="fill"
-                app:tabIndicatorColor="#00000000"
-                app:tabIndicatorFullWidth="false"
-                app:tabMode="scrollable"
-                app:tabSelectedTextColor="?attr/text_color_primary"
-                app:tabTextAppearance="@style/MainTabsTextTheme"
-                app:tabTextColor="?attr/text_color_secondary"
-                app:theme="@style/button_ripple_primary" />
-
-        </androidx.appcompat.widget.Toolbar>
+            app:theme="?attr/toolbarStyle"/>
 
 
     </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/subjects_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

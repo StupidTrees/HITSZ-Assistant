@@ -8,8 +8,8 @@
         <item name="text_color_secondary">@color/material_text_icon_white_secondary</item>
         <item name="toolbar_icon_color">#202020</item>
         <item name="background_color_bottom">#000000</item>
-        <item name="background_color_second">#202020</item>
-        <item name="background_icon_color">#22FFFFFF</item>
+        <item name="background_color_second">#242424</item>
+        <item name="background_icon_color">#101010</item>
         <item name="text_color_iconic">#FFFFFF</item>
         <item name="toolbarStyle">@style/ToolBarTheme_Light</item>
         <item name="drawer_header_background">@drawable/bg_black</item>

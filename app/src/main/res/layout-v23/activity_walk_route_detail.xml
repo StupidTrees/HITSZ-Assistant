@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginTop="24dp"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/background_color_bottom"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:minHeight="?attr/actionBarSize"
@@ -27,6 +27,7 @@
             android:id="@+id/navi_expandable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:el_expanded="true">
 
             <androidx.recyclerview.widget.RecyclerView

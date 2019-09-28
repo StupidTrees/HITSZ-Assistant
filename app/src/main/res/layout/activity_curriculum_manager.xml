@@ -19,12 +19,29 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/main_tool_bar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_marginTop="24dp"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:contentInsetStartWithNavigation="0dp"
             app:layout_collapseMode="pin"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:theme="?attr/toolbarStyle"
-            app:titleTextColor="?attr/text_color_primary" />
+            app:titleTextColor="?attr/text_color_primary">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:tabIndicatorColor="#00000000"
+                app:tabMode="scrollable"
+                app:tabRippleColor="?attr/colorPrimary"
+                app:tabSelectedTextColor="@color/main_tabs_selected_color"
+                app:tabTextAppearance="@style/MainTabsTextTheme"
+                app:tabTextColor="@color/main_tabs_unselected_color" />
+        </androidx.appcompat.widget.Toolbar>
+
+
+
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -35,6 +52,7 @@
         android:layout_marginBottom="90dp"
         android:gravity="center"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <ImageView
@@ -52,12 +70,10 @@
             android:text="没有课表" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/cm_list"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="90dp"
-        android:overScrollMode="never"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -65,7 +81,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/material_fab_margin"
+        android:layout_marginLeft="@dimen/material_fab_margin"
+        android:layout_marginTop="@dimen/material_fab_margin"
+        android:layout_marginRight="@dimen/material_fab_margin"
+        android:layout_marginBottom="@dimen/material_fab_margin"
         app:fabCustomSize="64dp"
         app:fabSize="normal"
         app:layout_anchorGravity="end|bottom"

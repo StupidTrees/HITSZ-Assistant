@@ -164,7 +164,7 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                         fTset = true;
 
                     }
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
+                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
                 TPD.create();
                 TPD.show();
 
@@ -183,7 +183,7 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                         tTset = true;
 
                     }
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
+                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
                 TPD.create();
                 TPD.show();
 
@@ -217,7 +217,7 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                     Intent mes2 = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes);
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes2);
-                    ActivityMain.saveData(getActivity());
+                    ActivityMain.saveData();
                 }
             }
         });

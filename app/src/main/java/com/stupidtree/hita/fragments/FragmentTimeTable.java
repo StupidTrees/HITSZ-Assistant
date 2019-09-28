@@ -153,21 +153,18 @@ public class FragmentTimeTable extends BaseFragment implements FragmentTimeTable
                 int id = menuItem.getItemId();
                 boolean isChecked = !menuItem.isChecked();
                 switch (id) {
-                    case R.id.action_import_timetable:
-                        Intent i = new Intent(FragmentTimeTable.this.getActivity(), ActivityCurriculumManager.class);
-                        FragmentTimeTable.this.getActivity().startActivityForResult(i,1);
-                        break;
+
                     case R.id.action_settings:
                         Intent x = new Intent(FragmentTimeTable.this.getActivity(), ActivitySetting.class);
                         startActivity(x);
                         break;
-                    case R.id.action_switch_timetable:
-                        menuItem.setChecked(isChecked);
-                        PreferenceManager.getDefaultSharedPreferences(FragmentTimeTable.this.getActivity()).edit().putBoolean("timetable_curriculumonly",isChecked).apply();
-                        //Toast.makeText(FragmentTimeTable.this.getActivity(),"重新进入本页面生效",Toast.LENGTH_SHORT).show();
-                        //reFreshViewPager();
-                        pagerAdapter.notifyAllFragments();
-                        break;
+//                    case R.id.action_switch_timetable:
+//                        menuItem.setChecked(isChecked);
+//                        PreferenceManager.getDefaultSharedPreferences(FragmentTimeTable.this.getActivity()).edit().putBoolean("timetable_curriculumonly",isChecked).apply();
+//                        //Toast.makeText(FragmentTimeTable.this.getActivity(),"重新进入本页面生效",Toast.LENGTH_SHORT).show();
+//                        //reFreshViewPager();
+//                        pagerAdapter.notifyAllFragments();
+//                        break;
 
                     case R.id.action_whole_day:
                         menuItem.setChecked(isChecked);
@@ -211,7 +208,7 @@ public class FragmentTimeTable extends BaseFragment implements FragmentTimeTable
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
 
     }
 

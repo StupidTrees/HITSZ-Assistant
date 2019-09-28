@@ -15,6 +15,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.online.Canteen;
+import com.stupidtree.hita.util.ImageUtils;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -64,7 +65,7 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
     @Override
     public void onBindViewHolder(@NonNull final FoodViewHolder foodViewHolder, final int i) {
         foodViewHolder.rate.setText(df.format(mBeans.get(i).getRate()) + "/10");
-        foodViewHolder.rank.setText("排名第" + (i + 1));
+        foodViewHolder.rank.setText((i + 1)+"");
         foodViewHolder.name.setText(mBeans.get(i).getName());
         foodViewHolder.company.setText(mBeans.get(i).getCompany());
 //        if (mOnNaviClickListener != null) {
@@ -83,9 +84,9 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
                 }
             });
         }
-        Glide.with(mContext).load(mBeans.get(i).getImageURL()).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(foodViewHolder.image);
+        Glide.with(mContext).load(mBeans.get(i).getImageURL()).into(foodViewHolder.image);
         //Glide.with(mContext).load(mBeans.get(i).getImageURL()).placeholder(R.drawable.gradient_bg).apply(RequestOptions.bitmapTransform(new mBlurTransformation(mContext))).into(foodViewHolder.background);
-
+        //ImageUtils.loadImage_Bmob(foodViewHolder.image,mBeans.get(i).getImageURL())
 
     }
 

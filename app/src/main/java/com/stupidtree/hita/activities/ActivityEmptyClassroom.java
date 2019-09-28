@@ -202,7 +202,7 @@ public class ActivityEmptyClassroom extends BaseActivity {
                 }
                 System.out.println(page);
                 return null;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 //e.printStackTrace();
                 return "error!";
             }
@@ -314,7 +314,7 @@ public class ActivityEmptyClassroom extends BaseActivity {
                 }
                 //System.out.println(page);
                 return null;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return "error!";
             }

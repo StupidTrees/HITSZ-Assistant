@@ -1,5 +1,7 @@
 package com.stupidtree.hita.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -7,33 +9,44 @@ import android.os.Bundle;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.core.content.ContextCompat;
 import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.skydoves.colorpickerview.ColorEnvelope;
+import com.skydoves.colorpickerview.ColorPickerDialog;
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.Subject;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.adapter.SubjectCoursesListAdapter;
+import com.stupidtree.hita.util.ActivityUtils;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
 
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 
 
 public class ActivitySubject extends BaseActivity {
 
+    public static final int RESULT_COLOR_CHANGED = 817;
     Subject subject;
     TextView ratingText;
     RecyclerView courseList;
@@ -41,11 +54,14 @@ public class ActivitySubject extends BaseActivity {
     ArcProgress arcProgress;
     CollapsingToolbarLayout toolbarLayout;
     TextView name,point, attr, totalcourses, exam, school, xnxq, type, code, score_qz, score_qm, score_none;
-    CardView  card_scores, card_rate, card_allcourses, card_html;
+    CardView  card_scores, card_allcourses;
+    View card_rate,card_color;
     LinearLayout qz_score_layout, qm_score_layout;
     InitProgressTask pageTask_progress;
     //RefreshRatingTask pageTask_rating;
+    ImageView pickColor,colorSample;
     InitCourseListTask pageTask_courseList;
+    DecimalFormat df = new DecimalFormat("#.00");
 
     //WebView webView;
 
@@ -75,7 +91,6 @@ public class ActivitySubject extends BaseActivity {
         initViews();
         initToolBar();
         initCourseList();
-
         initProgress();
     }
 
@@ -88,6 +103,8 @@ public class ActivitySubject extends BaseActivity {
         code = findViewById(R.id.subject_code);
         type = findViewById(R.id.subject_type);
         xnxq = findViewById(R.id.subject_xnxq);
+        pickColor = findViewById(R.id.pick_color);
+        colorSample = findViewById(R.id.color_sample);
         qz_score_layout = findViewById(R.id.score_qz_layout);
         qm_score_layout = findViewById(R.id.score_qm_layout);
         score_qz = findViewById(R.id.score_qz);
@@ -95,8 +112,38 @@ public class ActivitySubject extends BaseActivity {
         totalcourses = findViewById(R.id.subject_totalcourses);
         card_allcourses = findViewById(R.id.subject_card_allcourses);
         card_rate = findViewById(R.id.subject_card_rate);
-        card_html = findViewById(R.id.subject_card_html);
+        card_color = findViewById(R.id.subject_card_color);
+      //  card_html = findViewById(R.id.subject_card_html);
         score_none = findViewById(R.id.score_none);
+
+        pickColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ColorPickerDialog.Builder(ActivitySubject.this)
+                        .attachAlphaSlideBar(false)
+                        .attachBrightnessSlideBar(true)
+                        .setTitle("选择颜色")
+                        .setPositiveButton(getString(R.string.confirm),
+                                new ColorEnvelopeListener() {
+                                    @Override
+                                    public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
+                                        defaultSP.edit().putInt("color:"+subject.name,envelope.getColor()).apply();
+                                        colorSample.setColorFilter(envelope.getColor());
+                                        setResult(RESULT_COLOR_CHANGED);
+                                            }
+                                })
+                        .setNegativeButton("取消",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                })
+                        .attachAlphaSlideBar(true) // default is true. If false, do not show the AlphaSlideBar.
+                        .attachBrightnessSlideBar(true)  // default is true. If false, do not show the BrightnessSlideBar.
+                        .show();
+            }
+        });
     }
 
     void initToolBar() {
@@ -113,12 +160,28 @@ public class ActivitySubject extends BaseActivity {
                 onBackPressed();
             }
         });
-
+        toolbar.inflateMenu(R.menu.toolbar_subject);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId()==R.id.action_subject_manager){
+                    Intent i = new Intent(ActivitySubject.this,ActivitySubjectManager.class);
+                    ActivitySubject.this.startActivity(i);
+                }
+                return true;
+            }
+        });
         toolbarLayout.setExpandedTitleGravity(CollapsingToolbarLayout.TEXT_ALIGNMENT_CENTER);
         toolbarLayout.setExpandedTitleColor(Color.parseColor("#00FFFFFF"));
         toolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this,R.color.material_text_icon_white));
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_subject, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     void setInfos() {
@@ -129,10 +192,12 @@ public class ActivitySubject extends BaseActivity {
         code.setText(subject.code);
         xnxq.setText(subject.xnxq);
         type.setText(subject.type);
+        colorSample.setColorFilter(defaultSP.getInt("color:"+subject.name,Color.YELLOW));
         totalcourses.setText(subject.totalCourses);
         exam.setText((subject.exam ? "是" : "否") + (subject.Default ? "(默认)" : ""));
         if (subject.isMOOC) {
             card_rate.setVisibility(View.GONE);
+            card_color.setVisibility(View.GONE);
             arcProgress.setVisibility(View.GONE);
             card_allcourses.setVisibility(View.GONE);
             courseList.setVisibility(View.GONE);
@@ -176,7 +241,7 @@ public class ActivitySubject extends BaseActivity {
 //          //  Log.e("!!",subject.infoHTML);
 //    }else
 
-        card_html.setVisibility(View.GONE);
+      //  card_html.setVisibility(View.GONE);
 
     }
 
@@ -267,8 +332,8 @@ public class ActivitySubject extends BaseActivity {
         } else {
             subject = allCurriculum.get(thisCurriculumIndex).getSubjectByCourseCode(getIntent().getStringExtra("subject"));
         }
-        setInfos();
         if (subject != null){
+            setInfos();
             Double rate = 0.0;
             Double sum = 0.0;
             int size = 0;
@@ -279,7 +344,7 @@ public class ActivitySubject extends BaseActivity {
             }
             if (size == 0) rate = 0.0;
             else rate =  sum / size;
-            ratingText.setText(rate + "/5");
+            ratingText.setText(df.format(rate) + "/5");
         }
     }
 }

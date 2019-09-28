@@ -13,6 +13,9 @@ public class LostAndFound extends BmobObject{
     String imageUri;
     String contact;
     String type;
+    Location location;
+
+
 
     public String getImageUri() {
         return imageUri;
@@ -61,5 +64,13 @@ public class LostAndFound extends BmobObject{
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

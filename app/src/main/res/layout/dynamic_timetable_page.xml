@@ -9,12 +9,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:fitsSystemWindows="true"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/tt_tv_month"
@@ -23,19 +28,200 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="12"
-                android:textColor="?attr/colorPrimary"
-                android:textSize="8sp" />
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/dowb1"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:alpha="0.9"
+                    app:srcCompat="@drawable/round_grey" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="一"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="12sp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/dowb2"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:alpha="0.9"
+                    app:srcCompat="@drawable/round_grey" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="二"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="12sp" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/dowb3"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:alpha="0.9"
+                    app:srcCompat="@drawable/round_grey" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="三"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="12sp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/dowb4"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:alpha="0.9"
+                    app:srcCompat="@drawable/round_grey" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="四"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="12sp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/dowb5"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:alpha="0.9"
+                    app:srcCompat="@drawable/round_grey" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="五"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="12sp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/dowb6"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:alpha="0.9"
+                    app:srcCompat="@drawable/round_grey" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="六"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="12sp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/dowb7"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:alpha="0.9"
+                    app:srcCompat="@drawable/round_grey" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="日"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="12sp" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="16dp"
+                android:id="@+id/textView6"
+                android:layout_width="24dp"
                 android:layout_height="match_parent"
-                android:alpha="0.8"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:paddingLeft="6dp"
                 android:text="月"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="8sp"
-                android:visibility="gone" />
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/tt_tv_day1"
@@ -45,8 +231,8 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="16"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp" />
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/tt_tv_day2"
@@ -56,8 +242,8 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="17"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp" />
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/tt_tv_day3"
@@ -67,8 +253,8 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="18"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp" />
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/tt_tv_day4"
@@ -78,8 +264,8 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="19"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp" />
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/tt_tv_day5"
@@ -89,8 +275,8 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="20"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp" />
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/tt_tv_day6"
@@ -100,8 +286,8 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="21"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp" />
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/tt_tv_day7"
@@ -111,99 +297,9 @@
                 android:alpha="0.9"
                 android:gravity="center"
                 android:text="22"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp" />
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="10sp" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:fitsSystemWindows="true"
-            android:paddingBottom="5dp"
-            android:visibility="visible">
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="24dp"
-                android:layout_height="match_parent"
-                android:alpha="0.6"
-                android:gravity="center|top"
-                android:text="月"
-                android:textColor="?attr/colorPrimary"
-                android:textSize="8sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:alpha="0.6"
-                android:gravity="center"
-                android:text="一"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="8sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:alpha="0.6"
-                android:gravity="center"
-                android:text="二"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="8sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:alpha="0.6"
-                android:gravity="center"
-                android:text="三"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="8sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:alpha="0.6"
-                android:gravity="center"
-                android:text="四"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="8sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:alpha="0.6"
-                android:gravity="center"
-                android:text="五"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="8sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:alpha="0.6"
-                android:gravity="center"
-                android:text="六"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="8sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:alpha="0.6"
-                android:gravity="center"
-                android:text="日"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="8sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -428,75 +524,24 @@
         <LinearLayout
 
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/tt_class_number_layout"
                 android:layout_width="24dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/tt_rl_monday"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                android:layout_weight="1"
-                android:orientation="vertical" />
-
-            <RelativeLayout
-                android:id="@+id/tt_rl_tuesday"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                android:layout_weight="1"
-                android:orientation="vertical" />
-
-            <RelativeLayout
-                android:id="@+id/tt_rl_wednesday"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                android:layout_weight="1"
-                android:orientation="vertical" />
-
-            <RelativeLayout
-                android:id="@+id/tt_rl_thursday"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                android:layout_weight="1"
-                android:orientation="vertical" />
-
-            <RelativeLayout
-                android:id="@+id/tt_rl_friday"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                android:layout_weight="1"
-                android:orientation="vertical" />
-
-            <RelativeLayout
-                android:id="@+id/tt_rl_saturday"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                android:layout_weight="1"
-                android:orientation="vertical" />
-
-            <RelativeLayout
-                android:id="@+id/tt_rl_weekday"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:layout_weight="1"
-                android:orientation="vertical" />
+            <com.stupidtree.hita.diy.TimeTableViewGroup
+                android:id="@+id/timetableview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></com.stupidtree.hita.diy.TimeTableViewGroup>
 
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

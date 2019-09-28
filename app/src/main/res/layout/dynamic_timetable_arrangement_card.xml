@@ -7,7 +7,7 @@
 
     <androidx.cardview.widget.CardView
         app:cardBackgroundColor="?attr/background_color_second"
-        android:id="@+id/timetable_card"
+        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="2dp"
@@ -36,7 +36,7 @@
                 app:srcCompat="@drawable/ic_chatbot_arrangement" />
 
             <TextView
-                android:id="@+id/tt_card_coursename"
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

@@ -49,7 +49,7 @@ public class FragmentClassroomList extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
 
     }
 

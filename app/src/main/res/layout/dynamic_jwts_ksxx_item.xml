@@ -15,8 +15,7 @@
         android:layout_gravity="center"
         android:layout_weight="1.1"
         android:gravity="center"
-        android:singleLine="false"
-        android:text="计算机专业导论"
+        android:singleLine="true"
         android:textColor="?attr/text_color_primary" />
 
     <TextView
@@ -26,8 +25,7 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="center"
-        android:singleLine="false"
-        android:text="必修" />
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/ksxx_time"
@@ -36,8 +34,7 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="center"
-        android:singleLine="false"
-        android:text="1.2"
+        android:singleLine="true"
         android:textColor="?attr/colorPrimary" />
 
 </LinearLayout>

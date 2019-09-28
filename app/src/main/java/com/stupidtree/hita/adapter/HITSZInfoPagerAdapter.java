@@ -31,7 +31,11 @@ public class HITSZInfoPagerAdapter extends FragmentPagerAdapter {
         Fragment f = mBeans.get(position);
         if(f instanceof FragmentNewsBulletin) return "通知公告";
         else if(f instanceof FragmentNewsLecture) return "讲座信息";
-        else if(f instanceof FragmentNewsIPNews) return "校区要闻";
+        else if(f instanceof FragmentNewsIPNews){
+            if(((FragmentNewsIPNews) f).getPageCode().equals("116")) return "校区要闻";
+            else if(((FragmentNewsIPNews) f).getPageCode().equals("77")) return "校园动态";
+            else return "综合新闻";
+        }
         else return "社区";
     }
 

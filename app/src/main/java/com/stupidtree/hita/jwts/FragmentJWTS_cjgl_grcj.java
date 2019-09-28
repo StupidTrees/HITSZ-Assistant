@@ -143,7 +143,7 @@ public class FragmentJWTS_cjgl_grcj extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
         new refreshQZCJListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new refreshXNXQSpinnerTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

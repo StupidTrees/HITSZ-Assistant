@@ -16,25 +16,25 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:fitsSystemWindows="true"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:theme="?attr/toolbarStyle"
-            app:contentInsetStartWithNavigation="0dp">
+            app:contentInsetStartWithNavigation="0dp"
+            app:theme="?attr/toolbarStyle">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/hitszinfo_tab"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:background="#00000000"
                 android:contextClickable="true"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:tabIndicatorColor="#00000000"
                 app:tabMode="scrollable"
-                app:tabSelectedTextColor="@color/main_tans_selected_color"
+                app:tabSelectedTextColor="@color/main_tabs_selected_color"
                 app:tabTextAppearance="@style/MainTabsTextTheme"
-                app:tabTextColor="@color/main_tans_unselected_color" />
+                app:tabTextColor="@color/main_tabs_unselected_color" />
         </androidx.appcompat.widget.Toolbar>
 
 

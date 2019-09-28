@@ -1,5 +1,6 @@
 package com.stupidtree.hita;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ContentValues;
@@ -10,6 +11,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -45,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -68,7 +72,7 @@ public class HITAApplication extends Application {
     public static int thisWeekOfTerm = -1;
     /*核心的变量*/
     public static ArrayList<Curriculum> allCurriculum;
-    public static HashMap<String, String> cookies = null;
+    public static HashMap<String, String> cookies = new HashMap<>();
     public static boolean login = false;
     public static TimeTable mainTimeTable;
     public static SharedPreferences defaultSP;
@@ -80,10 +84,14 @@ public class HITAApplication extends Application {
     public static int DATA_STATE_HEALTHY = 17;
 
     public static List<ChatBotMessageItem> ChatBotListRes;//聊天机器人的聊天记录
+    public static List<BmobObject> SearchResultList;
+    public static String searchText ="";
     public static HITAUser CurrentUser = null;
     public static HITADBHelper mDBHelper;
+    public static Handler ToastHander;
 
 
+    @SuppressLint("HandlerLeak")
     @Override
     public void onCreate() {
         super.onCreate();
@@ -93,16 +101,25 @@ public class HITAApplication extends Application {
         mDBHelper = new HITADBHelper(HContext);
         allCurriculum = new ArrayList<>();
         ChatBotListRes = new ArrayList<>();
+        SearchResultList = new ArrayList<>();
         timeWatcher = new TimeWatcher(this);
         mainTimeTable = new TimeTable(null);
         initUpgradeDialog();
+        ToastHander = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                Toast.makeText(HContext,msg.getData().getString("msg"),Toast.LENGTH_LONG).show();
+            }
+        };
+
         Bugly.init(this, "7c0e87536a", false);//务必最后再init
         Bmob.initialize(this, "9c9c53cd53b3c7f02c37b7a3e6fd9145");
         CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
         getThemeID();
     }
 
-    public boolean copyAssetsSingleFile(File file, String fileName) {
+    public static boolean copyAssetsSingleFile(File file, String fileName) {
         if (!file.exists()) {
             if (!file.mkdirs()) {
                 Log.e("--Method--", "copyAssetsSingleFile: cannot create directory.");
@@ -110,7 +127,7 @@ public class HITAApplication extends Application {
             }
         }
         try {
-            InputStream inputStream = getAssets().open(fileName);
+            InputStream inputStream = HContext.getAssets().open(fileName);
             File outFile = new File(file, fileName);
             FileOutputStream fileOutputStream = new FileOutputStream(outFile);
             // Transfer bytes from inputStream to fileOutputStream
@@ -123,7 +140,7 @@ public class HITAApplication extends Application {
             fileOutputStream.flush();
             fileOutputStream.close();
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -285,21 +302,61 @@ public class HITAApplication extends Application {
 
     public static boolean deleteCurriculum(int index){
         if(index>allCurriculum.size()-1) return false;
+        String oldCode = allCurriculum.get(thisCurriculumIndex).curriculumCode;
         Curriculum toDel = allCurriculum.get(index);
         SQLiteDatabase sd = mDBHelper.getWritableDatabase();
         sd.delete("curriculum","curriculum_code=? and name=?",new String[]{toDel.curriculumCode,toDel.name});
         sd.delete("timetable","curriculum_code=?",new String[]{toDel.curriculumCode});
         sd.delete("task","curriculum_code=?",new String[]{toDel.curriculumCode});
         sd.delete("subject","curriculum_code=?",new String[]{toDel.curriculumCode});
-        if(index==thisCurriculumIndex){
-            if(allCurriculum.size()==1) mainTimeTable.upDateCore(null);
-            else  mainTimeTable.upDateCore(allCurriculum.get(allCurriculum.size()-2));
-            thisCurriculumIndex = allCurriculum.size()-1;
-        }
+//        if(index==thisCurriculumIndex){
+//            if(allCurriculum.size()==1) mainTimeTable.upDateCore(null);
+//            else  mainTimeTable.upDateCore(allCurriculum.get(allCurriculum.size()-2));
+//            thisCurriculumIndex = allCurriculum.size()-1;
+//        }
         allCurriculum.remove(index);
+        boolean hasMatch = false;
+        for(int i=0;i<allCurriculum.size();i++){
+            if(allCurriculum.get(i).curriculumCode.equals(oldCode)) {
+                hasMatch = true;
+                thisCurriculumIndex = i;
+            }
+        }
+        if(!hasMatch) thisCurriculumIndex = allCurriculum.size()-1;
+
         return true;
     }
+    public static boolean deleteCurriculum(String curriculumCode){
+        String oldCode = allCurriculum.get(thisCurriculumIndex).curriculumCode;
+        int index = -1;
+        for(int i = 0;i<allCurriculum.size();i++){
+            if(allCurriculum.get(i).curriculumCode.equals(curriculumCode)) index = i;
+        }
+        if(index<0) return false;
+        Curriculum toDel = allCurriculum.get(index);
+        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
+        sd.delete("curriculum","curriculum_code=? and name=?",new String[]{toDel.curriculumCode,toDel.name});
+        sd.delete("timetable","curriculum_code=?",new String[]{toDel.curriculumCode});
+        sd.delete("task","curriculum_code=?",new String[]{toDel.curriculumCode});
+        sd.delete("subject","curriculum_code=?",new String[]{toDel.curriculumCode});
+//        if(index==thisCurriculumIndex){
+//            if(allCurriculum.size()==1) mainTimeTable.upDateCore(null);
+//            else  mainTimeTable.upDateCore(allCurriculum.get(allCurriculum.size()-2));
+//            thisCurriculumIndex = allCurriculum.size()-1;
+//        }
+        allCurriculum.remove(index);
+        boolean hasMatch = false;
+        for(int i=0;i<allCurriculum.size();i++){
+            if(allCurriculum.get(i).curriculumCode.equals(oldCode)) {
+                hasMatch = true;
+                thisCurriculumIndex = i;
+            }
+        }
+        if(!hasMatch) thisCurriculumIndex = allCurriculum.size()-1;
 
+
+        return true;
+    }
     public static boolean addCurriculumToTimeTable(CurriculumHelper il) {
         if (il == null) return false;
         List<Curriculum> toDEl = new ArrayList<>();
@@ -314,7 +371,7 @@ public class HITAApplication extends Application {
         if (cur.getWeekOfTerm(now) > cur.totalWeeks) cur.totalWeeks = cur.getWeekOfTerm(now);
         allCurriculum.add(cur);
         thisCurriculumIndex = allCurriculum.size() - 1;
-        mainTimeTable.clearCurriculum(il.curriculumCode);
+       // mainTimeTable.clearCurriculum(il.curriculumCode);
         mainTimeTable.core = cur;//顺序不能乱
         mainTimeTable.addCurriculum(il);
         addSubjects(il);

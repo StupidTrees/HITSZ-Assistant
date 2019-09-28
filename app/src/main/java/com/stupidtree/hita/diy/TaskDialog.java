@@ -5,11 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Layout;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.adapter.ChatBotListTaskListAdapater;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.Task;
 import com.stupidtree.hita.fragments.FragmentTimeLine;
@@ -37,7 +33,8 @@ public class TaskDialog extends AlertDialog {
     eventListAdapter listAdapter;
     List<EventItem> listRes;
     Task task;
-    public TaskDialog(@NonNull Context context, Task y) {
+    public
+    TaskDialog(@NonNull Context context, Task y) {
         super(context);
         View v = getLayoutInflater().inflate(R.layout.dialog_task,null,false);
         name = v.findViewById(R.id.name);

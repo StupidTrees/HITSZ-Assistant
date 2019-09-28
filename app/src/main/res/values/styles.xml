@@ -8,7 +8,7 @@
         <item name="text_color_primary">?android:attr/textColorPrimary</item>
         <item name="text_color_secondary">?android:attr/textColorSecondary</item>
         <item name="background_color_second">?android:attr/colorBackgroundFloating</item>
-        <item name="background_icon_color">#11000000</item>
+        <item name="background_icon_color">#eEeEeE</item>
         <item name="toolbar_icon_color">#202020</item>
         <item name="text_color_iconic">#202020</item>
         <item name="toolbarStyle">@style/ToolBarTheme</item>
@@ -20,6 +20,18 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textStyle">bold</item>
+    </style>
+    <style name="NaviTitleExpandTheme">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+    </style>
+    <style name="NaviTitleCollapseTheme">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-black</item>
     </style>
     <style name="CalendarTextTheme">
         <item name="android:textSize">14sp</item>
@@ -71,10 +83,6 @@
         <item name="gapBetweenBars">2dp</item>
         <item name="thickness">2dp</item>
     </style>
-
-
-
-
 
 
     <!--水波纹风格-->
@@ -132,6 +140,7 @@
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
     </style>
+
     <style name="ToolBarTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!--<item name="colorButtonNormal">?attr/toolbar_icon_color</item>-->
         <!--<item name="colorControlNormal">?attr/toolbar_icon_color</item>-->
@@ -354,18 +363,18 @@
     </style>
 
     <!--<style name="DeepOrangeTheme" parent="AppTheme">-->
-        <!--<item name="colorPrimary">@color/deep_orange_primary</item>-->
-        <!--<item name="colorPrimaryDark">@color/deep_orange_primary_dark</item>-->
-        <!--<item name="colorAccent">@color/deep_orange_accent</item>-->
-        <!--<item name="colorFade">@color/deep_orange_fade</item>-->
-        <!--<item name="colorPrimaryLight">@color/deep_orange_primary_light</item>-->
-        <!--<item name="text_color_primary">@color/material_text_icon_white</item>-->
-        <!--<item name="text_color_secondary">@color/material_text_icon_white_secondary</item>-->
-        <!--<item name="toolbar_icon_color">#202020</item>-->
-        <!--<item name="background_color_bottom">#000000</item>-->
-        <!--<item name="background_color_second">#202020</item>-->
-        <!--<item name="background_icon_color">#11FFFFFF</item>-->
-        <!--<item name="toolbarStyle">@style/ToolBarTheme_Light</item>-->
+    <!--<item name="colorPrimary">@color/deep_orange_primary</item>-->
+    <!--<item name="colorPrimaryDark">@color/deep_orange_primary_dark</item>-->
+    <!--<item name="colorAccent">@color/deep_orange_accent</item>-->
+    <!--<item name="colorFade">@color/deep_orange_fade</item>-->
+    <!--<item name="colorPrimaryLight">@color/deep_orange_primary_light</item>-->
+    <!--<item name="text_color_primary">@color/material_text_icon_white</item>-->
+    <!--<item name="text_color_secondary">@color/material_text_icon_white_secondary</item>-->
+    <!--<item name="toolbar_icon_color">#202020</item>-->
+    <!--<item name="background_color_bottom">#000000</item>-->
+    <!--<item name="background_color_second">#202020</item>-->
+    <!--<item name="background_icon_color">#11FFFFFF</item>-->
+    <!--<item name="toolbarStyle">@style/ToolBarTheme_Light</item>-->
     <!--</style>-->
 
     <style name="IndigoTheme" parent="AppTheme">

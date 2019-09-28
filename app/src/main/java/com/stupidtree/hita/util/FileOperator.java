@@ -1,8 +1,11 @@
 package com.stupidtree.hita.util;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -32,12 +35,14 @@ import java.util.Map;
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.ToastHander;
 
 public class FileOperator {
 
@@ -69,7 +74,7 @@ public class FileOperator {
             file.getParentFile().mkdirs();
             try {
                 file.createNewFile();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
@@ -117,14 +122,14 @@ public class FileOperator {
     }
 
 
-    public static boolean saveUserInfosToFile(HashMap<String,String> ils, File path) {
+    public static boolean saveUserInfosToFile(HashMap<String, String> ils, File path) {
 
         File file = new File(path.toString() + "/UserInfo.dat");
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             try {
                 file.createNewFile();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
@@ -137,7 +142,7 @@ public class FileOperator {
             objOut.flush();
             objOut.close();
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -145,27 +150,28 @@ public class FileOperator {
 
     }
 
-    public static boolean saveByteImageToFile(String path,Bitmap bitmap) {
+    public static boolean saveByteImageToFile(String path, Bitmap bitmap) {
         BufferedOutputStream os;
         try {
             File file = new File(path);  //新建图片
             if (!file.getParentFile().exists()) {  //如果文件夹不存在，创建文件夹
                 file.getParentFile().mkdirs();
             }
-            if(file.exists()) file.delete();
+            if (file.exists()) file.delete();
             file.createNewFile();  //创建图片文件
-            os = new BufferedOutputStream(new FileOutputStream(file,false));
+            os = new BufferedOutputStream(new FileOutputStream(file, false));
+
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);  //图片存成png格式。
             os.close();  //关闭流
-        } catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
         return true;
     }
 
-    public static HashMap<String,String> loadUserInfosFromFile(File path) {
+    public static HashMap<String, String> loadUserInfosFromFile(File path) {
 
-        HashMap<String,String> il = null;
+        HashMap<String, String> il = null;
         File file = new File(path.toString() + "/UserInfo.dat");
         if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -189,7 +195,6 @@ public class FileOperator {
     }
 
 
-
     public static boolean wipeCurriculumFile(File path) {
         File file = new File(path.toString() + "/Curriculum.dat");
         if (!file.exists()) {
@@ -201,9 +206,8 @@ public class FileOperator {
     }
 
 
-
     public static CurriculumHelper loadCurriculumHelperFromExcel(File location, int sY, int sM, int sD) {
-        CurriculumHelper cl= null;
+        CurriculumHelper cl = null;
         if (!location.exists()) {
             location.getParentFile().mkdirs();
             return null;
@@ -211,7 +215,7 @@ public class FileOperator {
         StringBuilder curriculumText = new StringBuilder();
         Map<String, List<List<String>>> m = analyzeXls(location.toString());
         for (Map.Entry<String, List<List<String>>> table : m.entrySet()) {
-            cl = new CurriculumHelper("from_excel_"+table.getValue().get(0).get(0),sY, sM, sD, table.getValue().get(0).get(0));
+            cl = new CurriculumHelper("from_excel_" + table.getValue().get(0).get(0), sY, sM, sD, table.getValue().get(0).get(0));
             for (int i = 2; i <= 7; i++) {
                 List<String> row = table.getValue().get(i);
                 int begin = 1;
@@ -245,7 +249,7 @@ public class FileOperator {
                     curriculumText.append(text).append("#");
                     for (Map<String, String> map : courseList) {
                         if (map.get("teacher").equals("null")) {
-                            cl.ExamGeneraor(j - 1, map.get("name"), map.get("time"),  map.get("classroom"),begin, 2, map.get("week").split("-"));
+                            cl.ExamGeneraor(j - 1, map.get("name"), map.get("time"), map.get("classroom"), begin, 2, map.get("week").split("-"));
                         } else {
                             cl.CoursesGeneraor(j - 1, map.get("name"), map.get("teacher"), map.get("classroom"), begin, 2, map.get("weeks").split("-"));
                         }
@@ -259,73 +263,73 @@ public class FileOperator {
     }
 
 
-    public static CurriculumHelper loadCurriculumHelperFromCloud(String curriculumCode,Map<String,Object> m, int sY, int sM, int sD) {
-        CurriculumHelper cl= null;
+    public static CurriculumHelper loadCurriculumHelperFromCloud(String curriculumCode, Map<String, Object> m, int sY, int sM, int sD) {
+        CurriculumHelper cl = null;
         StringBuilder curriculumText = new StringBuilder();
         String name = (String) m.get("name");
         List<List<String>> table = (List<List<String>>) m.get("table");
-            cl = new CurriculumHelper(curriculumCode,sY, sM, sD,name);
-            for (int i = 2; i < table.size()+2; i++) {
-                List<String> row = table.get(i-2);
-                int begin = 1;
-                switch (i) {
-                    case 2:
-                        begin = 1;
-                        break;
-                    case 3:
-                        begin = 3;
-                        break;
-                    case 4:
-                        begin = 5;
-                        break;
-                    case 5:
-                        begin = 7;
-                        break;
-                    case 6:
-                        begin = 9;
-                        break;
-                    case 7:
-                        begin = 11;
-                        break;
-                }
-                for (int j = 2; j < row.size()+2; j++) {
-                    if (row.get(j-2).equals("")) {
-                        continue;
-                    }
-                    String text = null;
-                    text = row.get(j-2);
-                    List<Map<String, String>> courseList = analyseTableText(text);
-                    curriculumText.append(text).append("#");
-                    for (Map<String, String> map : courseList) {
-                        if (map.get("teacher").equals("null")) {
-                            cl.ExamGeneraor(j - 1, map.get("name"), map.get("time"),  map.get("classroom"),begin, 2, map.get("week").split("-"));
-                        } else {
-                            cl.CoursesGeneraor(j - 1, map.get("name"), map.get("teacher"), map.get("classroom"), begin, 2, map.get("weeks").split("-"));
-                        }
-                    }
-                }
-
+        cl = new CurriculumHelper(curriculumCode, sY, sM, sD, name);
+        for (int i = 2; i < table.size() + 2; i++) {
+            List<String> row = table.get(i - 2);
+            int begin = 1;
+            switch (i) {
+                case 2:
+                    begin = 1;
+                    break;
+                case 3:
+                    begin = 3;
+                    break;
+                case 4:
+                    begin = 5;
+                    break;
+                case 5:
+                    begin = 7;
+                    break;
+                case 6:
+                    begin = 9;
+                    break;
+                case 7:
+                    begin = 11;
+                    break;
             }
-            cl.curriculumText = curriculumText.toString();
+            for (int j = 2; j < row.size() + 2; j++) {
+                if (row.get(j - 2).equals("")) {
+                    continue;
+                }
+                String text = null;
+                text = row.get(j - 2);
+                List<Map<String, String>> courseList = analyseTableText(text);
+                curriculumText.append(text).append("#");
+                for (Map<String, String> map : courseList) {
+                    if (map.get("teacher").equals("null")) {
+                        cl.ExamGeneraor(j - 1, map.get("name"), map.get("time"), map.get("classroom"), begin, 2, map.get("week").split("-"));
+                    } else {
+                        cl.CoursesGeneraor(j - 1, map.get("name"), map.get("teacher"), map.get("classroom"), begin, 2, map.get("weeks").split("-"));
+                    }
+                }
+            }
+
+        }
+        cl.curriculumText = curriculumText.toString();
         return cl;
     }
 
     public static CurriculumHelper loadCurriculumHelperFromCurriculumText(Curriculum ci_bmob) {
         CurriculumHelper cl;
         String name = ci_bmob.name;
-        String[] tableText = ci_bmob.curriculumText.split("#",-1);
-        cl = new CurriculumHelper(ci_bmob.curriculumCode,ci_bmob.start_year, ci_bmob.start_month, ci_bmob.start_day,name);
+        String[] tableText = ci_bmob.curriculumText.split("#", -1);
+        cl = new CurriculumHelper(ci_bmob.curriculumCode, ci_bmob.start_year, ci_bmob.start_month, ci_bmob.start_day, name);
         for (int i = 0; i < 6; i++) {
-            for(int j = 0;j<7;j++){
-                int begin = 2*i+1;
-                String text = tableText[i*7+j];
+            for (int j = 0; j < 7; j++) {
+                int begin = 2 * i + 1;
+                String text = tableText[i * 7 + j];
                 List<Map<String, String>> courseList = analyseTableText(text);
                 for (Map<String, String> map : courseList) {
                     //Log.e("block",map.toString());
                     if (map.get("teacher").equals("null")) {
-                        cl.ExamGeneraor(j+1, map.get("name"), map.get("time"),  map.get("classroom"),begin, 2, map.get("week").split("-"));
+                        cl.ExamGeneraor(j + 1, map.get("name"), map.get("time"), map.get("classroom"), begin, 2, map.get("week").split("-"));
                     } else {
-                        cl.CoursesGeneraor(j+1, map.get("name"), map.get("teacher"), map.get("classroom"), begin, 2, map.get("weeks").split("-"));
+                        cl.CoursesGeneraor(j + 1, map.get("name"), map.get("teacher"), map.get("classroom"), begin, 2, map.get("weeks").split("-"));
                     }
                 }
 
@@ -336,18 +340,18 @@ public class FileOperator {
         return cl;
     }
 
-    public static List<String> loadNotePhotosFromFile(File location,String curriculumName,String dateName,String number){
-        File file = new File(location.toString() + "/notes/"+curriculumName+"/"+dateName+"/"+number+"/");
+    public static List<String> loadNotePhotosFromFile(File location, String curriculumName, String dateName, String number) {
+        File file = new File(location.toString() + "/notes/" + curriculumName + "/" + dateName + "/" + number + "/");
         if (!file.exists()) {
-            if(file.getParentFile().exists()){
+            if (file.getParentFile().exists()) {
                 file.mkdir();
-            }else{
+            } else {
                 file.mkdirs();
             }
         }
         List<String> result = new ArrayList<>();
         // 得到该路径文件夹下所有的文件
-        List<File> files= new ArrayList<File>(Arrays.asList(file.listFiles()));
+        List<File> files = new ArrayList<File>(Arrays.asList(file.listFiles()));
         // 将所有的文件存入ArrayList中,并过滤所有图片格式的文件
         for (int i = 0; i < files.size(); i++) {
             File x = files.get(i);
@@ -360,33 +364,32 @@ public class FileOperator {
     }
 
 
+    public static boolean copyNotePhotosToFile(List<String> oldFile, File location, String curriculumName, String dateName, String number) {
+        if (oldFile == null || oldFile.size() == 0) return false;
 
-    public  static boolean copyNotePhotosToFile(List<String> oldFile,File location,String curriculumName,String dateName,String number){
-        if(oldFile==null||oldFile.size()==0) return false;
-
-        File file = new File(location.toString() + "/notes/"+curriculumName+"/"+dateName+"/"+number+"/");
+        File file = new File(location.toString() + "/notes/" + curriculumName + "/" + dateName + "/" + number + "/");
         if (!file.exists()) {
-            if(file.getParentFile().exists()){
+            if (file.getParentFile().exists()) {
                 file.mkdir();
-            }else{
+            } else {
                 file.mkdirs();
             }
         }
-        for(String x:oldFile){
-           // System.out.println("copy:"+x+"--->"+file.getPath()+x.substring(x.lastIndexOf("/")));
-           if(!copyFile(x,file.getPath()+x.substring(x.lastIndexOf("/")))) return false;
+        for (String x : oldFile) {
+            // System.out.println("copy:"+x+"--->"+file.getPath()+x.substring(x.lastIndexOf("/")));
+            if (!copyFile(x, file.getPath() + x.substring(x.lastIndexOf("/")))) return false;
         }
         return true;
     }
 
     public static boolean saveNoteToFile(ArrayList<Note> ltt, File path, String curriculumName, String dateName, String number) {
         if (ltt == null) return false;
-        File file = new File(path.toString() + "/notes/"+curriculumName+"/"+dateName+"/"+number+"/notes.dat");
+        File file = new File(path.toString() + "/notes/" + curriculumName + "/" + dateName + "/" + number + "/notes.dat");
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             try {
                 file.createNewFile();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return false;
             }
         }
@@ -397,7 +400,7 @@ public class FileOperator {
             objOut.writeObject(ltt);
             objOut.flush();
             objOut.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             return false;
         }
         return true;
@@ -406,7 +409,7 @@ public class FileOperator {
 
     public static ArrayList<Note> loadNoteFromFile(File path, String curriculumName, String dateName, String number) {
         ArrayList<Note> ltt = new ArrayList<>();
-        File file = new File(path.toString() + "/notes/"+curriculumName+"/"+dateName+"/"+number+"/notes.dat");
+        File file = new File(path.toString() + "/notes/" + curriculumName + "/" + dateName + "/" + number + "/notes.dat");
         if (!file.exists()) {
             return null;
         }
@@ -460,17 +463,28 @@ public class FileOperator {
 
     /*函数功能:从教务系统课表文字中分析出课程信息（写这个真滴累）
      * 参数1：一格中的文字*/
-    public static List<Map<String, String>> analyseTableText(String rawText){
+    public static List<Map<String, String>> analyseTableText(final String rawText) {
         List<String> textSplit = new ArrayList<>();
-        List<Map<String, String>> result = new ArrayList<>();
-        if(TextUtils.isEmpty(rawText)) return result;
+        final List<Map<String, String>> result = new ArrayList<>();
+        if (TextUtils.isEmpty(rawText)) return result;
+        int counting = 0;
+        counting++;
+        result.clear();
         try {
-            String text = rawText.replaceAll("<br>","</br>").replaceAll("双]","]双").replaceAll("单]","]单");
+            String text = rawText.replaceAll("<br>", "</br>")
+                    .replaceAll("\n","")
+                    .replaceAll("◇","</br>")
+                    .replaceAll("<br>","</br>")
+                    .replaceAll("周]","]周")
+                    .replaceAll("双]", "]双")
+                    .replaceAll("单]", "]单")
+                    .replaceAll(",","，")
+                    ;
             // System.out.println("block:\n"+text);
-            if(text.contains("&nbsp")) return result;
+            if (text.contains("&nbsp")) return result;
             if (text.startsWith("[考试]")) {
                 String ExamsText;
-                if(text.contains("考试时间")){
+                if (text.contains("考试时间")) {
                     int temp0 = text.indexOf("</br>", text.lastIndexOf("考试时间"));
                     if (temp0 > 0) {
                         ExamsText = text.substring(0, temp0);
@@ -479,7 +493,7 @@ public class FileOperator {
                     } else {
                         ExamsText = text;
                     }
-                }else{
+                } else {
                     int temp0 = text.indexOf("</br>", text.lastIndexOf("周 ，"));
                     if (temp0 > 0) {
                         ExamsText = text.substring(0, temp0);
@@ -489,7 +503,6 @@ public class FileOperator {
                         ExamsText = text;
                     }
                 }
-
 
 
                 List<String> ExamTexts = new ArrayList<>();
@@ -512,10 +525,12 @@ public class FileOperator {
                     String week = x.substring(x.indexOf("[", 5) + 1, x.indexOf("]", 5));
                     String time;
                     String classroom;
-                    if(x.indexOf("，")>0)time = x.substring(x.indexOf("考试时间") + 5, x.indexOf("，", x.indexOf("考试时间")));
+                    if (x.indexOf("，") > 0)
+                        time = x.substring(x.indexOf("考试时间") + 5, x.indexOf("，", x.indexOf("考试时间")));
                     else time = x.substring(x.indexOf("考试时间") + 5);
-                    if(x.indexOf("<br/>", x.indexOf("考试时间"))>0) classroom= x.substring(x.indexOf("]周", x.indexOf("考试时间")) + 2, x.indexOf("<br/>", x.indexOf("考试时间")));
-                    else classroom= "";
+                    if (x.indexOf("<br/>", x.indexOf("考试时间")) > 0)
+                        classroom = x.substring(x.indexOf("]周", x.indexOf("考试时间")) + 2, x.indexOf("<br/>", x.indexOf("考试时间")));
+                    else classroom = "";
 
                     //System.out.println("classroom:"+classroom);
                     m.put("name", name);
@@ -574,65 +589,71 @@ public class FileOperator {
                 }
                 splitIndexes.removeAll(integersToDelete);
                 Collections.sort(splitIndexes);
-                System.out.println("text:"+text+",splitIndexes:"+splitIndexes.toString());
+                System.out.println("text:" + text + ",splitIndexes:" + splitIndexes.toString());
                 for (int i = 0; i < splitIndexes.size() - 1; i++) {
                     if (i == splitIndexes.size() - 1) break;
-                    if (text.substring(splitIndexes.get(i), splitIndexes.get(i) + 7>=text.length()?text.length()-1:splitIndexes.get(i) + 7).contains("</br>")) {
+                    if (text.substring(splitIndexes.get(i), splitIndexes.get(i) + 7 >= text.length() ? text.length() - 1 : splitIndexes.get(i) + 7).contains("</br>")) {
                         boolean hasMultiWeek = false;//判断是否为在教室前加</br>这种情况（前面有多个周就加，没有就不加）
-                        if(integersToDelete.size()>0&&integersToDelete.get(0)<splitIndexes.get(i))
+                        if (integersToDelete.size() > 0 && integersToDelete.get(0) < splitIndexes.get(i))
                             hasMultiWeek = true;
                         List<Integer> fuckoff = new ArrayList<>();
-                        for(int x:integersToDelete){
-                            if(x<splitIndexes.get(i)) fuckoff.add(x);
+                        for (int x : integersToDelete) {
+                            if (x < splitIndexes.get(i)) fuckoff.add(x);
                         }
                         integersToDelete.removeAll(fuckoff);
-                        int offset =  hasMultiWeek?3:0;//如果有</br>则跳过这个br，否则不调过
-                        splitIndexes_plus.add(text.indexOf("</br>", splitIndexes.get(i) +offset));
-                    } else if(text.indexOf("</br>", splitIndexes.get(i))>0){
-                        splitIndexes_plus.add(text.indexOf("</br>", splitIndexes.get(i))); }
+                        int offset = hasMultiWeek ? 3 : 0;//如果有</br>则跳过这个br，否则不调过
+                        int toAddIndexPlus = text.indexOf("</br>", splitIndexes.get(i) + offset);
+                        if (!splitIndexes_plus.contains(toAddIndexPlus))
+                            splitIndexes_plus.add(toAddIndexPlus);
+                    } else if (text.indexOf("</br>", splitIndexes.get(i)) > 0) {
+                        int toAddIndexPlus = text.indexOf("</br>", splitIndexes.get(i));
+                        if (!splitIndexes_plus.contains(toAddIndexPlus))
+                            splitIndexes_plus.add(toAddIndexPlus);
+                    }
                 }
-                System.out.println("text:"+text+",splitIndexes_plus:"+splitIndexes_plus.toString());
+                System.out.println("text:" + text + ",splitIndexes_plus:" + splitIndexes_plus.toString());
                 int from = 0;
                 for (int i = 0; i < splitIndexes_plus.size() + 1; i++) {
                     if (i > splitIndexes_plus.size() - 1) {
                         textSplit.add(text.substring(from));
                     } else {
                         textSplit.add(text.substring(from, splitIndexes_plus.get(i)));
-                        from = splitIndexes_plus.get(i) + 5; }
+                        from = splitIndexes_plus.get(i) + 5;
+                    }
                 }
                 for (String x : textSplit) {
                     Map m = new HashMap();
-                    System.out.println("x:\n"+x);
+                    System.out.println("x:\n" + x);
                     String name = x.substring(0, x.indexOf("</br>"));
                     String teacher = x.substring(x.indexOf("</br>") + 5, x.indexOf("["));
                     String classroom, timeText;
-                    int num1 = countStrNum(x,"]");
-                    int num2 = countStrNum(x,"周，");
-                  //  if(x.contains("，[")&&(!x.contains("周，"))){//教室变动的情况
-                    Log.e("教室变动处理：","text="+text+",num1="+num1+",num2="+num2);
-                    if(num1!=num2+1){ //教室变动的情况
+                    int num1 = countStrNum(x, "]");
+                    int num2 = countStrNum(x, "周，");
+                    //  if(x.contains("，[")&&(!x.contains("周，"))){//教室变动的情况
+                    Log.e("教室变动处理：", "text=" + text + ",num1=" + num1 + ",num2=" + num2);
+                    if (num1 != num2 + 1) { //教室变动的情况
                         int f = x.indexOf("[");
                         classroom = x.substring(f);
                         StringBuilder sb = new StringBuilder();
-                        for(String df:classroom.split("，\\[")){
-                            String timeT = df.substring(0,df.lastIndexOf("]"));
+                        for (String df : classroom.split("，\\[")) {
+                            String timeT = df.substring(0, df.lastIndexOf("]"));
                             sb.append(timeT);
                             sb.append("，");
                         }
-                        timeText = sb.toString().substring(0,sb.length()-1)+"]";
+                        timeText = sb.toString().substring(0, sb.length() - 1) + "]";
                         //Log.e("!!!",timeText);
-                    }else{
+                    } else {
                         if (x.substring(x.lastIndexOf("周")).contains("</br>")) {
                             classroom = x.substring(x.lastIndexOf("</br>") + 5);
                         } else {
-                            classroom = x.substring(x.lastIndexOf("周") + 1); }
+                            classroom = x.substring(x.lastIndexOf("周") + 1);
+                        }
                         if (x.lastIndexOf("]") + 3 < x.length()) {
                             timeText = x.substring(x.indexOf("["), x.lastIndexOf("]") + 3);
                         } else {
                             timeText = x.substring(x.indexOf("["), x.lastIndexOf("]") + 1);
                         }
                     }
-
 
 
                     String timeMap = new String();
@@ -654,13 +675,37 @@ public class FileOperator {
                 }
             }
         } catch (Exception e) {
+            Log.e("解析出错，等待服务器更正", "," );
             e.printStackTrace();
-            new errorTableText(rawText,e).save(new SaveListener<String>() {
-                @Override
-                public void done(String s, BmobException e) {
-                    Toast.makeText(HContext,"解析课表出现问题，已上传错误日志", Toast.LENGTH_SHORT).show();
-                }
-            });
+            BmobQuery<errorTableText> bq = new BmobQuery<>();
+            bq.addWhereEqualTo("tableText", rawText);
+            List<errorTableText> ls = null;
+            try {
+                ls = bq.findObjectsSync(errorTableText.class);
+            } catch (Exception el) {
+                el.printStackTrace();
+                Message msg = ToastHander.obtainMessage();
+                msg.what = 0;
+                Bundle b = new Bundle();
+                b.putString("msg","解析课表出现问题，请开启网络尝试使用云端修复！");
+                msg.setData(b);
+                ToastHander.sendMessage(msg);
+                return result;
+            }
+            if(ls!=null&&ls.size()>0){
+
+                Log.e("success", "已找到更正方案");
+                return analyseTableText(ls.get(0).correction);
+            }else{
+                new errorTableText(rawText, e).save(new SaveListener<String>() {
+                    @Override
+                    public void done(String s, BmobException e) {
+                        Toast.makeText(HContext, "解析课表出现问题，请等待云端修复方案", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return result;
+            }
+
         }
         return result;
 
@@ -780,13 +825,14 @@ public class FileOperator {
         String FileEnd = fName.substring(fName.lastIndexOf(".") + 1,
                 fName.length()).toLowerCase();
         if (FileEnd.equals("jpg") || FileEnd.equals("png") || FileEnd.equals("gif")
-                || FileEnd.equals("jpeg")|| FileEnd.equals("bmp") ) {
+                || FileEnd.equals("jpeg") || FileEnd.equals("bmp")) {
             isImageFile = true;
         } else {
             isImageFile = false;
         }
         return isImageFile;
     }
+
     private static boolean copyFile(String oldPath$Name, String newPath$Name) {
         try {
             File oldFile = new File(oldPath$Name);
@@ -811,13 +857,14 @@ public class FileOperator {
 
     }
 
-    static int countStrNum(String text,String str){
-        String without = text.replaceAll(str,"");
-        return ((text.length()-without.length())/str.length());
+    static int countStrNum(String text, String str) {
+        String without = text.replaceAll(str, "");
+        return ((text.length() - without.length()) / str.length());
     }
 
-    static class errorTableText extends BmobObject{
+    public static class errorTableText extends BmobObject {
         String tableText;
+        String correction;
         Exception exception;
 
         public errorTableText(String tableText, Exception exception) {

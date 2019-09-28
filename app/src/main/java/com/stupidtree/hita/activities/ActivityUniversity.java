@@ -30,7 +30,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.stupidtree.hita.adapter.IpNewsListAdapter.dip2px;
+import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
 /**
  * Created by xmuSistone on 2017/5/12.

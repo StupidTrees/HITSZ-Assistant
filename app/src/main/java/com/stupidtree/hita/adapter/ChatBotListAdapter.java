@@ -1,6 +1,5 @@
 package com.stupidtree.hita.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -20,8 +19,7 @@ import com.stupidtree.hita.diy.CornerTransform;
 
 import java.util.List;
 
-import static com.stupidtree.hita.adapter.IpNewsListAdapter.dip2px;
-import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
+import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
 public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.RecyclerHolder> {
     public static final int TYPE_RIGHT = -11;
@@ -63,29 +61,15 @@ public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.
             recyclerHolder.hint.setVisibility(View.VISIBLE);
             recyclerHolder.hint.setText(messageItem.getHint());
         }else if(recyclerHolder.hint!=null)recyclerHolder.hint.setVisibility(View.GONE);
-        if(messageItem.courseList!=null) {
+        if(messageItem.list!=null&&messageItem.listRes!=null) {
             recyclerHolder.resultRecy.setVisibility(View.VISIBLE);
-            recyclerHolder.resultEventAdapter = new ChatBotListEventListAdapater(mMsgList.get(i).courseList, mContext);
+            recyclerHolder.resultEventAdapter = new ChatBotItemsAdapter(messageItem.list,messageItem.listRes, mContext);
             recyclerHolder.resultRecy.setNestedScrollingEnabled(true);
             LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
             recyclerHolder.resultRecy.setLayoutManager(layoutManager);
             recyclerHolder.resultRecy.setAdapter(recyclerHolder.resultEventAdapter);
-            recyclerHolder.resultEventAdapter.setOnItemClickLitener(new ChatBotListEventListAdapater.OnItemClickLitener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    showEventDialog((Activity) mContext, mMsgList.get(i).courseList.get(position),view,null);
-                }
-            });
             recyclerHolder.resultEventAdapter.notifyDataSetChanged();
 
-        } else if(messageItem.taskList!=null){
-            recyclerHolder.resultRecy.setVisibility(View.VISIBLE);
-            recyclerHolder.resultTaskAdapter = new ChatBotListTaskListAdapater(mMsgList.get(i).taskList, mContext);
-            recyclerHolder.resultRecy.setNestedScrollingEnabled(true);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-            recyclerHolder.resultRecy.setLayoutManager(layoutManager);
-            recyclerHolder.resultRecy.setAdapter(recyclerHolder.resultTaskAdapter);
-            recyclerHolder.resultTaskAdapter.notifyDataSetChanged();
         }
         else if(recyclerHolder.type == TYPE_LEFT)recyclerHolder.resultRecy.setVisibility(View.GONE);
         if(recyclerHolder.asr_image!=null&&recyclerHolder.type==TYPE_LEFT&&mMsgList.get(i).getImageURI()!= null) {
@@ -143,8 +127,7 @@ public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.
     class RecyclerHolder extends RecyclerView.ViewHolder {
         TextView textView,hint;
         RecyclerView resultRecy;
-        ChatBotListEventListAdapater resultEventAdapter;
-        ChatBotListTaskListAdapater resultTaskAdapter;
+        ChatBotItemsAdapter resultEventAdapter;
         CardView userAvatar;
         ImageView userAvatarImg,asr_image;
         int type;

@@ -25,7 +25,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.diy.PickInfoDialog;
 import com.stupidtree.hita.fragments.FragmentLostAndFound;
+import com.stupidtree.hita.online.Location;
 import com.stupidtree.hita.online.LostAndFound;
 import com.stupidtree.hita.online.HITAUser;
 import com.yuyh.library.imgsel.ISNav;
@@ -100,9 +102,10 @@ public class ActivityLostAndFound extends BaseActivity implements FragmentLostAn
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         // 图片选择结果回调
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LIST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> pathList = data.getStringArrayListExtra("result");
-            if(pathList.size()>0){
+            if (pathList.size() > 0) {
                 mPostListener.URI = pathList.get(0);
                 mPostListener.image.setVisibility(View.VISIBLE);
                 mPostListener.add.setVisibility(View.GONE);
@@ -119,15 +122,21 @@ public class ActivityLostAndFound extends BaseActivity implements FragmentLostAn
     class postListener implements View.OnClickListener {
         View adv;
         EditText title;
-        EditText content;
+        EditText content,contact;
         AlertDialog ad;
-        ImageView image;
+        ImageView image,clear_location;
         LinearLayout add;
         String URI;
-        TextView defaultText;
+        TextView defaultText,pickLocation;
+       LostAndFound p;
+
         postListener(){
-            adv = getLayoutInflater().inflate(R.layout.dialog_society_post,null);
+            p = new LostAndFound();
+            adv = getLayoutInflater().inflate(R.layout.dialog_add_laf,null);
+            contact = adv.findViewById(R.id.edit_contact);
+            pickLocation = adv.findViewById(R.id.location_text);
             title = adv.findViewById(R.id.edit_title);
+            clear_location = adv.findViewById(R.id.location_clear);
             content = adv.findViewById(R.id.edit_content);
             image = adv.findViewById(R.id.laf_image);
             add = adv.findViewById(R.id.laf_add);
@@ -135,7 +144,27 @@ public class ActivityLostAndFound extends BaseActivity implements FragmentLostAn
             ad = new AlertDialog.Builder(ActivityLostAndFound.this).setTitle("发布失物招领").setView(adv).create();
             add.setVisibility(View.VISIBLE);
             image.setVisibility(View.GONE);
-
+            pickLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new PickInfoDialog(ActivityLostAndFound.this, "选择地点", PickInfoDialog.LOCATION_ALL, new PickInfoDialog.OnPickListener() {
+                        @Override
+                        public void OnPick(String title, Object obj) {
+                            if(obj instanceof Location){
+                                p.setLocation((Location) obj);
+                                pickLocation.setText(title);
+                            }
+                        }
+                    }).show();
+                }
+            });
+            clear_location.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pickLocation.setText("不设置地点");
+                    p.setLocation(null);
+                }
+            });
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -175,10 +204,10 @@ public class ActivityLostAndFound extends BaseActivity implements FragmentLostAn
             ad.setButton(DialogInterface.BUTTON_POSITIVE, "发布", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    final LostAndFound p = new LostAndFound();
                     p.setAuthor(BmobUser.getCurrentUser(HITAUser.class));
                     p.setTitle((pager.getCurrentItem()==1?"找到":"丢失")+title.getText().toString());
                     p.setContent(content.getText().toString());
+                    p.setContact(contact.getText().toString());
                     p.setType(pager.getCurrentItem()==1?"found":"lost");
                     if(URI!=null){
                         final BmobFile bf = new BmobFile(new File(URI));

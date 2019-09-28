@@ -5,137 +5,79 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="top"
-    android:gravity="center|top"
-    android:orientation="vertical"
-    tools:context=".fragments.FragmentUserCenter_sync">
 
-    <androidx.cardview.widget.CardView
-        app:cardBackgroundColor="?attr/background_color_second"
-        android:id="@+id/save_to_cloud"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
+        android:layout_gravity="top"
         android:layout_margin="16dp"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        app:cardCornerRadius="36dp"
-        app:cardElevation="4dp">
+        android:gravity="center|top"
+        android:orientation="vertical"
+        tools:context=".fragments.FragmentUserCenter_sync">
 
-        <ImageView
+        <Switch
+            android:id="@+id/auto_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="16dp"
+            android:text="自动保存数据到服务器"
+            android:textSize="16sp" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/gradient_bg" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center|start"
+            android:text="自动保存将频繁进行，这会消耗性能及流量，但可以及时保存数据变更"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="16sp" />
 
         <LinearLayout
+            android:id="@+id/load_from_cloud"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/ic_cloud_upload"
-                android:tint="@color/material_text_icon_white" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
-                android:gravity="center"
-                android:text="同步本地数据到云端"
-                android:textColor="@color/material_text_icon_white"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        app:cardBackgroundColor="?attr/background_color_second"
-        android:id="@+id/load_from_cloud"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
-        android:layout_margin="16dp"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        app:cardCornerRadius="36dp"
-        app:cardElevation="4dp">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/gradient_bg" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:orientation="horizontal">
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:text="下载云端数据到本地"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/imageView6"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/ic_cloud_download"
-                android:tint="@color/material_text_icon_white" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="8dp"
-                android:gravity="center"
-                android:text="下载云端数据到本地"
-                android:textColor="@color/material_text_icon_white"
-                android:textSize="18sp" />
+                android:src="@drawable/ic_cloud_download"
+                android:tint="?attr/colorPrimary" />
+
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
-        app:cardBackgroundColor="?attr/background_color_second"
-        android:id="@+id/clear_cloud"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center|top"
-        android:layout_margin="16dp"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:visibility="gone"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp">
-
-        <ImageView
+        <TextView
+            android:id="@+id/textView32"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/gradient_bg" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center|start"
+            android:text="这将清除本地数据，并置课表为教务课表"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="16sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_clear"
-                android:tint="@color/material_text_icon_white" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="清除云端数据"
-                android:textColor="@color/material_text_icon_white" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-</LinearLayout>
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

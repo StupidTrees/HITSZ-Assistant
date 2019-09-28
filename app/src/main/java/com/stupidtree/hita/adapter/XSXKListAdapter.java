@@ -71,17 +71,21 @@ public class XSXKListAdapter extends RecyclerView.Adapter<XSXKListAdapter.pyjhIt
         pyjhItemHolder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StringBuilder sb = new StringBuilder();
-                for (Map.Entry e : mBeans.get(i).entrySet()) {
-                    String name = getName(e.getKey().toString());
-                    if(name.equals("skip")) continue;
-                   // Log.e("entry:",e.toString());
-                    sb.append(name+"："+e.getValue()+"&&");
-                }
-                String[] items = sb.toString().split("&&");
+                try {
+                    StringBuilder sb = new StringBuilder();
+                    for (Map.Entry e : mBeans.get(i).entrySet()) {
+                        String name = getName(e.getKey().toString());
+                        if(name.equals("skip")) continue;
+                       // Log.e("entry:",e.toString());
+                        sb.append(name+"："+e.getValue()+"&&");
+                    }
+                    String[] items = sb.toString().split("&&");
 
-                AlertDialog ad = new AlertDialog.Builder(mContext).setItems(items,null).create();
-                ad.show();
+                    AlertDialog ad = new AlertDialog.Builder(mContext).setItems(items,null).create();
+                    ad.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -100,6 +104,7 @@ public class XSXKListAdapter extends RecyclerView.Adapter<XSXKListAdapter.pyjhIt
         if (pinyin.equals("gzyyxrs")) return "各志愿已选人数";
         if (pinyin.equals("skxx")) return "上课信息";
         if (pinyin.equals("xksj")) return "选课时间";
+        if (pinyin.equals("kkyx")) return "开课院系";
         return "skip";
     }
 

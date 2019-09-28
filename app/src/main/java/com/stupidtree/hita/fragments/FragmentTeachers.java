@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.core.Subject;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -36,24 +38,28 @@ public class FragmentTeachers extends BaseFragment {
     List<Map<String, String>> listRes;
     listAdapter listAdapter;
     refreshListTask pageTask;
+    String curriculumCode;
+    boolean firstResume = true;
 
     public FragmentTeachers() {
         // Required empty public constructor
     }
 
 
-    public static FragmentTeachers newInstance() {
+    public static FragmentTeachers newInstance(String curriculumCode) {
         FragmentTeachers fragment = new FragmentTeachers();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
+        Bundle args = new Bundle();
+        args.putString("curriculum_code",curriculumCode);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments()!=null){
+            curriculumCode = getArguments().getString("curriculum_code");
+        }
     }
 
     @Override
@@ -70,7 +76,9 @@ public class FragmentTeachers extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-       Refresh();
+        Refresh(firstResume);
+        if(firstResume) firstResume = false;
+
     }
 
     void initList(View v) {
@@ -78,7 +86,7 @@ public class FragmentTeachers extends BaseFragment {
         listAdapter = new listAdapter();
         listRes = new ArrayList<>();
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        list.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     @Override
@@ -87,12 +95,14 @@ public class FragmentTeachers extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
+
+    }
+    public void Refresh(boolean anim) {
         if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
-        pageTask =  new refreshListTask();
+        pageTask =  new refreshListTask(anim);
         pageTask.execute();
     }
-
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
@@ -100,6 +110,12 @@ public class FragmentTeachers extends BaseFragment {
     }
 
     class refreshListTask extends AsyncTask {
+
+        boolean anim;
+
+        public refreshListTask(boolean anim) {
+            this.anim = anim;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -110,7 +126,7 @@ public class FragmentTeachers extends BaseFragment {
         @Override
         protected Object doInBackground(Object[] objects) {
             if (!isDataAvailable()) return false;
-            List<Subject> sl = allCurriculum.get(thisCurriculumIndex).getSubjects();
+            List<Subject> sl = Curriculum.getSubjects(curriculumCode);
             for (Subject s : sl) {
                 EventItem ei = s.getFirstCourse();
                 if (ei == null) continue;
@@ -132,6 +148,7 @@ public class FragmentTeachers extends BaseFragment {
                 Toast.makeText(HContext, "无教师信息", Toast.LENGTH_SHORT).show();
             }
             listAdapter.notifyDataSetChanged();
+            if(anim) list.scheduleLayoutAnimation();
         }
     }
 
@@ -163,7 +180,7 @@ public class FragmentTeachers extends BaseFragment {
 
         class viewHolder extends RecyclerView.ViewHolder {
             TextView name, subject;
-            CardView card;
+            View card;
 
             public viewHolder(@NonNull View itemView) {
                 super(itemView);

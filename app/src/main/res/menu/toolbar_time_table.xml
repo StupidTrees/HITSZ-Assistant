@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<menu tools:context="com.stupidtree.hita.activities.ActivityUserCenter" xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:title="设置" android:id="@+id/action_settings"
+<menu tools:context="com.stupidtree.hita.activities.ActivityTimeTable"
+
+    xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:title="添加课程" android:id="@+id/action_add_course"
       app:showAsAction="never"
       android:orderInCategory="100"/>
-  <item android:title="仅显示课程" android:id="@+id/action_switch_timetable"
-      app:showAsAction="never"
-      android:orderInCategory="80"
-      android:checkable="true"/>
+  <!--<item android:title="仅显示课程" android:id="@+id/action_switch_timetable"-->
+      <!--app:showAsAction="never"-->
+      <!--android:orderInCategory="80"-->
+      <!--android:checkable="true"/>-->
       <!--android:actionLayout="@layout/util_dynamictimetable_toolbar_actionlayout"-->
-  <item android:title="显示全天" android:id="@+id/action_whole_day"
+  <item android:title="从零点开始显示" android:id="@+id/action_whole_day"
       app:showAsAction="never"
       android:orderInCategory="80"
       android:checkable="true"/>
-  <item android:title="管理课程表" android:id="@+id/action_import_timetable"
+  <item android:title="显示当前时间线" android:id="@+id/action_draw_now_line"
       app:showAsAction="never"
-      android:orderInCategory="90"
-      android:icon="@drawable/bt_timetable_toolbar_import"
-      />
+      android:orderInCategory="80"
+      android:checkable="true"/>
+  <item android:title="科目颜色" android:id="@+id/action_colorful_mode"
+      app:showAsAction="never"
+      android:orderInCategory="80"
+      android:checkable="true"/>
+  <item android:title="随机分配颜色" android:id="@+id/action_reset_color"
+      app:showAsAction="never"
+      android:orderInCategory="80" />
+  <item android:title="各科目使用主题色" android:id="@+id/action_reset_color_to_theme"
+      app:showAsAction="never"
+      android:orderInCategory="80" />
+  <!--<item android:title="切换课程表" android:id="@+id/action_import_timetable"-->
+      <!--app:showAsAction="never"-->
+      <!--android:orderInCategory="90"-->
+      <!--/>-->
 </menu>

@@ -1,4 +1,28 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:layout_width="match_parent"
+        android:title="功能开关">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="app_task_enabled"
+            android:summary="开启后方可使用学习助手"
+            android:textColor="?attr/text_color_primary"
+            android:textColorHint="?attr/text_color_secondary"
+            android:title="任务模块(开发阶段)" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="教务设置">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="jwts_autologin"
+            android:summary="需要绑定学号并设置本地登录密码"
+            android:title="后台自动登录同步" />
+        <EditTextPreference
+            android:key="jwts_password"
+            android:inputType="textPassword"
+            android:summary="出于隐私安全，密码不会保存在云"
+            android:title="设置教务登录密码" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="外观设置">
         <ListPreference
             android:dialogTitle="设置大可莫得开启时机"
@@ -6,24 +30,14 @@
             android:entryValues="@array/preference_dark_mode_values"
             android:key="dark_mode_mode"
             android:title="深色模式选项"></ListPreference>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="课程表设置">
         <SwitchPreference
             android:defaultValue="true"
-            android:key="navi_show_news"
-            android:summary="给你一个干净的主页(重启生效)"
-            android:textColor="?attr/text_color_primary"
-            android:textColorHint="?attr/text_color_secondary"
-            android:title="校园页面显示讲座新闻" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:layout_width="match_parent"
-        android:title="功能开关">
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="app_task_enabled"
-            android:summary="开启后方可使用学习助手"
-            android:textColor="?attr/text_color_primary"
-            android:textColorHint="?attr/text_color_secondary"
-            android:title="任务模块" />
+            android:key="timetable_colorful_mode"
+            android:summary="在课表和科目管理页面为不同科目着色"
+            android:title="启用科目颜色（多彩模式）" />
     </PreferenceCategory>
     <PreferenceCategory
         android:layout_width="match_parent"

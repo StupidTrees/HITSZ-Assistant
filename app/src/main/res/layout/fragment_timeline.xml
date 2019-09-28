@@ -31,7 +31,7 @@
                 android:visibility="visible"
                 app:cardBackgroundColor="?attr/background_color_second"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
+                app:cardElevation="8dp"
                 app:layout_collapseMode="none"
                 app:layout_collapseParallaxMultiplier="0.95">
 
@@ -84,6 +84,7 @@
                             android:id="@+id/timeline_head_image"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginBottom="48dp"
                             android:scaleType="centerInside"
                             android:tint="@color/material_text_icon_white"
                             android:visibility="invisible"
@@ -95,6 +96,7 @@
                             android:layout_width="110dp"
                             android:layout_height="110dp"
                             android:layout_gravity="center"
+                            android:layout_marginBottom="18dp"
                             android:visibility="invisible"
                             app:arc_bottom_text="进度"
                             app:arc_bottom_text_size="12sp"
@@ -104,99 +106,84 @@
                             app:arc_text_size="20sp"
                             app:arc_unfinished_color="#66FFFFFF" />
 
-                  <!--<com.gelitenight.waveview.library.WaveView-->
-                            <!--android:id="@+id/timeline_head_waveview"-->
-                            <!--android:layout_width="90dp"-->
-                            <!--android:layout_height="90dp"-->
-                            <!--android:layout_centerHorizontal="true"-->
-                            <!--android:layout_gravity="center"-->
-                            <!--android:visibility="invisible" />-->
+                        <!--<com.gelitenight.waveview.library.WaveView-->
+                        <!--android:id="@+id/timeline_head_waveview"-->
+                        <!--android:layout_width="90dp"-->
+                        <!--android:layout_height="90dp"-->
+                        <!--android:layout_centerHorizontal="true"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:visibility="invisible" />-->
 
                         <LinearLayout
                             android:id="@+id/timeline_head_gonow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginBottom="24dp"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:visibility="invisible">
 
+                            <ImageView
+                                android:id="@+id/imageView36"
+                                android:layout_width="84dp"
+                                android:layout_height="84dp"
+                                android:layout_marginBottom="4dp"
+                                android:tint="@color/material_text_icon_white"
+                                app:srcCompat="@drawable/ic_run" />
+
                             <TextView
-                                android:id="@+id/tl_head_gonow_course"
+                                android:id="@+id/tl_head_gonow_classroom"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:layout_marginBottom="16dp"
+                                android:alpha="0.8"
+                                android:fontFamily="sans-serif-black"
                                 android:maxEms="9"
                                 android:singleLine="true"
-                                android:text="后即将开始，请立刻前往"
+                                android:text="T3401"
                                 android:textColor="@color/material_text_icon_white"
                                 android:textSize="18sp" />
 
-                            <androidx.cardview.widget.CardView
-                                android:id="@+id/find_classroom"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center"
-                                android:layout_marginBottom="16dp"
-                                android:clickable="true"
-                                android:foreground="?attr/selectableItemBackgroundBorderless"
-                                app:cardBackgroundColor="?attr/background_color_second"
-                                app:cardCornerRadius="18dp"
-                                app:cardElevation="0dp">
-
-                                <TextView
-                                    android:id="@+id/tl_head_gonow_classroom"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_marginRight="8dp"
-                                    android:maxEms="8"
-                                    android:singleLine="true"
-                                    android:text="哈工大排球场"
-                                    android:textColor="?attr/text_color_secondary"
-                                    android:textSize="18sp" />
-                            </androidx.cardview.widget.CardView>
                         </LinearLayout>
 
                     </FrameLayout>
 
-                    <LinearLayout
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:id="@+id/bt_timetable"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|right"
-                        android:orientation="horizontal">
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="16dp"
+                        android:tint="@color/material_text_icon_white"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/bt_timeline_toolbar_timetable"
+                        app:theme="@style/button_ripple_white" />
 
-
-                        <ImageView
-                            android:id="@+id/bt_timetable"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?attr/selectableItemBackground"
-                            android:padding="16dp"
-                            android:tint="@color/material_text_icon_white"
-                            android:visibility="gone"
-                            app:srcCompat="@drawable/bt_timeline_toolbar_timetable"
-                            app:theme="@style/button_ripple_white" />
-
-                        <ImageView
-                            android:id="@+id/bt_add"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?attr/selectableItemBackground"
-                            android:padding="16dp"
-                            android:tint="@color/material_text_icon_white"
-                            app:srcCompat="@drawable/bt_timeline_toolbar_add"
-                            app:theme="@style/button_ripple_white" />
-
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/bt_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="16dp"
+                        android:tint="@color/material_text_icon_white"
+                        app:srcCompat="@drawable/bt_timeline_toolbar_add"
+                        app:theme="@style/button_ripple_white" />
 
                 </LinearLayout>
 
@@ -210,46 +197,66 @@
                     android:orientation="vertical"
                     android:visibility="invisible">
 
-                    <TextView
-                        android:id="@+id/tl_head_counting_time"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="bottom"
-                        android:text="2小时20分钟"
-                        android:textColor="?attr/colorPrimary"
-                        android:textSize="36sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/tl_head_counting_middle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="6dp"
-                        android:text="后进行"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/tl_head_counting_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="16dp"
+                            android:layout_weight="1"
+                            android:gravity="bottom|start"
+                            android:maxEms="9"
+                            android:text="2小时20分钟"
+                            android:textColor="?attr/text_color_secondary"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tl_head_counting_name"
+                        <TextView
+                            android:id="@+id/tl_head_counting_middle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="16dp"
+                            android:text="后进行"
+                            android:textColor="?attr/text_color_secondary"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <Space
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:maxEms="8"
-                        android:singleLine="true"
-                        android:text="高等数学B"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="24sp" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
 
                     <ImageView
                         android:id="@+id/tl_head_counting_image"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:layout_margin="8dp"
+                        android:layout_marginBottom="4dp"
+                        android:alpha=".8"
+                        android:scaleType="centerCrop"
                         android:tint="?attr/colorPrimary"
-                        app:srcCompat="@drawable/ic_task" />
+                        android:tintMode="src_in"
+                        android:visibility="visible"
+                        app:srcCompat="@drawable/ic_access_alarm_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/tl_head_counting_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="48dp"
+                        android:alpha="0.8"
+                        android:fontFamily="sans-serif-black"
+                        android:gravity="center"
+                        android:maxEms="8"
+                        android:singleLine="true"
+                        android:text="高等数学B"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
 

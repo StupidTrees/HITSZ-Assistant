@@ -1,7 +1,6 @@
 package com.stupidtree.hita.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,30 +11,27 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
-import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import androidx.core.app.ActivityOptionsCompat;
+
 import androidx.core.widget.NestedScrollView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.util.Pair;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Layout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,14 +43,11 @@ import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.activities.ActivityUserCenter;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.TimeWatcher;
 import com.stupidtree.hita.activities.ActivityCourse;
-import com.stupidtree.hita.activities.ActivityExplore;
 import com.stupidtree.hita.activities.ActivityRankBoard;
 import com.stupidtree.hita.activities.ActivityLogin;
 import com.stupidtree.hita.activities.ActivityLoginJWTS;
 import com.stupidtree.hita.activities.ActivityMain;
-import com.stupidtree.hita.activities.ActivitySubject;
 import com.stupidtree.hita.activities.ActivityTeacher;
 import com.stupidtree.hita.activities.ActivityTimeTable;
 import com.stupidtree.hita.adapter.TimeLineWholedayAdapter;
@@ -79,6 +72,7 @@ import static com.stupidtree.hita.TimeWatcher.nowEvent;
 import static com.stupidtree.hita.TimeWatcher.nowProgress;
 import static com.stupidtree.hita.TimeWatcher.todaysEvents;
 
+import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_COURSE;
 import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE;
 import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC;
@@ -99,20 +93,20 @@ public class FragmentTimeLine extends BaseFragment implements
     NestedScrollView noneLayout;
     View[] heads;
     ArcProgress circleProgress;
-   // WaveView waveView;
-   // WaveViewHelper waveViewHelper;
+    // WaveView waveView;
+    // WaveViewHelper waveViewHelper;
     DecimalFormat df = new DecimalFormat("#.#%");
     TimelineListAdapter TimeLineListAdapter;
     TimeLineWholedayAdapter timelineWholedayAdapter;
-    RecyclerView TimeLineList,timelineWholedayList;
-    List<EventItem> timelineRes,wholeDayRes;
-    ImageView bt_bar_timetable,bt_bar_addEvent;
-    LinearLayout head_counting,head_goNow;
-    TextView head_counting_time,head_counting_name,head_counting_middle,
-            head_goQuickly_classroom,head_goNow_course;
-    CardView findClassroom,head_card;
-    TextView head_title,head_subtitle;
-    ImageView head_image,head_counting_image;
+    RecyclerView TimeLineList, timelineWholedayList;
+    List<EventItem> timelineRes, wholeDayRes;
+    ImageView bt_bar_timetable, bt_bar_addEvent;
+    LinearLayout head_counting, head_goNow;
+    TextView head_counting_time, head_counting_name, head_counting_middle,
+            head_goQuickly_classroom;
+    CardView head_card;
+    TextView head_title, head_subtitle;
+    ImageView head_image, head_counting_image;
 
     //public FragmentTasks ftsk;
     boolean switchToCountingAvailable = false;
@@ -122,14 +116,14 @@ public class FragmentTimeLine extends BaseFragment implements
     SwipeRefreshLayout swipeRefreshLayout;
     RefreshTask pageTask;
 
-    public FragmentTimeLine(){
+    public FragmentTimeLine() {
 
     }
 
-    public static FragmentTimeLine newInstance(Boolean isFirst){
-        FragmentTimeLine fl = new  FragmentTimeLine();
+    public static FragmentTimeLine newInstance(Boolean isFirst) {
+        FragmentTimeLine fl = new FragmentTimeLine();
         Bundle b = new Bundle();
-        b.putBoolean("isFirst",isFirst);
+        b.putBoolean("isFirst", isFirst);
         fl.setArguments(b);
         return fl;
     }
@@ -137,20 +131,21 @@ public class FragmentTimeLine extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments()!=null) isFirst = getArguments().getBoolean("isFirst");
+        if (getArguments() != null) isFirst = getArguments().getBoolean("isFirst");
         //layoutAnimationController = AnimationUtils.loadLayoutAnimation(FragmentTimeLine.this.getContext(), R.anim.recycler_layout_animation_falls_down);
 
         initReciever();
     }
 
 
-    private void initReciever(){
+    private void initReciever() {
         refreshReciever = new RefreshBroadcastReceiver();
         refreshReciever.setListener(this);
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter iF = new IntentFilter();
         iF.addAction("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
-        localBroadcastManager.registerReceiver(refreshReciever,iF);
+        iF.addAction("COM.STUPIDTREE.HITA.TIMETABLE_PAGE_REFRESH");
+        localBroadcastManager.registerReceiver(refreshReciever, iF);
     }
 
 
@@ -158,18 +153,18 @@ public class FragmentTimeLine extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_timeline, container, false);
-        timeWatcher.refreshProgress(true,true);
+        timeWatcher.refreshProgress(true, true);
         initViews(v);
         initListAndAdapter(v);
 
-        if(!isFirst){
+        if (!isFirst) {
             head_card.post(new Runnable() {
                 @Override
                 public void run() {
-                    MaterialCircleAnimator.animShow(mAppBarLayout,500);
+                    MaterialCircleAnimator.animShow(mAppBarLayout, 500);
                 }
             });
-        }else{
+        } else {
             head_card.setVisibility(View.INVISIBLE);
         }
 
@@ -179,20 +174,21 @@ public class FragmentTimeLine extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        Refresh(TL_REFRESH_FROM_UNHIDE,false);
+        Refresh(TL_REFRESH_FROM_UNHIDE, false);
     }
 
-    public void showHeadCard(){
-        if(!hasInit) return;
+    public void showHeadCard() {
+        if (!hasInit) return;
         head_card.setVisibility(View.VISIBLE);
         head_card.post(new Runnable() {
             @Override
             public void run() {
-                MaterialCircleAnimator.animShow(mAppBarLayout,500);
+                MaterialCircleAnimator.animShow(mAppBarLayout, 500);
             }
         });
     }
-    public void continueToGuide(){
+
+    public void continueToGuide() {
         new TapTargetSequence(this.getActivity())
                 .targets(
 //                        TapTarget.forView(bt_bar_timetable,"点这里查看时间表","课程表plus")
@@ -204,7 +200,7 @@ public class FragmentTimeLine extends BaseFragment implements
 //                                .transparentTarget(true)
 //                                .targetCircleColor(R.color.white)
 //                                .outerCircleColor(R.color.amber_primary),
-                        TapTarget.forView(bt_bar_addEvent,"点这里添加事件","妈妈再也不用担心我的时间安排")
+                        TapTarget.forView(bt_bar_addEvent, "点这里添加事件", "妈妈再也不用担心我的时间安排")
                                 .drawShadow(true)
                                 .cancelable(false)
                                 .tintTarget(false)
@@ -216,11 +212,12 @@ public class FragmentTimeLine extends BaseFragment implements
                 ).listener(new TapTargetSequence.Listener() {
             @Override
             public void onSequenceFinish() {
-                ((ActivityMain)getActivity()).continueToGuide();
+                ((ActivityMain) getActivity()).continueToGuide();
             }
 
             @Override
-            public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {;
+            public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                ;
             }
 
             @Override
@@ -233,23 +230,29 @@ public class FragmentTimeLine extends BaseFragment implements
     }
 
 
-
     @Override
     public void receive(Context context, Intent intent) {
-        if(intent.getAction().equals("COM.STUPIDTREE.HITA.TIMELINE_REFRESH")){
-            if(intent.hasExtra("from")&&intent.getStringExtra("from").equals("time_tick")) Refresh(TL_REFRESH_FROM_TIMETICK,false);
-            else if(intent.hasExtra("from")&&intent.getStringExtra("from").equals("task")) Refresh(TL_REFRESH_FROM_TASK,false);
-            else Refresh(TL_REFRESH_FROM_UNHIDE,false);
+        if (intent.getAction().equals("COM.STUPIDTREE.HITA.TIMELINE_REFRESH")) {
+            if (intent.hasExtra("from") && intent.getStringExtra("from").equals("time_tick"))
+                Refresh(TL_REFRESH_FROM_TIMETICK, false);
+            else if (intent.hasExtra("from") && intent.getStringExtra("from").equals("task"))
+                Refresh(TL_REFRESH_FROM_TASK, false);
+            else Refresh(TL_REFRESH_FROM_UNHIDE, false);
+        }
+        Log.e("receive:",intent.getAction());
+        if (intent.getAction().equals("COM.STUPIDTREE.HITA.TIMETABLE_PAGE_REFRESH")) {
+
+            Refresh(TL_REFRESH_FROM_UNHIDE, true);
         }
     }
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
 
     }
 
@@ -264,10 +267,9 @@ public class FragmentTimeLine extends BaseFragment implements
         bt_bar_timetable = v.findViewById(R.id.bt_timetable);
         bt_bar_addEvent = v.findViewById(R.id.bt_add);
         head_title = v.findViewById(R.id.timeline_titile);
-        head_subtitle= v.findViewById(R.id.timeline_subtitle);
+        head_subtitle = v.findViewById(R.id.timeline_subtitle);
         head_image = v.findViewById(R.id.timeline_head_image);
         head_goNow = v.findViewById(R.id.timeline_head_gonow);
-        head_goNow_course = v.findViewById(R.id.tl_head_gonow_course);
         mCollapsingToolbarLayout = v.findViewById(R.id.collapsingtoolbar);
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor("#202020"));
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#00202020"));
@@ -290,7 +292,7 @@ public class FragmentTimeLine extends BaseFragment implements
 
 
     @SuppressLint("ClickableViewAccessibility")
-    public void initHead(View v){
+    public void initHead(View v) {
         circleProgress = v.findViewById(R.id.circle_progress);
 //        waveView = v.findViewById(R.id.timeline_head_waveview);
 //        waveViewHelper = new WaveViewHelper(waveView, nowProgress);
@@ -299,15 +301,14 @@ public class FragmentTimeLine extends BaseFragment implements
 //        waveView.setWaveColor(
 //                Color.WHITE,Color.parseColor("#66FFFFFF")
 //        );
-        findClassroom = v.findViewById(R.id.find_classroom);
         headCardClickListener = new headCardClickListener();
 
         head_card.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getActionMasked() == MotionEvent.ACTION_DOWN){
-                   headCardClickListener.posX = event.getX();
-                   headCardClickListener.posY = event.getY();
+                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    headCardClickListener.posX = event.getX();
+                    headCardClickListener.posY = event.getY();
                 }
                 return false;
             }
@@ -315,7 +316,7 @@ public class FragmentTimeLine extends BaseFragment implements
 
         head_card.setOnClickListener(headCardClickListener);
         head_counting = v.findViewById(R.id.head_counting);
-        heads = new View[]{head_image,head_goNow,circleProgress};
+        heads = new View[]{head_image, head_goNow, circleProgress};
         head_counting_name = v.findViewById(R.id.tl_head_counting_name);
         head_counting_image = v.findViewById(R.id.tl_head_counting_image);
         head_counting_middle = v.findViewById(R.id.tl_head_counting_middle);
@@ -329,28 +330,20 @@ public class FragmentTimeLine extends BaseFragment implements
                 FragmentTimeLine.this.getActivity().startActivity(i);
             }
         };
-       // findFood_lunch.setOnClickListener(findFoodListener);
+        // findFood_lunch.setOnClickListener(findFoodListener);
         //findFood_dinner.setOnClickListener(findFoodListener);
-        findClassroom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(FragmentTimeLine.this.getActivity(), ActivityExplore.class);
-                i.putExtra("terminal",head_goQuickly_classroom.getText());
-                FragmentTimeLine.this.getActivity().startActivity(i);
-            }
-        });
     }
 
     public void initListAndAdapter(View v) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         TimeLineList = v.findViewById(R.id.timelinelist);
         swipeRefreshLayout = v.findViewById(R.id.timeline_refresh);
         timelineWholedayList = v.findViewById(R.id.timeline_wholeday_list);
         wholeDayRes = new ArrayList<>();
         timelineRes = new ArrayList<>();
-        timelineWholedayAdapter = new TimeLineWholedayAdapter(this.getContext(),wholeDayRes);
-        TimeLineListAdapter = new TimelineListAdapter(this.getContext(),timelineRes);
+        timelineWholedayAdapter = new TimeLineWholedayAdapter(this.getContext(), wholeDayRes);
+        TimeLineListAdapter = new TimelineListAdapter(this.getContext(), timelineRes);
         TimeLineList.setAdapter(TimeLineListAdapter);
         TimeLineList.setLayoutManager(layoutManager);
         timelineWholedayList.setLayoutManager(layoutManager2);
@@ -358,7 +351,7 @@ public class FragmentTimeLine extends BaseFragment implements
         TimeLineListAdapter.setOnItemClickLitener(new TimelineListAdapter.OnItemClickLitener() {
             @Override
             public void onItemClick(View card, View time, View name, int position) {
-                showEventDialog(FragmentTimeLine.this.getActivity(), timelineRes.get(position),card,name);
+                showEventDialog(FragmentTimeLine.this.getActivity(), timelineRes.get(position), card, name);
             }
 
 
@@ -366,27 +359,46 @@ public class FragmentTimeLine extends BaseFragment implements
         TimeLineListAdapter.setOnItemLongClickLitener(new TimelineListAdapter.OnItemLongClickLitener() {
             @Override
             public void onItemLongClick(View view, int position) {
-                if (todaysEvents.get(position).eventType != TimeTable.TIMETABLE_EVENT_TYPE_COURSE&&todaysEvents.get(position).eventType != TIMETABLE_EVENT_TYPE_DYNAMIC) {
+                if (todaysEvents.get(position).eventType != TimeTable.TIMETABLE_EVENT_TYPE_COURSE && todaysEvents.get(position).eventType != TIMETABLE_EVENT_TYPE_DYNAMIC) {
                     ExplosionField ef = ExplosionField.attach2Window(FragmentTimeLine.this.getActivity());
                     ef.explode(view);
                     new DeleteTask_timeline(position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
         });
-        TimeLineListAdapter.setmOnNaviClickListener(new TimelineListAdapter.OnNaviClickListener() {
-            @Override
-            public void onNaviClick(View view, int position, int type,String terminal) {
-                if(type== TIMETABLE_EVENT_TYPE_EXAM||type== TIMETABLE_EVENT_TYPE_COURSE){
-                    Intent i = new Intent(getActivity(),ActivityExplore.class);
-                    i.putExtra("terminal",terminal);
-                    startActivity(i);
-                }
-            }
-        });
+//        TimeLineListAdapter.setmOnNaviClickListener(new TimelineListAdapter.OnNaviClickListener() {
+//            @Override
+//            public void onNaviClick(View view, int position, int type, String terminal) {
+//                if (type == TIMETABLE_EVENT_TYPE_EXAM || type == TIMETABLE_EVENT_TYPE_COURSE) {
+//                    final String cr[] = terminal.split("，\\[");
+//                    final ArrayList<String> classRooms = new ArrayList<>(Arrays.asList(cr));
+//                    if (classRooms.size() > 1) {
+//                        ArrayList<String> toRemove = new ArrayList<>();
+//                        for (int i = 0; i < classRooms.size(); i++) {
+//                            classRooms.set(i, classRooms.get(i).substring(classRooms.get(i).lastIndexOf("周") + 1));
+//                        }
+//                        for (String x : classRooms) {
+//                            if (TextUtils.isEmpty(x)) toRemove.add(x);
+//                        }
+//                        classRooms.removeAll(toRemove);
+//                        String classRoomItems[] = new String[classRooms.size()];
+//                        for (int i = 0; i < classRoomItems.length; i++)
+//                            classRoomItems[i] = classRooms.get(i);
+//                        AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle("选择教室").setItems(classRoomItems, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                ActivityUtils.startExploreActivity_forNavi(getActivity(), classRooms.get(i));
+//                            }
+//                        }).create();
+//                        ad.show();
+//                    } else ActivityUtils.startExploreActivity_forNavi(getActivity(), terminal);
+//                }
+//            }
+//        });
         timelineWholedayAdapter.setOnItemClickListener(new TimeLineWholedayAdapter.OnItemClickListener() {
             @Override
             public void OnClick(View v, int position) {
-                showEventDialog(FragmentTimeLine.this.getActivity(),wholeDayRes.get(position),null,null);
+                showEventDialog(FragmentTimeLine.this.getActivity(), wholeDayRes.get(position), null, null);
             }
         });
 
@@ -399,127 +411,125 @@ public class FragmentTimeLine extends BaseFragment implements
                 return true;
             }
         });
-        swipeRefreshLayout.setColorSchemeColors(((BaseActivity)getActivity()).getColorAccent());
+        swipeRefreshLayout.setColorSchemeColors(((BaseActivity) getActivity()).getColorAccent());
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Refresh(TL_REFRESH_FROM_TIMETICK,true);
+                Refresh(TL_REFRESH_FROM_TIMETICK, true);
             }
         });
     }
 
     public void UpdateHeadView() {
-        String titleToSet,subtitltToSet;
-        if(CurrentUser==null){
+        String titleToSet, subtitltToSet;
+        if (CurrentUser == null) {
             titleToSet = HContext.getString(R.string.timeline_head_nulluser_title);
             subtitltToSet = HContext.getString(R.string.timeline_head_nulluser_subtitle);
-            switchHeadView(head_image,R.drawable.ic_timeline_head_login);
+            switchHeadView(head_image, R.drawable.ic_timeline_head_login);
             //switchToCountingAvailable = false;
             headCardClickListener.setMode(headCardClickListener.LOG_IN);
 
-        }else if(CurrentUser!=null&&!isDataAvailable()){
+        } else if (CurrentUser != null && !isDataAvailable()) {
             titleToSet = HContext.getString(R.string.timeline_head_nulldata_title);
             subtitltToSet = HContext.getString(R.string.timeline_head_nulldata_subtitle);
-            switchHeadView(head_image,R.drawable.ic_timeline_head_nulldata);
+            switchHeadView(head_image, R.drawable.ic_timeline_head_nulldata);
             headCardClickListener.setMode(headCardClickListener.JWTS);
             switchToCountingAvailable = false;
-        }else if(!isThisTerm){
+        } else if (!isThisTerm) {
             titleToSet = HContext.getString(R.string.timeline_head_notthisterm_title);
             subtitltToSet = HContext.getString(R.string.timeline_head_notthisterm_subtitle);
-            switchHeadView(head_image,R.drawable.ic_origami_paper_bird);
+            switchHeadView(head_image, R.drawable.ic_origami_paper_bird);
             headCardClickListener.setMode(headCardClickListener.SHOW_NEXT);
-        } else if(todaysEvents.size()==0){
+        } else if (todaysEvents.size() == 0) {
             titleToSet = HContext.getString(R.string.timeline_head_free_title);
             subtitltToSet = HContext.getString(R.string.timeline_head_free_subtitle);
-            switchHeadView(head_image,R.drawable.ic_timeline_head_free);
+            switchHeadView(head_image, R.drawable.ic_timeline_head_free);
             headCardClickListener.setMode(headCardClickListener.SHOW_NEXT);
-        } else if(nowEvent!=null){
-            switchHeadView(circleProgress,-1);
-            titleToSet= nowEvent.mainName;
+        } else if (nowEvent != null) {
+            switchHeadView(circleProgress, -1);
+            titleToSet = nowEvent.mainName;
             subtitltToSet = "正在进行";
-            circleProgress.setProgress((int) (nowProgress*100));
+            circleProgress.setProgress((int) (nowProgress * 100));
 //
 //            waveView.setWaterLevelRatio(nowProgress);
 //            waveViewHelper.start();
 
             headCardClickListener.setMode(headCardClickListener.SHOW_NEXT);
-        }else{
-            if(new HTime(now).compareTo(new HTime(5,0))<0&&new HTime(now).compareTo(new HTime(0,0))>0){
-                switchHeadView(head_image,R.drawable.ic_moon);
+        } else {
+            if (new HTime(now).compareTo(new HTime(5, 0)) < 0 && new HTime(now).compareTo(new HTime(0, 0)) > 0) {
+                switchHeadView(head_image, R.drawable.ic_moon);
                 titleToSet = HContext.getString(R.string.timeline_head_goodnight_title);
                 subtitltToSet = HContext.getString(R.string.timeline_head_goodnight_subtitle);
                 headCardClickListener.setMode(headCardClickListener.SHOW_NEXT);
-            }else if(new HTime(now).compareTo(new HTime(8,15))<0&&new HTime(now).compareTo(new HTime(5,00))>0){
-                switchHeadView(head_image,R.drawable.ic_sunny);
+            } else if (new HTime(now).compareTo(new HTime(8, 15)) < 0 && new HTime(now).compareTo(new HTime(5, 00)) > 0) {
+                switchHeadView(head_image, R.drawable.ic_sunny);
                 titleToSet = HContext.getString(R.string.timeline_head_goodmorning_title);
-                subtitltToSet= "今天共有"+ timeWatcher.getTodayCourseNum()+"节课";
+                subtitltToSet = "今天共有" + timeWatcher.getTodayCourseNum() + "节课";
                 headCardClickListener.setMode(headCardClickListener.SHOW_NEXT);
-            }else if(new HTime(now).compareTo(new HTime(12,15))>0&&new HTime(now).compareTo(new HTime(13,00))<0){
-                switchHeadView(head_image,R.drawable.ic_lunch);
+            } else if (new HTime(now).compareTo(new HTime(12, 15)) > 0 && new HTime(now).compareTo(new HTime(13, 00)) < 0) {
+                switchHeadView(head_image, R.drawable.ic_lunch);
                 titleToSet = HContext.getString(R.string.timeline_head_lunch_title);
                 subtitltToSet = HContext.getString(R.string.timeline_head_lunch_subtitle);
                 headCardClickListener.setMode(headCardClickListener.CANTEEN);
-            }else if(new HTime(now).compareTo(new HTime(17,10))>0&&new HTime(now).compareTo(new HTime(18,10))<0){
-                switchHeadView(head_image,R.drawable.ic_lunch);
+            } else if (new HTime(now).compareTo(new HTime(17, 10)) > 0 && new HTime(now).compareTo(new HTime(18, 10)) < 0) {
+                switchHeadView(head_image, R.drawable.ic_lunch);
                 titleToSet = HContext.getString(R.string.timeline_head_dinner_title);
                 subtitltToSet = HContext.getString(R.string.timeline_head_dinner_subtitle);
                 headCardClickListener.setMode(headCardClickListener.CANTEEN);
-            }else if(nextEvent!=null){
-                if(nextEvent.startTime.getDuration(new HTime(now))<=15&&(nextEvent.eventType==TimeTable.TIMETABLE_EVENT_TYPE_COURSE||nextEvent.eventType==TimeTable.TIMETABLE_EVENT_TYPE_EXAM)){
-                    switchHeadView(head_goNow,-1);
-                    subtitltToSet = HContext.getString(R.string.timeline_head_gonow_subtitle);
-
-                    titleToSet = (nextEvent.startTime.getDuration(new HTime(now)) >= 60 ?
-                            (nextEvent.startTime.getDuration(new HTime(now))) / 60 + "小时" + (nextEvent.startTime.getDuration(new HTime(now))) % 60 + "分"
-                            :nextEvent.startTime.getDuration(new HTime(now))+"分钟")+"后";
+            } else if (nextEvent != null) {
+                if (nextEvent.startTime.getDuration(new HTime(now)) <= 15 && (nextEvent.eventType == TimeTable.TIMETABLE_EVENT_TYPE_COURSE || nextEvent.eventType == TimeTable.TIMETABLE_EVENT_TYPE_EXAM)) {
+                    switchHeadView(head_goNow, -1);
+                    titleToSet = nextEvent.mainName;
+                    // subtitltToSet = HContext.getString(R.string.timeline_head_gonow_subtitle);
+                    subtitltToSet = nextEvent.startTime.getDuration(new HTime(now)) + "分钟" + "后开始";
                     head_goQuickly_classroom.setText(nextEvent.tag2);
-                    head_goNow_course.setText(nextEvent.mainName);
-                    headCardClickListener.setMode(headCardClickListener.NONE);
-                }else{
+                    headCardClickListener.setMode(headCardClickListener.NAVI_CLASSROOM);
+                } else {
                     titleToSet = HContext.getString(R.string.timeline_head_normal_title);
                     subtitltToSet = HContext.getString(R.string.timeline_head_normal_subtitle);
-                    switchHeadView(head_image,R.drawable.ic_sunglasses);
+                    switchHeadView(head_image, R.drawable.ic_sunglasses);
                     headCardClickListener.setMode(headCardClickListener.SHOW_NEXT);
                 }
-            }else{
-                if(new HTime(now).compareTo(new HTime(23,00))>0||new HTime(now).compareTo(new HTime(5,0))<0){
-                    switchHeadView(head_image,R.drawable.ic_moon);
+            } else {
+                if (new HTime(now).compareTo(new HTime(23, 00)) > 0 || new HTime(now).compareTo(new HTime(5, 0)) < 0) {
+                    switchHeadView(head_image, R.drawable.ic_moon);
                     titleToSet = HContext.getString(R.string.timeline_head_goodnight_title);
                     subtitltToSet = HContext.getString(R.string.timeline_head_goodnight_subtitle);
-                }else{
-                    switchHeadView(head_image,R.drawable.ic_finish);
+
+                } else {
+                    switchHeadView(head_image, R.drawable.ic_finish);
                     titleToSet = HContext.getString(R.string.timeline_head_finish_title);
                     subtitltToSet = HContext.getString(R.string.timeline_head_finish_subtitle);
                 }
-                switchToCountingAvailable = false;
+                headCardClickListener.setMode(headCardClickListener.SHOW_NEXT);
+                switchToCountingAvailable = true;
             }
         }
-        if(nextEvent!=null){
+        if (nextEvent != null) {
             String timeText = nextEvent.startTime.getDuration(new HTime(now)) >= 60 ?
-                    (nextEvent.startTime.getDuration(new HTime(now))) / 60 + "小时" + ((int) nextEvent.startTime.getDuration(new HTime(now))) % 60 + "分"
-                    :nextEvent.startTime.getDuration(new HTime(now))+"分钟";
+                    (nextEvent.startTime.getDuration(new HTime(now))) / 60 + "小时" + ((int) nextEvent.startTime.getDuration(new HTime(now))) % 60 + "分钟"
+                    : nextEvent.startTime.getDuration(new HTime(now)) + "分钟";
             head_counting_name.setText(nextEvent.mainName);
             head_counting_time.setText(timeText);
-            head_counting_middle.setVisibility(View.VISIBLE);
-            head_counting_time.setVisibility(View.VISIBLE);
-            head_counting_image.setVisibility(View.GONE);
-            head_counting_name.setVisibility(View.VISIBLE);
-        }else{
-            head_counting_name.setVisibility(View.GONE);
-            head_counting_middle.setVisibility(View.GONE);
-            head_counting_time.setVisibility(View.GONE);
-            head_counting_image.setVisibility(View.VISIBLE);
+            head_counting_middle.setText("后进行");
+            head_counting_image.setImageResource(R.drawable.ic_access_alarm_black_24dp);
+            // head_counting_name.setVisibility(View.VISIBLE);
+        } else {
+            head_counting_name.setText("see you");
+            head_counting_middle.setText("");
+            head_counting_time.setText("接下来没事了");
+            head_counting_image.setImageResource(R.drawable.ic_empty);
         }
         head_title.setText(titleToSet);
         head_subtitle.setText(subtitltToSet);
     }
 
-    void switchHeadView(View view,int imageId){
-        for(int i = 0;i<heads.length;i++){
-            if(heads[i]==view) heads[i].setVisibility(View.VISIBLE);
+    void switchHeadView(View view, int imageId) {
+        for (int i = 0; i < heads.length; i++) {
+            if (heads[i] == view) heads[i].setVisibility(View.VISIBLE);
             else heads[i].setVisibility(View.GONE);
         }
-        if(view instanceof ImageView)((ImageView)view).setImageResource(imageId);
+        if (view instanceof ImageView) ((ImageView) view).setImageResource(imageId);
         head_counting.post(new Runnable() {
             @Override
             public void run() {
@@ -529,17 +539,18 @@ public class FragmentTimeLine extends BaseFragment implements
 
     }
 
-    private void Refresh(int from,boolean swipe) {
-        if(!hasInit) return;
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
-        pageTask = new RefreshTask(from,swipe);
+    private void Refresh(int from, boolean swipe) {
+        if (!hasInit) return;
+        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        pageTask = new RefreshTask(from, swipe);
         pageTask.execute();
     }
 
     private class RefreshTask extends AsyncTask<String, Integer, Integer> {
         int from;
         boolean swipe;
-        RefreshTask(int f,boolean swipe) {
+
+        RefreshTask(int f, boolean swipe) {
             this.swipe = swipe;
             from = f;
         }
@@ -547,24 +558,24 @@ public class FragmentTimeLine extends BaseFragment implements
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(swipe)swipeRefreshLayout.setRefreshing(true);
+            if (swipe) swipeRefreshLayout.setRefreshing(true);
         }
 
         @Override
         protected Integer doInBackground(String... strings) {
             correctData();
-            if(!isThisTerm) return -2;
-            boolean refreshTask = from!=TL_REFRESH_FROM_TASK;
-            if (from != TL_REFRESH_FROM_TIMETICK) timeWatcher.refreshProgress(true,refreshTask);
+            if (!isThisTerm) return -2;
+            boolean refreshTask = from != TL_REFRESH_FROM_TASK;
+            if (from != TL_REFRESH_FROM_TIMETICK) timeWatcher.refreshProgress(true, refreshTask);
             if (getDataState() == DATA_STATE_NONE_CURRICULUM) return DATA_STATE_NONE_CURRICULUM;
             timelineRes.clear();
             wholeDayRes.clear();
-            for(EventItem ei:todaysEvents){
-              //  Log.e("ei:",ei.mainName+","+ei.isWholeDay);
-                if(ei.isWholeDay) wholeDayRes.add(ei);
+            for (EventItem ei : todaysEvents) {
+                //  Log.e("ei:",ei.mainName+","+ei.isWholeDay);
+                if (ei.isWholeDay) wholeDayRes.add(ei);
                 else timelineRes.add(ei);
             }
-            if(timelineRes.size()==0) return -5;
+            if (timelineRes.size() == 0) return -5;
             return 0;
         }
 
@@ -575,39 +586,41 @@ public class FragmentTimeLine extends BaseFragment implements
             UpdateHeadView();
             swipeRefreshLayout.setRefreshing(false);
             if (integer == DATA_STATE_NONE_CURRICULUM) {
-                    noneLayout.setVisibility(View.VISIBLE);
-                    TimeLineList.setVisibility(View.GONE);
-                    return;
-                } else if (integer == -2) {
-                    noneLayout.setVisibility(View.VISIBLE);
-                    TimeLineList.setVisibility(View.GONE);
-                    return;
-                }else if(integer==-5) {
                 noneLayout.setVisibility(View.VISIBLE);
                 TimeLineList.setVisibility(View.GONE);
-            }else{
+                return;
+            } else if (integer == -2) {
+                noneLayout.setVisibility(View.VISIBLE);
+                TimeLineList.setVisibility(View.GONE);
+                return;
+            } else if (integer == -5) {
+                noneLayout.setVisibility(View.VISIBLE);
+                TimeLineList.setVisibility(View.GONE);
+            } else {
                 TimeLineList.setVisibility(View.VISIBLE);
                 noneLayout.setVisibility(View.INVISIBLE);
             }
             timelineWholedayAdapter.notifyDataSetChanged();
-                if(from!=TL_REFRESH_FROM_DELETE) TimeLineListAdapter.notifyDataSetChanged();
-                if (from != TL_REFRESH_FROM_UNHIDE&&from!=TL_REFRESH_FROM_DELETE&&swipe) {
-                   // TimeLineList.setLayoutAnimation(layoutAnimationController);
-                    TimeLineList.scheduleLayoutAnimation();
-                }
+            if (from != TL_REFRESH_FROM_DELETE) TimeLineListAdapter.notifyDataSetChanged();
+            if (from != TL_REFRESH_FROM_UNHIDE && from != TL_REFRESH_FROM_DELETE && swipe) {
+                // TimeLineList.setLayoutAnimation(layoutAnimationController);
+                TimeLineList.scheduleLayoutAnimation();
+            }
 
         }
     }
 
-    class DeleteTask_timeline extends AsyncTask{
+    class DeleteTask_timeline extends AsyncTask {
         int position;
-        DeleteTask_timeline(int pos){
+
+        DeleteTask_timeline(int pos) {
             position = pos;
         }
+
         @Override
         protected Object doInBackground(Object[] objects) {
-            boolean res = mainTimeTable.deleteEvent(timelineRes.get(position),timelineRes.get(position).eventType==TIMETABLE_EVENT_TYPE_DEADLINE);
-            if(res){
+            boolean res = mainTimeTable.deleteEvent(timelineRes.get(position), timelineRes.get(position).eventType == TIMETABLE_EVENT_TYPE_DEADLINE);
+            if (res) {
                 todaysEvents.remove(timelineRes.get(position));
                 timelineRes.remove(position);
                 timeWatcher.refreshNowAndNextEvent();
@@ -619,15 +632,15 @@ public class FragmentTimeLine extends BaseFragment implements
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            if((Boolean)o){
+            if ((Boolean) o) {
                 TimeLineListAdapter.notifyItemRemoved(position);
-                if(position != timelineRes.size()){ // 如果移除的是最后一个，忽略
+                if (position != timelineRes.size()) { // 如果移除的是最后一个，忽略
                     TimeLineListAdapter.notifyItemRangeChanged(position, todaysEvents.size() - position);
-                }else{
-                    if(position-1>=0)TimeLineListAdapter.notifyItemChanged(position-1);
+                } else {
+                    if (position - 1 >= 0) TimeLineListAdapter.notifyItemChanged(position - 1);
                 }
                 UpdateHeadView();
-                if(todaysEvents.size()==0) {
+                if (todaysEvents.size() == 0) {
                     noneLayout.setVisibility(View.VISIBLE);
                     TimeLineList.setVisibility(View.GONE);
                 }
@@ -635,23 +648,26 @@ public class FragmentTimeLine extends BaseFragment implements
             Intent mes = new Intent("COM.STUPIDTREE.HITA.TASK_REFRESH");
             localBroadcastManager.sendBroadcast(mes);
             //if(ftsk!=null&&ftsk.hasInit) ftsk.Refresh();
-            ActivityMain.saveData(getActivity());
+            ActivityMain.saveData();
 
         }
     }
-    class DeleteTask_wholeday extends AsyncTask{
+
+    class DeleteTask_wholeday extends AsyncTask {
         int position;
-        DeleteTask_wholeday(int pos){
+
+        DeleteTask_wholeday(int pos) {
             position = pos;
         }
+
         @Override
         protected Object doInBackground(Object[] objects) {
-            boolean res = mainTimeTable.deleteEvent(wholeDayRes.get(position),wholeDayRes.get(position).eventType==TIMETABLE_EVENT_TYPE_DEADLINE);
-            if(res){
+            boolean res = mainTimeTable.deleteEvent(wholeDayRes.get(position), wholeDayRes.get(position).eventType == TIMETABLE_EVENT_TYPE_DEADLINE);
+            if (res) {
                 timeWatcher.refreshNowAndNextEvent();
                 todaysEvents.remove(wholeDayRes.get(position));
                 wholeDayRes.remove(position);
-                if(todaysEvents.size()==0) {
+                if (todaysEvents.size() == 0) {
                     noneLayout.setVisibility(View.VISIBLE);
                     TimeLineList.setVisibility(View.GONE);
                 }
@@ -663,27 +679,28 @@ public class FragmentTimeLine extends BaseFragment implements
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            if((Boolean)o){
+            if ((Boolean) o) {
                 timelineWholedayAdapter.notifyItemRemoved(position);
-                if(position != wholeDayRes.size()){ // 如果移除的是最后一个，忽略
-                   timelineWholedayAdapter.notifyItemRangeChanged(position, todaysEvents.size() - position);
+                if (position != wholeDayRes.size()) { // 如果移除的是最后一个，忽略
+                    timelineWholedayAdapter.notifyItemRangeChanged(position, todaysEvents.size() - position);
                 }
                 UpdateHeadView();
-                ActivityMain.saveData(getActivity());
+                ActivityMain.saveData();
             }
             Intent mes = new Intent("COM.STUPIDTREE.HITA.TASK_REFRESH");
             localBroadcastManager.sendBroadcast(mes);
-           // if(ftsk!=null&&ftsk.hasInit) ftsk.Refresh();
+            // if(ftsk!=null&&ftsk.hasInit) ftsk.Refresh();
 
         }
     }
 
-    class headCardClickListener implements View.OnClickListener{
+    class headCardClickListener implements View.OnClickListener {
         public static final int SHOW_NEXT = 94;
         public static final int LOG_IN = 713;
         public static final int JWTS = 577;
         public static final int CANTEEN = 379;
         public static final int NONE = 264;
+        private static final int NAVI_CLASSROOM = 143;
         float posX;
         float posY;
         int mode;
@@ -694,25 +711,25 @@ public class FragmentTimeLine extends BaseFragment implements
 
         @Override
         public void onClick(View v) {
-            switch(mode){
+            switch (mode) {
                 case SHOW_NEXT:
-                    if(head_counting.getVisibility()==View.VISIBLE){
-                    head_counting.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MaterialCircleAnimator.animHide(head_counting,400,posX,posY);
-                        }
-                    });
+                    if (head_counting.getVisibility() == View.VISIBLE) {
+                        head_counting.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                MaterialCircleAnimator.animHide(head_counting, 400, posX, posY);
+                            }
+                        });
 
-                }else{
-                    head_counting.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MaterialCircleAnimator.animShow(head_counting,400,posX,posY);
-                        }
-                    });
+                    } else {
+                        head_counting.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                MaterialCircleAnimator.animShow(head_counting, 400, posX, posY);
+                            }
+                        });
 
-                }
+                    }
                     break;
                 case LOG_IN:
                     Intent i = new Intent(getActivity(), ActivityLogin.class);
@@ -720,7 +737,7 @@ public class FragmentTimeLine extends BaseFragment implements
                     break;
                 case JWTS:
                     Intent k;
-                    if(CurrentUser.getStudentnumber()==null||CurrentUser.getStudentnumber().isEmpty()){
+                    if (CurrentUser.getStudentnumber() == null || CurrentUser.getStudentnumber().isEmpty()) {
                         AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle("提示").setMessage("请先绑定学号后再使用教务系统导入课表").setPositiveButton("好的", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -729,7 +746,7 @@ public class FragmentTimeLine extends BaseFragment implements
                             }
                         }).create();
                         ad.show();
-                    }else{
+                    } else {
                         k = new Intent(HContext, ActivityLoginJWTS.class);
                         startActivity(k);
                     }
@@ -738,26 +755,32 @@ public class FragmentTimeLine extends BaseFragment implements
                     Intent c = new Intent(getActivity(), ActivityRankBoard.class);
                     startActivity(c);
                     break;
+                case NAVI_CLASSROOM:
+                    if (nextEvent != null) {
+                        ActivityUtils.startExploreActivity_forNavi(getActivity(), nextEvent.tag2);
+                    }
 
             }
 
         }
     }
 
-    class addEventClickListener implements View.OnClickListener{
+    class addEventClickListener implements View.OnClickListener {
         FragmentAddEvent aef;
-        addEventClickListener(){
+
+        addEventClickListener() {
             aef = FragmentAddEvent.newInstance();
         }
+
         @Override
         public void onClick(View v) {
             if (isDataAvailable()) {
-                if(isThisTerm)aef.show(getFragmentManager(), "add_event");
-                else Snackbar.make(v,"这学期还没开始呐，试着切换课表为已开始学期吧！",Snackbar.LENGTH_SHORT).show();
-                   // Toast.makeText(FragmentTimeLine.this.getContext(), , Toast.LENGTH_SHORT).show();
+                if (isThisTerm) aef.show(getFragmentManager(), "add_event");
+                else Snackbar.make(v, "这学期还没开始呐，试着切换课表为已开始学期吧！", Snackbar.LENGTH_SHORT).show();
+                // Toast.makeText(FragmentTimeLine.this.getContext(), , Toast.LENGTH_SHORT).show();
             } else {
-                Snackbar.make(v,"请先导入课表！",Snackbar.LENGTH_SHORT).show();
-               // Toast.makeText(FragmentTimeLine.this.getContext(), "请先导入课表！", Toast.LENGTH_SHORT).show();
+                Snackbar.make(v, "请先导入课表！", Snackbar.LENGTH_SHORT).show();
+                // Toast.makeText(FragmentTimeLine.this.getContext(), "请先导入课表！", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -765,11 +788,12 @@ public class FragmentTimeLine extends BaseFragment implements
 
     public static void showEventDialog(final Context a, final EventItem ei, final View transitionCard, View transitionName) {
         View dlgView = null;
-        LayoutInflater inflater =  LayoutInflater.from(a);
+        LayoutInflater inflater = LayoutInflater.from(a);
         final AlertDialog dialog = new AlertDialog.Builder(a).create();
+
         if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
             //Log.e("======!!!", String.valueOf(ei));
-            dlgView =inflater.inflate(R.layout.dialog_timetable_course, null);
+            dlgView = inflater.inflate(R.layout.dialog_timetable_course, null);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
             final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
             final TextView value4 = dlgView.findViewById(R.id.tt_dlg_value4);
@@ -792,7 +816,7 @@ public class FragmentTimeLine extends BaseFragment implements
                     //ActivityOptionsCompat ops = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) a,card,"card");
                     Intent i = new Intent(a, ActivityCourse.class);
                     Bundle b = new Bundle();
-                    b.putSerializable("eventitem",ei);
+                    b.putSerializable("eventitem", ei);
                     i.putExtras(b);
                     a.startActivity(i);
                     //dialog.dismiss();
@@ -802,51 +826,52 @@ public class FragmentTimeLine extends BaseFragment implements
                 @Override
                 public void onClick(View v) {
                     final String[] names = ei.tag3.split("，");
-                    if(names.length>1){
+                    if (names.length > 1) {
                         AlertDialog ad = new AlertDialog.Builder(a).setTitle("选择教师").setItems(names, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Intent il = new Intent(a, ActivityTeacher.class);
-                                il.putExtra("name",names[i]);
+                                il.putExtra("name", names[i]);
                                 a.startActivity(il);
                             }
                         }).create();
                         ad.show();
-                    }else {
+                    } else {
                         Intent i = new Intent(a, ActivityTeacher.class);
-                        i.putExtra("name",ei.tag3);
+                        i.putExtra("name", ei.tag3);
                         a.startActivity(i);
                     }
                 }
             });
-            if(ei.tag2.isEmpty()){
+            if (ei.tag2.isEmpty()) {
                 classroom_detail_icon.setVisibility(View.GONE);
-            }else{
+            } else {
                 classroom_detail_icon.setVisibility(View.VISIBLE);
                 classroom_detail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final String cr[] = ei.tag2.split("，");
+                        final String cr[] = ei.tag2.split("，\\[");
                         final ArrayList<String> classRooms = new ArrayList<>(Arrays.asList(cr));
-                        if(classRooms.size()>1){
+                        if (classRooms.size() > 1) {
                             ArrayList<String> toRemove = new ArrayList<>();
-                            for(int i=0;i<classRooms.size();i++){
-                                classRooms.set(i,classRooms.get(i).substring(classRooms.get(i).lastIndexOf("周")+1));
+                            for (int i = 0; i < classRooms.size(); i++) {
+                                classRooms.set(i, classRooms.get(i).substring(classRooms.get(i).lastIndexOf("周") + 1));
                             }
-                            for(String x:classRooms){
-                                if(TextUtils.isEmpty(x)) toRemove.add(x);
+                            for (String x : classRooms) {
+                                if (TextUtils.isEmpty(x)) toRemove.add(x);
                             }
                             classRooms.removeAll(toRemove);
                             String classRoomItems[] = new String[classRooms.size()];
-                            for(int i=0;i<classRoomItems.length;i++) classRoomItems[i] = classRooms.get(i);
+                            for (int i = 0; i < classRoomItems.length; i++)
+                                classRoomItems[i] = classRooms.get(i);
                             AlertDialog ad = new AlertDialog.Builder(a).setTitle("选择教室").setItems(classRoomItems, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    ActivityUtils.startLocationActivity_name(a,classRooms.get(i));
+                                    ActivityUtils.startLocationActivity_name(a, classRooms.get(i));
                                 }
                             }).create();
                             ad.show();
-                        }else ActivityUtils.startLocationActivity_name(a,ei.tag2);
+                        } else ActivityUtils.startLocationActivity_name(a, ei.tag2);
 //                    Intent i = new Intent(a,ActivityExplore.class);
 //                    i.putExtra("terminal",ei.tag2);
 //                    a.startActivity(i);
@@ -855,12 +880,9 @@ public class FragmentTimeLine extends BaseFragment implements
             }
 
 
-        }else if (ei.eventType == TIMETABLE_EVENT_TYPE_DYNAMIC) {
+        } else if (ei.eventType == TIMETABLE_EVENT_TYPE_DYNAMIC) {
             //Log.e("======!!!", String.valueOf(ei));
             dlgView = inflater.inflate(R.layout.dialog_timetable_dynamic, null);
-            final TextView name = dlgView.findViewById(R.id.tt_dlg_name);
-            //dialog.setTitle(ei.mainName);
-            name.setText(ei.mainName);
             final TextView value1 = dlgView.findViewById(R.id.tt_dlg_value1);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
             final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
@@ -870,63 +892,112 @@ public class FragmentTimeLine extends BaseFragment implements
             value3.setText(ei.startTime.tellTime() + "-" + ei.endTime.tellTime());
         } else if (ei.eventType == TIMETABLE_EVENT_TYPE_EXAM) {
             dlgView = inflater.inflate(R.layout.dialog_timetable_exam, null);
-            final TextView name = dlgView.findViewById(R.id.tt_dlg_name);
             final TextView value1 = dlgView.findViewById(R.id.tt_dlg_value1);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
-            final ImageView detail = dlgView.findViewById(R.id.dlg_bt_detail);
-            name.setText(ei.mainName);
+
+
             value1.setText(ei.tag2);//考场
             value2.setText(ei.tag4.isEmpty() ? "无" : ei.tag4);//具体考试时间
-            detail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // ActivityOptionsCompat ops = ActivityOptionsCompat.makeSceneTransitionAnimation(a,new Pair<View, String>(name,"course_name"));
-                    Intent i = new Intent(a, ActivitySubject.class);
-                    if(ei.tag3.startsWith("科目代码：")){
-                        i.putExtra("useCode",true);
-                        i.putExtra("subject", ei.tag3.substring(5));
-                       // Log.e("code:",ei.tag3.substring(4));
-                    }else{
-                        i.putExtra("useCode",false);
-                        i.putExtra("subject", ei.tag3);
-                    }
-                    a.startActivity(i);
-                    dialog.dismiss();
-                }
-            });
+
         } else if (ei.eventType == TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT) {
-            dlgView =inflater.inflate(R.layout.dialog_timetable_arrangement, null);
+            dlgView = inflater.inflate(R.layout.dialog_timetable_arrangement, null);
             final TextView value1 = dlgView.findViewById(R.id.tt_dlg_value1);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
             final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
-            dialog.setTitle(ei.mainName);
             value1.setText(ei.tag2.isEmpty() ? "无" : ei.tag2);//标签1
             value2.setText(ei.tag3.isEmpty() ? "无" : ei.tag3);//标签2
             value3.setText(ei.startTime.tellTime() + "-" + ei.endTime.tellTime());
         } else if (ei.eventType == TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE) {
-            dlgView =inflater.inflate(R.layout.dialog_timetable_deadline, null);
+            dlgView = inflater.inflate(R.layout.dialog_timetable_deadline, null);
             final TextView value1 = dlgView.findViewById(R.id.tt_dlg_value1);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
             final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
-            dialog.setTitle(ei.mainName);
             value1.setText(ei.tag2.isEmpty() ? "无" : ei.tag2);//标签1
             value2.setText(ei.tag3.isEmpty() ? "无" : ei.tag3);//标签2
             value3.setText(ei.startTime.tellTime());
         } else if (ei.eventType == TimeTable.TIMETABLE_EVENT_TYPE_REMIND) {
             dlgView = inflater.inflate(R.layout.dialog_timetable_remind, null);
-
             final TextView value1 = dlgView.findViewById(R.id.tt_dlg_value1);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
             final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
-            dialog.setTitle(ei.mainName);
             value1.setText(ei.tag2.isEmpty() ? "无" : ei.tag2);//标签1
             value2.setText(ei.tag3.isEmpty() ? "无" : ei.tag3);//标签2
             value3.setText(ei.startTime.tellTime());
         }
 
         TextView date = dlgView.findViewById(R.id.tt_dlg_date);
-        Calendar c = allCurriculum.get(thisCurriculumIndex).getDateAtWOT(ei.week, ei.DOW);
+        final TextView name = dlgView.findViewById(R.id.tt_dlg_name);
+        name.setText(ei.mainName);
+        ImageView detail = dlgView.findViewById(R.id.dlg_bt_detail);
+        final Calendar c = allCurriculum.get(thisCurriculumIndex).getDateAtWOT(ei.week, ei.DOW);
         date.setText(c.get(Calendar.MONTH) + 1 + "月" + c.get(Calendar.DAY_OF_MONTH) + "日" + "(第" + ei.week + "周" + TextTools.words_time_DOW[ei.DOW - 1] + ")");
+        detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu pm = new PopupMenu(a, v);
+                int menuId;
+                switch (ei.eventType) {
+                    case TIMETABLE_EVENT_TYPE_COURSE:
+                        menuId = R.menu.menu_opr_dialog_detail_course;
+                        break;
+                    case TIMETABLE_EVENT_TYPE_EXAM:
+                        menuId = R.menu.menu_opr_dialog_detail_exam;
+                        break;
+                    default:
+                        menuId = R.menu.menu_opr_dialog_detail_normal;
+                }
+                pm.inflate(menuId);
+                pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == R.id.opr_delete) {
+                            android.app.AlertDialog ad = new android.app.AlertDialog.Builder(a).
+                                    setNegativeButton("取消", null)
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface d, int which) {
+                                            if (mainTimeTable.deleteEvent(ei, ei.eventType == TIMETABLE_EVENT_TYPE_DEADLINE)) {
+                                                Toast.makeText(a, "删除成功！", Toast.LENGTH_SHORT).show();
+                                                Intent i = new Intent();
+                                                i.putExtra("week", ei.week);
+                                                i.setAction("COM.STUPIDTREE.HITA.TIMETABLE_PAGE_REFRESH");
+                                                LocalBroadcastManager.getInstance(a).sendBroadcast(i);
+                                                dialog.dismiss();
+                                            }
+                                        }
+                                        }).create();
+                            ad.setTitle("确定删除吗？");
+                            if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
+                                ad.setMessage("删除课程后,可以通过导入课表或同步云端数据恢复初始课表");
+                            }
+                            ad.show();
+                        } else if (item.getItemId() == R.id.opr_subject) {
+                            if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
+                                ActivityUtils.startSubjectActivity_name(a, ei.mainName);
+                            } else if (ei.eventType == TIMETABLE_EVENT_TYPE_EXAM) {
+                                if (ei.tag3.startsWith("科目代码：")) {
+                                    ActivityUtils.startSubjectActivity_code(a, ei.tag3.substring(5));
+                                } else if (ei.tag3.startsWith("科目名称：")) {
+                                    ActivityUtils.startSubjectActivity_name(a, ei.tag3.substring(5));
+                                } else {
+                                    ActivityUtils.startSubjectActivity_name(a, ei.tag3);
+                                }
+                            }
+
+                        } else if (item.getItemId() == R.id.opr_detail) {
+                            Intent i = new Intent(a, ActivityCourse.class);
+                            Bundle b = new Bundle();
+                            b.putSerializable("eventitem", ei);
+                            i.putExtra("showSubject", true);
+                            i.putExtras(b);
+                            a.startActivity(i);
+                        }
+                        return true;
+                    }
+                });
+                pm.show();
+            }
+        });
         if (ei.isWholeDay) {
             final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
             value3.setText("全天");
@@ -934,10 +1005,14 @@ public class FragmentTimeLine extends BaseFragment implements
 
         dialog.setView(dlgView);
         dialog.show();
+        dialog.getWindow().
+
+                setLayout(dip2px(a, 320), LinearLayout.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().
+
+                setBackgroundDrawableResource(R.drawable.dialog_background_radius);
 
     }
-
-
 
 
 }

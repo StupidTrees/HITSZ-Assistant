@@ -91,6 +91,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
         Map m5 = new HashMap();
         Map m6 = new HashMap();
         Map m7 = new HashMap();
+        Map m8 = new HashMap();
         m1.put("name", "必修");
         m1.put("value", "bx");
         m2.put("name", "限选");
@@ -105,7 +106,9 @@ public class FragmentJWTS_xsxk extends BaseFragment {
         m6.put("value", "ty");
         m7.put("name","MOOC");
         m7.put("value","mooc");
-        Map[] m = new Map[]{m1, m2, m3, m4, m5, m6,m7};
+        m8.put("name","雅思托福");
+        m8.put("value","tsk");
+        Map[] m = new Map[]{m1, m2, m3, m4, m5, m6,m7,m8};
         spinnerOptionsTYPE.addAll(Arrays.<Map<String, String>>asList(m));
         ArrayList<String> typeStr = new ArrayList<>();
         for (Map<String, String> ma : spinnerOptionsTYPE) typeStr.add(ma.get("name"));
@@ -173,20 +176,31 @@ public class FragmentJWTS_xsxk extends BaseFragment {
             @Override
             public void OnClick(final View view, final int index, boolean choose, final String rwh) {
                 if (choose) {
-                    String[] items = new String[listButtonOptions.get(index).size()];
-                    for (int i = 0; i < listButtonOptions.get(index).size(); i++) {
-                        items[i] = listButtonOptions.get(index).get(i).get("text");
-                    }
-                    AlertDialog ad = new AlertDialog.Builder(view.getContext()).setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            new chooseCourseTask(rwh,listButtonOptions.get(index).get(which).get("zy"),xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value"),spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                            //Toast.makeText(view.getContext(), "不好意思哈，客户端不支持该操作", Toast.LENGTH_SHORT).show();
+                    if(listButtonOptions.size()==0){
+                        new chooseCourseTask(rwh,null,xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value"),spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+                    }else{
+                        String[] items = new String[listButtonOptions.get(index).size()];
+                        for (int i = 0; i < listButtonOptions.get(index).size(); i++) {
+                            items[i] = listButtonOptions.get(index).get(i).get("text");
                         }
-                    }).setTitle("选择志愿").create();
+                        AlertDialog ad = new AlertDialog.Builder(view.getContext()).setItems(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    new chooseCourseTask(rwh,listButtonOptions.get(index).get(which).get("zy"),xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value"),spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                    //Toast.makeText(view.getContext(), "不好意思哈，客户端不支持该操作", Toast.LENGTH_SHORT).show();
+                                } catch (Exception e) {
+                                    Toast.makeText(HContext,"选课出错！",Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
 
-                    ad.show();
+                            }
+                        }).setTitle("选择志愿").create();
+
+                        ad.show();
+                    }
+
                 }else{
                     new txTask(rwh,xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value"),spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -220,8 +234,8 @@ public class FragmentJWTS_xsxk extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
-
+    public void Refresh() {
+        new getWLTSPageTask(spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).execute();
     }
 
 
@@ -258,8 +272,9 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .ignoreContentType(true)
                         .get();
-                Element selections = wltsPage.getElementsByClass("XNXQ_CON").first();
+                Element selections = wltsPage.getElementById("pageXnxq");
                 //System.out.println(selections);
+
                 for (Element e : selections.getElementsByTag("option")) {
                     Map m = new HashMap();
                     m.put("value", e.attr("value"));
@@ -269,6 +284,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                 }
                 return true;
             } catch (Exception e) {
+                e.printStackTrace();
                 return false;
             }
 
@@ -324,6 +340,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .ignoreContentType(true)
                         .data("pageXklb", xklb)
+                        .data("pageSize","900")
                         .data("pageXnxq", xnxq)
                         .post();
                 //System.out.println(xkPage.toString());
@@ -409,6 +426,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                     if (th.text().contains("各志愿已选人数")) positions.put("gzyyxrs", i);
                     if (th.text().contains("上课信息")) positions.put("skxx", i);
                     if (th.text().contains("选课时间")) positions.put("xksj", i);
+                    if (th.text().contains("开课院系")) positions.put("kkyx", i);
                     i++;
                 }
 
@@ -439,6 +457,8 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                         m.put("skxx", es.get(positions.get("skxx")).text());
                     if (positions.get("xksj") != null)
                         m.put("xksj", es.get(positions.get("xksj")).text());
+                    if (positions.get("kkyx") != null)
+                        m.put("kkyx", es.get(positions.get("kkyx")).text());
                     m.put("bxOryx", spinnerBX.getSelectedItemPosition() == 0 ? "bx" : "yx");
                     if(row.getElementsByClass("addlist_button").size()>0){
                         m.put("hasbutton","true");
@@ -539,7 +559,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                 connect.data("rwh", rwh);
                 connect.data("pageXnxq", xnxq);
                 connect.data("pageXklb", xklb);
-                connect.data("zy", zy);
+                if(zy!=null) connect.data("zy", zy);
                 connect.data("token", token);
                 Document xkPage = connect.post();
                 Log.e("!!", "header:rwh=" + rwh + ",zy=" + zy + ",xnxq=" + xnxq+",xklb="+xklb+",token="+token);
@@ -554,7 +574,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                     System.out.println(y);
                 }
                 return alert;
-            } catch (IOException e) {
+            } catch (Exception e) {
                // Log.e("!!error", "header:rwh=" + rwh + ",zy=" + zy + ",xnxq=" + xnxq);
                 e.printStackTrace();
                 return "出现错误！";
@@ -615,7 +635,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                     System.out.println(y);
                 }
                 return alert;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return "出现错误！";
             }

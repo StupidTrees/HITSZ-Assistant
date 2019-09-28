@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragments.FragmentSubjects">
 
     <!-- TODO: Update blank fragment layout -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/usercenter_subjects_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:animateLayoutChanges="false"
         android:animationCache="false"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp" />
+        android:layoutAnimation="@anim/recycler_layout_animation_falls_down"
+        android:overScrollMode="never"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" />
 
-</FrameLayout>
+</LinearLayout>

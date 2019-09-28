@@ -4,22 +4,18 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/background_color_second"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingStart="24dp"
-    android:paddingTop="16dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="16dp"
     android:transitionName="card">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="24dp">
 
         <TextView
             android:id="@+id/tt_dlg_name"
@@ -27,6 +23,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center|start"
+            android:singleLine="true"
             android:text="高等数学B"
             android:textColor="?attr/text_color_primary"
             android:textSize="20sp"
@@ -34,25 +31,32 @@
 
         <ImageView
             android:id="@+id/dlg_bt_detail"
-            android:layout_width="47dp"
-            android:layout_height="match_parent"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:tint="?attr/colorPrimary"
-            app:srcCompat="@drawable/bt_dlg_more" />
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="16dp"
+            android:tint="?attr/colorControlNormal"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/bt_dlg_more"
+            app:theme="@style/button_ripple_primary" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/tt_dlg_value3_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="top"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="16dp"
@@ -62,12 +66,10 @@
             app:srcCompat="@drawable/ic_dlg_tt_teacher" />
 
         <LinearLayout
-            android:id="@+id/tt_dlg_value3_detail"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:clickable="false"
             android:orientation="vertical">
 
             <TextView
@@ -112,31 +114,35 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/tt_dlg_value2_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="24dp"
         android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="top"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="20dp"
             android:scaleType="fitCenter"
             android:tint="?attr/colorPrimary"
-            app:srcCompat="@drawable/ic_dlg_tt_classroom" />
+            app:srcCompat="@drawable/ic_location2" />
 
         <LinearLayout
-            android:id="@+id/tt_dlg_value2_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
             android:layout_weight="1"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:clickable="false"
             android:orientation="vertical">
 
             <TextView
@@ -185,15 +191,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="24dp"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="top"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="16dp"
@@ -233,15 +241,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="24dp"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="top"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="16dp"
@@ -281,14 +291,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="30dp"
         android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="top"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="16dp"

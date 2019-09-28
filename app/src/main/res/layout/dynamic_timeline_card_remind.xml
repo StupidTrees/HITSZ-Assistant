@@ -4,55 +4,58 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.github.vipulasri.timelineview.TimelineView
-        android:id="@+id/timelineview"
-        android:layout_width="wrap_content"
+    <com.alorma.timeline.RoundTimelineView
+        android:id="@+id/timeline"
+        android:layout_width="16dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
         android:layout_marginLeft="16dp"
-        app:endLineColor="?attr/background_icon_color"
-        app:lineWidth="4dp"
-        app:marker="@drawable/timeline_marker"
-        app:markerInCenter="false"
-        app:markerSize="16dp"
-        app:startLineColor="?attr/background_icon_color" />
+        app:timeline_alignment="middle"
+        app:timeline_drawInternal="false"
+        app:timeline_indicatorColor="?attr/colorPrimary"
+        app:timeline_indicatorSize="8dp"
+        app:timeline_lineColor="?attr/background_icon_color"
+        app:timeline_lineStyle="linear"
+        app:timeline_lineWidth="6dp" />
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/tl_card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:longClickable="true"
+        app:cardBackgroundColor="?attr/colorPrimary"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="@dimen/timeline_card_elevation">
 
-        <TextView
-            android:id="@+id/tl_tv_time"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:layout_marginLeft="16dp"
-            android:text="10:15-10:32"
-            android:textColor="?attr/text_color_secondary"
-            android:textSize="12sp"
-            android:transitionName="course_time" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/tl_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:longClickable="true"
-            app:cardBackgroundColor="?attr/colorPrimary"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tl_tv_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="10:15-10:32"
+                    android:textColor="@color/material_text_icon_white"
+                    android:textSize="12sp"
+                    android:transitionName="course_time" />
 
                 <TextView
                     android:id="@+id/tl_tv_name"
@@ -60,26 +63,28 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-black"
                     android:maxEms="10"
                     android:singleLine="true"
                     android:text="最后期限！"
                     android:textColor="@color/material_text_icon_white"
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="16dp"
-                    android:tint="@color/material_text_icon_white"
-                    app:srcCompat="@drawable/ic_timeline_remind" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
-    </LinearLayout>
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="16dp"
+                android:tint="@color/material_text_icon_white"
+                app:srcCompat="@drawable/ic_timeline_remind" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

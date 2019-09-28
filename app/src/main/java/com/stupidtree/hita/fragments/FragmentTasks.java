@@ -244,7 +244,7 @@ public class FragmentTasks extends BaseFragment implements RefreshBroadcastRecei
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
         if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
         pageTask = new refreshListTask();
         pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -322,7 +322,7 @@ public class FragmentTasks extends BaseFragment implements RefreshBroadcastRecei
             if ((Boolean) o) {
                 refreshText();
             } else Toast.makeText(HContext, "删除失败!", Toast.LENGTH_SHORT).show();
-            ActivityMain.saveData(getActivity());
+            ActivityMain.saveData();
             Intent mes = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
             mes.putExtra("from", "task");
             localBroadcastManager.sendBroadcast(mes);
@@ -377,7 +377,7 @@ public class FragmentTasks extends BaseFragment implements RefreshBroadcastRecei
                 if ((Boolean) o) {
                     refreshText();
                 } else Toast.makeText(HContext, "操作失败!", Toast.LENGTH_SHORT).show();
-                ActivityMain.saveData(getActivity());
+                ActivityMain.saveData();
                 Intent mes = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
                 mes.putExtra("from", "task");
                 localBroadcastManager.sendBroadcast(mes);

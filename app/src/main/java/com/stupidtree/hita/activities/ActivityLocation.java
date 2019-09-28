@@ -1,17 +1,25 @@
 package com.stupidtree.hita.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
+
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +37,7 @@ import com.stupidtree.hita.online.Canteen;
 import com.stupidtree.hita.online.Classroom;
 import com.stupidtree.hita.online.Facility;
 import com.stupidtree.hita.online.Location;
+import com.stupidtree.hita.online.LostAndFound;
 import com.stupidtree.hita.online.Scenery;
 import com.stupidtree.hita.util.ActivityUtils;
 
@@ -37,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -47,13 +57,16 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 public class ActivityLocation extends BaseActivity {
 
     Location location;
-    RecyclerView infoList;
+    TextView name,intro;
+    RecyclerView infoList,lafList;
     Toolbar mToolbar;
     LocationInfoListAdapter infoListAdapter;
+    lafListAdapter lafListAdapter;
     ArrayList<HashMap> infoListRes;
+    ArrayList<LostAndFound> lafListRes;
     ImageView appbarBG;
     FloatingActionButton fab;
-    CollapsingToolbarLayout collapsingToolbarLayout;
+    //CollapsingToolbarLayout collapsingToolbarLayout;
     TextView rate;
     ImageView rateButton;
 
@@ -70,9 +83,11 @@ public class ActivityLocation extends BaseActivity {
         initToolbar();
         initViews();
         initInfoList();
+        initLafList();
         if(getIntent().getSerializableExtra("location")!=null){
             location = (Location) getIntent().getSerializableExtra("location");
             loadInfos();
+            refresh();
         }else if(getIntent().getStringExtra("objectId")!=null){
             String id = getIntent().getStringExtra("objectId");
             BmobQuery<Location> bq = new BmobQuery();
@@ -154,7 +169,7 @@ public class ActivityLocation extends BaseActivity {
 
     void initToolbar(){
         mToolbar = findViewById(R.id.toolbar);
-        collapsingToolbarLayout = findViewById(R.id.collapsing);
+        mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -164,19 +179,18 @@ public class ActivityLocation extends BaseActivity {
                 onBackPressed();
             }
         });
-
-        collapsingToolbarLayout.setCollapsedTitleTextColor(getTextColorIconic());
-        collapsingToolbarLayout.setExpandedTitleColor(getTextColorIconic());
-        collapsingToolbarLayout.setScrimAnimationDuration(200);
     }
     void initViews(){
         rate = findViewById(R.id.location_rate);
+        name = findViewById(R.id.name);
+        intro = findViewById(R.id.intro);
         rateButton = findViewById(R.id.location_rate_button);
         appbarBG = findViewById(R.id.location_image);
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(location==null) return;
                 if(location.getLongitude()>0&&location.getLatitude()>0){
                     ActivityUtils.startExploreActivity_forNavi(ActivityLocation.this,location.getName(),location.getLongitude(),location.getLatitude());
                 }else  ActivityUtils.startExploreActivity_forNavi(ActivityLocation.this,location.getName());
@@ -210,7 +224,9 @@ public class ActivityLocation extends BaseActivity {
         });
     }
     void loadInfos(){
-        collapsingToolbarLayout.setTitle(location.getName());
+        name.setText(location.getName());
+        intro.setText(location.getPositionIntroduction());
+       // collapsingToolbarLayout.setTitle(location.getName());
         mToolbar.setSubtitle(location.getPositionIntroduction());
         if(getIntent().getBooleanExtra("circle_reveal_image",true)){
             if(!this.isDestroyed()){
@@ -254,11 +270,87 @@ public class ActivityLocation extends BaseActivity {
         infoList.setLayoutManager(lm);
     }
 
+    void initLafList(){
+        lafListRes = new ArrayList<>();
+        lafList = findViewById(R.id.location_laf_list);
+        lafListAdapter = new lafListAdapter(lafListRes);
+        lafList.setAdapter(lafListAdapter);
+        lafList.setLayoutManager(new LinearLayoutManager(this,RecyclerView.HORIZONTAL,false));
+    }
+
     void refresh(){
         DecimalFormat  df = new DecimalFormat("#0.00");
         infoListRes.clear();
         infoListRes.addAll(location.getInfoListArray());
         infoListAdapter.notifyDataSetChanged();
         rate.setText(df.format(location.getRate())+"/10");
+        if(location!=null) new refreshLafTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    class lafListAdapter extends RecyclerView.Adapter<lafListAdapter.lafViewHolder>{
+
+        List<LostAndFound> mBeans;
+
+        public lafListAdapter(List<LostAndFound> mBeans) {
+            this.mBeans = mBeans;
+        }
+
+        @NonNull
+        @Override
+        public lafViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new lafViewHolder(getLayoutInflater().inflate(R.layout.dynamic_location_laf,parent,false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull lafViewHolder holder, final int position) {
+            holder.time.setText(mBeans.get(position).getCreatedAt());
+            holder.title.setText(mBeans.get(position).getTitle());
+            holder.card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+               ActivityUtils.startPostDetailActivity(ActivityLocation.this,mBeans.get(position),mBeans.get(position).getAuthor());
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return mBeans.size();
+        }
+
+        class lafViewHolder extends RecyclerView.ViewHolder{
+
+            TextView title,time;
+            CardView card;
+            public lafViewHolder(@NonNull View itemView) {
+                super(itemView);
+                title = itemView.findViewById(R.id.title);
+                time = itemView.findViewById(R.id.time);
+                card = itemView.findViewById(R.id.card);
+            }
+        }
+    }
+
+    class refreshLafTask extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            if(location!=null){
+                BmobQuery<LostAndFound> bq = new BmobQuery();
+                bq.addWhereEqualTo("location",location.getObjectId());
+                List<LostAndFound> r = bq.findObjectsSync(LostAndFound.class);
+                if(r!=null&&r.size()>0) {
+                    lafListRes.clear();
+                    lafListRes.addAll(r);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            lafListAdapter.notifyDataSetChanged();
+        }
     }
 }

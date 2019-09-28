@@ -123,6 +123,7 @@
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
                 android:tint="?attr/colorPrimary"
+                android:visibility="gone"
                 app:srcCompat="@drawable/ic_turned_in" />
 
             <ImageView

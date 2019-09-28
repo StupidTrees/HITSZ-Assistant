@@ -216,6 +216,118 @@ public class Curriculum extends BmobObject {
         return res;
     }
 
+    public ArrayList<Subject> getSubjects_Exam(){
+        ArrayList<Subject> res = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        try {
+            Cursor c = sd.query("subject",null,"curriculum_code=? and is_exam = ?",new String[]{curriculumCode, 1+""},null,null,null);
+            while (c.moveToNext()){
+                Subject s = new Subject(c);
+                res.add(s);
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            sd.delete("subject",null,null);
+        }
+        return res;
+    }
+    public ArrayList<Subject> getSubjects_No_Exam(){
+        ArrayList<Subject> res = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        try {
+            Cursor c = sd.query("subject",null,"curriculum_code=? and is_exam = ?",new String[]{curriculumCode, 0+""},null,null,null);
+            while (c.moveToNext()){
+                Subject s = new Subject(c);
+                res.add(s);
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            sd.delete("subject",null,null);
+        }
+        return res;
+    }
+    public ArrayList<Subject> getSubjects_Mooc(){
+        ArrayList<Subject> res = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        try {
+            Cursor c = sd.query("subject",null,"curriculum_code=? and is_mooc = ?",new String[]{curriculumCode, 1+""},null,null,null);
+            while (c.moveToNext()){
+                Subject s = new Subject(c);
+                res.add(s);
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            sd.delete("subject",null,null);
+        }
+        return res;
+    }
+    public ArrayList<Subject> getSubjects_Comp(){
+        ArrayList<Subject> res = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        try {
+            Cursor c = sd.query("subject",null,"curriculum_code=? and compulsory = ?",new String[]{curriculumCode, "必修"},null,null,null);
+            while (c.moveToNext()){
+                Subject s = new Subject(c);
+                res.add(s);
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            sd.delete("subject",null,null);
+        }
+        return res;
+    }
+    public ArrayList<Subject> getSubjects_Alt(){
+        ArrayList<Subject> res = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        try {
+            Cursor c = sd.query("subject",null,"curriculum_code=? and compulsory = ?",new String[]{curriculumCode, "选修"},null,null,null);
+            while (c.moveToNext()){
+                Subject s = new Subject(c);
+                res.add(s);
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            sd.delete("subject",null,null);
+        }
+        return res;
+    }
+    public ArrayList<Subject> getSubjects_WTV(){
+        ArrayList<Subject> res = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        try {
+            Cursor c = sd.query("subject",null,"curriculum_code=? and compulsory = ?",new String[]{curriculumCode, "任选"},null,null,null);
+            while (c.moveToNext()){
+                Subject s = new Subject(c);
+                res.add(s);
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            sd.delete("subject",null,null);
+        }
+        return res;
+    }
+    public static ArrayList<Subject> getSubjects(String curriculumCode){
+        ArrayList<Subject> res = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        try {
+            Cursor c = sd.query("subject",null,"curriculum_code=?",new String[]{curriculumCode},null,null,null);
+            while (c.moveToNext()){
+                Subject s = new Subject(c);
+                res.add(s);
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            sd.delete("subject",null,null);
+        }
+        return res;
+    }
 
     /*函数功能：获取某一周第一天的日期*/
     public Calendar getFirstDateAtWOT(int WeekOfTerm) {

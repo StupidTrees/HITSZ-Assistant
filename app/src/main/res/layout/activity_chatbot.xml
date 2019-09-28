@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chatbot_root_layout"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent"
     android:layout_gravity="bottom"
-    android:background="?attr/background_color_bottom"
-    android:fitsSystemWindows="false"
-    android:orientation="vertical">
+    android:background="?attr/background_color_bottom">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -21,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:minHeight="80dp"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+            app:contentScrim="?attr/background_color_bottom"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@id/toolbar">
 
             <androidx.appcompat.widget.Toolbar
@@ -59,11 +56,11 @@
         android:id="@+id/chat_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="90dp"
         android:layoutAnimation="@anim/recycler_layout_animation_falls_down"
+        android:nestedScrollingEnabled="true"
         android:overScrollMode="never"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-        tools:overScrollMode="never" />
+        android:paddingBottom="80dp"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -72,72 +69,101 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="false"
         android:layout_centerVertical="false"
-        android:layout_gravity="bottom|center"
+        android:layout_gravity="bottom|center|right"
         android:layout_marginStart="@dimen/material_fab_margin"
         android:layout_marginTop="@dimen/material_fab_margin"
         android:layout_marginEnd="@dimen/material_fab_margin"
         android:layout_marginBottom="@dimen/material_fab_margin"
-        android:tint="@color/white"
-        android:transitionName="fab"
+        android:tint="@color/material_text_icon_white"
+        android:tintMode="src_in"
 
+        android:transitionName="fab"
         android:visibility="gone"
-        app:backgroundTint="?attr/colorAccent"
         app:fabCustomSize="60dp"
         app:maxImageSize="36dp"
         app:srcCompat="@drawable/bt_chatbot_voice_wave" />
 
-    <jaygoo.widget.wlv.WaveLineView
-        android:id="@+id/waveLineView"
+    <LinearLayout
+        android:id="@+id/voiceInput"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_centerVertical="true"
+        android:layout_height="116dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="16dp"
-        app:layout_anchorGravity="bottom|center"
-        app:wlvBackgroundColor="#00000000"
-        app:wlvLineColor="?attr/colorPrimary"
-        app:wlvMoveSpeed="290"
-        app:wlvSensibility="10" />
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            app:srcCompat="@drawable/background_color_gradient_reverse" />
+
+        <jaygoo.widget.wlv.WaveLineView
+            android:id="@+id/waveLineView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_gravity="bottom"
+            android:background="?attr/background_color_bottom"
+            android:visibility="visible"
+            app:wlvBackgroundColor="#00000000"
+            app:wlvLineColor="?attr/colorPrimary"
+            app:wlvMoveSpeed="290"
+            app:wlvSensibility="10" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/textInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:layout_marginLeft="16dp"
-        android:orientation="horizontal"
+        android:layout_marginBottom="-6dp"
+        android:gravity="bottom"
+        android:orientation="vertical"
         android:paddingVertical="5dp"
         android:visibility="visible">
 
-        <EditText
-            android:id="@+id/edit_send"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="5dp"
-            android:layout_marginVertical="6dp"
-            android:layout_weight="1"
-            android:background="@drawable/select_chat_bot_edittext"
-            android:focusable="auto"
-            android:hint="嘻嘻嘻"
-            android:paddingLeft="6dp"
-            android:textColor="?attr/text_color_primary"
-            android:textSize="15sp" />
-
         <ImageView
-            android:id="@+id/btn_send"
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="6dp"
-            android:focusable="auto"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:paddingHorizontal="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/bt_chatbot_send"
-            android:tint="?attr/colorPrimary" />
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            app:srcCompat="@drawable/background_color_gradient_reverse" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_gravity="bottom"
+            android:background="?attr/background_color_bottom"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edit_send"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom|center"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="6dp"
+                android:layout_marginStart="24dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:focusable="auto"
+                android:hint="想和我说啥？"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="16dp" />
+
+            <ImageView
+                android:id="@+id/btn_send"
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="6dp"
+                android:focusable="auto"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:paddingHorizontal="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bt_chatbot_send"
+                android:tint="?attr/colorControlNormal"
+                android:tintMode="src_in"
+                app:theme="@style/button_ripple_primary" />
+        </LinearLayout>
 
     </LinearLayout>
 

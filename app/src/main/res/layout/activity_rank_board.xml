@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#00000000"
+        android:elevation="0dp"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
@@ -19,6 +20,7 @@
             android:layout_height="?attr/actionBarSize"
             android:layout_marginTop="24dp"
             android:background="#00000000"
+            android:elevation="0dp"
             app:layout_collapseMode="pin"
             app:theme="?attr/toolbarStyle">
 

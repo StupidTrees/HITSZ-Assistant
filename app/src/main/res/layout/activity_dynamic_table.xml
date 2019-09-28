@@ -125,6 +125,103 @@
                 </LinearLayout>
             </net.cachapa.expandablelayout.ExpandableLayout>
 
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:text="APP将综合科目信息与用户喜好，为重要性强的科目安排预习复习等任务，也会为任务自动分配处理事件，帮助你的学习生活么么哒"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="?attr/background_color_second"
+        app:cardCornerRadius="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Switch
+                android:id="@+id/switch_auto_mute"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="上课静音助手"
+                android:textSize="18sp" />
+
+            <net.cachapa.expandablelayout.ExpandableLayout
+                android:id="@+id/exand_mute"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:el_expanded="false">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="8dp"
+                            android:text="上课前" />
+
+                        <NumberPicker
+                            android:id="@+id/numberpicker_mute_before"
+                            android:layout_width="wrap_content"
+                            android:layout_height="56dp"
+                            android:layout_gravity="center" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:text="分钟开启静音" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/switch_mute_after"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:text="下课时自动关闭"
+                        android:textColor="?attr/text_color_secondary" />
+                </LinearLayout>
+            </net.cachapa.expandablelayout.ExpandableLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:text="请授予本应用相关的权限！"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="15sp" />
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -133,17 +230,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1" />
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="30dp"
-        android:alpha="0.8"
-        android:gravity="center"
-        android:text="APP将综合科目信息与用户喜好，为重要性强的科目安排预习复习等任务，也会为任务自动分配处理事件，帮助你的学习生活么么哒"
-        android:textColor="@color/material_text_icon_white"
-        android:textSize="15sp" />
 
 </LinearLayout>

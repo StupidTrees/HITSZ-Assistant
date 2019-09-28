@@ -1,14 +1,13 @@
 package com.stupidtree.hita.activities;
 
-import android.graphics.Color;
-
 import androidx.annotation.Nullable;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
 import android.view.View;
 
 import com.stupidtree.hita.BaseActivity;
@@ -59,13 +58,18 @@ public class ActivityHITSZInfo extends BaseActivity {
         tab = findViewById(R.id.hitszinfo_tab);
         pager = findViewById(R.id.hitszinfo_pager);
         fragments = new ArrayList<>();
+        fragments.add(FragmentNewsIPNews.getInstance("75"));
         fragments.add(new FragmentNewsLecture());
         fragments.add(new FragmentNewsBulletin());
-        fragments.add(new FragmentNewsIPNews());
+        fragments.add(FragmentNewsIPNews.getInstance("116"));
+        fragments.add(FragmentNewsIPNews.getInstance("77"));
         pagerAdapter = new HITSZInfoPagerAdapter(getSupportFragmentManager(),fragments);
         pager.setAdapter(pagerAdapter);
         tab.setTabIndicatorFullWidth(false);
         tab.setupWithViewPager(pager);
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("terminal"))){
+            pager.setCurrentItem(Integer.parseInt(getIntent().getStringExtra("terminal")));
+        }
 
     }
 

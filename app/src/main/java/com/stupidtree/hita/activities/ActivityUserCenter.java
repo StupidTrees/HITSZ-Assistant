@@ -61,7 +61,9 @@ import cn.bmob.v3.listener.UploadFileListener;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.clearData;
+import static com.stupidtree.hita.HITAApplication.cookies;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
+import static com.stupidtree.hita.HITAApplication.login;
 
 public class ActivityUserCenter extends BaseActivity implements FragmentSubjects.OnFragmentInteractionListener, FragmentJWTS_info.OnListFragmentInteractionListener
 {
@@ -117,6 +119,8 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
                         public void onClick(DialogInterface dialog, int which) {
                             BmobUser.logOut();
                             clearData();
+                            cookies.clear();
+                            login = false;
                             CurrentUser = null;
                             finish();
                         }

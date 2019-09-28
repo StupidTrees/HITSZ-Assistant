@@ -73,6 +73,7 @@ public class TimeTableGenerator {
         boolean skipNoExam = defaultSP.getBoolean("dtt_preview_skip_no_exam",true);
         for(EventItem ei:courses){
             Subject subject = mainTimeTable.core.getSubjectByCourse(ei);
+            if(subject==null) continue;
             if((!subject.exam)&&skipNoExam)  toRemove.add(ei);
             else courseMap.put(ei,subject.getPriority());
         }

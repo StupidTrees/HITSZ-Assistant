@@ -26,12 +26,12 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
                     android:background="#00000000"
+                    android:fitsSystemWindows="true"
                     android:minHeight="?attr/actionBarSize"
-                    app:theme="?attr/toolbarStyle"
                     app:contentInsetStart="0dp"
-                    app:contentInsetStartWithNavigation="0dp">
+                    app:contentInsetStartWithNavigation="0dp"
+                    app:theme="?attr/toolbarStyle">
 
                         <com.google.android.material.tabs.TabLayout
                             android:id="@+id/laf_tabs"

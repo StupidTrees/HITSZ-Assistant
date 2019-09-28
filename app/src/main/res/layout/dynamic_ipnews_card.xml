@@ -90,6 +90,7 @@
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:padding="16dp"
         android:tint="?attr/text_color_secondary"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_more" />
 
 </androidx.cardview.widget.CardView>

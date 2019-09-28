@@ -56,7 +56,7 @@ public class FragmentCanteenList extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
 
     }
 

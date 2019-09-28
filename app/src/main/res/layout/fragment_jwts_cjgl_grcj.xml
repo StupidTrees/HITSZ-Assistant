@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:overScrollMode="never"
     tools:context=".jwts.FragmentJWTS_cjgl_grcj">
 
     <!-- TODO: Update blank fragment layout -->
@@ -16,10 +16,12 @@
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
-        app:cardBackgroundColor="?attr/background_color_second"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_margin="16dp"
+            app:cardBackgroundColor="?attr/background_color_second"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,8 +34,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    android:fontFamily="sans-serif-black"
                     android:text="期中成绩"
-                    android:textColor="?attr/text_color_primary" />
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="18sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -105,10 +109,12 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-        app:cardBackgroundColor="?attr/background_color_second"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_margin="16dp"
+            app:cardBackgroundColor="?attr/background_color_second"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -119,8 +125,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
                     android:text="期末成绩"
-                    android:textColor="?attr/text_color_primary" />
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="18sp" />
 
                 <Spinner
                     android:id="@+id/qmcj_xnxq_spinner"

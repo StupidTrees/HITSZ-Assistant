@@ -18,7 +18,7 @@ import com.stupidtree.hita.online.Canteen;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import static com.stupidtree.hita.adapter.IpNewsListAdapter.dip2px;
+import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
 public class NaviCanteenListAdapter extends RecyclerView.Adapter <NaviCanteenListAdapter.FoodViewHolder>{
 

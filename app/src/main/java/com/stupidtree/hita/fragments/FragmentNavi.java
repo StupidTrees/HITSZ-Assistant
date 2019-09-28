@@ -2,17 +2,28 @@ package com.stupidtree.hita.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
+
 import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
+
 import androidx.cardview.widget.CardView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,21 +32,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.lapism.searchview.widget.SearchItem;
+import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.activities.ActivityRankBoard;
-import com.stupidtree.hita.activities.ActivityEmptyClassroom;
-import com.stupidtree.hita.activities.ActivityExplore;
-import com.stupidtree.hita.activities.ActivityHITSZInfo;
-import com.stupidtree.hita.activities.ActivityLostAndFound;
-import com.stupidtree.hita.activities.ActivityUniversity;
-import com.stupidtree.hita.activities.ActivityXL;
-import com.stupidtree.hita.activities.ActivityYX_FDY;
-import com.stupidtree.hita.activities.ActivityYX_ToSchool;
 import com.stupidtree.hita.adapter.HITSZInfoPagerAdapter;
 
+import com.stupidtree.hita.adapter.NaviPageAdapter;
 import com.stupidtree.hita.online.BannerItem;
 
 import com.stupidtree.hita.util.ActivityUtils;
@@ -44,168 +52,161 @@ import com.zhouwei.mzbanner.holder.MZHolderCreator;
 import com.zhouwei.mzbanner.holder.MZViewHolder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 import static com.stupidtree.hita.HITAApplication.defaultSP;
+import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_BOARD_JW;
+import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_HINT;
+import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_HITA;
+import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_JWTS_FUN;
+import static com.stupidtree.hita.adapter.NaviPageAdapter.strToIntegerList;
 
 public class FragmentNavi extends BaseFragment {
 
 
-   // SearchView searchview;
-    CardView card_explore,card_jwts,card_lostandfound,card_canteen,card_info,card_university,card_emptyclassroom,card_locations,
-    card_yx_toschool,card_yx_timetable,card_yx_fdy,card_yx_signup,card_xl;
-    MZBannerView banner;
+    // SearchView searchview;
+   MZBannerView banner;
     List<BannerItem> bannerItemList;
-    ViewPager pager;
-    HITSZInfoPagerAdapter pagerAdapter;
-    List<Fragment> fragments;
-    TabLayout tab;
-    LinearLayout card_info_layout;
-    ImageView yx_bg;
 
+    HITSZInfoPagerAdapter pagerAdapter;
+    //List<Fragment> fragments;
+    //TabLayout tab;
+    //ViewPager pager;
+    LinearLayout card_info_layout;
+    BroadcastReceiver broadcastReceiver;
+    List<Integer> listRes;
+    RecyclerView list;
+    NaviPageAdapter listAdapter;
+    SwipeRefreshLayout refreshLayout;
+    Gson gson;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       View v = inflater.inflate(R.layout.fragment_navi,container,false);
-       //InitSearch(v);
-       initViews(v);
-       initBanner(v);
-      // initCanteen(v);
-       pagePreference(v);
+        View v = inflater.inflate(R.layout.fragment_navi, container, false);
+        //InitSearch(v);
+        initViews(v);
+        initBanner(v);
+        // initCanteen(v);
+//        pagePreference(v);
         refreshBanner();
-       return v;
+        initBroadcastReceiver();
+        initList(v);
+        return v;
     }
 
-    void initViews(View v){
-        yx_bg = v.findViewById(R.id.yx_bg);
-        card_info = v.findViewById(R.id.navipage_card_info);
-        card_info_layout = v.findViewById(R.id.navipage_card_info_layout);
-        card_canteen = v.findViewById(R.id.navipage_card_canteen);
-        card_jwts = v.findViewById(R.id.navipage_card_jwts);
-        card_yx_toschool = v.findViewById(R.id.navipage_card_yx_guide_toschool);
-        card_yx_timetable = v.findViewById(R.id.navipage_card_yx_timetable);
-        card_yx_fdy = v.findViewById(R.id.navipage_card_yx_fdy);
-        card_yx_signup = v.findViewById(R.id.navipage_card_yx_guide_tologin);
-        card_xl = v.findViewById(R.id.navipage_card_xl);
-        card_lostandfound = v.findViewById(R.id.navipage_card_society);
-        card_explore = v.findViewById(R.id.navi_card_explore);
-        card_emptyclassroom = v.findViewById(R.id.navipage_card_empty_classroom);
-        card_locations = v.findViewById(R.id.navipage_card_location);
-        tab = v.findViewById(R.id.hitszinfo_tab);
-        pager = v.findViewById(R.id.hitszinfo_pager);
-        card_xl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), ActivityXL.class);
-                startActivity(i);
+    void initList(View v) {
+        gson = new Gson();
+        list = v.findViewById(R.id.navipage_list);
+        listRes = new ArrayList<>();
+        List<Integer> order  = strToIntegerList(defaultSP.getString("navi_page_order_2","[]"));
+        if(order.size()>0){
+            for(int i=0;i<order.size();i++){
+                if(order.get(i)!=TYPE_JWTS_FUN&&order.get(i)!=TYPE_HINT) listRes.add(order.get(i));
             }
-        });
-        card_explore.setOnClickListener(new View.OnClickListener() {
+            if(!order.contains(TYPE_HITA)) listRes.add(NaviPageAdapter.TYPE_HITA);
+        }else{
+            listRes.add(NaviPageAdapter.TYPE_HITA);
+            listRes.add(NaviPageAdapter.TYPE_BULLETIN);
+            listRes.add(NaviPageAdapter.TYPE_BOARD_JW);
+           // listRes.add(NaviPageAdapter.TYPE_BOARD_SERVICE);
+            listRes.add(NaviPageAdapter.TYPE_LECTURE);
+            listRes.add(NaviPageAdapter.TYPE_IPNEWS);
+
+        }
+        if(defaultSP.getBoolean("first_enter_navipage_hint_drag",true)){
+            listRes.add(0,NaviPageAdapter.TYPE_HINT);
+        }
+    
+        listAdapter = new NaviPageAdapter(listRes, getContext());
+        list.setAdapter(listAdapter);
+        list.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        NaviPageAdapter.mCallBack mCallBack = new NaviPageAdapter.mCallBack(listAdapter);
+        ItemTouchHelper helper = new ItemTouchHelper(mCallBack);
+        helper.attachToRecyclerView(list);
+    }
+
+    void initBroadcastReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onClick(View v) {
-                Intent i = new Intent(FragmentNavi.this.getActivity(),ActivityExplore.class);
-                startActivity(i);
-            }
-        });
-        card_university = v.findViewById(R.id.navi_card_university);
-        card_university.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(FragmentNavi.this.getActivity(), ActivityUniversity.class);
-                startActivity(i);
-            }
-        });
-        card_info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), ActivityHITSZInfo.class);
-                startActivity(i);
-            }
-        });
-        card_locations.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), ActivityUniversity.class);
-                startActivity(i);
-            }
-        });
-        View.OnClickListener jwtsClick = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityUtils.startJWTSActivity(getActivity());
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals("COM.STUPIDTREE.HITA.JWTS_AUTO_LOGIN_DONE")) {
+                    Log.e("接受到广播：", "登录教务完成");
+                    int addIndex_jw_fun = listRes.indexOf(defaultSP.getInt("navi_page_order_before_jwts", TYPE_BOARD_JW))+1;
+//                    int addIndex_exam = listRes.indexOf(defaultSP.getInt("navi_page_order_before_jwts_exam", TYPE_BOARD_JW))+1;
+//                    int addIndex_xfj = listRes.indexOf(defaultSP.getInt("navi_page_order_before_jwts_xfj", TYPE_BOARD_JW))+1;
+//                    int addIndex_xk = listRes.indexOf(defaultSP.getInt("navi_page_order_before_jwts_xk", TYPE_BOARD_JW))+1;
+//                    SparseArray<Integer> m_exam,m_xfj,m_xk;
+//                    m_exam = new SparseArray<>();
+//                    m_xfj = new SparseArray<>();
+//                    m_xk = new SparseArray<>();
+//                    m_exam.put(0,TYPE_EXAM);
+//                    m_exam.put(1,addIndex_exam);
+//                    m_xfj.put(0,TYPE_JWTS_XFJ);
+//                    m_xfj.put(1,addIndex_xfj);
+//                    m_xk.put(0,TYPE_JWTS_XK);
+//                    m_xk.put(1,addIndex_xk);
+//                    SparseArray<Integer>[] list = new SparseArray[]{m_exam,m_xfj,m_xk};
+//                    for(int i= 1;i>=0;i--){
+//                        for(int j=0;j<=i;j++){
+//                            if(list[j].get(1)<list[j+1].get(1)){
+//                                SparseArray temp = list[j];
+//                                list[j] = list[j+1];
+//                                list[j+1] = temp;
+//                            }
+//                        }
+//                    }
+//                    for(int i=0;i<3;i++){
+//                        listAdapter.addItem(list[i].get(0),list[i].get(1));
+//                    }
+                    listAdapter.addItem(TYPE_JWTS_FUN,addIndex_jw_fun);
+//                    listAdapter.addItem(TYPE_JWTS_XFJ,addIndex_xfj);
+//                    listAdapter.addItem(TYPE_EXAM, addIndex_exam);
+                    //list.scrollToPosition(0);
+                } else if (intent.getAction().equals("COM.STUPIDTREE.HITA.JWTS_LOGIN_FAIL")) {
+                    Log.e("接受到广播：", "登录教务失效");
+                    listAdapter.removeItems(new int[]{TYPE_JWTS_FUN});
+                }
+
             }
         };
-        card_jwts.setOnClickListener(jwtsClick);
-        card_canteen.setOnClickListener(new View.OnClickListener() {
+        IntentFilter ifi = new IntentFilter();
+        ifi.addAction("COM.STUPIDTREE.HITA.JWTS_AUTO_LOGIN_DONE");
+        ifi.addAction("COM.STUPIDTREE.HITA.JWTS_LOGIN_FAIL");
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, ifi);
+    }
+
+    void initViews(View v) {
+        refreshLayout = v.findViewById(R.id.refresh);
+        refreshLayout.setColorSchemeColors(new int[]{((BaseActivity)getActivity()).getColorPrimary(),((BaseActivity)getActivity()).getColorPrimaryDark()});
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
-                Intent g = new Intent(getContext(), ActivityRankBoard.class);
-                startActivity(g);
-            }
-        });
-        card_lostandfound.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getContext(), ActivityLostAndFound.class);
-                startActivity(i);
-            }
-        });
-        card_emptyclassroom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), ActivityEmptyClassroom.class);
-                startActivity(i);
-            }
-        });
-        card_yx_toschool.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), ActivityYX_ToSchool.class);
-                startActivity(i);
-            }
-        });
-        card_yx_timetable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Uri uri = Uri.parse("http://yx.hitsz.edu.cn/yx/sjym?id=5f53525aea104d2d962c2837e113639f&xxlm=00");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
-        card_yx_fdy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), ActivityYX_FDY.class);
-                startActivity(i);
-            }
-        });
-        card_yx_signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ActivityUtils.startExploreActivity_forNavi(getActivity(),"哈工大活动中心",113.9726100000,22.5864610000);
+            public void onRefresh() {
+                ActivityMain.autoLogin(refreshLayout);
             }
         });
     }
 
 
-    void initPager(View v){
+//    void initPager(View v) {
+//
+//        fragments = new ArrayList<>();
+//        fragments.add(new FragmentNewsLecture());
+//        fragments.add(new FragmentNewsBulletin());
+//        fragments.add(new FragmentNewsIPNews());
+//        pagerAdapter = new HITSZInfoPagerAdapter(getFragmentManager(), fragments);
+//        pager.setAdapter(pagerAdapter);
+//        tab.setTabIndicatorFullWidth(false);
+//        tab.setupWithViewPager(pager);
+//    }
 
-        fragments = new ArrayList<>();
-        fragments.add(new FragmentNewsLecture());
-        fragments.add(new FragmentNewsBulletin());
-        fragments.add(new FragmentNewsIPNews());
-        pagerAdapter = new HITSZInfoPagerAdapter(getFragmentManager(),fragments);
-        pager.setAdapter(pagerAdapter);
-        tab.setTabIndicatorFullWidth(false);
-        tab.setupWithViewPager(pager);
-    }
-
-    void initBanner(View v){
+    void initBanner(View v) {
         bannerItemList = new ArrayList<>();
         banner = v.findViewById(R.id.navi_banner);
         banner.setDelayedTime(4000);
@@ -214,83 +215,9 @@ public class FragmentNavi extends BaseFragment {
     }
 
 
-
     @SuppressLint("WrongConstant")
-//    void InitSearch(View v){
-//        searchview= v. findViewById(R.id.searchBar);
-//        searchview.setLogoIcon(R.drawable.ic_search);
-//        searchview.setOnLogoClickListener(new Search.OnLogoClickListener() {
-//            @Override
-//            public void onLogoClick() {
-//               searchview.setQuery(searchview.getText().toString(),true);
-//            }
-//        });
-//        List<SearchItem> suggestions = new ArrayList<>();
-//
-//        for(String x:getResources().getStringArray(R.array.query_suggestions)){
-//            suggestions.add(newSuggestion(x,""));
-//        }
-//        final SearchHistoryTable mHistoryDatabase = new SearchHistoryTable(this.getContext());
-//        final SearchAdapter searchAdapter = new SearchAdapter(this.getContext());
-//        searchAdapter.setSuggestionsList(suggestions);
-//        searchAdapter.setOnSearchItemClickListener(new SearchAdapter.OnSearchItemClickListener() {
-//            @Override
-//            public void onSearchItemClick(int position, CharSequence title, CharSequence subtitle) {
-//                SearchItem item = new SearchItem(FragmentNavi.this.getContext());
-//                item.setTitle(title);
-//                item.setSubtitle(subtitle);
-//                mHistoryDatabase.addItem(item);
-//                searchview.setQuery(title,true);
-////                Intent i = new Intent(FragmentNavi.this.getActivity(), ActivityExplore.class);
-////                i.putExtra("terminal",title);
-////                FragmentNavi.this.getActivity().startActivity(i);
-//            }
-//
-//        });
-//        searchview.setAdapter(searchAdapter);
-//        searchview.setOnQueryTextListener(new Search.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(CharSequence query) {
-//                SearchItem item = new SearchItem(FragmentNavi.this.getContext());
-//                item.setTitle(query);
-//                mHistoryDatabase.addItem(item);
-//                searchAdapter.notifyDataSetChanged();
-//                Intent i = new Intent(FragmentNavi.this.getActivity(), ActivityExplore.class);
-//                i.putExtra("terminal",query);
-//                FragmentNavi.this.getActivity().startActivity(i);
-//
-//                return true;
-//            }
-//
-//            @Override
-//            public void onQueryTextChange(CharSequence newText) {
-//
-//            }
-//        });
-//
-//    }
-//
 
-    void pagePreference(View v){
-        if(defaultSP.getBoolean("navi_show_news",true)){
-            initPager(v);
-            tab.setVisibility(View.VISIBLE);
-            pager.setVisibility(View.VISIBLE);
-            //card_info_layout.setVisibility(View.GONE);
-        }else {
-            tab.setVisibility(View.GONE);
-            pager.setVisibility(View.GONE);
-           // card_info_layout.setVisibility(View.VISIBLE);
-        }
-    }
 
-    SearchItem newSuggestion(String title,String subtitle){
-        SearchItem suggestion = new SearchItem(this.getContext());
-        suggestion.setTitle(title);
-        suggestion.setIcon1Drawable(ContextCompat.getDrawable(this.getContext(),R.drawable.search_ic_search_black_24dp));
-        suggestion.setSubtitle(subtitle);
-        return suggestion;
-    }
 
     @Override
     protected void stopTasks() {
@@ -298,26 +225,24 @@ public class FragmentNavi extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
-        Glide.with(getContext()).load("https://bmob-cdn-26359.bmobpay.com/2019/08/17/fed6b71440392e6a80cfc8bc8fa35f0f.png")
-                .into(yx_bg);
+    public void Refresh() {
     }
 
 
-    public interface OnFragmentInteractionListener{
+    public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
 
 
-    void refreshBanner(){
+    void refreshBanner() {
         BmobQuery<BannerItem> bq = new BmobQuery<>();
         bq.findObjects(new FindListener<BannerItem>() {
             @Override
             public void done(List<BannerItem> list, BmobException e) {
-                if(e==null&&list!=null&&list.size()>0){
+                if (e == null && list != null && list.size() > 0) {
                     bannerItemList.clear();
                     bannerItemList.addAll(list);
-                    if(list.size()==1) banner.setCanLoop(false);
+                    if (list.size() == 1) banner.setCanLoop(false);
                     else banner.setCanLoop(true);
                     banner.setPages(bannerItemList, new MZHolderCreator<BannerViewHolder>() {
                         @Override
@@ -326,7 +251,7 @@ public class FragmentNavi extends BaseFragment {
                         }
                     });
                     banner.start();
-                }else if(bannerItemList.size()==0){
+                } else if (bannerItemList.size() == 0) {
                     BannerItem temp = new BannerItem();
                     temp.setImageUri("https://bmob-cdn-26359.bmobpay.com/2019/08/10/23ab6917400d551a805267303f0f840a.jpg");
                     temp.setTitle("同学们好");
@@ -348,21 +273,20 @@ public class FragmentNavi extends BaseFragment {
     }
 
 
-
-
-
-
-
     @Override
     public void onResume() {
         super.onResume();
         Refresh();
         banner.start();
 
+
         //refreshBanner();
         //refreshCanteen();
         //banner.start();
     }
+
+
+
 
     @Override
     public void onPause() {
@@ -376,10 +300,11 @@ public class FragmentNavi extends BaseFragment {
         private TextView title;
         private TextView subtitle;
         private CardView card;
+
         @Override
         public View createView(Context context) {
             // 返回页面布局
-            View view = LayoutInflater.from(context).inflate(R.layout.dynamic_navi_banner,null);
+            View view = LayoutInflater.from(context).inflate(R.layout.dynamic_navi_banner, null);
             image = view.findViewById(R.id.banner_image);
             title = view.findViewById(R.id.banner_title);
             subtitle = view.findViewById(R.id.banner_subtitle);
@@ -389,10 +314,10 @@ public class FragmentNavi extends BaseFragment {
 
         @Override
         public void onBind(Context context, int i, final BannerItem bannerItem) {
-           // Log.e("bind",bannerItem.getTitle());
+            // Log.e("bind",bannerItem.getTitle());
             Glide.with(context).load(bannerItem.getImageUri()).centerCrop()
                     .placeholder(R.drawable.gradient_bg)
-                   .into(image);
+                    .into(image);
             title.setText(bannerItem.getTitle());
             subtitle.setText(bannerItem.getSubtitle());
             card.setOnClickListener(new View.OnClickListener() {
@@ -406,23 +331,23 @@ public class FragmentNavi extends BaseFragment {
     }
 
 
-    private void bannerAction(JsonObject action){
+    private void bannerAction(JsonObject action) {
         try {
-            if(action==null) return;
-            if(action.has("intent")){
-                if(action.get("intent").getAsString().equals("jwts")){
+            if (action == null) return;
+            if (action.has("intent")) {
+                if (action.get("intent").getAsString().equals("jwts")) {
                     ActivityUtils.startJWTSActivity(getActivity());
-                }else if(action.get("intent").getAsString().equals("rankboard")){
-                    Intent i = new Intent(getActivity(),ActivityRankBoard.class);
+                } else if (action.get("intent").getAsString().equals("rankboard")) {
+                    Intent i = new Intent(getActivity(), ActivityRankBoard.class);
                     startActivity(i);
                 }
-            }else if(action.has("url")){
+            } else if (action.has("url")) {
                 Uri uri = Uri.parse(action.get("url").getAsString());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
-            }else if(action.has("dialog_title")&&action.has("dialog_message")){
+            } else if (action.has("dialog_title") && action.has("dialog_message")) {
                 AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(action.get("dialog_title").getAsString())
-                        .setMessage(action.get("dialog_message").getAsString()).setPositiveButton("好的",null).create();
+                        .setMessage(action.get("dialog_message").getAsString()).setPositiveButton("好的", null).create();
                 ad.show();
             }
         } catch (Exception e) {

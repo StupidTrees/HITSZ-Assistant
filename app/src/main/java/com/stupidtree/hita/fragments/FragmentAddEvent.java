@@ -58,6 +58,7 @@ import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 import static com.stupidtree.hita.activities.ActivityMain.app_task_enabled;
+import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_EXAM;
 import static com.stupidtree.hita.core.TimeTable.contains_integer;
 
 @SuppressLint("ValidFragment")
@@ -67,7 +68,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
     private EditText name, tag2, tag3;
     private TextView fromTimeShow, toTimeShow, dateShow, courseShow, examPlace, taskShow;
     FloatingActionButton done;
-    private String subjectCode;
+    private String subjectCode,subjectName;
     private Task task;
     private LinearLayout pickToTimeLayout, pickFromTimeLayout, pickCourseLayout, nameLayout, pickTaskLayout;
     private ExpandableLayout mExpandableLayout;
@@ -289,7 +290,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         setFromTime(hourOfDay,minute);
                     }
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
+                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
                 TPD.create();
                 TPD.show();
 
@@ -303,7 +304,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         setToTime(hourOfDay,minute);
                     }
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
+                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
                 TPD.create();
                 TPD.show();
             }
@@ -376,7 +377,10 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                 String Tname, Ttag2, Ttag3;
                 if (type == TimeTable.TIMETABLE_EVENT_TYPE_EXAM) {
                     Ttag2 = examPlace.getText().toString().isEmpty() ? "" : examPlace.getText().toString();
-                    Ttag3 = "科目代码：" + subjectCode;
+                    if(TextUtils.isEmpty(subjectCode)){
+                        Ttag3 = "科目名称：" + subjectName;
+                    }else Ttag3 = "科目代码："+subjectCode;
+
                     Tname = courseShow.getText() + "考试";
                     //  Ttag4 = fromT.tellTime()+"-"+toT.tellTime();
                 } else {
@@ -453,6 +457,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                             courseSet = true;
                             courseShow.setTextColor(((BaseActivity) FragmentAddEvent.this.getActivity()).getColorPrimary());
                             subjectCode = subjects.get(which).code;
+                            subjectName = subjects.get(which).name;
                         }
                     }).create();
             dialog.show();
@@ -552,7 +557,9 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                 ddl_task = new Task(mainTimeTable.core.curriculumCode, "处理DDL:" + name.getText().toString(), allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now), TimeTable.getDOW(now),
                         new HTime(now), week, dow, toT, "");
                 tag4 = ddl_task.getUuid();
-            } else tag4 = "null";
+            } else if(type==TIMETABLE_EVENT_TYPE_EXAM){
+                tag4 = TextUtils.isEmpty(subjectCode)?subjectName:subjectCode;
+            }
             int[] types_length = new int[]{TimeTable.TIMETABLE_EVENT_TYPE_EXAM
                     ,TimeTable.TIMETABLE_EVENT_TYPE_COURSE,TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT,TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC};
             List<EventItem> overlapEvents = mainTimeTable.getEventFrom_typeLimit(week,dow,start,week,dow,end,types_length);
@@ -583,7 +590,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                 AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle("事件时间与以下事件重叠：").setItems(dialogItems,null).setPositiveButton("修改时间",null).create();
                 ad.show();
             }else{
-                ActivityMain.saveData(getActivity());
+                ActivityMain.saveData();
                 sendRefreshMessages();
                 if(!this.isCancelled())dismiss();
             }

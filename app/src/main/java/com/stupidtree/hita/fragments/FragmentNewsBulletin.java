@@ -18,14 +18,13 @@ import android.view.ViewGroup;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityNewsDetail;
-import com.stupidtree.hita.adapter.BulletinRecyclerAdapter;
+import com.stupidtree.hita.adapter.NewsBulletinRecyclerAdapter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
     RecyclerView list;
-    BulletinRecyclerAdapter listAdapter;
+    NewsBulletinRecyclerAdapter listAdapter;
     List<Map<String, String>> listRes;
     Toolbar toolbar;
     int offset = 0;
@@ -44,7 +43,7 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_news_bulletin, container, false);
+        View v = inflater.inflate(R.layout.fragment_news, container, false);
         initList(v);
         return v;
     }
@@ -61,12 +60,12 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
 
     void initList(View v) {
         pullRefreshLayout = v.findViewById(R.id.pullrefresh);
-        list = v.findViewById(R.id.bulletin_recyc);
+        list = v.findViewById(R.id.list);
         listRes = new ArrayList<>();
-        listAdapter = new BulletinRecyclerAdapter(this.getContext(), listRes);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
+        listAdapter = new NewsBulletinRecyclerAdapter(this.getContext(), listRes);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false);
         list.setLayoutManager(manager);
-        listAdapter.setmOnItemClickListener(new BulletinRecyclerAdapter.OnItemClickListener() {
+        listAdapter.setmOnItemClickListener(new NewsBulletinRecyclerAdapter.OnItemClickListener() {
             @Override
             public void OnClick(View v, int position) {
                 //ActivityOptionsCompat op = ActivityOptionsCompat.makeSceneTransitionAnimation(FragmentNewsBulletin.this.getActivity(),v,"cardview");
@@ -114,7 +113,7 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
         if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
         pageTask = new loadTask(false);
         pageTask.execute();
@@ -156,7 +155,7 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
                     listRes.add(m);
                     //System.out.println("href="+link+",title="+title+",views="+views+",time="+time);
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

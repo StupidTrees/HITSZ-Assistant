@@ -13,8 +13,9 @@
     <color name="transparent_dark">#BB000000</color>
     <color name="user_center_scrim_color">#66FFFFFF</color>
     <color name="user_center_foreground_color">#33FFFFFF</color>
-    <color name="main_tans_unselected_color">#55000000</color>
-    <color name="main_tans_selected_color">#212121</color>
+    <color name="main_tabs_unselected_color">#55000000</color>
+    <color name="main_tabs_selected_color">#212121</color>
+    <color name="navi_page_card_image_foreground_color">#00000000</color>
     <!-- 分割线背景色 -->
     <color name="white">#FFFFFF</color>
     <color name="colorBGChatbot">#00000000</color>

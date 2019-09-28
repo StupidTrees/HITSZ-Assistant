@@ -6,10 +6,13 @@
 
     <ImageView
         android:id="@+id/li_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_margin="16dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:tint="?attr/text_color_secondary"
+        android:tintMode="src_in"
         app:srcCompat="@drawable/ic_label" />
 
     <LinearLayout
@@ -21,7 +24,7 @@
             android:id="@+id/li_key"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="开放时间"
             android:textColor="?attr/text_color_secondary" />
 
@@ -30,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:text="上午8点到下午7点"
             android:textColor="?attr/text_color_primary"
             android:textSize="16sp" />

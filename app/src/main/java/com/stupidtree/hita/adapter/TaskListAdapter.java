@@ -77,42 +77,46 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 
     @Override
     public void onBindViewHolder(@NonNull final TaskViewHolder taskViewHolder, final int position) {
-        taskViewHolder.name.setText(mBeans.get(position).name);
-        if(taskViewHolder.limit!=null) taskViewHolder.limit.
-                setText(mBeans.get(position).fW+"周"+ TextTools.words_time_DOW[mBeans.get(position).fDOW-1]
-                +"-"+mBeans.get(position).tW+"周"+ TextTools.words_time_DOW[mBeans.get(position).tDOW-1]
-                );
-        if(taskViewHolder.progress!=null) {
-            if(mBeans.get(position).isHas_length()) taskViewHolder.progress.setVisibility(View.VISIBLE);
-            else taskViewHolder.progress.setVisibility(View.GONE);
-            taskViewHolder.progress.setProgress(mBeans.get(position).getProgress());
-        }
-        if(taskViewHolder.done!=null) taskViewHolder.done.setChecked(false);
-        if(mBeans.get(position).isHas_length()&&taskViewHolder.done!=null) taskViewHolder.done.setVisibility(View.GONE);
-        else if(!mBeans.get(position).isHas_length()&&taskViewHolder.done!=null) taskViewHolder.done.setVisibility(View.VISIBLE);
-        if(mOnItemLongClickListener!=null){
-            taskViewHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    return mOnItemLongClickListener.OnClick(v,position);
-                }
-            });
-        }
-        if(mOnFinishClickListener!=null&&taskViewHolder.done!=null){
-            taskViewHolder.done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked) mOnFinishClickListener.OnClick(taskViewHolder.card,position);
-                }
-            });
+        try {
+            taskViewHolder.name.setText(mBeans.get(position).name);
+            if(taskViewHolder.limit!=null) taskViewHolder.limit.
+                    setText(mBeans.get(position).fW+"周"+ TextTools.words_time_DOW[mBeans.get(position).fDOW-1]
+                    +"-"+mBeans.get(position).tW+"周"+ TextTools.words_time_DOW[mBeans.get(position).tDOW-1]
+                    );
+            if(taskViewHolder.progress!=null) {
+                if(mBeans.get(position).isHas_length()) taskViewHolder.progress.setVisibility(View.VISIBLE);
+                else taskViewHolder.progress.setVisibility(View.GONE);
+                taskViewHolder.progress.setProgress(mBeans.get(position).getProgress());
+            }
+            if(taskViewHolder.done!=null) taskViewHolder.done.setChecked(false);
+            if(mBeans.get(position).isHas_length()&&taskViewHolder.done!=null) taskViewHolder.done.setVisibility(View.GONE);
+            else if(!mBeans.get(position).isHas_length()&&taskViewHolder.done!=null) taskViewHolder.done.setVisibility(View.VISIBLE);
+            if(mOnItemLongClickListener!=null){
+                taskViewHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return mOnItemLongClickListener.OnClick(v,position);
+                    }
+                });
+            }
+            if(mOnFinishClickListener!=null&&taskViewHolder.done!=null){
+                taskViewHolder.done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked) mOnFinishClickListener.OnClick(taskViewHolder.card,position);
+                    }
+                });
 
-        }
+            }
             taskViewHolder.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                    new TaskDialog(context,mBeans.get(position)).show();
                 }
             });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

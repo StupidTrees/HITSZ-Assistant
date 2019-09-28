@@ -65,10 +65,14 @@ public class ActivityTeacher extends BaseActivity {
         super.onCreate(savedInstanceState);
         setWindowParams(true, false, false);
         setContentView(R.layout.activity_teacher);
-        teacherName = getIntent().getStringExtra("name");
         initToolbar();
         initViews();
-        refreshPage();
+        if(getIntent().getExtras().getSerializable("teacher")!=null){
+            refreshPage_get();
+        }else refreshPage_search();
+
+
+
 
 //        loadingView = findViewById(R.id.teacher_loading);
 //        webView = findViewById(R.id.webview);
@@ -79,7 +83,8 @@ public class ActivityTeacher extends BaseActivity {
 //        new LoadTeacherPageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    void refreshPage() {
+    void refreshPage_search() {
+        teacherName = getIntent().getStringExtra("name");
         refresh.setVisibility(View.VISIBLE);
         BmobQuery<Teacher> bq = new BmobQuery();
         bq.addWhereEqualTo("name", teacherName);
@@ -114,6 +119,12 @@ public class ActivityTeacher extends BaseActivity {
         });
     }
 
+    void refreshPage_get() {
+        refresh.setVisibility(View.GONE);
+       teacher = (Teacher) getIntent().getExtras().getSerializable("teacher");
+       teacherName = teacher.getName();
+       loadInfos();
+    }
 
     void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -233,7 +244,7 @@ public class ActivityTeacher extends BaseActivity {
                 }
                 System.out.println(teachers);
                 return teachers;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }

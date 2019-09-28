@@ -15,6 +15,7 @@ import com.stupidtree.hita.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
@@ -37,6 +38,7 @@ public class Location extends BmobObject  implements Comparable{
     String address;
     int studentnum;
     float rate;
+    int search;
     String infos;
 
     public Location(String name, String imageURL, String type, double latitude, double longitude, String positionIntroduction, String record, String address, int studentnum, float rate, String infos) {
@@ -51,6 +53,7 @@ public class Location extends BmobObject  implements Comparable{
         this.studentnum = studentnum;
         this.rate = rate;
         this.infos = infos;
+
     }
 
     public Location(){
@@ -68,6 +71,15 @@ public class Location extends BmobObject  implements Comparable{
         rate = l.getRate();
         infos = l.getInfos();
         setObjectId(l.getObjectId());
+        this.search = l.getSearch();
+    }
+
+    public int getSearch() {
+        return search;
+    }
+
+    public void setSearch(int search) {
+        this.search = search;
     }
 
     public String getAddress() {
@@ -164,7 +176,14 @@ public class Location extends BmobObject  implements Comparable{
     public String getType() {
         return type;
     }
-
+    public String getType_Name() {
+        if(type.equals("canteen")) return "食堂";
+        if(type.equals("classroom")) return "教室";
+        if(type.equals("scenery")) return "景点";
+        if(type.equals("facility")) return "设施";
+        if(type.equals("dormitory")) return "宿舍";
+        return "地点";
+    }
     public void setType(String type) {
         this.type = type;
     }
@@ -182,6 +201,7 @@ public class Location extends BmobObject  implements Comparable{
             Toast.makeText(HContext, "请先登录!", Toast.LENGTH_SHORT).show();
             return;
         }
+        if(t==null) return;
         BmobQuery<RateUser> bmobQuery = new BmobQuery();
         bmobQuery.addWhereEqualTo("hitaUser", CurrentUser);
         bmobQuery.addWhereEqualTo("rateObjectId", t.getObjectId());
@@ -229,6 +249,20 @@ public class Location extends BmobObject  implements Comparable{
             }
         });
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return Objects.equals(name, location.name) &&
+                Objects.equals(type, location.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, type);
     }
 
     public static int getListLayout(){return -1;}

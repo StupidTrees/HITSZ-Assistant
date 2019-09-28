@@ -11,6 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.stupidtree.hita.BaseFragment;
@@ -27,27 +30,34 @@ import cn.bmob.v3.listener.FindListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.loadDataFromCloud;
 import static com.stupidtree.hita.HITAApplication.saveDataToCloud;
 
 
 public class FragmentUserCenter_sync extends BaseFragment {
-    CardView load_from_cloud;
-    CardView save_to_cloud;
-    CardView clear_cloud;
+    LinearLayout load_from_cloud;
+    Switch autoUpload;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_user_center_sync,container,false);
         load_from_cloud = v.findViewById(R.id.load_from_cloud);
-        save_to_cloud = v.findViewById(R.id.save_to_cloud);
-        clear_cloud = v.findViewById(R.id.clear_cloud);
-        save_to_cloud.setOnClickListener(new View.OnClickListener() {
+        autoUpload = v.findViewById(R.id.auto_upload);
+        autoUpload.setChecked(defaultSP.getBoolean("auto_upload_user_data",true));
+        autoUpload.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                new upLoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                defaultSP.edit().putBoolean("auto_upload_user_data",isChecked).apply();
             }
         });
+//        save_to_cloud.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new upLoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            }
+//        });
         load_from_cloud.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,32 +70,32 @@ public class FragmentUserCenter_sync extends BaseFragment {
                ad.show();
             }
         });
-        clear_cloud.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BmobQuery<Curriculum> bq = new BmobQuery();
-                bq.addWhereEqualTo("hitaUser",CurrentUser);
-                bq.findObjects(new FindListener<Curriculum>() {
-                    @Override
-                    public void done(List list, BmobException e) {
-                        new BmobBatch().deleteBatch(list);
-                    }
-                });
-                BmobQuery<Subject> bs = new BmobQuery<>();
-                bs.addWhereEqualTo("hitaUser",CurrentUser);
-                bs.findObjects(new FindListener<Subject>() {
-                    @Override
-                    public void done(List list, BmobException e) {
-                        if(e==null){
-                            new BmobBatch().deleteBatch(list);
-                        }else{
-                            Log.e("!!",e.toString());
-                        }
-
-                    }
-                });
-            }
-        });
+//        clear_cloud.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                BmobQuery<Curriculum> bq = new BmobQuery();
+//                bq.addWhereEqualTo("hitaUser",CurrentUser);
+//                bq.findObjects(new FindListener<Curriculum>() {
+//                    @Override
+//                    public void done(List list, BmobException e) {
+//                        new BmobBatch().deleteBatch(list);
+//                    }
+//                });
+//                BmobQuery<Subject> bs = new BmobQuery<>();
+//                bs.addWhereEqualTo("hitaUser",CurrentUser);
+//                bs.findObjects(new FindListener<Subject>() {
+//                    @Override
+//                    public void done(List list, BmobException e) {
+//                        if(e==null){
+//                            new BmobBatch().deleteBatch(list);
+//                        }else{
+//                            Log.e("!!",e.toString());
+//                        }
+//
+//                    }
+//                });
+//            }
+//        });
         return v;
     }
 
@@ -95,7 +105,7 @@ public class FragmentUserCenter_sync extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
 
     }
 

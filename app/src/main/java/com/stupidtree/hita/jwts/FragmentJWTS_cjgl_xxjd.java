@@ -95,7 +95,7 @@ public class FragmentJWTS_cjgl_xxjd extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
         if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
         pageTask = new refreshPageTask(getContext());
         pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

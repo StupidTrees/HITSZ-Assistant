@@ -29,7 +29,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> <!-- 用于申请获取蓝牙信息进行室内定位 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <meta-data
         android:name="IFLYTEK_APPKEY"
         android:value="5c4aa1d3" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
@@ -45,9 +45,14 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
+            android:name=".activities.ActivitySearch"
+            android:label="@string/title_activity_search"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/ChatBotTheme" />
+        <activity
             android:name=".activities.ActivityXL"
             android:label="@string/title_activity_xl"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.ActivityYX_FDY" />
         <activity android:name=".activities.ActivityYX_ToSchool" />
         <activity android:name=".activities.ActivityEmptyClassroomDetail" />
@@ -148,6 +153,7 @@
         <activity
             android:name=".activities.ActivityMain"
             android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.ActivityCampusLocations" />
         <activity
@@ -159,13 +165,13 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-
-            <!--<meta-data-->
-                <!--android:name="android.app.shortcuts"-->
-                <!--android:resource="@xml/shortcuts" />-->
+             <meta-data
+             android:name="android.app.shortcuts"
+             android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".activities.ActivityUserCenter"
@@ -177,9 +183,6 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activities.ActivityExplore"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.ActivityWalkRouteDetail"
             android:theme="@style/AppTheme" />
 
         <meta-data

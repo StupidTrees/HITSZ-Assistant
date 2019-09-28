@@ -87,7 +87,7 @@ public class FragmentFDY extends BaseFragment {
 
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
         if(fdyInfo!=null){
             name.setText(fdyInfo.get("name").getAsString());
             phone.setText(fdyInfo.get("phone").getAsString());

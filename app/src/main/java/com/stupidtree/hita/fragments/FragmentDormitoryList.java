@@ -50,7 +50,7 @@ public class FragmentDormitoryList extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
 
     }
 

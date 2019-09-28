@@ -34,6 +34,7 @@ public class FragmentJWTS_pyfa extends BaseFragment {
 
     ViewPager pager;
     TabLayout tabs;
+    List<BaseFragment> fragments;
 
     public FragmentJWTS_pyfa() {
         // Required empty public constructor
@@ -62,7 +63,7 @@ public class FragmentJWTS_pyfa extends BaseFragment {
     void initViews(View v){
         pager = v.findViewById(R.id.pyfa_pager);
         tabs = v.findViewById(R.id.pyfa_tabs);
-        List<Fragment> fragments = new ArrayList<>();
+        fragments = new ArrayList<>();
         fragments.add(new FragmentJWTS_pyfa_pyjhcx());
         fragments.add(new FragmentJWTS_pyfa_zxjxjh());
         pager.setAdapter(new pagerAdapter(getFragmentManager(),fragments,new String[]{"培养方案查询","执行教学计划查询"}));
@@ -94,8 +95,8 @@ public class FragmentJWTS_pyfa extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
-
+    public void Refresh() {
+        fragments.get(pager.getCurrentItem()).Refresh();
     }
 
     public interface OnFragmentInteractionListener {
@@ -105,9 +106,9 @@ public class FragmentJWTS_pyfa extends BaseFragment {
 
     private class pagerAdapter extends FragmentPagerAdapter{
 
-        List<Fragment> mBeans;
+        List<BaseFragment> mBeans;
         String[] title;
-        public pagerAdapter(FragmentManager fm,List<Fragment> res,String[] title) {
+        public pagerAdapter(FragmentManager fm,List<BaseFragment> res,String[] title) {
             super(fm);
             this.title = title;
             mBeans = res;

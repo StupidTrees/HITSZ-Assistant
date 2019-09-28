@@ -125,7 +125,7 @@ public class FragmentSignup extends BaseFragment {
     }
 
     @Override
-    protected void Refresh() {
+    public void Refresh() {
 
     }
 

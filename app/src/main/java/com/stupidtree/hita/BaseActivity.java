@@ -1,10 +1,12 @@
 package com.stupidtree.hita;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -21,6 +23,10 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.stupidtree.hita.activities.ActivityChatbot;
+import com.stupidtree.hita.activities.ActivitySearch;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import static com.stupidtree.hita.HITAApplication.themeID;
 
@@ -30,8 +36,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
+            fixOrientation();
+        }
         super.onCreate(savedInstanceState);
-        if(this instanceof ActivityChatbot){
+        if(this instanceof ActivityChatbot||this instanceof ActivitySearch){
             switch (themeID){
                 case R.style.BlueTheme:setTheme(R.style.BlueTheme_chatbot);break;
                 case R.style.RedTheme:setTheme(R.style.RedTheme_chatbot);break;
@@ -54,8 +63,49 @@ public abstract class BaseActivity extends AppCompatActivity {
            // else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             setTheme(themeID);
         }
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//禁止屏幕旋转
+        try {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//禁止屏幕旋转
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    private boolean fixOrientation(){
+        try {
+            Field field = Activity.class.getDeclaredField("mActivityInfo");
+            field.setAccessible(true);
+            ActivityInfo o = (ActivityInfo)field.get(this);
+            o.screenOrientation = -1;
+            field.setAccessible(false);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    private boolean isTranslucentOrFloating(){
+        boolean isTranslucentOrFloating = false;
+        try {
+            int [] styleableRes = (int[]) Class.forName("com.android.internal.R$styleable").getField("Window").get(null);
+            final TypedArray ta = obtainStyledAttributes(styleableRes);
+            Method m = ActivityInfo.class.getMethod("isTranslucentOrFloating", TypedArray.class);
+            m.setAccessible(true);
+            isTranslucentOrFloating = (boolean)m.invoke(null, ta);
+            m.setAccessible(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isTranslucentOrFloating;
+    }
+
+    @Override
+    public void setRequestedOrientation(int requestedOrientation) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
+            return;
+        }
+        super.setRequestedOrientation(requestedOrientation);
+    }
+
 
 
     protected void setWindowParams(Boolean statusBar, Boolean darkColor, Boolean navi){

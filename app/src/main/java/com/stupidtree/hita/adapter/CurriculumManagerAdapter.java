@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +31,7 @@ public class CurriculumManagerAdapter extends RecyclerView.Adapter<CurriculumMan
     List<Curriculum> mBeans;
     LayoutInflater mInflater;
     Context mContext;
+
 
     public CurriculumManagerAdapter(Context c, List<Curriculum> res){
         mInflater = LayoutInflater.from(c);

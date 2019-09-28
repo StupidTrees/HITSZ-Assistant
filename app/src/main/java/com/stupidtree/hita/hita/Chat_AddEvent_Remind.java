@@ -1,6 +1,7 @@
 package com.stupidtree.hita.hita;
 
 import com.google.gson.JsonObject;
+import com.stupidtree.hita.R;
 
 import org.ansj.domain.Nature;
 import org.ansj.domain.Term;
@@ -17,10 +18,7 @@ import static com.stupidtree.hita.hita.TextTools.T_NEXT;
 import static org.nlpcn.commons.lang.util.WordAlert.isNumber;
 
 public class Chat_AddEvent_Remind {
-    TextTools textTools;
-    Chat_AddEvent_Remind(TextTools tt){
-        textTools = tt;
-    }
+    
     private static final int AE_WW = 1;
 
     public JsonObject Process(List<Term> x) {
@@ -42,11 +40,11 @@ public class Chat_AddEvent_Remind {
                 x.get(i).setName(x.get(i).getName().substring(0, x.get(i).getName().length() - 1));
                 x.add(i + 1, new Term("到", 1000, "to", 1000));
             }
-            if (x.get(i).getNatureStr().equals("number") && textTools.mContains(x.get(i + 2).getNatureStr(), new String[]{"t_w", "t*w"}) && textTools.mContains(x.get(i + 1).getName(), textTools.words_to)) {
+            if (x.get(i).getNatureStr().equals("number") && TextTools.mContains(x.get(i + 2).getNatureStr(), new String[]{"t_w", "t*w"}) && TextTools.mContains(x.get(i + 1).getName(), R.array.words_to)) {
                 x.get(i).setName(x.get(i).getName() + "周");
                 x.get(i).setNature(new Nature("t_w"));
             }
-            if (x.get(i).getNatureStr().equals("t_dow") && textTools.mContains(x.get(i + 1).getName(), textTools.words_to) && textTools.mEquals(x.get(i + 2).getName(), textTools.words_number)) {
+            if (x.get(i).getNatureStr().equals("t_dow") && TextTools.mEquals(x.get(i + 1).getName(),R.array.words_to) && TextTools.mEquals(x.get(i + 2).getName(), R.array.words_number)) {
                 x.get(i + 2).setName("周" + x.get(i + 2).getName());
                 x.get(i + 2).setNature(new Nature("t_dow"));
             }
@@ -69,12 +67,12 @@ public class Chat_AddEvent_Remind {
                 x.get(i).setNature(new Nature("t_w"));
                 x.get(i).setName("上周");
             }
-            if(textTools.mEquals(x.get(i).getName(),textTools.words_backup_next)&&x.get(i+1).getNatureStr().equals("number")){
+            if(TextTools.mEquals(x.get(i).getName(),R.array.words_backup_next)&&x.get(i+1).getNatureStr().equals("number")){
                 String old = x.get(i+1).getName();
                 x.remove(i+1);
                 x.add(i+1,new Term("周"+old,1000,"t_dow",1000));
             }
-            if(textTools.mEquals(x.get(i).getName(),textTools.words_time_days_with_period)){
+            if(TextTools.mEquals(x.get(i).getName(),R.array.words_time_days_with_period)){
                 String first = x.get(i).getName().substring(0,1)+"天";
                 String second  = x.get(i).getName().substring(1)+"上";
                 x.remove(i);
@@ -115,37 +113,37 @@ public class Chat_AddEvent_Remind {
         String[] temp6 = {"t_pr"};
         String[] temp7 = {"t","add_remind"};
 
-        eventNameTxt = textTools.getStringAfterTag(x,temp7);
-        num_Txt = textTools.getStringWithTag(x,"t_num",1);
+        eventNameTxt = TextTools.getStringAfterTag(x,temp7);
+        num_Txt = TextTools.getStringWithTag(x,"t_num",1);
         num_Num = parseNumText(num_Txt);
-        fromW_Txt = textTools.getStringBetweenTag(x, temp1, temp3, false, 0, 1, 1);
-        toW_Txt = textTools.getStringBetweenTag(x, temp1, temp3, false, 1, 0, 1);
+        fromW_Txt = TextTools.getStringBetweenTag(x, temp1, temp3, false, 0, 1, 1);
+        toW_Txt = TextTools.getStringBetweenTag(x, temp1, temp3, false, 1, 0, 1);
         fromW_Num = parseWeekText(fromW_Txt);
         toW_Num = parseWeekText(toW_Txt);
-        fromDOW_Txt = textTools.getStringBetweenTag(x, temp2, temp3, false, 0, 1, 1);
-        toDOW_Txt = textTools.getStringBetweenTag(x, temp2, temp3, false, 1, 0, 1);
+        fromDOW_Txt = TextTools.getStringBetweenTag(x, temp2, temp3, false, 0, 1, 1);
+        toDOW_Txt = TextTools.getStringBetweenTag(x, temp2, temp3, false, 1, 0, 1);
         fromDOW_Num = parseDOWText(fromDOW_Txt);
         toDOW_Num = parseDOWText(toDOW_Txt);
-        fromH_Txt = textTools.getStringBetweenTag(x, temp4, temp3, false, 0, 1, 1);
-        toH_Txt = textTools.getStringBetweenTag(x, temp4, temp3, false, 1, 0, 1);
+        fromH_Txt = TextTools.getStringBetweenTag(x, temp4, temp3, false, 0, 1, 1);
+        toH_Txt = TextTools.getStringBetweenTag(x, temp4, temp3, false, 1, 0, 1);
         fromH_Num = parseHourText(fromH_Txt);
         toH_Num = parseHourText(toH_Txt);
         if (fromH_Num > 100) {
             fromH_Num -= 100;
             fromM_Num = 30;
         } else {
-            fromM_Txt = textTools.getStringBetweenTag(x, temp5, temp3, false, 0, 1, 1);
+            fromM_Txt = TextTools.getStringBetweenTag(x, temp5, temp3, false, 0, 1, 1);
             fromM_Num = parseMinuteText(fromM_Txt);
         }
         if (toH_Num > 100) {
             toH_Num -= 100;
             toM_Num = 30;
         } else {
-            toM_Txt = textTools.getStringBetweenTag(x, temp5, temp3, false, 1, 0, 1);
+            toM_Txt = TextTools.getStringBetweenTag(x, temp5, temp3, false, 1, 0, 1);
             toM_Num = parseMinuteText(toM_Txt);
         }
-        fromPr_Txt = textTools.getStringBetweenTag(x, temp6, temp3, false, 0, 1, 1);
-        toPr_Txt = textTools.getStringBetweenTag(x, temp6, temp3, false, 1, 0, 1);
+        fromPr_Txt = TextTools.getStringBetweenTag(x, temp6, temp3, false, 0, 1, 1);
+        toPr_Txt = TextTools.getStringBetweenTag(x, temp6, temp3, false, 1, 0, 1);
         if (fromPr_Txt != null&&toPr_Txt==null && fromH_Txt == null && toH_Txt == null) {
             switch (parsePeriodText(fromPr_Txt)) {
                 case 1:
@@ -269,9 +267,9 @@ public class Chat_AddEvent_Remind {
             else if (pureText.equals("十七")) result = 17;
             else if (pureText.equals("十八")) result = 18;
             else if (pureText.equals("十九")) result = 19;
-            else if(textTools.mEquals(pureText,textTools.words_this)) result = THIS;
-            else if(textTools.mEquals(pureText,textTools.words_next)) result = NEXT;
-            else if(textTools.mEquals(pureText,textTools.words_last)) result = BEFORE;
+            else if(TextTools.mEquals(pureText,R.array.words_this)) result = THIS;
+            else if(TextTools.mEquals(pureText,R.array.words_next)) result = NEXT;
+            else if(TextTools.mEquals(pureText,R.array.words_last)) result = BEFORE;
         }
         return result;
     }
@@ -282,7 +280,7 @@ public class Chat_AddEvent_Remind {
         int result = -1;
         if (text.startsWith("周")) pureText = text.substring(1);
         else if (text.startsWith("星期")) pureText = text.substring(2);
-        else if(textTools.mEquals(text,textTools.words_time_days)) pureText = text;
+        else if(TextTools.mEquals(text, R.array.words_time_days)) pureText = text;
         else return -1;
         if (isNumber(pureText)) {
             result = Integer.parseInt(pureText);
@@ -295,14 +293,14 @@ public class Chat_AddEvent_Remind {
             else if (pureText.equals("六")) result = 6;
             else if (pureText.equals("日")) result = 7;
             else if (pureText.equals("天")) result = 7;
-            else if(textTools.mEquals(pureText,new String[]{"明天"})) result = NEXT;
-            else if(textTools.mEquals(pureText,new String[]{"昨天"})) result = BEFORE;
-            else if(textTools.mEquals(pureText,new String[]{"前天"})) result = T_BEFORE;
-            else if(textTools.mEquals(pureText,new String[]{"大前天"})) result = TT_BEFORE;
-            else if(textTools.mEquals(pureText,new String[]{"大前天"})) result = TT_BEFORE;
-            else if(textTools.mEquals(pureText,new String[]{"后天"})) result = T_NEXT;
-            else if(textTools.mEquals(pureText,new String[]{"大后天"})) result = TT_NEXT;
-            else if(textTools.mEquals(pureText,new String[]{"今天"})) result = THIS;
+            else if(TextTools.mEquals(pureText,new String[]{"明天"})) result = NEXT;
+            else if(TextTools.mEquals(pureText,new String[]{"昨天"})) result = BEFORE;
+            else if(TextTools.mEquals(pureText,new String[]{"前天"})) result = T_BEFORE;
+            else if(TextTools.mEquals(pureText,new String[]{"大前天"})) result = TT_BEFORE;
+            else if(TextTools.mEquals(pureText,new String[]{"大前天"})) result = TT_BEFORE;
+            else if(TextTools.mEquals(pureText,new String[]{"后天"})) result = T_NEXT;
+            else if(TextTools.mEquals(pureText,new String[]{"大后天"})) result = TT_NEXT;
+            else if(TextTools.mEquals(pureText,new String[]{"今天"})) result = THIS;
 
         }
         return result;
@@ -431,10 +429,10 @@ public class Chat_AddEvent_Remind {
         String[] noon = {"中午", "午间"};
         String[] afternoon = {"下午", "午后", "后半天"};
         String[] night = {"晚上", "夜晚", "夜间"};
-        if (textTools.mContains(text, morning)) return 1;
-        if (textTools.mContains(text, noon)) return 2;
-        if (textTools.mContains(text, afternoon)) return 3;
-        if (textTools.mContains(text, night)) return 4;
+        if (TextTools.mContains(text, morning)) return 1;
+        if (TextTools.mContains(text, noon)) return 2;
+        if (TextTools.mContains(text, afternoon)) return 3;
+        if (TextTools.mContains(text, night)) return 4;
         return -1;
     }
 

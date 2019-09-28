@@ -87,7 +87,7 @@ public class ActivityNewsDetail extends BaseActivity {
                 m.put("time",time);
                 return m;
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return null;
             }
 

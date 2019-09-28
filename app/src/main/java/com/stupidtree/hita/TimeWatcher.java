@@ -9,13 +9,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Build;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.preference.PreferenceManager;
 
 import android.text.TextUtils;
 
@@ -60,7 +63,7 @@ public class TimeWatcher {
         now.setTimeInMillis(System.currentTimeMillis());
         initNotification(application);
         todaysEvents = new ArrayList<>();
-        refreshProgress(false,true);
+        refreshProgress(false, true);
     }
 
     void initNotification(Application application) {
@@ -103,7 +106,7 @@ public class TimeWatcher {
     }
 
 
-    public void refreshProgress(boolean fromOther,boolean refreshTask) {
+    public void refreshProgress(boolean fromOther, boolean refreshTask) {
         try {
             thisWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
         } catch (Exception e) {
@@ -113,7 +116,7 @@ public class TimeWatcher {
             TimeTableGenerator.Dynamic_PreviewPlan(now);
         } else if (isDataAvailable()) {
             mainTimeTable.clearTask(":::");
-           // mainTimeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC);
+            // mainTimeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC);
         }
         refreshTodaysEvents();
         refreshNowAndNextEvent();
@@ -122,11 +125,11 @@ public class TimeWatcher {
             sendNotification();
         if (!fromOther) {
             Intent mes = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
-            mes.putExtra("from","time_tick");
+            mes.putExtra("from", "time_tick");
             LocalBroadcastManager.getInstance(HContext).sendBroadcast(mes);
             //fragmentTimeLine.Refresh(FragmentTimeLine.TL_REFRESH_FROM_TIMETICK);
         }
-        if(refreshTask){
+        if (refreshTask) {
             Intent mes2 = new Intent("COM.STUPIDTREE.HITA.TASK_REFRESH");
             LocalBroadcastManager.getInstance(HContext).sendBroadcast(mes2);
         }
@@ -146,22 +149,23 @@ public class TimeWatcher {
         if (!isDataAvailable()) return;
         List<EventItem> events = mainTimeTable.getAllEvents();
         for (EventItem ei : events) {
-            if (!ei.hasPassed(now) || ei.tag4.equals("null")) continue;
+            if (!ei.hasPassed(now) || TextUtils.isEmpty(ei.tag4) || ei.tag4 != null && ei.tag4.equals("null"))
+                continue;
             Task t = mainTimeTable.getTaskWithUUID(ei.tag4);
             if (t != null) {
-                if (t.getEvent_map().get(ei.getUuid() + ":::" + ei.week)!=null&&!t.getEvent_map().get(ei.getUuid() + ":::" + ei.week)) {
+                if (t.getEvent_map().get(ei.getUuid() + ":::" + ei.week) != null && !t.getEvent_map().get(ei.getUuid() + ":::" + ei.week)) {
                     t.putEventMap(ei.getUuid() + ":::" + ei.week, true);
                     float newProgress = (float) (100 * ((float) t.getProgress() / 100.0 * t.getLength() + ei.getDuration()) / t.getLength());
                     t.updateProgress((int) newProgress);
-                    if(newProgress>=100f) mainTimeTable.finishTask(t);
+                    if (newProgress >= 100f) mainTimeTable.finishTask(t);
                 }
             }
         }
         List<Task> taks = mainTimeTable.getUnfinishedTasks();
-        for(Task t:taks){
-            if(!t.has_deadline) continue;
-            Calendar end = mainTimeTable.core.getDateAt(t.tW,t.tDOW,t.eTime);
-            if(end.before(now)) mainTimeTable.finishTask(t);
+        for (Task t : taks) {
+            if (!t.has_deadline) continue;
+            Calendar end = mainTimeTable.core.getDateAt(t.tW, t.tDOW, t.eTime);
+            if (end.before(now)) mainTimeTable.finishTask(t);
         }
 
     }
@@ -201,12 +205,38 @@ public class TimeWatcher {
             if (!changed_now) nowEvent = null;
             if (nowEvent != null) {
                 nowProgress = ((float) new HTime(now).getDuration(nowEvent.startTime)) / ((float) nowEvent.endTime.getDuration(nowEvent.startTime));
+                String x = defaultSP.getString("mute_course", null);
+                if (x == null || !nowEvent.equalsEvent(x)) {
+                    startMute();
+                    defaultSP.edit().putString("mute_course",nowEvent.getEventsIdStr()).apply();
+                    sendNotification("已开启静音", "HITSZ学习助手");
+                }
             }
+            if (nextEvent != null && nextEvent.eventType == TimeTable.TIMETABLE_EVENT_TYPE_COURSE) {
+                String x = defaultSP.getString("mute_course", null);
+                if (x == null || !nextEvent.equalsEvent(x)) {
+                    if (nextEvent.startTime.getDuration(nowTime) <= defaultSP.getInt("auto_mute_before", 15)) {
+                        startMute();
+                        defaultSP.edit().putString("mute_course", nextEvent.getEventsIdStr()).apply();
+                        sendNotification("已开启静音", "HITSZ学习助手");
+                    }
+                }
+            }
+            //if(nowEvent==null&&)
         } catch (Exception e) {
             e.printStackTrace();
             nowEvent = null;
             nextEvent = null;
             return;
+        }
+    }
+
+    public void startMute() {
+
+        AudioManager audioManager = (AudioManager) HContext.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager != null) {
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            audioManager.getStreamVolume(AudioManager.STREAM_RING);
         }
     }
 
@@ -284,11 +314,18 @@ public class TimeWatcher {
         notificationManager.notify(R.string.app_notification_channel_id, notification);
     }
 
+    public void sendNotification(String title, String content) {
+        notificationBuilder.setContentTitle(title);
+        notificationBuilder.setContentText(content);
+        Notification n = notificationBuilder.build();
+        notificationManager.notify(R.string.app_notification_channel_id, n);
+    }
+
     class timeTickTask extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            refreshProgress(false,true);
+            refreshProgress(false, true);
             return null;
         }
     }

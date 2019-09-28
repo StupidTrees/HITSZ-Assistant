@@ -77,9 +77,10 @@ public class FragmentLostAndFound extends BaseFragment {
     void initList(View v) {
         list = v.findViewById(R.id.society_list);
         listRes = new ArrayList<>();
+        list.setItemViewCacheSize(30);
         listAdapter = new LostAndFoundListAdapter(getActivity(), listRes);
         list.setAdapter(listAdapter);
-        RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         list.setLayoutManager(lm);
         pullRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

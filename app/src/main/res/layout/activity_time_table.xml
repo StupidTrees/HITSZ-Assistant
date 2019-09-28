@@ -19,25 +19,26 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/main_tool_bar"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="24dp"
+            android:layout_height="wrap_content"
             android:elevation="0dp"
+            android:fitsSystemWindows="true"
             android:visibility="visible"
-            app:theme="?attr/toolbarStyle"
-            app:contentInsetStartWithNavigation="0dp">
+            app:contentInsetStartWithNavigation="0dp"
+            app:theme="?attr/toolbarStyle">
             <!--app:contentInsetStart="0dp"-->
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/timetable_tabs"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/second_tab_height"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="#00000000"
                 app:tabIndicatorGravity="bottom"
                 app:tabMode="scrollable"
                 app:tabRippleColor="?attr/colorPrimary"
-                app:tabSelectedTextColor="@color/main_tans_selected_color"
+                app:tabSelectedTextColor="@color/main_tabs_selected_color"
                 app:tabTextAppearance="@style/MainTabsTextTheme_normal"
-                app:tabTextColor="@color/main_tans_unselected_color"
+                app:tabTextColor="@color/main_tabs_unselected_color"
                 app:tabUnboundedRipple="true" />
         </androidx.appcompat.widget.Toolbar>
 
@@ -66,7 +67,7 @@
         android:id="@+id/timetable_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="always"
+        android:overScrollMode="never"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
