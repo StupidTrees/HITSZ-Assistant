@@ -40,6 +40,7 @@ import com.amap.api.services.route.WalkRouteResult;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.util.WalkRouteOverlay;
 import com.stupidtree.hita.util_navi.AMapUtil;
@@ -135,7 +136,7 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
             //为amap添加事件监听器
             aMap.setOnMapLongClickListener(this);
         }
-        new LoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadTask().executeOnExecutor(HITAApplication.TPE);
         changeDayAndNight();//昼夜模式
         if (defaultSP.getBoolean("firstOpen_explore", true) && longClickAvailable) {
             Guide();

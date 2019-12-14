@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.CurriculumManagerAdapter;
 import com.stupidtree.hita.adapter.SubjectsManagerPagerAdapter;
@@ -138,7 +139,7 @@ public class FragmentCurriculum extends BaseFragment {
                                     setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            new deleteTask(curriculum.curriculumCode).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                            new deleteTask(curriculum.curriculumCode).executeOnExecutor(HITAApplication.TPE);
                                         }
                                     }).setNegativeButton("取消", null).
                                     create();

@@ -24,9 +24,10 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="?attr/actionBarSize"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="26dp"
+                android:fitsSystemWindows="true"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
                 app:layout_collapseMode="pin"

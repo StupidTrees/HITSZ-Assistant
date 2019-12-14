@@ -29,22 +29,21 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/textView20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:fontFamily="sans-serif-black"
                 android:text="绑定哈工大深圳学号"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/current_user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="24dp"
                 android:text="绑定账号：StupidTree（15159128923）"
-                android:textColor="?attr/colorPrimary" />
+                android:textColor="?attr/text_color_secondary" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"

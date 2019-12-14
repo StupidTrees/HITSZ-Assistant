@@ -431,7 +431,7 @@ public class FileOperator {
     ///////////////////////////////以下为内部辅助函数////////////////////////////////////////////////
     /*函数功能:把Excel文件转化成java通用类的形式
      * 参数1：Excel文件名*/
-    private static Map<String, List<List<String>>> analyzeXls(String fileName) {
+    public static Map<String, List<List<String>>> analyzeXls(String fileName) {
         Map<String, List<List<String>>> map = new HashMap<>();
         List<List<String>> rows;
         List<String> columns = null;

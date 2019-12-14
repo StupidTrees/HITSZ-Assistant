@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityCurriculumManager;
 import com.stupidtree.hita.activities.ActivitySetting;
@@ -168,7 +170,7 @@ public class FragmentTimeTable extends BaseFragment implements FragmentTimeTable
 
                     case R.id.action_whole_day:
                         menuItem.setChecked(isChecked);
-                        PreferenceManager.getDefaultSharedPreferences(FragmentTimeTable.this.getActivity()).edit().putBoolean("timetable_wholeday",isChecked).apply();
+                        PreferenceManager.getDefaultSharedPreferences(HContext).edit().putBoolean("timetable_wholeday",isChecked).apply();
                         //Toast.makeText(FragmentTimeTable.this.getActivity(),"重新进入本页面生效",Toast.LENGTH_SHORT).show();
                         pagerAdapter.notifyAllFragments();
                         // Refresh(FROM_INIT);
@@ -185,9 +187,10 @@ public class FragmentTimeTable extends BaseFragment implements FragmentTimeTable
 
     /*刷新课表视图函数*/
     public void Refresh(int from) {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new RefreshTask(from);
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(HITAApplication.TPE);
+
     }
 
 
@@ -204,7 +207,7 @@ public class FragmentTimeTable extends BaseFragment implements FragmentTimeTable
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override

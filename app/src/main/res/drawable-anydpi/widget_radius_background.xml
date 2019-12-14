@@ -7,7 +7,7 @@
         <!--android:angle="45"-->
         <!--android:endColor="@color/blue_primary"-->
         <!--android:startColor="@color/deep_purple_primary" />-->
-    <solid android:color="#55000000"></solid>
+    <solid android:color="#FFFFFF"></solid>
     <corners
         android:topLeftRadius="24dp"
         android:topRightRadius="24dp"

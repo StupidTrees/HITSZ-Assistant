@@ -40,6 +40,13 @@ public class FragmentSettings extends PreferenceFragmentCompat {
                 return true;
             }
         });
+        findPreference("app_events_enabled").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Toast.makeText(getContext(),"重启应用生效",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
         Preference jwts_autologin = findPreference("jwts_autologin");
         final Preference jwts_password = findPreference("jwts_password");
         if(CurrentUser==null){

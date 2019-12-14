@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:background="?attr/color_primary_fade_background"
             app:contentScrim="?attr/background_color_bottom"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
             app:toolbarId="@+id/toolbar">
 
             <LinearLayout
@@ -44,6 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="6dp"
+                    android:fontFamily="sans-serif-black"
                     android:gravity="center"
                     android:text="T3402"
                     android:textColor="@color/material_text_icon_white"
@@ -81,7 +82,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    app:cardBackgroundColor="?attr/background_color_second">
+                    app:cardBackgroundColor="?attr/background_color_second"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="6dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -139,7 +142,9 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="?attr/background_color_second">
+                    app:cardBackgroundColor="?attr/background_color_second"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="6dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"

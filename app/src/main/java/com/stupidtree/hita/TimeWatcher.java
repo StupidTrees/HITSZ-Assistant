@@ -1,10 +1,12 @@
 package com.stupidtree.hita;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +22,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.preference.PreferenceManager;
 
+import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.stupidtree.hita.activities.ActivityLogin;
 import com.stupidtree.hita.activities.ActivityLoginJWTS;
@@ -32,6 +36,7 @@ import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.HTime;
 import com.stupidtree.hita.core.timetable.Task;
 
+import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,18 +53,28 @@ public class TimeWatcher {
     public static float nowProgress;
     public static List<EventItem> todaysEvents;
     private NotificationManager notificationManager;
-    NotificationCompat.Builder notificationBuilder;
-    Notification notification;
+    private NotificationCompat.Builder notificationBuilder;
     // private FragmentTimeLine fragmentTimeLine = null;
-    DecimalFormat df = new DecimalFormat("#.##%");
+    private DecimalFormat df = new DecimalFormat("#.##%");
+    public VolumeChangeReciever volumeChangeReciever;
+    private AudioManager audioManager;
 
     public TimeWatcher(Application application) {
+        audioManager = (AudioManager) HContext.getSystemService(Context.AUDIO_SERVICE);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_TIME_TICK);//每分钟变化
         intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
         intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
         TimeChangeReceiver timeChangeReceiver = new TimeChangeReceiver();
         application.registerReceiver(timeChangeReceiver, intentFilter);
+        volumeChangeReciever = new VolumeChangeReciever();
+
+        if (defaultSP.getBoolean("auto_mute",false)&&defaultSP.getBoolean("forced_mute", false)){
+            IntentFilter if2 = new IntentFilter();
+            if2.addAction("android.media.VOLUME_CHANGED_ACTION");
+            application.registerReceiver(volumeChangeReciever, if2);
+        }
+
         now.setTimeInMillis(System.currentTimeMillis());
         initNotification(application);
         todaysEvents = new ArrayList<>();
@@ -85,6 +100,7 @@ public class TimeWatcher {
                 .setAutoCancel(false);//设置通知被点击一次是否自动取消
 
     }
+
 //
 //    public void bindTimeLine(FragmentTimeLine ftl) {
 //        fragmentTimeLine = ftl;
@@ -100,9 +116,26 @@ public class TimeWatcher {
                 case Intent.ACTION_TIMEZONE_CHANGED:
                     refreshTodaysEvents();
             }
-            new timeTickTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new timeTickTask().executeOnExecutor(HITAApplication.TPE);
         }
 
+    }
+
+    class VolumeChangeReciever extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (nowEvent != null && nowEvent.eventType == TimeTable.TIMETABLE_EVENT_TYPE_COURSE) {
+                //Log.e("volume_change","cccc");
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_RING, 0, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 0, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, 0, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 0, 0);
+            }
+
+        }
     }
 
 
@@ -145,7 +178,7 @@ public class TimeWatcher {
         return result;
     }
 
-    public void updateTaskProgress() {
+    private void updateTaskProgress() {
         if (!isDataAvailable()) return;
         List<EventItem> events = mainTimeTable.getAllEvents();
         for (EventItem ei : events) {
@@ -157,7 +190,7 @@ public class TimeWatcher {
                     t.putEventMap(ei.getUuid() + ":::" + ei.week, true);
                     float newProgress = (float) (100 * ((float) t.getProgress() / 100.0 * t.getLength() + ei.getDuration()) / t.getLength());
                     t.updateProgress((int) newProgress);
-                    if (newProgress >= 100f) mainTimeTable.finishTask(t);
+                    if (newProgress >= 100f) mainTimeTable.setFinishTask(t,true);
                 }
             }
         }
@@ -165,29 +198,27 @@ public class TimeWatcher {
         for (Task t : taks) {
             if (!t.has_deadline) continue;
             Calendar end = mainTimeTable.core.getDateAt(t.tW, t.tDOW, t.eTime);
-            if (end.before(now)) mainTimeTable.finishTask(t);
+            if (end.before(now)) mainTimeTable.setFinishTask(t,true);
         }
 
     }
 
-    public void refreshTodaysEvents() {
+    private void refreshTodaysEvents() {
         if (!isDataAvailable()) return;
         int DOW = now.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : now.get(Calendar.DAY_OF_WEEK) - 1;
         todaysEvents.clear();
         thisWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
         if (thisWeekOfTerm < 0) isThisTerm = false;
         else isThisTerm = true;
-        for (EventItem ei : mainTimeTable.getOneDayEvents(thisWeekOfTerm, DOW)) {
-            todaysEvents.add(ei);
-        }
+        todaysEvents.addAll(mainTimeTable.getOneDayEvents(thisWeekOfTerm, DOW));
         Collections.sort(todaysEvents);
     }
 
     public void refreshNowAndNextEvent() {
-        boolean changed_now = false;
-        boolean changed_next = false;
+        HTime nowTime = new HTime(now);
         try {
-            HTime nowTime = new HTime(now);
+            boolean changed_now = false;
+            boolean changed_next = false;
             for (int i = todaysEvents.size() - 1; i >= 0; i--) {
                 EventItem ei = todaysEvents.get(i);
                 if (ei.hasCross(nowTime) && (!ei.isWholeDay)
@@ -203,44 +234,96 @@ public class TimeWatcher {
             }
             if (!changed_next) nextEvent = null;
             if (!changed_now) nowEvent = null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+//            nowEvent = null;
+//            nextEvent = null;
+            return;
+        }
+        try {
+            boolean next_on = false;
+            boolean autoMute = defaultSP.getBoolean("auto_mute", false);
             if (nowEvent != null) {
                 nowProgress = ((float) new HTime(now).getDuration(nowEvent.startTime)) / ((float) nowEvent.endTime.getDuration(nowEvent.startTime));
-                String x = defaultSP.getString("mute_course", null);
-                if (x == null || !nowEvent.equalsEvent(x)) {
-                    startMute();
-                    defaultSP.edit().putString("mute_course",nowEvent.getEventsIdStr()).apply();
-                    sendNotification("已开启静音", "HITSZ学习助手");
-                }
-            }
-            if (nextEvent != null && nextEvent.eventType == TimeTable.TIMETABLE_EVENT_TYPE_COURSE) {
-                String x = defaultSP.getString("mute_course", null);
-                if (x == null || !nextEvent.equalsEvent(x)) {
-                    if (nextEvent.startTime.getDuration(nowTime) <= defaultSP.getInt("auto_mute_before", 15)) {
+                if (autoMute) {
+                    String x = defaultSP.getString("mute_course", null);
+                    if (nowEvent.eventType == TimeTable.TIMETABLE_EVENT_TYPE_COURSE && (x == null || !nowEvent.equalsEvent(x))) {
                         startMute();
-                        defaultSP.edit().putString("mute_course", nextEvent.getEventsIdStr()).apply();
+                        defaultSP.edit().putString("mute_course", nowEvent.getEventsIdStr()).apply();
                         sendNotification("已开启静音", "HITSZ学习助手");
                     }
                 }
+
             }
-            //if(nowEvent==null&&)
+            if (nextEvent != null && nextEvent.eventType == TimeTable.TIMETABLE_EVENT_TYPE_COURSE) {
+                if (autoMute) {
+                    String x = defaultSP.getString("mute_course", null);
+                    if (x == null || !nextEvent.equalsEvent(x)) {
+                        if (nextEvent.startTime.getDuration(nowTime) <= defaultSP.getInt("auto_mute_before", 15)) {
+                            startMute();
+                            defaultSP.edit().putString("mute_course", nextEvent.getEventsIdStr()).apply();
+                            sendNotification("已开启静音", "HITSZ学习助手");
+                            next_on = true;
+                        }
+                    }
+                }
+
+            }
+
+            if ((nowEvent == null && !next_on) || (nowEvent != null && nowEvent.eventType != TimeTable.TIMETABLE_EVENT_TYPE_COURSE)) {
+                if (autoMute && defaultSP.getBoolean("auto_mute_after", true)) {
+                    String mute = defaultSP.getString("mute_course", null);
+                    //  Log.e("mute",mute);
+                    if (mute != null) {
+                        boolean has = false;
+                        for (EventItem ei : todaysEvents) {
+                            if (ei.eventType != TimeTable.TIMETABLE_EVENT_TYPE_COURSE) continue;
+                            if (ei.getEventsIdStr().equals(mute)) {
+                                has = true;
+                                if (ei.endTime.before(nowTime)) {
+                                    finishMute();
+                                    sendNotification("已关闭静音", "HITSZ学习助手");
+                                    defaultSP.edit().putString("mute_course", null).apply();
+                                    break;
+                                }
+
+                            }
+                        }
+                        if (!has) {
+                            finishMute();
+                            sendNotification("已关闭静音", "HITSZ学习助手");
+                            defaultSP.edit().putString("mute_course", null).apply();
+
+                        }
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            nowEvent = null;
-            nextEvent = null;
-            return;
         }
+
+        //if(nowEvent==null&&)
+
     }
 
-    public void startMute() {
-
-        AudioManager audioManager = (AudioManager) HContext.getSystemService(Context.AUDIO_SERVICE);
+    private void startMute() {
         if (audioManager != null) {
             audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             audioManager.getStreamVolume(AudioManager.STREAM_RING);
         }
     }
 
-    public void sendNotification() {
+    private void finishMute() {
+
+        AudioManager audioManager = (AudioManager) HContext.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager != null) {
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            audioManager.getStreamVolume(AudioManager.STREAM_RING);
+        }
+    }
+
+    private void sendNotification() {
         String title;
         String content;
         int IntentTerminal = 0;
@@ -308,19 +391,20 @@ public class TimeWatcher {
         notificationBuilder.setSound(null);
         notificationBuilder.setLights(0, 0, 0);
 
-        notification = notificationBuilder.build();
+        Notification notification = notificationBuilder.build();
 
         notification.flags = Notification.FLAG_ONGOING_EVENT;
         notificationManager.notify(R.string.app_notification_channel_id, notification);
     }
 
-    public void sendNotification(String title, String content) {
+    private void sendNotification(String title, String content) {
         notificationBuilder.setContentTitle(title);
         notificationBuilder.setContentText(content);
         Notification n = notificationBuilder.build();
-        notificationManager.notify(R.string.app_notification_channel_id, n);
+        notificationManager.notify(R.string.app_notification_channel_id_learning, n);
     }
 
+    @SuppressLint("StaticFieldLeak")
     class timeTickTask extends AsyncTask {
 
         @Override

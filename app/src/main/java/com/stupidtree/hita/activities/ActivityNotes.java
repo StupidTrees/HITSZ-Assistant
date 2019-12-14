@@ -27,6 +27,7 @@ import com.azoft.carousellayoutmanager.CenterScrollListener;
 import com.bumptech.glide.Glide;
 import com.github.clans.fab.FloatingActionMenu;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.Note;
@@ -73,7 +74,7 @@ public class ActivityNotes extends BaseActivity {
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -307,9 +308,9 @@ public class ActivityNotes extends BaseActivity {
 
 
     public void Refresh(boolean refreshList){
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new RefreshTask(refreshList,this);
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
 

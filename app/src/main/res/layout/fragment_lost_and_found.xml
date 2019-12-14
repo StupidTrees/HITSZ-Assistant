@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animationCache="true"
-            android:layoutAnimation="@anim/recycler_layout_animation_falls_down"
+            android:layoutAnimation="@anim/recycler_layout_animation_fade"
             android:overScrollMode="never"
             tools:context=".activities.ActivityLostAndFound">
 

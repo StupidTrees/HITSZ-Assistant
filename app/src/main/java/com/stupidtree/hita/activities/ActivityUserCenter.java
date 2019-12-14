@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,15 +33,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 
 import com.stupidtree.hita.diy.MaterialCircleAnimator;
 import com.stupidtree.hita.adapter.UserCenterPagerAdapter;
 import com.stupidtree.hita.diy.mBlurTransformation;
+import com.stupidtree.hita.fragments.FragmentUserCenter_ut;
 import com.stupidtree.hita.jwts.FragmentJWTS_info;
 import com.stupidtree.hita.fragments.FragmentUserCenter_Info;
 import com.stupidtree.hita.fragments.FragmentSubjects;
 import com.stupidtree.hita.fragments.FragmentUserCenter_sync;
+import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.util.FileOperator;
 import com.yuyh.library.imgsel.ISNav;
 import com.yuyh.library.imgsel.common.ImageLoader;
@@ -55,15 +60,16 @@ import java.util.List;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.clearData;
-import static com.stupidtree.hita.HITAApplication.cookies;
+import static com.stupidtree.hita.HITAApplication.cookies_jwts;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.login;
+import static com.stupidtree.hita.HITAApplication.login_jwts;
 
 public class ActivityUserCenter extends BaseActivity implements FragmentSubjects.OnFragmentInteractionListener, FragmentJWTS_info.OnListFragmentInteractionListener
 {
@@ -71,7 +77,7 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     private static final int REQUEST_CAMERA_CODE = 1;
     ViewPager viewpager;
     UserCenterPagerAdapter pagerAdapter;
-    List<Fragment> fragments;
+    List<BaseFragment> fragments;
     TabLayout tabLayout;
     ImageView appbarBg;
     CollapsingToolbarLayout mToolbarLayout;
@@ -93,6 +99,20 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
         initToolbar();
         initPager();
         initUserView();
+        BmobUser.fetchUserInfo(new FetchUserInfoListener<BmobUser>() {
+            @Override
+            public void done(BmobUser user, BmobException e) {
+                if (e == null) {
+                    CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
+                     } else {
+                    Log.e("同步用户出错",e.getMessage());
+                }
+
+                for(BaseFragment bf:fragments){
+                    bf.Refresh();;
+                }
+            }
+        });
     }
     void initToolbar(){
         appBarLayout = findViewById(R.id.appbar);
@@ -119,8 +139,8 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
                         public void onClick(DialogInterface dialog, int which) {
                             BmobUser.logOut();
                             clearData();
-                            cookies.clear();
-                            login = false;
+                            cookies_jwts.clear();
+                            login_jwts = false;
                             CurrentUser = null;
                             finish();
                         }
@@ -144,6 +164,21 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
             @Override
             public void run() {
               MaterialCircleAnimator.animShow(appbarBg,700);
+            }
+        });
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            private float mHeadImgScale = 0;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                float scale = 1.0f + (verticalOffset) / ((float) appBarLayout.getHeight());
+                avatar.setScaleX(scale);
+                avatar.setScaleY(scale);
+                avatar.setTranslationY(mHeadImgScale * verticalOffset);
+
+                change_avatar.setScaleX(scale);
+                change_avatar.setScaleY(scale);
+                change_avatar.setTranslationY(mHeadImgScale * verticalOffset);
             }
         });
     }
@@ -196,8 +231,9 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     void initPager(){
         tabLayout = findViewById(R.id.usercenter_tablayout);
         viewpager = findViewById(R.id.usercenter_viewpager);
-        String[] titles= {"个人资料","同步"};
+        String[] titles= {"校园","个人资料","同步"};
         fragments = new ArrayList<>();
+        fragments.add(FragmentUserCenter_ut.newInstance());
         fragments.add(new FragmentUserCenter_Info());
         fragments.add(new FragmentUserCenter_sync());
         pagerAdapter = new UserCenterPagerAdapter(getSupportFragmentManager(),fragments,Arrays.asList(titles));
@@ -214,7 +250,8 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
         // 图片选择结果回调
         if (requestCode == REQUEST_LIST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> pathList = data.getStringArrayListExtra("result");
-            new saveAvatarTask(pathList.get(0)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new saveAvatarTask(pathList.get(0)).executeOnExecutor(
+                    HITAApplication.TPE);
         }
     }
 

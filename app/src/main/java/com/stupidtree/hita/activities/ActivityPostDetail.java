@@ -48,6 +48,7 @@ public class ActivityPostDetail extends BaseActivity {
     Toolbar toolbar;
     TextView phone_text,location_text;
     LinearLayout location_layout;
+    LinearLayout userLayout;
 
     @Override
     protected void stopTasks() {
@@ -81,6 +82,7 @@ public class ActivityPostDetail extends BaseActivity {
     }
     
     void initViews(){
+        userLayout = findViewById(R.id.user_layout);
         location_layout = findViewById(R.id.location_layout);
         location_text = findViewById(R.id.location_text);
         phone_text = findViewById(R.id.phone_text);
@@ -91,10 +93,10 @@ public class ActivityPostDetail extends BaseActivity {
         avatar = findViewById(R.id.post_avatar);
         image = findViewById(R.id.post_image);
         delete = findViewById(R.id.post_delete);
-        avatar.setOnClickListener(new View.OnClickListener() {
+        userLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(authorUser!=null)  ActivityUtils.startUserProfileActivity(ActivityPostDetail.this,authorUser.getObjectId(),v);
+                if(authorUser!=null&&!laf.isAnonymous())  ActivityUtils.startUserProfileActivity(ActivityPostDetail.this,authorUser.getObjectId(),avatar);
                }
         });
         if(CurrentUser!=null&& CurrentUser.getObjectId() .equals(laf.getAuthor().getObjectId())){
@@ -147,12 +149,24 @@ public class ActivityPostDetail extends BaseActivity {
 
         title.setText(laf.getTitle());
         content.setText(laf.getContent());
-        time.setText(laf.getUpdatedAt());
-        if(authorUser!=null)author.setText(authorUser.getNick());
-        if(authorUser!=null)Glide.with(this).load(authorUser.getAvatarUri()).
-        placeholder(R.drawable.ic_account_activated)
-                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                .into(avatar);
+        time.setText(laf.getCreatedAt());
+        if(authorUser!=null){
+            if(laf.isAnonymous()) {
+                author.setText("匿名");
+                image.setImageResource(R.drawable.ic_account);
+            }
+            else{
+                author.setText(authorUser.getNick());
+                Glide.with(this).load(authorUser.getAvatarUri()).placeholder(R.drawable.ic_account_activated)
+                        .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                        .into(avatar);
+            }
+        }else if(laf.isAnonymous()){
+            author.setText("匿名");
+            image.setImageResource(R.drawable.ic_account);
+
+        }
+
         Transformation<Bitmap> transformation;
         transformation = new CornerTransform(ActivityPostDetail.this, dip2px(HContext, 10));
         Glide.with(this).load(laf.getImageUri()).apply(RequestOptions.bitmapTransform(transformation))
@@ -175,7 +189,7 @@ public class ActivityPostDetail extends BaseActivity {
         }else{
             phone_text.setText(laf.getContact());
         }
-        if(laf.getAuthor().getNick()==null){
+        if(laf.getAuthor().getNick()==null&&!laf.isAnonymous()){
             BmobQuery<HITAUser> bq = new BmobQuery<>();
             bq.addWhereEqualTo("objectId",laf.getAuthor().getObjectId());
             bq.findObjects(new FindListener<HITAUser>() {

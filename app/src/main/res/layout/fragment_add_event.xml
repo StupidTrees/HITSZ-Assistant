@@ -49,8 +49,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="16dp">
+            android:paddingRight="16dp">
 
 
             <RadioGroup
@@ -68,10 +67,12 @@
                     android:layout_weight="1"
                     android:button="@null"
                     android:drawableTop="@drawable/select_add_event_arrange"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="4dp"
+                    android:fontFamily="sans-serif-black"
                     android:gravity="center"
-                    android:text="事务"
-                    android:textColor="?attr/text_color_primary" />
+                    android:text="日程"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textColorHighlight="@color/transparent_none" />
 
                 <RadioButton
                     android:id="@+id/ade_ddl"
@@ -80,23 +81,27 @@
                     android:layout_weight="1"
                     android:button="@null"
                     android:drawableTop="@drawable/select_add_event_ddl"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="4dp"
+                    android:fontFamily="sans-serif-black"
                     android:gravity="center"
                     android:text="DDL"
-                    android:textColor="?attr/text_color_primary" />
+                    android:textColor="?attr/text_color_secondary"
+                    android:textColorHighlight="@color/transparent_none" />
 
                 <RadioButton
-                    android:id="@+id/ade_remind"
+                    android:id="@+id/ade_course"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:button="@null"
-                    android:drawableTop="@drawable/select_add_event_remind"
-                    android:drawablePadding="8dp"
+                    android:drawableTop="@drawable/select_add_event_course"
+                    android:drawablePadding="4dp"
+                    android:drawableTintMode="src_in"
+                    android:fontFamily="sans-serif-black"
                     android:gravity="center"
-                    android:text="提醒"
-                    android:textColor="?attr/text_color_primary"
-                    android:visibility="gone" />
+                    android:text="课程"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textColorHighlight="@color/transparent_none" />
 
                 <RadioButton
                     android:id="@+id/ade_exam"
@@ -105,329 +110,66 @@
                     android:layout_weight="1"
                     android:button="@null"
                     android:drawableTop="@drawable/select_add_event_exam"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="4dp"
                     android:drawableTintMode="src_in"
+                    android:fontFamily="sans-serif-black"
                     android:gravity="center"
                     android:text="考试"
-                    android:textColor="?attr/text_color_primary" />
+                    android:textColor="?attr/text_color_secondary"
+                    android:textColorHighlight="@color/transparent_none" />
 
             </RadioGroup>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginRight="16dp"
-                    android:scaleType="fitCenter"
-                    android:tint="?attr/text_color_secondary"
-                    app:srcCompat="@drawable/ic_settings" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <Switch
-                        android:id="@+id/ade_switch_autoallocation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="帮我安排时间"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="16sp" />
-
-                    <Switch
-                        android:id="@+id/ade_switch_wholeday"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="全天事件"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="16sp" />
-
-                    <Switch
-                        android:id="@+id/ade_switch_dealwithtask"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="处理任务"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="16sp" />
-
-                    <LinearLayout
-                        android:id="@+id/ade_courselayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/ade_text_course"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center|top"
-                                android:layout_marginLeft="4dp"
-                                android:layout_marginRight="16dp"
-                                android:layout_marginBottom="8dp"
-                                android:layout_weight="1"
-                                android:textColor="?attr/text_color_secondary"
-                                android:textSize="16sp" />
-
-                            <ImageView
-                                android:id="@+id/ade_pick_course_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:foreground="?attr/selectableItemBackgroundBorderless"
-                                android:paddingLeft="16dp"
-                                android:paddingRight="16dp"
-                                android:scaleType="center"
-                                android:tint="?attr/colorPrimary"
-                                app:srcCompat="@drawable/bt_edit" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:orientation="horizontal">
-
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="16dp"
-                                android:layout_weight="1">
-
-                                <AutoCompleteTextView
-                                    android:id="@+id/ade_nexam_place"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:hint="考试地点"
-                                    android:inputType="text"
-                                    android:maxLines="1"
-                                    android:singleLine="true" />
-                            </com.google.android.material.textfield.TextInputLayout>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ade_picktasklayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/ade_choose_deal_task"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_weight="1"
-                            android:gravity="center|left"
-                            android:text="选择处理任务"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:id="@+id/ade_pick_task_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:scaleType="center"
-                            android:tint="?attr/colorPrimary"
-                            app:srcCompat="@drawable/bt_edit" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <AutoCompleteTextView
+                android:id="@+id/ade_extra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginRight="16dp"
-                    android:scaleType="fitCenter"
-                    android:tint="?attr/text_color_secondary"
-                    app:srcCompat="@drawable/ic_addevent_date" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/ade_date_show"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_weight="1"
-                            android:gravity="center|left"
-                            android:text="设置事件日期"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:id="@+id/ade_bt_pickdate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:tint="?attr/colorPrimary"
-                            app:srcCompat="@drawable/ic_dlg_tt_duration"
-                            app:theme="@style/button_ripple_primary" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ade_pickfromtimelayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/ade_time_from_show"
-                            android:layout_width="320dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_weight="1"
-                            android:gravity="center|left"
-                            android:text="设置起始时间"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:id="@+id/ade_bt_picktime_from"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:tint="?attr/colorPrimary"
-                            app:srcCompat="@drawable/ic_dlg_tt_duration"
-                            app:theme="@style/button_ripple_primary" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ade_picktotimelayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/ade_time_to_show"
-                            android:layout_width="320dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_weight="1"
-                            android:text="设置结束时间"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:id="@+id/ade_bt_picktime_to"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:tint="?attr/colorPrimary"
-                            app:srcCompat="@drawable/ic_dlg_tt_duration"
-                            app:theme="@style/button_ripple_primary" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
+                android:layout_weight="1"
+                android:background="@color/transparent_none"
+                android:hint="输入内容..."
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingTop="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:singleLine="true"
+                android:textSize="18sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/ade_namelayout"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="16dp"
-                    android:scaleType="fitCenter"
-                    android:tint="?attr/text_color_secondary"
-                    app:srcCompat="@drawable/ic_dlg_tt_tag1" />
-
-                <com.google.android.material.textfield.TextInputLayout
+                <AutoCompleteTextView
+                    android:id="@+id/ade_name"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/ade_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:hint="名称"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/transparent_none"
+                    android:hint="输入事件名称..."
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingTop="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true"
+                    android:textSize="18sp" />
 
                 <ImageView
                     android:id="@+id/ade_expand_button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
+                    android:alpha="0.4"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
+                    android:padding="16dp"
                     android:scaleType="center"
+                    android:tint="?attr/colorControlNormal"
+                    android:tintMode="src_in"
                     app:srcCompat="@drawable/bt_addevent_triangle"
                     app:theme="@style/button_ripple_primary" />
 
@@ -444,73 +186,289 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <AutoCompleteTextView
+                        android:id="@+id/ade_tag2"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:layout_height="match_parent"
+                        android:background="@color/transparent_none"
+                        android:hint="标签2"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingTop="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="16dp"
+                        android:singleLine="true"
+                        android:textSize="18sp" />
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginRight="16dp"
-                            android:scaleType="fitCenter"
-                            android:tint="?attr/text_color_secondary"
-                            app:srcCompat="@drawable/ic_dlg_tag2" />
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <AutoCompleteTextView
-                                android:id="@+id/ade_tag2"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:hint="标签2"
-                                android:inputType="text"
-                                android:maxLines="1"
-                                android:singleLine="true" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <AutoCompleteTextView
+                        android:id="@+id/ade_tag3"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginRight="16dp"
-                            android:scaleType="fitCenter"
-                            android:tint="?attr/text_color_secondary"
-                            app:srcCompat="@drawable/ic_dlg_tag2" />
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:textColorHint="?attr/text_color_secondary">
-
-                            <AutoCompleteTextView
-                                android:id="@+id/ade_tag3"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:hint="标签3"
-                                android:inputType="text"
-                                android:maxLines="1"
-                                android:singleLine="true"
-                                android:textColor="?attr/text_color_primary" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                    </LinearLayout>
+                        android:layout_height="match_parent"
+                        android:background="@color/transparent_none"
+                        android:hint="标签3"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingTop="16dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="16dp"
+                        android:singleLine="true"
+                        android:textColor="?attr/text_color_primary"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
 
             </net.cachapa.expandablelayout.ExpandableLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="16dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:paddingRight="24dp">
+
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/pick_subject"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:backgroundTint="@color/background_bottom_color_as_tint"
+                        android:backgroundTintMode="src_atop"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:visibility="gone"
+                        app:cardBackgroundColor="?attr/colorControlNormal"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/pick_subject_icon"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:padding="2dp"
+                                android:tint="?attr/colorControlNormal"
+                                android:tintMode="src_in"
+                                app:srcCompat="@drawable/ic_menu_subject" />
+
+                            <TextView
+                                android:id="@+id/pick_subject_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="4dp"
+                                android:fontFamily="sans-serif-black"
+                                android:maxEms="16"
+                                android:singleLine="true"
+                                android:text="选择科目"
+                                android:textColor="?attr/text_color_secondary" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/pick_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/background_bottom_color_as_tint"
+                        android:backgroundTintMode="src_atop"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        app:cardBackgroundColor="?attr/colorControlNormal"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/pick_time_icon"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_weight="1"
+                                android:tint="?attr/colorControlNormal"
+                                android:tintMode="src_in"
+                                app:srcCompat="@drawable/ic_date_range" />
+
+                            <TextView
+                                android:id="@+id/time_show"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="4dp"
+                                android:fontFamily="sans-serif-black"
+                                android:maxEms="16"
+                                android:singleLine="true"
+                                android:text="设置日期与时间段"
+                                android:textColor="?attr/text_color_secondary" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/pick_task"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="8dp"
+                        android:backgroundTint="@color/background_bottom_color_as_tint"
+                        android:backgroundTintMode="src_atop"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        app:cardBackgroundColor="?attr/colorControlNormal"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/pick_task_icon"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:tint="?attr/colorControlNormal"
+                                android:tintMode="src_in"
+                                app:srcCompat="@drawable/bt_timeline_toolbar_task" />
+
+                            <TextView
+                                android:id="@+id/pick_task_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="4dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:fontFamily="sans-serif-black"
+                                android:maxEms="16"
+                                android:singleLine="true"
+                                android:text="处理任务"
+                                android:textColor="?attr/text_color_secondary" />
+
+                            <ImageView
+                                android:id="@+id/pick_task_cancel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:foreground="?attr/selectableItemBackgroundBorderless"
+                                android:paddingLeft="4dp"
+                                android:paddingTop="12dp"
+                                android:paddingRight="8dp"
+                                android:paddingBottom="12dp"
+                                android:scaleType="centerInside"
+                                android:tint="?attr/colorPrimary"
+                                android:visibility="gone"
+                                app:srcCompat="@drawable/bt_addevent_cancel"
+                                app:theme="@style/button_ripple_primary" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/pick_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="8dp"
+                        android:backgroundTint="@color/background_bottom_color_as_tint"
+                        android:backgroundTintMode="src_atop"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:visibility="gone"
+                        app:cardBackgroundColor="?attr/colorControlNormal"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/pick_location_icon"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:tint="?attr/colorControlNormal"
+                                android:tintMode="src_in"
+                                app:srcCompat="@drawable/ic_location2" />
+
+                            <TextView
+                                android:id="@+id/pick_location_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="4dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:fontFamily="sans-serif-black"
+                                android:maxEms="16"
+                                android:singleLine="true"
+                                android:text="选择地点"
+                                android:textColor="?attr/text_color_secondary" />
+
+                            <ImageView
+                                android:id="@+id/pick_location_cancel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:foreground="?attr/selectableItemBackgroundBorderless"
+                                android:paddingLeft="4dp"
+                                android:paddingTop="12dp"
+                                android:paddingRight="8dp"
+                                android:paddingBottom="12dp"
+                                android:scaleType="centerInside"
+                                android:tint="?attr/colorPrimary"
+                                android:visibility="gone"
+                                app:srcCompat="@drawable/bt_addevent_cancel"
+                                app:theme="@style/button_ripple_primary" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <Switch
+                android:id="@+id/ade_switch_wholeday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="3dp"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center|right"
+                android:switchPadding="2dp"
+                android:text="全天"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="14sp" />
+
         </LinearLayout>
 
     </LinearLayout>

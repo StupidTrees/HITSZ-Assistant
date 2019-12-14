@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.Task;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
+import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
 public class TaskDialog extends AlertDialog {
     TextView name,progress,length,ddl,start;
@@ -50,7 +52,7 @@ public class TaskDialog extends AlertDialog {
         listRes = new ArrayList<>();
         listAdapter = new eventListAdapter(listRes,context);
         eventList.setAdapter(listAdapter);
-        eventList.setLayoutManager(new LinearLayoutManager(context));
+        eventList.setLayoutManager(new WrapContentLinearLayoutManager(context));
         setView(v);
         task = y;
     }
@@ -59,6 +61,10 @@ public class TaskDialog extends AlertDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().
+                setLayout(dip2px(getContext(), 320), LinearLayout.LayoutParams.WRAP_CONTENT);
+        getWindow().
+                setBackgroundDrawableResource(R.drawable.dialog_background_radius);
         name.setText(task.name);
         if(task.isHas_length()){
             lengthLayout.setVisibility(View.VISIBLE);
@@ -78,7 +84,7 @@ public class TaskDialog extends AlertDialog {
             ddlLayout.setVisibility(View.GONE);
             startLayout.setVisibility(View.GONE);
         }
-        new refreshListTask().execute();
+        new refreshListTask().executeOnExecutor(HITAApplication.TPE);;
 
 
 

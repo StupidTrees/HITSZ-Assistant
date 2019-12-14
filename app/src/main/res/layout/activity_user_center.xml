@@ -24,27 +24,15 @@
             <ImageView
                 android:id="@+id/usercenter_appbar_image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="200dp"
                 android:fadingEdge="vertical"
                 android:fadingEdgeLength="40dp"
-                android:foreground="@color/user_center_foreground_color"
+                android:foreground="@color/user_center_scrim_color"
                 android:requiresFadingEdge="vertical"
                 android:scaleType="centerCrop"
                 android:visibility="visible"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.6" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_gravity="bottom|center"
-                android:background="@color/user_center_scrim_color"
-                android:gravity="bottom"
-                android:orientation="vertical"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.6">
-
-            </LinearLayout>
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -52,7 +40,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
                 app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.3">
+                app:layout_collapseParallaxMultiplier="0.67">
 
                 <ImageView
                     android:id="@+id/usercenter_avatar"

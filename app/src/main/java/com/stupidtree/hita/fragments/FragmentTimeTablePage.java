@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.core.timetable.HTime;
 import com.stupidtree.hita.diy.TimeTableViewGroup;
 import com.stupidtree.hita.hita.TextTools;
@@ -205,9 +206,9 @@ public class FragmentTimeTablePage extends BaseFragment {
     }
 
     public void RefreshPageView(int week) {
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new refreshPageTask(week);
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
     public void NotifyRefresh() {
@@ -246,7 +247,7 @@ public class FragmentTimeTablePage extends BaseFragment {
 
     @Override
     protected void stopTasks() {
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override

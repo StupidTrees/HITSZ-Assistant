@@ -2,20 +2,14 @@ package com.stupidtree.hita.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
-
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AlertDialog;
 
@@ -24,26 +18,16 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.webkit.WebView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.signature.ObjectKey;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.JWTSPagerAdapter;
-import com.stupidtree.hita.core.Curriculum;
-import com.stupidtree.hita.diy.RevealAnimation;
 import com.stupidtree.hita.jwts.FragmentJWTS_cjgl_xfj;
 import com.stupidtree.hita.jwts.FragmentJWTS_cjgl_xxjd;
 import com.stupidtree.hita.jwts.FragmentJWTS_cjgl;
@@ -61,9 +45,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -72,27 +54,20 @@ import cn.bmob.v3.listener.UpdateListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.cookies;
-import static com.stupidtree.hita.HITAApplication.login;
+import static com.stupidtree.hita.HITAApplication.cookies_jwts;
+import static com.stupidtree.hita.HITAApplication.login_jwts;
 
 public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFragmentInteractionListener, FragmentJWTS_xsxk.OnFragmentInteractionListener, FragmentJWTS_ksxx.OnFragmentInteractionListener,
         FragmentJWTS_cjgl_grcj.OnFragmentInteractionListener, FragmentJWTS_pyfa.OnFragmentInteractionListener, FragmentJWTS_pyfa_pyjhcx.OnFragmentInteractionListener, FragmentJWTS_pyfa_zxjxjh.OnFragmentInteractionListener,
         FragmentJWTS_cjgl_xxjd.OnFragmentInteractionListener, FragmentJWTS_cjgl.OnFragmentInteractionListener, FragmentJWTS_cjgl_xfj.OnFragmentInteractionListener {
     public static final String EXTRA_CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
     public static final String EXTRA_CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
-    WebView webview;
     ViewPager pager;
     JWTSPagerAdapter pagerAdapter;
     List<BaseFragment> fragments;
     TabLayout tabs;
     FloatingActionButton fab;
-    //FloatingActionButton fab_sync;
-    //头像
-    private byte[] avatar;
     CoordinatorLayout rootLayout;
-    private RevealAnimation mRevealAnimation;
-    private int revealX;
-    private int revealY;
 
 
     @Override
@@ -105,7 +80,6 @@ public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFr
         super.onCreate(savedInstanceState);
         setWindowParams(true, true, false);
         setContentView(R.layout.activity_jwts);
-        webview = findViewById(R.id.webview);
         rootLayout = findViewById(R.id.jwts_root);
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +96,8 @@ public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFr
     @Override
     protected void onResume() {
         super.onResume();
-        new checkLoginTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new checkLoginTask().executeOnExecutor(
+                HITAApplication.TPE);
     }
 
 
@@ -149,7 +124,7 @@ public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFr
                     ad.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            login = false;
+                            login_jwts = false;
                             Intent i = new Intent(ActivityJWTS.this, ActivityLoginJWTS.class);
                             ActivityJWTS.this.startActivity(i);
                             finish();
@@ -194,31 +169,6 @@ public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFr
         getMenuInflater().inflate(R.menu.toolbar_jwts, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
-    private void onAnimateLayout(Bundle savedInstanceState, Intent intent) {
-        if (savedInstanceState == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-                intent.hasExtra(EXTRA_CIRCULAR_REVEAL_X) &&
-                intent.hasExtra(EXTRA_CIRCULAR_REVEAL_Y)) {
-            rootLayout.setVisibility(View.INVISIBLE);
-
-            revealX = intent.getIntExtra(EXTRA_CIRCULAR_REVEAL_X, 0);
-            revealY = intent.getIntExtra(EXTRA_CIRCULAR_REVEAL_Y, 0);
-
-            ViewTreeObserver viewTreeObserver = rootLayout.getViewTreeObserver();
-            if (viewTreeObserver.isAlive()) {
-                viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        mRevealAnimation.revealActivity(revealX, revealY);
-                        rootLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
-                });
-            }
-        } else {
-            rootLayout.setVisibility(View.VISIBLE);
-        }
-    }
-
     @Override
     public void onFragmentInteraction(Uri uri) {
 
@@ -262,7 +212,7 @@ public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFr
         @Override
         protected Boolean doInBackground(String... strings) {
             try {
-                Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn/xswhxx/queryXswhxx").cookies(cookies).timeout(20000)
+                Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn/xswhxx/queryXswhxx").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -283,14 +233,12 @@ public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFr
             super.onPostExecute(o);
             if (!o) {
                 Toast.makeText(HContext, "页面过期，请返回重新登录！", Toast.LENGTH_SHORT).show();
-                cookies.clear();
-                login = false;
+                cookies_jwts.clear();
+                login_jwts = false;
                 Intent i = new Intent(ActivityJWTS.this, ActivityLoginJWTS.class);
                 startActivity(i);
                 finish();
             }
         }
     }
-
-
 }

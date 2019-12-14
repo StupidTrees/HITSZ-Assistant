@@ -21,8 +21,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityJWTS;
 import com.stupidtree.hita.activities.ActivityLoginJWTS;
 import com.stupidtree.hita.adapter.UserInfosAdapter;
 
@@ -31,7 +31,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,8 +38,8 @@ import java.util.Map;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.cookies;
-import static com.stupidtree.hita.HITAApplication.login;
+import static com.stupidtree.hita.HITAApplication.cookies_jwts;
+import static com.stupidtree.hita.HITAApplication.login_jwts;
 
 
 @SuppressLint("ValidFragment")
@@ -102,7 +101,7 @@ public class FragmentJWTS_info extends BaseFragment {
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -113,9 +112,9 @@ public class FragmentJWTS_info extends BaseFragment {
 
     @Override
     public void Refresh() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new refreshInfoTask();
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
     public void getUserInfo(Document doc){
         Element table = doc.getElementsByTag("table").first();
@@ -127,8 +126,8 @@ public class FragmentJWTS_info extends BaseFragment {
                     String image;
                     image = "http://jwts.hitsz.edu.cn/"+tds.get(i).select("img").attr("src");
                     // userInfos.put("头像",image);
-                    avatar = Jsoup.connect(image).cookies(cookies).ignoreContentType(true).execute().bodyAsBytes();
-                    new saveAvatarTask(image).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    avatar = Jsoup.connect(image).cookies(cookies_jwts).ignoreContentType(true).execute().bodyAsBytes();
+                    new saveAvatarTask(image).executeOnExecutor(HITAApplication.TPE);
 //                    if(avatar==null) Toast.makeText(HContext,"加载教务头像失败！",Toast.LENGTH_SHORT).show();
 //                    else Glide.with(HContext).load(avatar).signature(new ObjectKey(System.currentTimeMillis())).placeholder(R.drawable.ic_account).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(avatarView);
                     tds.remove(i);
@@ -166,7 +165,7 @@ public class FragmentJWTS_info extends BaseFragment {
         @Override
         protected Boolean doInBackground(String... strings) {
             try {
-                Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn/xswhxx/queryXswhxx").cookies(cookies).timeout(20000)
+                Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn/xswhxx/queryXswhxx").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -193,7 +192,7 @@ public class FragmentJWTS_info extends BaseFragment {
             try {
                 if(!o){
                     Toast.makeText(HContext,"页面过期，请返回重新登录！",Toast.LENGTH_SHORT).show();
-                    login = false;
+                    login_jwts = false;
                     Intent i = new Intent(getActivity(), ActivityLoginJWTS.class);
                     startActivity(i);
                     getActivity().finish();
@@ -227,7 +226,7 @@ public class FragmentJWTS_info extends BaseFragment {
         @Override
         protected Object doInBackground(Object[] objects) {
             try {
-                avatar = Jsoup.connect(link).cookies(cookies).ignoreContentType(true).execute().bodyAsBytes();
+                avatar = Jsoup.connect(link).cookies(cookies_jwts).ignoreContentType(true).execute().bodyAsBytes();
             } catch (Exception e) {
                 return null;
             }

@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.WorkerThread;
+
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -84,12 +86,15 @@ public class Task {
         uuid = String.valueOf(UUID.randomUUID());
     }
 
+    @WorkerThread
     public int getDealtTime_All(){
         int result = 0;
         for(String x:event_map.keySet()){
             String uuid = x.split(":::")[0];
             EventItemHolder eih = mainTimeTable.getEventItemHolderWithUUID(uuid);
-            result+=eih.startTime.getDuration(eih.endTime);
+            if(eih!=null) {
+                result += eih.startTime.getDuration(eih.endTime);
+            }
         }
         return result;
     }

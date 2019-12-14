@@ -8,6 +8,8 @@
     <!--<item android:title="动态时间表" android:id="@+id/drawer_nav_dynamictimetable" android:icon="@drawable/ic_dynamic"/>-->
     <!--<item android:title="主题" android:id="@+id/drawer_nav_theme" android:icon="@drawable/ic_menu_theme"/>-->
         <item android:title="教务系统" android:id="@+id/drawer_nav_jwts" android:icon="@drawable/ic_menu_jwts"/>
+        <item android:title="大学城内部网" android:id="@+id/drawer_nav_ut" android:icon="@drawable/ic_card"/>
+
         <item android:title="信息窗口" android:id="@+id/drawer_nav_info" android:icon="@drawable/ic_menu_bulletin"/>
         <item android:title="搜索" android:id="@+id/drawer_nav_search" android:icon="@drawable/ic_search"/>
       </menu>

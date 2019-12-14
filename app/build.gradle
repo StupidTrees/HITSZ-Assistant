@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         ndk {
             //设置支持的SO库架构
@@ -11,16 +11,16 @@ android {
         }
         applicationId "com.stupidtree.hita"
         minSdkVersion 23
-        targetSdkVersion 28
-        versionCode 20190916
-        versionName "9.16"
+        targetSdkVersion 29
+        versionCode 20191202
+        versionName "12.2"
     }
     sourceSets {
         main.jniLibs.srcDirs = ['libs']
     }
     buildTypes {
         release {
-            minifyEnabled  false
+            minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -157,5 +157,9 @@ dependencies {
     implementation "com.github.skydoves:colorpickerview:2.1.5"
     //颜色选择器
 
+    implementation 'net.opacapp:multiline-collapsingtoolbar:27.1.1'
+    //多行collapsongtoolbar
 
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    //折线图
 }

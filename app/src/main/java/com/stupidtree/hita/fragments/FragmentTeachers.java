@@ -16,10 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.core.Subject;
 import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.util.ActivityUtils;
 
 import java.util.ArrayList;
@@ -86,12 +88,12 @@ public class FragmentTeachers extends BaseFragment {
         listAdapter = new listAdapter();
         listRes = new ArrayList<>();
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
     }
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -99,9 +101,9 @@ public class FragmentTeachers extends BaseFragment {
 
     }
     public void Refresh(boolean anim) {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask =  new refreshListTask(anim);
-        pageTask.execute();
+        pageTask.executeOnExecutor(HITAApplication.TPE);;
     }
 
     public interface OnFragmentInteractionListener {

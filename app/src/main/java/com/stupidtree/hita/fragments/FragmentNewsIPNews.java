@@ -14,9 +14,11 @@ import android.view.ViewGroup;
 
 
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityNewsDetail;
 import com.stupidtree.hita.adapter.NewsIpNewsListAdapter;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -84,7 +86,7 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
         listRes = new ArrayList<>();
         listAdapter = new NewsIpNewsListAdapter(this.getContext(),listRes);
         list.setAdapter(listAdapter);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext(),RecyclerView.VERTICAL,false);
+        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext(),RecyclerView.VERTICAL,false);
         list.setLayoutManager(layoutManager);
         list.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -99,9 +101,9 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
                         && lastVisibleItemPosition == totalItemCount - 1
                         && visibleItemCount > 0) {
                     offset+=10;
-                    if(pageTask!=null&&!pageTask.isCancelled())pageTask.cancel(true);
+                    if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED)pageTask.cancel(true);
                     pageTask = new LoadTask(true);
-                    pageTask.execute();
+                    pageTask.executeOnExecutor(HITAApplication.TPE);;
                 }
             }
         });
@@ -119,23 +121,23 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
             @Override
             public void onRefresh() {
                 first = true;
-                if(pageTask!=null&&!pageTask.isCancelled())pageTask.cancel(true);
+                if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED)pageTask.cancel(true);
                 pageTask = new LoadTask(true);
-                pageTask.execute();
+                pageTask.executeOnExecutor(HITAApplication.TPE);;
             }
         });
     }
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled())pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED)pageTask.cancel(true);
     }
 
     @Override
     public void Refresh() {
-        if(pageTask!=null&&!pageTask.isCancelled())pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED)pageTask.cancel(true);
         pageTask = new LoadTask(false);
-        pageTask.execute();
+        pageTask.executeOnExecutor(HITAApplication.TPE);;
     }
 
     class LoadTask extends AsyncTask{

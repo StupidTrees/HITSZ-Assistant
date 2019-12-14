@@ -10,20 +10,18 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="24dp">
 
         <TextView
             android:id="@+id/tt_dlg_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:layout_weight="1"
             android:gravity="center|start"
-            android:singleLine="true"
-            android:text="考试"
+            android:text="毛泽东思想和"
             android:textColor="?attr/text_color_primary"
             android:textSize="20sp"
             android:transitionName="course_name" />
@@ -44,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:layout_marginRight="24dp"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
@@ -74,7 +72,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="时间"
-                android:textColor="#757575"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="12sp" />
 
             <TextView
@@ -85,7 +83,7 @@
                 android:gravity="left|center"
                 android:singleLine="false"
                 android:text="	2019-06-12，星期三，第1,2,3,4节，09:00-11:00"
-                android:textColor="#212121"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
@@ -124,7 +122,7 @@
                 android:layout_weight="1"
                 android:gravity="left|center"
                 android:text="考场"
-                android:textColor="#757575"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="12sp" />
 
             <TextView
@@ -135,7 +133,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="T3502"
-                android:textColor="#212121"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
@@ -173,7 +171,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="日期"
-                android:textColor="#757575"
+                android:textColor="?attr/text_color_secondary"
                 android:textSize="12sp" />
 
             <TextView
@@ -184,7 +182,7 @@
                 android:gravity="left|center"
                 android:singleLine="true"
                 android:text="3月24日(第三周星期日）"
-                android:textColor="#212121"
+                android:textColor="?attr/text_color_primary"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>

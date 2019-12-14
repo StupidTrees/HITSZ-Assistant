@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,34 +16,48 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.activities.ActivityAttitude;
 import com.stupidtree.hita.activities.ActivityChatbot;
 import com.stupidtree.hita.activities.ActivityEmptyClassroom;
-import com.stupidtree.hita.activities.ActivityExplore;
 import com.stupidtree.hita.activities.ActivityHITSZInfo;
 import com.stupidtree.hita.activities.ActivityLostAndFound;
 import com.stupidtree.hita.activities.ActivityRankBoard;
-import com.stupidtree.hita.activities.ActivityUniversity;
+import com.stupidtree.hita.activities.ActivityUTMood;
 import com.stupidtree.hita.activities.ActivityXL;
+import com.stupidtree.hita.core.TimeTable;
+import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.core.timetable.HTime;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
+import com.stupidtree.hita.online.HITAUser;
+import com.stupidtree.hita.online.Infos;
 import com.stupidtree.hita.util.ActivityUtils;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,9 +68,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.stupidtree.hita.HITAApplication.cookies;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FetchUserInfoListener;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
+
+import static com.stupidtree.hita.HITAApplication.CurrentUser;
+import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.TPE;
+import static com.stupidtree.hita.HITAApplication.allCurriculum;
+import static com.stupidtree.hita.HITAApplication.cookies_jwts;
+import static com.stupidtree.hita.HITAApplication.cookies_ut_card;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
+import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
+import static com.stupidtree.hita.HITAApplication.ut_username;
+import static com.stupidtree.hita.fragments.FragmentNavi.ORDER_NAME;
+import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
 
 public class NaviPageAdapter extends RecyclerView.Adapter {
     List<Integer> mBeans;
@@ -66,12 +95,13 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
     public static final int TYPE_BANNER = 66;
     public static final int TYPE_BOARD_JW = 331;
     public static final int TYPE_BOARD_SERVICE = 691;
-    public static final int TYPE_IPNEWS = 724;
-    public static final int TYPE_BULLETIN = 851;
-    public static final int TYPE_LECTURE = 108;
+    public static final int TYPE_NEWS = 724;
     public static final int TYPE_HINT = 910;
     public static final int TYPE_JWTS_FUN = 265;
     public static final int TYPE_HITA = 590;
+    public static final int TYPE_CARD = 905;
+    public static final int TYPE_MOOD = 0;
+    public static final int TYPE_UT_MOOD = 756;
 
     public NaviPageAdapter(List<Integer> res, Context c) {
         mBeans = res;
@@ -82,21 +112,21 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == TYPE_IPNEWS) {
-            return new ViewHolder_News(inflater.inflate(R.layout.dynamic_navipage_ipnews, parent, false));
-        } else if (viewType == TYPE_BULLETIN) {
-            return new ViewHolder_Bulletin(inflater.inflate(R.layout.dynamic_navipage_bulletin, parent, false));
-        } else if (viewType == TYPE_LECTURE) {
-            return new ViewHolder_Lecture(inflater.inflate(R.layout.dynamic_navipage_lecture, parent, false));
+        if (viewType == TYPE_NEWS) {
+            return new ViewHolder_News(inflater.inflate(R.layout.dynamic_navipage_news, parent, false));
         } else if (viewType == TYPE_BOARD_JW) {
             return new ViewHolder_Board_jw(inflater.inflate(R.layout.dynamic_navipage_board_jw, parent, false));
-        }else if (viewType == TYPE_JWTS_FUN ) {
+        } else if (viewType == TYPE_JWTS_FUN) {
             return new ViewHolder_JW(inflater.inflate(R.layout.dynamic_navipage_jwts_fun, parent, false));
         } else if (viewType == TYPE_HINT) {
             return new ViewHolder_Hint(inflater.inflate(R.layout.dynamic_navipage_hint, parent, false));
         } else if (viewType == TYPE_HITA) {
             return new ViewHolder_Hita(inflater.inflate(R.layout.dynamic_navipage_hita, parent, false));
-        }
+        }else if (viewType == TYPE_CARD) {
+            return new ViewHolder_Card(inflater.inflate(R.layout.dynamic_navipage_card, parent, false));
+        }else if(viewType == TYPE_MOOD){
+            return new ViewHolder_Mood(inflater.inflate(R.layout.dynamic_navipage_mood,parent,false));
+        }else
         return new ViewHolder_Hint(inflater.inflate(R.layout.dynamic_navipage_hint, parent, false));
     }
 
@@ -127,16 +157,29 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                 }
             }
             ve.xk_type.setText(ve.xk_spinnerOptions.get(nowPosition).get("name"));
-            new refreshXKInfoTask(ve.xk_nowCode, ve.xk_loading, ve.xk_top, ve.xk_second).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            new refreshExamListTask(ve.exam_title, ve.exam_list, ve.exam_listAdapter, ve.exam_listRes, ve.exam_loading).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            ve.xk_button2.setOnClickListener(new View.OnClickListener() {
+
+            new refreshXKInfoTask(ve.xk_nowCode, ve.xk_loading, ve.xk_top, ve.xk_second).executeOnExecutor(TPE);
+            new refreshExamListTask(ve.examLayout,ve.exam_title, ve.exam_listRes, ve.exam_loading).executeOnExecutor(TPE);
+            ve.xkLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ActivityUtils.startJWTSActivity_forPage(mContext, 2);
                     //mContext.startActivity(i);
                 }
             });
-            ve.xk_button1.setOnClickListener(new View.OnClickListener() {
+//            ve.exam_listAdapter.setmOnOperateClickListsner(new KSXXListAdapter.OnOperateClickListener() {
+//                @Override
+//                public void OnClick(View view, int index, boolean choose) {
+//                    showEventDialog(mContext,ve.exams.get(index),null,null);
+//                }
+//            });
+            ve.examLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityUtils.startJWTSActivity_forPage(mContext, 4);
+                }
+            });
+            ve.xklbLayout.setOnClickListener(new View.OnClickListener() {
                 int selectedPosition = 0;
 
                 @Override
@@ -166,7 +209,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                                     defaultSP.edit().putString("navi_page_jwts_xk_now_code", newCode).apply();
                                     ve.xk_nowCode = newCode;
                                     ve.xk_type.setText(ve.xk_spinnerOptions.get(selectedPosition).get("name"));
-                                    new refreshXKInfoTask(newCode, ve.xk_loading, ve.xk_top, ve.xk_second).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                    new refreshXKInfoTask(newCode, ve.xk_loading, ve.xk_top, ve.xk_second).executeOnExecutor(TPE);
                                 }
                             }).setNegativeButton("取消", null).create();
                     ad.show();
@@ -175,39 +218,14 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
             });
         } else if (holder instanceof ViewHolder_News) {
             ViewHolder_News vn = (ViewHolder_News) holder;
-            new refreshIPNewsListTask(vn.image, vn.top, vn.second, vn.third, vn.loading).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new refreshNewsListTask(vn.top, vn.second, vn.third, vn.loading).executeOnExecutor(TPE);
             vn.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(mContext, ActivityHITSZInfo.class);
-                    i.putExtra("terminal", 2 + "");
                     mContext.startActivity(i);
                 }
             });
-        } else if (holder instanceof ViewHolder_Bulletin) {
-            ViewHolder_Bulletin vn = (ViewHolder_Bulletin) holder;
-            vn.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(mContext, ActivityHITSZInfo.class);
-                    i.putExtra("terminal", 1 + "");
-                    mContext.startActivity(i);
-                }
-            });
-            new refreshBulletinListTask(vn.top, vn.second, vn.third, vn.loading).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        } else if (holder instanceof ViewHolder_Lecture) {
-            ViewHolder_Lecture vn = (ViewHolder_Lecture) holder;
-            vn.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(mContext, ActivityHITSZInfo.class);
-                    i.putExtra("terminal", 0 + "");
-                    mContext.startActivity(i);
-                }
-            });
-            new refreshLectureListTask(vn.top, vn.second, vn.third, vn.loading).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
         } else if (holder instanceof ViewHolder_Board_jw) {
             ViewHolder_Board_jw vb = (ViewHolder_Board_jw) holder;
             vb.card_xl.setOnClickListener(new View.OnClickListener() {
@@ -238,7 +256,17 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                     mContext.startActivity(i);
                 }
             });
-        } else if (holder instanceof ViewHolder_Hint) {
+        }else if(holder instanceof ViewHolder_Card){
+            ViewHolder_Card vc = (ViewHolder_Card) holder;
+            vc.card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityUtils.startUTActivity(mContext);
+                }
+            });
+            new refreshCardTask(vc.money,vc.loading).executeOnExecutor(TPE);
+        }
+        else if (holder instanceof ViewHolder_Hint) {
             ViewHolder_Hint vh = (ViewHolder_Hint) holder;
             vh.button.setOnClickListener(new View.OnClickListener() {
 
@@ -258,15 +286,15 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                 }
             };
             vb.card.setOnClickListener(ol);
-            vb.button.setOnClickListener(ol);
-            vb.hint.setText(now.get(Calendar.MONTH) + 1 + "月" + now.get(Calendar.DAY_OF_MONTH) + "日");
-            vb.hint_second.setText("希塔一直在这陪你");
+            //vb.button.setOnClickListener(ol);
+           // vb.hint.setText(now.get(Calendar.MONTH) + 1 + "月" + now.get(Calendar.DAY_OF_MONTH) + "日");
+           // vb.hint_second.setText("希塔一直在这陪你");
 //           vht.animationView.setAnimation("hita_animation/hita_normal.json");
 //           vht.animationView.playAnimation();
             vb.card_explore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(mContext, ActivityExplore.class);
+                    Intent i = new Intent(mContext, ActivityAttitude.class);
                     mContext.startActivity(i);
                 }
             });
@@ -284,6 +312,51 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                     mContext.startActivity(i);
                 }
             });
+            vb.card_ut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ActivityUtils.startUTActivity(mContext);
+                }
+            });
+        }else if(holder instanceof ViewHolder_Mood){
+            final ViewHolder_Mood vm = (ViewHolder_Mood) holder;
+            vm.card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(mContext, ActivityUTMood.class);
+                    mContext.startActivity(i);
+                }
+            });
+            if(CurrentUser!=null&&!CurrentUser.hasPunch(now)){
+                vm.ut.setVisibility(View.GONE);
+                vm.vote.setVisibility(View.VISIBLE);
+                vm.normal.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new punchTask(1,"打卡成功！",position).executeOnExecutor(TPE);
+                    }
+                });
+                vm.happy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new punchTask(0,"打卡成功，祝你开心每一天",position).executeOnExecutor(TPE);
+                    }
+                });
+                vm.sad.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new punchTask(2,"打卡成功，加油呀！",position).executeOnExecutor(TPE);
+
+                    }
+                });
+            }else{
+                vm.ut.setVisibility(View.VISIBLE);
+                vm.vote.setVisibility(View.GONE);
+                new refreshUTMoodTask(vm).executeOnExecutor(TPE);
+            }
+
+
+
         }
 
 
@@ -330,12 +403,14 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         notifyItemRangeChanged(posToRemove, mBeans.size());
         saveOrders();
     }
+
     public void removeItem_position(int posToRemove) {
         mBeans.remove(posToRemove);
         notifyItemRemoved(posToRemove);
         notifyItemRangeChanged(posToRemove, mBeans.size());
         saveOrders();
     }
+
     public void removeItems(int[] types) {
         int pos[] = new int[types.length];
         for (int i = 0; i < types.length; i++) pos[i] = mBeans.indexOf(types[i]);
@@ -361,18 +436,33 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
     void saveOrders() {
         int before_jw_fun = -1;
         for (int i = mBeans.indexOf(TYPE_JWTS_FUN) - 1; i >= 0; i--) {
-            if (mBeans.get(i) != TYPE_JWTS_FUN)
+            if (mBeans.get(i) != TYPE_CARD)
                 before_jw_fun = mBeans.get(i);
             if (before_jw_fun != -1) break;
         }
         if (before_jw_fun == -1) before_jw_fun = mBeans.indexOf(TYPE_BOARD_JW) + 1;
+
+        int before_ut_card = -1;
+        for (int i = mBeans.indexOf(TYPE_CARD) - 1; i >= 0; i--) {
+            if (mBeans.get(i) != TYPE_JWTS_FUN)
+                before_ut_card = mBeans.get(i);
+            if (before_ut_card != -1) break;
+        }
+        if (before_ut_card == -1) before_ut_card = mBeans.indexOf(TYPE_BOARD_JW) + 1;
+
         SharedPreferences.Editor editor = defaultSP.edit();
         if (mBeans.contains(TYPE_JWTS_FUN))
             editor.putInt("navi_page_order_before_jwts", before_jw_fun);
-        editor.putString("navi_page_order_2", integerToString(mBeans));
+        if (mBeans.contains(TYPE_CARD))
+            editor.putInt("navi_page_order_before_ut_card", before_ut_card);
+        editor.putString(ORDER_NAME, integerToString(mBeans));
         editor.apply();
     }
-
+    public void saveOrders(List<Integer> orders) {
+        SharedPreferences.Editor editor = defaultSP.edit();
+        editor.putString(ORDER_NAME, integerToString(orders));
+        editor.apply();
+    }
     class NaviViewHolder extends RecyclerView.ViewHolder {
         CardView card;
 
@@ -384,8 +474,8 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
 
     class ViewHolder_Hita extends NaviViewHolder {
         TextView hint, hint_second;
-        Button button;
-        LinearLayout card_explore, card_lostandfound, card_canteen;
+       // Button button;
+        LinearLayout card_explore, card_lostandfound, card_canteen,card_ut;
         //card_locations;
 
         ;
@@ -396,9 +486,10 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
             hint_second = itemView.findViewById(R.id.hint_second);
             card_canteen = itemView.findViewById(R.id.hita_item1);
             card_lostandfound = itemView.findViewById(R.id.hita_item2);
+            card_ut = itemView.findViewById(R.id.hita_item4);
             card_explore = itemView.findViewById(R.id.hita_item3);
-            button = itemView.findViewById(R.id.button);
-           // card_locations = itemView.findViewById(R.id.navipage_card_location);
+            //button = itemView.findViewById(R.id.button);
+            // card_locations = itemView.findViewById(R.id.navipage_card_location);
         }
     }
 
@@ -415,7 +506,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
     class ViewHolder_News extends NaviViewHolder {
         TextView top, second, third;
         ProgressBar loading;
-        ImageView image;
+        //ImageView image;
         ;
 
         public ViewHolder_News(@NonNull View itemView) {
@@ -424,7 +515,45 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
             second = itemView.findViewById(R.id.second_news);
             loading = itemView.findViewById(R.id.loading);
             third = itemView.findViewById(R.id.third_news);
-            image = itemView.findViewById(R.id.image);
+            // image = itemView.findViewById(R.id.image);
+        }
+    }
+    class ViewHolder_Mood extends NaviViewHolder {
+        ImageView happy,normal,sad;
+        LinearLayout vote,ut;
+        ImageView icon;
+        TextView percentage,text,score;
+
+
+        public ViewHolder_Mood(@NonNull View itemView) {
+            super(itemView);
+            happy = itemView.findViewById(R.id.happy);
+            normal = itemView.findViewById(R.id.normal);
+            sad = itemView.findViewById(R.id.sad);
+            ut = itemView.findViewById(R.id.mood_ut);
+            vote = itemView.findViewById(R.id.mood_vote);
+            // image = itemView.findViewById(R.id.image);
+            score = itemView.findViewById(R.id.score);
+            icon = itemView.findViewById(R.id.icon);
+            percentage = itemView.findViewById(R.id.percentage);
+            text = itemView.findViewById(R.id.mood_text);
+            // image = itemView.findViewById(R.id.image);
+
+        }
+    }
+
+
+    class ViewHolder_Card extends NaviViewHolder {
+        TextView money;
+        ProgressBar loading;
+        //ImageView image;
+        ;
+
+        public ViewHolder_Card(@NonNull View itemView) {
+            super(itemView);
+            loading = itemView.findViewById(R.id.loading);
+            money = itemView.findViewById(R.id.money);
+            // image = itemView.findViewById(R.id.image);
         }
     }
 
@@ -457,7 +586,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
     }
 
     class ViewHolder_Board_jw extends NaviViewHolder {
-        LinearLayout card_jwts,card_emptyclassroom, card_xl;
+        LinearLayout card_jwts, card_emptyclassroom, card_xl;
 
         public ViewHolder_Board_jw(@NonNull View itemView) {
             super(itemView);
@@ -482,31 +611,34 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         TextView xk_top, xk_second, xk_type;
         // CalendarView calendarView;
         ProgressBar xk_loading;
-        Button xk_button1, xk_button2;
         String xk_nowCode;
         TextView exam_title;
-        RecyclerView exam_list;
-        KSXXListAdapter exam_listAdapter;
+        //RecyclerView exam_list;
+        //KSXXListAdapter exam_listAdapter;
         List<Map<String, String>> exam_listRes;
         ProgressBar exam_loading;
         List<Map<String, String>> xk_spinnerOptions;
+        LinearLayout examLayout,xkLayout,xklbLayout;
+        //List<EventItem> exams;
         ;
 
         public ViewHolder_JW(@NonNull View itemView) {
             super(itemView);
+           // exams = new ArrayList<>();
             xk_top = itemView.findViewById(R.id.top);
             xk_second = itemView.findViewById(R.id.second);
             xk_loading = itemView.findViewById(R.id.loading_xk);
-            xk_button1 = itemView.findViewById(R.id.button1);
-            xk_button2 = itemView.findViewById(R.id.button2);
+            xkLayout = itemView.findViewById(R.id.layout_xk);
+            xklbLayout = itemView.findViewById(R.id.xklb_choose);
             xk_type = itemView.findViewById(R.id.type);
             exam_title = itemView.findViewById(R.id.title_exam);
-            exam_list = itemView.findViewById(R.id.list_exam);
+           // exam_list = itemView.findViewById(R.id.list_exam);
             exam_loading = itemView.findViewById(R.id.loading_exam);
+            examLayout = itemView.findViewById(R.id.layout_exam);
             exam_listRes = new ArrayList<>();
-            exam_listAdapter = new KSXXListAdapter(mContext, exam_listRes);
-            exam_list.setAdapter(exam_listAdapter);
-            exam_list.setLayoutManager(new LinearLayoutManager(mContext, RecyclerView.VERTICAL, false));
+           // exam_listAdapter = new KSXXListAdapter(mContext, exam_listRes,true);
+            //exam_list.setAdapter(exam_listAdapter);
+            //exam_list.setLayoutManager(new WrapContentLinearLayoutManager(mContext, RecyclerView.VERTICAL, false));
 
             xk_spinnerOptions = new ArrayList<>();
             Map<String, String> m1 = new HashMap<>();
@@ -537,17 +669,13 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
     }
 
     class refreshExamListTask extends AsyncTask {
-
-        RecyclerView list;
-        KSXXListAdapter listAdapter;
         List<Map<String, String>> listRes;
         ProgressBar loading;
         TextView title;
-
-        public refreshExamListTask(TextView title, RecyclerView list, KSXXListAdapter listAdapter, List<Map<String, String>> listRes, ProgressBar loading) {
+        LinearLayout exam_layout;
+        public refreshExamListTask(LinearLayout exam_layout,TextView title, List<Map<String, String>> listRes, ProgressBar loading) {
             this.title = title;
-            this.list = list;
-            this.listAdapter = listAdapter;
+            this.exam_layout = exam_layout;
             this.listRes = listRes;
             this.loading = loading;
         }
@@ -555,7 +683,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            list.setVisibility(View.GONE);
+//            list.setVisibility(View.GONE);
             loading.setVisibility(View.VISIBLE);
         }
 
@@ -563,7 +691,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         protected Object doInBackground(Object[] objects) {
             try {
                 listRes.clear();
-                Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/kscx/queryKcForXs").cookies(cookies).timeout(20000)
+                Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/kscx/queryKcForXs").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -587,6 +715,8 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                     m.put("time", time);
                     listRes.add(m);
                 }
+
+
                 return listRes.size() > 0;
             } catch (Exception e) {
                 return false;
@@ -598,14 +728,13 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
             super.onPostExecute(o);
             try {
                 if ((Boolean) o) {
-                    title.setText("近期共" + listRes.size() + "场考试");
-                    list.setVisibility(View.VISIBLE);
+                    exam_layout.setVisibility(View.VISIBLE);
+                    title.setText("共公布了" + listRes.size() + "场考试信息");
                     loading.setVisibility(View.GONE);
-                    listAdapter.notifyDataSetChanged();
                 } else {
-                    title.setText("近期没有考试信息");
+                    exam_layout.setVisibility(View.GONE);
+                    title.setText("近期没有公布考试信息");
                     loading.setVisibility(View.GONE);
-                    list.setVisibility(View.GONE);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -638,7 +767,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         @Override
         protected Object doInBackground(Object[] objects) {
             try {
-                Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/xsxk/queryXsxk?pageXklb=" + xkCode).cookies(cookies).timeout(20000)
+                Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/xsxk/queryXsxk?pageXklb=" + xkCode).cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -690,22 +819,22 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
     }
 
 
-    class refreshIPNewsListTask extends AsyncTask {
+    class refreshNewsListTask extends AsyncTask {
 
         TextView first;
         TextView second, third;
         ProgressBar loading;
-        List<Map<String, String>> listRes;
-        ImageView image;
-        String imageUri = null;
+        Map<String, String> titleRes;
+        //ImageView image;
+        //String imageUri = null;
 
-        public refreshIPNewsListTask(ImageView image, TextView first, TextView third, TextView second, ProgressBar loading) {
+        public refreshNewsListTask(TextView first, TextView third, TextView second, ProgressBar loading) {
             this.first = first;
             this.second = second;
             this.loading = loading;
-            listRes = new ArrayList<Map<String, String>>();
+            titleRes = new HashMap<>();
             this.third = third;
-            this.image = image;
+            // this.image = image;
         }
 
         @Override
@@ -722,99 +851,38 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                         .header("X-Requested-With", "XMLHttpRequest")
                         .get();
                 Elements e = d.getElementsByClass("newsletters");
-                for (Element x : e.select("li")) {
-                    Map<String, String> news = new HashMap<>();
-                    String title = x.select("a").text().replace("[详细]", "").replace("[转发]", "");
-                    String image = x.select("img").attr("src");
-                    news.put("title", title);
-                    listRes.add(news);
-                    if (listRes.size() == 3) break;
-                }
-                for (Element x : e.select("li")) {
-                    imageUri = x.select("img").attr("src");
-                    if (!TextUtils.isEmpty(imageUri)) break;
-                }
-                return listRes.size() >= 1;
-            } catch (Exception e) {
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            try {
-                loading.setVisibility(View.GONE);
-                first.setVisibility(View.VISIBLE);
-                second.setVisibility(View.VISIBLE);
-                if ((Boolean) o) {
-                    first.setText(listRes.get(0).get("title"));
-                    if (listRes.size() >= 2) {
-                        second.setText(listRes.get(1).get("title"));
-                        if (listRes.size() >= 3) {
-                            third.setText(listRes.get(2).get("title"));
-                        } else third.setText("没有更多新闻了");
-                    } else {
-                        second.setText("没有更多新闻了");
-                        third.setText("...");
+                if (e.select("li").size() > 0) {
+                    Elements x = e.select("li").first().select("a");
+                    if (x != null) {
+                        titleRes.put("news", x.text().replace("[详细]", "").replace("[转发]", ""));
                     }
-                    if (TextUtils.isEmpty(imageUri)) {
-                        image.setVisibility(View.GONE);
-                    } else {
-                        image.setVisibility(View.VISIBLE);
-                        //.apply(RequestOptions.bitmapTransform(new CornerTransform(mContext, dip2px(mContext, 10)
-                        Glide.with(mContext).load(imageUri).centerCrop().into(image);
-                    }
-                } else {
-                    first.setText("加载新闻失败");
-                    second.setText("...");
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-        }
-    }
-
-    class refreshBulletinListTask extends AsyncTask {
-
-        TextView first;
-        TextView second, third;
-        ProgressBar loading;
-        List<Map<String, String>> listRes;
-
-        public refreshBulletinListTask(TextView first, TextView second, TextView third, ProgressBar loading) {
-            this.first = first;
-            this.second = second;
-            this.loading = loading;
-            this.third = third;
-            listRes = new ArrayList<>();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loading.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            try {
-                Document d = Jsoup.connect("http://www.hitsz.edu.cn/article/id-74.html?maxPageItems=20&keywords=&pager.offset=0")
+                Document d2 = Jsoup.connect("http://www.hitsz.edu.cn/article/id-74.html?maxPageItems=20&keywords=&pager.offset=0")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("X-Requested-With", "XMLHttpRequest")
                         .get();
-                Elements annoucements = d.getElementsByClass("announcement");
+                Elements annoucements = d2.getElementsByClass("announcement");
                 //System.out.println(annoucements);
-                for (Element e : annoucements.select("li")) {
-                    String title = e.select("a").text();
-                    Map<String, String> m = new HashMap<String, String>();
-                    m.put("title", title);
-                    listRes.add(m);
-                    if (listRes.size() == 3) break;
-                    //System.out.println("href="+link+",title="+title+",views="+views+",time="+time);
+                if (annoucements.select("li").size() > 0) {
+                    Elements xx = annoucements.select("li").first().select("a");
+                    if (xx != null) titleRes.put("announce", xx.text());
                 }
-                return listRes.size() >= 1;
+
+
+                Document d3 = Jsoup.connect("http://www.hitsz.edu.cn/article/id-78.html?maxPageItems=10&keywords=&pager.offset=0")
+                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+                        .header("X-Requested-With", "XMLHttpRequest")
+                        .get();
+                Elements lect = d3.select("ul[class^=lecture_n]");
+                Elements ee = lect.select("li");
+                if (ee.size() > 0) {
+                    Elements xxx = ee.first().select("a");
+                    if (xxx != null) titleRes.put("lecture", xxx.text());
+                }
+
+                return true;
+
             } catch (Exception e) {
                 return false;
             }
@@ -827,20 +895,18 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                 loading.setVisibility(View.GONE);
                 first.setVisibility(View.VISIBLE);
                 second.setVisibility(View.VISIBLE);
-                if ((Boolean) o) {
-                    first.setText(listRes.get(0).get("title"));
-                    if (listRes.size() >= 2) {
-                        second.setText(listRes.get(1).get("title"));
-                        if (listRes.size() >= 3) {
-                            third.setText(listRes.get(2).get("title"));
-                        } else third.setText("没有更多新闻了");
-                    } else {
-                        second.setText("没有更多新闻了");
-                        third.setText("...");
-                    }
-                } else {
-                    first.setText("加载新闻失败");
-                }
+                third.setVisibility(View.VISIBLE);
+
+                if (titleRes.get("news") == null) third.setText("加载校区要闻失败");
+                else third.setText(titleRes.get("news"));
+
+                if (titleRes.get("lecture") == null) second.setText("加载讲座信息失败");
+                else second.setText(titleRes.get("lecture"));
+
+
+                if (titleRes.get("announce") == null) first.setText("加载通知消息失败");
+                else first.setText(titleRes.get("announce"));
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -848,19 +914,14 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         }
     }
 
-    class refreshLectureListTask extends AsyncTask {
-
-        TextView first;
-        TextView second, third;
+    class refreshCardTask extends AsyncTask{
+        TextView money;
         ProgressBar loading;
-        List<Map<String, String>> listRes;
+        String money_str;
 
-        public refreshLectureListTask(TextView first, TextView second, TextView third, ProgressBar loading) {
-            this.first = first;
-            this.second = second;
+        public refreshCardTask(TextView money, ProgressBar loading) {
+            this.money = money;
             this.loading = loading;
-            this.third = third;
-            listRes = new ArrayList<>();
         }
 
         @Override
@@ -872,53 +933,364 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         @Override
         protected Object doInBackground(Object[] objects) {
             try {
-                Document d = Jsoup.connect("http://www.hitsz.edu.cn/article/id-78.html?maxPageItems=10&keywords=&pager.offset=0")
-                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-                        .header("X-Requested-With", "XMLHttpRequest")
+                Connection.Response r = Jsoup.connect("http://10.64.1.15/sfrzwhlgportalHome.action")
+                        .data("errorcode","1")
+                        .header("Connection","keep-alive")
+                        .data("continueurl","http://ecard.utsz.edu.cn/accountcardUser.action")
+                        .data("ssoticketid",ut_username)
+                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36").header("Connection","keep-alive")
+                        .execute();
+                cookies_ut_card.clear();
+                cookies_ut_card.putAll(r.cookies());
+                Document d2 = Jsoup.connect("http://10.64.1.15/accountcardUser.action")
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+                        .header("Connection","keep-alive")
+                        .header("Host","10.64.1.15")
+                        .cookies(cookies_ut_card)
+                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+                        .header("Content-Type", "application/x-www-form-urlencoded")
                         .get();
-                Elements e = d.select("ul[class^=lecture_n]");
-                Elements ee = e.select("li");
-                for (Element x : ee) {
-                    Map<String, String> lecture = new HashMap<>();
-                    String title = x.select("a").text();
-                    // Log.e("!!",date);
-                    lecture.put("title", title);
-                    listRes.add(lecture);
-                    if (listRes.size() == 3) break;
+                // System.out.println(d2);
+                Elements infosList = d2.select("td");
+                Elements toR = new Elements();
+                for(Element e:infosList){
+                    if(!e.hasClass("neiwen")||e.toString().contains("table")) toR.add(e);
                 }
-                return listRes.size() >= 1;
+                infosList.removeAll(toR);
+                //System.out.println(infosList);
+                Map infosMap = new HashMap();
+                for(int i = 0;i+1<infosList.size();i+=2){
+                    //Log.e("td", String.valueOf(infosList.get(i)));
+                    String key = infosList.get(i).text().replaceAll(" ","").replaceAll("：","");
+                    String value = infosList.get(i+1).text();
+                    infosMap.put(key,value);
+                }
+                //Log.e("infos", String.valueOf(infosMap));
+                //  name_str = infosMap.get("姓名").toString();
+                String ye = infosMap.get("余额").toString();
+                int in1 = ye.indexOf("(");
+                int in2 = ye.indexOf("（");
+                int index = in1<in2?in1:in2;
+                money_str = ye.substring(0,index);
+//            number_str = infosMap.get("学工号").toString();
+//            kzt_str = infosMap.get("卡状态").toString();
+//            djzt_str = infosMap.get("冻结状态").toString();
+//            gszt_str = infosMap.get("挂失状态").toString();
+//            jczt_str = infosMap.get("检查状态").toString();
+                return true;
             } catch (Exception e) {
+                e.printStackTrace();
                 return false;
             }
+
         }
 
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            try {
-                loading.setVisibility(View.GONE);
-                first.setVisibility(View.VISIBLE);
-                second.setVisibility(View.VISIBLE);
-                if ((Boolean) o) {
-                    first.setText(listRes.get(0).get("title"));
-                    if (listRes.size() >= 2) {
-                        second.setText(listRes.get(1).get("title"));
-                        if (listRes.size() >= 3) {
-                            third.setText(listRes.get(2).get("title"));
-                        } else third.setText("没有更多新闻了");
-                    } else {
-                        second.setText("没有更多新闻了");
-                        third.setText("...");
-                    }
-                } else {
-                    first.setText("加载新闻失败");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            loading.setVisibility(View.GONE);
+            if((Boolean) o){
+                money.setText(money_str);
+            }else{
+                money.setText("--");
             }
-
         }
     }
+
+     class punchTask extends AsyncTask{
+        int type;
+        String hint;
+        int position;
+
+         public punchTask(int type, String hint,int position) {
+             this.type = type;
+             this.hint = hint;
+             this.position = position;
+         }
+
+         @Override
+         protected Object doInBackground(Object[] objects) {
+             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+             BmobQuery<Infos> bq = new BmobQuery<>();
+             bq.addWhereEqualTo("name","ut_mood_"+sdf.format(now.getTime()));
+             Infos utMood;
+             List<Infos> res =  bq.findObjectsSync(Infos.class);
+             if(res!=null&&res.size()>0) utMood = res.get(0);
+             else {
+                 JsonObject jx = new JsonObject();
+                 jx.addProperty("happy",0);
+                 jx.addProperty("normal",0);
+                 jx.addProperty("sad",0);
+                 Infos in = new Infos();
+                 in.setName("ut_mood_"+sdf.format(now.getTime()));
+                 in.setType("ut_mood");
+                 in.setJson(jx);
+                 in.saveSync();
+                 utMood = in;
+             }
+
+            // CurrentUser.Punch(now,type);
+             JsonObject JO = utMood.getJson();
+
+             if(!JO.has("happy")) JO.addProperty("happy",0);
+             if(!JO.has("normal")) JO.addProperty("normal",0);
+             if(!JO.has("sad")) JO.addProperty("sad",0);
+             if(type==0) {
+                 int happy = JO.get("happy").getAsInt();
+                 JO.addProperty("happy",happy+1);
+             }else if(type==1) {
+                 int normal = JO.get("normal").getAsInt();
+                 JO.addProperty("normal",normal+1);
+             }else if(type==2) {
+                 int sad = JO.get("sad").getAsInt();
+                 JO.addProperty("sad",sad+1);
+             }
+             utMood.setJson(JO);
+             CurrentUser.Punch(now,type);
+             try {
+                 utMood.updateSync();
+                 CurrentUser.updateSync();
+                 return true;
+             } catch (Exception e) {
+                 e.printStackTrace();
+                 return false;
+             }
+         }
+
+         @Override
+         protected void onPostExecute(Object o) {
+             super.onPostExecute(o);
+             if((boolean)o){
+                 Toast.makeText(mContext,hint,Toast.LENGTH_SHORT).show();
+                 notifyItemChanged(position);
+                 //removeItem(TYPE_MOOD);
+             }else{
+                 Toast.makeText(mContext,"提交失败！",Toast.LENGTH_SHORT).show();
+             }
+         }
+     }
+
+
+     class refreshUTMoodTask extends AsyncTask{
+        ViewHolder_Mood holder;
+        int maxNumber;
+        int totalNumber;
+        String maxTitle;
+        int iconID;
+        float score;
+
+         public refreshUTMoodTask(ViewHolder_Mood holder) {
+             this.holder = holder;
+         }
+
+         @Override
+         protected Object doInBackground(Object[] objects) {
+             try {
+                 String today = new SimpleDateFormat("yyyy-MM-dd").format(now.getTime());
+                 BmobQuery<Infos> bq = new BmobQuery<>();
+                 bq.addWhereEqualTo("name","ut_mood_"+today);
+                 List<Infos> resu =   bq.findObjectsSync(Infos.class);
+                 Infos utMood;
+                 if(resu!=null&&resu.size()>0){
+                    utMood = resu.get(0);
+                 }else{
+                         JsonObject jx = new JsonObject();
+                         jx.addProperty("happy",0);
+                         jx.addProperty("normal",0);
+                         jx.addProperty("sad",0);
+                         Infos in = new Infos();
+                         in.setName("ut_mood_"+today);
+                         in.setType("ut_mood");
+                         in.setJson(jx);
+                         in.saveSync();
+                         utMood = in;
+                 }
+
+                 JsonObject JO = utMood.getJson();
+                 if(!JO.has("happy")) JO.addProperty("happy",0);
+                 if(!JO.has("normal")) JO.addProperty("normal",0);
+                 if(!JO.has("sad")) JO.addProperty("sad",0);
+                 int happy = JO.get("happy").getAsInt();
+                 int normal = JO.get("normal").getAsInt();
+                 int sad = JO.get("sad").getAsInt();
+                 Log.e("t",happy+","+normal+","+sad);
+                 int t[] = {happy,normal,sad};
+                 maxNumber = happy;
+                 int maxIndex = 0;
+                 for(int i=0;i<3;i++){
+                     if(t[i]>maxNumber){
+                         maxNumber = t[i];
+                         maxIndex = i;
+                     }
+
+                 }
+                 if(maxIndex==0) {
+                     maxTitle="心情愉悦";
+                     iconID = R.drawable.ic_mood_happy;
+                 } else if(maxIndex == 1){
+                     maxTitle="心情一般";
+                     iconID = R.drawable.ic_mood_normal;
+                 } else {
+                     maxTitle="心情不好";
+                     iconID = R.drawable.ic_mood_sad;
+                 }
+                 totalNumber = normal+happy+sad;
+                 float haP = 100f*(float)happy/totalNumber;
+                 float nP = 100f*(float)normal/totalNumber;
+                 score =  (float) (haP*0.5+nP*0.2+50);
+                 return true;
+             } catch (Exception e) {
+                 e.printStackTrace();
+                 return false;
+
+             }
+         }
+         @Override
+         protected void onPostExecute(Object o) {
+             super.onPostExecute(o);
+             if((boolean)o){
+                 DecimalFormat df = new DecimalFormat("#.0");
+                 holder.score.setText(df.format(score));
+
+                 holder.percentage.setText(df.format((float)maxNumber/totalNumber*100)+"%");
+                 holder.text.setText(maxTitle);
+                 holder.icon.setImageResource(iconID);
+             }else{
+                 holder.percentage.setText("-");
+                 holder.icon.setImageResource(R.drawable.ic_mood_happy);
+                 holder.text.setText(maxTitle);
+             }
+         }
+     }
+//    class refreshBulletinListTask extends AsyncTask {
+//
+//        TextView first;
+//        TextView second, third;
+//        ProgressBar loading;
+//        List<Map<String, String>> listRes;
+//
+//        public refreshBulletinListTask(TextView first, TextView second, TextView third, ProgressBar loading) {
+//            this.first = first;
+//            this.second = second;
+//            this.loading = loading;
+//            this.third = third;
+//            listRes = new ArrayList<>();
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            loading.setVisibility(View.VISIBLE);
+//        }
+//
+//        @Override
+//        protected Object doInBackground(Object[] objects) {
+//            try {
+//
+//            } catch (Exception e) {
+//                return false;
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Object o) {
+//            super.onPostExecute(o);
+//            try {
+//                loading.setVisibility(View.GONE);
+//                first.setVisibility(View.VISIBLE);
+//                second.setVisibility(View.VISIBLE);
+//                if ((Boolean) o) {
+//                    first.setText(listRes.get(0).get("title"));
+//                    if (listRes.size() >= 2) {
+//                        second.setText(listRes.get(1).get("title"));
+//                        if (listRes.size() >= 3) {
+//                            third.setText(listRes.get(2).get("title"));
+//                        } else third.setText("没有更多新闻了");
+//                    } else {
+//                        second.setText("没有更多新闻了");
+//                        third.setText("...");
+//                    }
+//                } else {
+//                    first.setText("加载新闻失败");
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//    }
+//
+//    class refreshLectureListTask extends AsyncTask {
+//
+//        TextView first;
+//        TextView second, third;
+//        ProgressBar loading;
+//        List<Map<String, String>> listRes;
+//
+//        public refreshLectureListTask(TextView first, TextView second, TextView third, ProgressBar loading) {
+//            this.first = first;
+//            this.second = second;
+//            this.loading = loading;
+//            this.third = third;
+//            listRes = new ArrayList<>();
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            loading.setVisibility(View.VISIBLE);
+//        }
+//
+//        @Override
+//        protected Object doInBackground(Object[] objects) {
+//            try {
+//                Document d = Jsoup.connect("http://www.hitsz.edu.cn/article/id-78.html?maxPageItems=10&keywords=&pager.offset=0")
+//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+//                        .header("X-Requested-With", "XMLHttpRequest")
+//                        .get();
+//                Elements e = d.select("ul[class^=lecture_n]");
+//                Elements ee = e.select("li");
+//                for (Element x : ee) {
+//                    Map<String, String> lecture = new HashMap<>();
+//                    String title = x.select("a").text();
+//                    // Log.e("!!",date);
+//                    lecture.put("title", title);
+//                    listRes.add(lecture);
+//                    if (listRes.size() == 3) break;
+//                }
+//                return listRes.size() >= 1;
+//            } catch (Exception e) {
+//                return false;
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Object o) {
+//            super.onPostExecute(o);
+//            try {
+//                loading.setVisibility(View.GONE);
+//                first.setVisibility(View.VISIBLE);
+//                second.setVisibility(View.VISIBLE);
+//                if ((Boolean) o) {
+//                    first.setText(listRes.get(0).get("title"));
+//                    if (listRes.size() >= 2) {
+//                        second.setText(listRes.get(1).get("title"));
+//                        if (listRes.size() >= 3) {
+//                            third.setText(listRes.get(2).get("title"));
+//                        } else third.setText("没有更多新闻了");
+//                    } else {
+//                        second.setText("没有更多新闻了");
+//                        third.setText("...");
+//                    }
+//                } else {
+//                    first.setText("加载新闻失败");
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//    }
 
     public static List<Integer> strToIntegerList(String s) {
         JsonParser jp = new JsonParser();
@@ -971,8 +1343,13 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
             super.clearView(recyclerView, viewHolder);
             viewHolder.itemView.setAlpha(1.0f);
-            if (mAdapter != null) {
-                mAdapter.notifyDataSetChanged();
+            viewHolder.itemView.setElevation(0f);
+            try {
+                if (mAdapter != null) {
+                    mAdapter.notifyDataSetChanged();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -980,6 +1357,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
             if (actionState != 0) {
                 viewHolder.itemView.setAlpha(0.92f);
+                viewHolder.itemView.setElevation(38f);
             }
             super.onSelectedChanged(viewHolder, actionState);
         }

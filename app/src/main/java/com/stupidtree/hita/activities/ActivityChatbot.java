@@ -3,6 +3,7 @@ package com.stupidtree.hita.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.core.app.ActivityCompat;
@@ -48,7 +50,9 @@ import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.core.Subject;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.hita.ChatBotA;
 import com.stupidtree.hita.hita.ChatBotB;
 import com.stupidtree.hita.hita.TextTools;
@@ -167,7 +171,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void stopTasks() {
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -577,7 +581,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     private void initListAndAdapter() {
         ListAdapter = new ChatBotListAdapter(this, ChatBotListRes);
         ChatList = findViewById(R.id.chat_recyclerview);
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new WrapContentLinearLayoutManager(this);
         ChatList.setLayoutManager(layoutManager);
         ChatList.setAdapter(ListAdapter);
         ChatList.scrollToPosition(ListAdapter.getItemCount() - 1);
@@ -627,9 +631,10 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
 
     //把消息post给聊天机器人线程
     private void postToChatBot(final String raw) {
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new ChatBotIteractTask(raw, ActivityChatbot.this);
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(
+                HITAApplication.TPE);
 
 
     }
@@ -637,7 +642,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
 
     //收到聊天机器人的回复后
     private void getReply(JsonObject received) {
-        new ProcessReplyMessageTask(received).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new ProcessReplyMessageTask(received).executeOnExecutor(HITAApplication.TPE);
         setVoiceParam();
     }
 
@@ -1516,37 +1521,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                         Toast.makeText(ActivityChatbot.this, "请补全信息", Toast.LENGTH_SHORT).show();
                         return;
                     } else {
-
-                        for (String query : query.getText().toString().split("@@")) {
-                            ChatMessage cm = new ChatMessage();
-                            cm.setQueryText(String.valueOf(query));
-                            if (show.getText().toString().contains("@@")) {
-                                StringBuilder sb = new StringBuilder();
-                                for (String s : show.getText().toString().split("@@")) {
-                                    JsonObject jo = new JsonObject();
-                                    jo.addProperty("message_show", s);
-                                    sb.append(jo.toString()).append("$$");
-                                }
-                                cm.setAnswer(sb.toString());
-                            } else {
-                                JsonObject jo = new JsonObject();
-                                jo.addProperty("message_show", show.getText().toString());
-                                cm.setAnswer(jo.toString());
-                            }
-                            cm.save(new SaveListener<String>() {
-                                @Override
-                                public void done(String s, BmobException e) {
-                                    if (e == null) {
-                                        Toast.makeText(ActivityChatbot.this, "上传成功！", Toast.LENGTH_SHORT).show();
-                                        ad.dismiss();
-                                    } else if (e.getErrorCode() == 401) {
-                                        Toast.makeText(ActivityChatbot.this, "该问题已经存在！", Toast.LENGTH_SHORT).show();
-                                    } else
-                                        Toast.makeText(ActivityChatbot.this, "上传失败！" + e.toString(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-
+                        new uploadMessageTask(query.getText().toString(),show.getText().toString(),ad).executeOnExecutor(HITAApplication.TPE);
                     }
                 }
             });
@@ -1563,6 +1538,69 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         public boolean onMenuItemClick(MenuItem item) {
             ad.show();
             return true;
+        }
+    }
+
+    class uploadMessageTask extends AsyncTask{
+        String query,show;
+        BottomSheetDialog ad;
+
+        public uploadMessageTask(String query, String show, BottomSheetDialog ad) {
+            this.query = query;
+            this.show = show;
+            this.ad = ad;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+
+            try {
+                for (String q : query.split("@@")) {
+                    ChatMessage cm = new ChatMessage();
+                    cm.setQueryText(q);
+                    List<String> queryArr = new ArrayList<>();
+                    for(Term t:ToAnalysis.parse(q)){
+                        queryArr.add(t.getName());
+                    }
+                    cm.setQueryArray(queryArr);
+                    if (show.contains("@@")) {
+                        StringBuilder sb = new StringBuilder();
+                        for (String s : show.split("@@")) {
+                            JsonObject jo = new JsonObject();
+                            jo.addProperty("message_show", s);
+                            sb.append(jo.toString()).append("$$");
+                        }
+                        cm.setAnswer(sb.toString());
+                    } else {
+                        JsonObject jo = new JsonObject();
+                        jo.addProperty("message_show", show);
+                        cm.setAnswer(jo.toString());
+                    }
+                    cm.setTag("user_uploaded");
+                    cm.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            Log.e("done",e==null?"success":e.toString());
+                        }
+                    });
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if ((boolean)o) {
+                Toast.makeText(ActivityChatbot.this, "上传成功！", Toast.LENGTH_SHORT).show();
+                ad.dismiss();
+            } else
+                Toast.makeText(ActivityChatbot.this, "上传失败！" , Toast.LENGTH_SHORT).show();
+
         }
     }
 

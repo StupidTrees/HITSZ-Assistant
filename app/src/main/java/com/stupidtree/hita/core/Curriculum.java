@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import androidx.annotation.WorkerThread;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -154,6 +156,8 @@ public class Curriculum extends BmobObject {
         }
         return null;
     }
+
+    @WorkerThread
     public Subject getSubjectByName(String name){
         SQLiteDatabase sd = mDBHelper.getReadableDatabase();
         Cursor c = sd.query("subject",null,"name=? and curriculum_code=?",new String[]{name,curriculumCode},null,null,null);
@@ -164,6 +168,7 @@ public class Curriculum extends BmobObject {
         }
         return null;
     }
+    @WorkerThread
     public Subject getSubjectByCourseCode(String code){
         SQLiteDatabase sd = mDBHelper.getReadableDatabase();
         Cursor c = sd.query("subject",null,"code=? and curriculum_code=?",new String[]{code,curriculumCode},null,null,null);
@@ -175,6 +180,7 @@ public class Curriculum extends BmobObject {
         return null;
     }
 
+    @WorkerThread
     public List<Subject> getSubjectsByCourseCode(String code){
         List<Subject> result = new ArrayList<>();
         SQLiteDatabase sd = mDBHelper.getReadableDatabase();

@@ -4,6 +4,8 @@ import androidx.core.content.ContextCompat;
 
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
@@ -14,6 +16,8 @@ import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.Switch;
 
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 
@@ -21,13 +25,15 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
+import static com.stupidtree.hita.HITAApplication.timeWatcher;
 
 public class ActivityDynamicTable extends BaseActivity {
 
     Toolbar toolbar;
-    Switch preViewPlan,preview_skip_no_exam,auto_mute,auto_mute_after;
+    Switch preViewPlan,preview_skip_no_exam,auto_mute,auto_mute_after,forced_mute;
     NumberPicker preview_length_picker,auto_mute_before_picker;
     ExpandableLayout preview_expand,mute_expand;
+    CollapsingToolbarLayout collapsingToolbarLayout;
     @Override
     protected void stopTasks() {
 
@@ -40,9 +46,11 @@ public class ActivityDynamicTable extends BaseActivity {
         setWindowParams(true,false,false);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("学习助手");
-
+        collapsingToolbarLayout = findViewById(R.id.collapse);
+        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
+        collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
        // toolbar.inflateMenu(R.menu.toolbar_dynamic_timetable);
-        toolbar.setBackgroundColor(getColorPrimary());
+        //toolbar.setBackgroundColor(getColorPrimary());
         toolbar.setTitleTextColor(ContextCompat.getColor(this,R.color.material_text_icon_white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
@@ -68,27 +76,62 @@ public class ActivityDynamicTable extends BaseActivity {
         auto_mute = findViewById(R.id.switch_auto_mute);
         auto_mute_before_picker = findViewById(R.id.numberpicker_mute_before);
         auto_mute_after = findViewById(R.id.switch_mute_after);
+        forced_mute = findViewById(R.id.forced_mute);
         auto_mute_before_picker.setMaxValue(15);
         auto_mute_after.setChecked(defaultSP.getBoolean("auto_mute_after",true));
         auto_mute_before_picker.setValue(defaultSP.getInt("auto_mute_before",15));
         auto_mute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                if(isChecked){
-                        NotificationManager notificationManager =
-                                (NotificationManager) HContext.getSystemService(HContext.NOTIFICATION_SERVICE);
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                                && !notificationManager.isNotificationPolicyAccessGranted()) {
-                            Intent intent = new Intent(
-                                    android.provider.Settings
-                                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                            startActivity(intent);
+                try {
+                    if(isChecked){
+                        if(forced_mute.isChecked()) {
+                            IntentFilter if2 = new IntentFilter();
+                            if2.addAction("android.media.VOLUME_CHANGED_ACTION");
+                            HContext.registerReceiver(timeWatcher.volumeChangeReciever,if2);
                         }
-                    mute_expand.expand();
+                            NotificationManager notificationManager =
+                                    (NotificationManager) HContext.getSystemService(HContext.NOTIFICATION_SERVICE);
+
+                            if(!notificationManager.isNotificationPolicyAccessGranted()) {
+                                auto_mute.setChecked(false);
+                                Intent intent = new Intent(
+                                        android.provider.Settings
+                                                .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                                startActivity(intent);
+                            }else{
+                                mute_expand.expand();
+                                defaultSP.edit().putBoolean("auto_mute",true).apply();
+                            }
+
+                    }
+                    else{
+                        mute_expand.collapse();
+                        if(forced_mute.isChecked()) HContext.unregisterReceiver(timeWatcher.volumeChangeReciever);
+                        defaultSP.edit().putBoolean("auto_mute",false).apply();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                else mute_expand.collapse();
-                defaultSP.edit().putBoolean("auto_mute",isChecked).apply();
+
+            }
+        });
+        forced_mute.setChecked(defaultSP.getBoolean("forced_mute",false));
+        forced_mute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                try {
+                    defaultSP.edit().putBoolean("forced_mute",b).apply();
+                    if(b){
+                        IntentFilter if2 = new IntentFilter();
+                        if2.addAction("android.media.VOLUME_CHANGED_ACTION");
+                        HContext.registerReceiver(timeWatcher.volumeChangeReciever,if2);
+                    }else{
+                        HContext.unregisterReceiver(timeWatcher.volumeChangeReciever);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         auto_mute.setChecked(defaultSP.getBoolean("auto_mute",false));
@@ -117,12 +160,26 @@ public class ActivityDynamicTable extends BaseActivity {
         preViewPlan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                if(isChecked) preview_expand.expand();
-                else preview_expand.collapse();
-                defaultSP.edit().putBoolean("dtt_preview",isChecked).apply();
+
+                if(isChecked) {
+                    if(defaultSP.getBoolean("app_task_enabled", false)){
+                        defaultSP.edit().putBoolean("dtt_preview",true).apply();
+                        preview_expand.expand();
+                    }else{
+                        Snackbar.make(buttonView,"请先进入设置开启任务模块",Snackbar.LENGTH_SHORT).show();
+                        preViewPlan.setChecked(false);
+                    }
+
+                }
+                else {
+                    defaultSP.edit().putBoolean("dtt_preview",true).apply();
+                    preview_expand.collapse();
+                }
+
             }
         });
-        preViewPlan.setChecked(defaultSP.getBoolean("dtt_preview",false));
+        if(defaultSP.getBoolean("app_task_enabled", false))preViewPlan.setChecked(defaultSP.getBoolean("dtt_preview",false));
+        else preViewPlan.setChecked(false);
         preview_skip_no_exam.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

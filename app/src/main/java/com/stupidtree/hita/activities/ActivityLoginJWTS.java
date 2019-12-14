@@ -7,19 +7,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,7 +26,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.googlecode.tesseract.android.TessBaseAPI;
 import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.diy.ButtonLoading;
 import com.stupidtree.hita.diy.MaterialCircleAnimator;
@@ -45,7 +41,6 @@ import java.lang.ref.WeakReference;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.HashMap;
 
 
 import javax.net.ssl.HostnameVerifier;
@@ -54,10 +49,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
-import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static com.stupidtree.hita.HITAApplication.*;
-import static com.stupidtree.hita.util.SafecodeUtil.cutBorder;
-import static com.stupidtree.hita.util.SafecodeUtil.getProcessedBitmap;
 import static com.stupidtree.hita.util.SafecodeUtil.splitBitmapInto;
 
 public class ActivityLoginJWTS extends BaseActivity {
@@ -75,7 +67,7 @@ public class ActivityLoginJWTS extends BaseActivity {
     ProgressBar loadingView;
     LinearLayout loginCard;
     TextView loadingError;
-    Button bt_vpn;
+   // Button bt_vpn;
     //验证码
     private byte[] checkPic;
     loadSafeCodeTask pageTask_safecode;
@@ -83,9 +75,9 @@ public class ActivityLoginJWTS extends BaseActivity {
 
     @Override
     protected void stopTasks() {
-        if (pageTask_safecode != null && !pageTask_safecode.isCancelled())
+        if (pageTask_safecode != null && pageTask_safecode.getStatus()!=AsyncTask.Status.FINISHED)
             pageTask_safecode.cancel(true);
-        if (pageTask_login != null && !pageTask_login.isCancelled()) pageTask_login.cancel(true);
+        if (pageTask_login != null && pageTask_login.getStatus()!=AsyncTask.Status.FINISHED) pageTask_login.cancel(true);
     }
 
     @Override
@@ -111,15 +103,15 @@ public class ActivityLoginJWTS extends BaseActivity {
         login = findViewById(R.id.login);
         loginCard = findViewById(R.id.logincard);
         loadingView = findViewById(R.id.loadingview);
-        bt_vpn = findViewById(R.id.bt_vpn);
+      //  bt_vpn = findViewById(R.id.bt_vpn);
         loadingError = findViewById(R.id.loadingerror);
         login.setOnButtonLoadingListener(new ButtonLoading.OnButtonLoadingListener() {
             @Override
             public void onClick() {
-                if (pageTask_login != null && !pageTask_login.isCancelled())
+                if (pageTask_login != null && pageTask_login.getStatus()!=AsyncTask.Status.FINISHED)
                     pageTask_login.cancel(true);
                 pageTask_login = new loginTask(ActivityLoginJWTS.this, username.getText().toString(), password.getText().toString(), safecode.getText().toString(), true);
-                pageTask_login.executeOnExecutor(THREAD_POOL_EXECUTOR);
+                pageTask_login.executeOnExecutor(TPE);
             }
 
             @Override
@@ -132,38 +124,30 @@ public class ActivityLoginJWTS extends BaseActivity {
 
             }
         });
-        bt_vpn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse("https://vpn.hitsz.edu.cn");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                ActivityLoginJWTS.this.startActivity(intent);
-            }
-        });
 
-        if (pageTask_safecode != null && !pageTask_safecode.isCancelled())
+        if (pageTask_safecode != null && pageTask_safecode.getStatus()!=AsyncTask.Status.FINISHED)
             pageTask_safecode.cancel(true);
         pageTask_safecode = new loadSafeCodeTask(this);
-        pageTask_safecode.executeOnExecutor(THREAD_POOL_EXECUTOR);
-        //new directlyLoginTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask_safecode.executeOnExecutor(TPE);
+        //new directlyLoginTask().executeOnExecutor(HITAApplication.TPE);
     }
 
     //模拟访问登录界面
     public int getCookiesFromJwc() {
-        HITAApplication.login = false;
+        login_jwts = false;
         try {
             //第一次访问登录界面
-            Connection.Response response = Jsoup.connect(LOGIN_VIEW).timeout(30000).execute();
+            Connection.Response response = Jsoup.connect(LOGIN_VIEW).timeout(5000).execute();
             //得到系统返回的Cookies
-            cookies.clear();
-            cookies .putAll(response.cookies());
-            //Log.e("cookie:",cookies.toString()+" ");
+            cookies_jwts.clear();
+            cookies_jwts.putAll(response.cookies());
+            //Log.e("cookie:",cookies_jwts.toString()+" ");
             //请求获得验证码的内容
-            checkPic = Jsoup.connect(CHECK_CODE).cookies(cookies).ignoreContentType(true).execute().bodyAsBytes();
+            checkPic = Jsoup.connect(CHECK_CODE).cookies(cookies_jwts).ignoreContentType(true).execute().bodyAsBytes();
         } catch (Exception e) {
             return -1;
         }
-        if (checkPic.length == 0 || cookies.size() == 0) {
+        if (checkPic.length == 0 || cookies_jwts.size() == 0) {
             return -1;
         }
         return 0;
@@ -191,7 +175,7 @@ public class ActivityLoginJWTS extends BaseActivity {
 
     //登录\爬取
     public static String loginCheck(String username, String password, String checkCode) throws IOException {
-        Document login = Jsoup.connect(LOGIN).cookies(cookies).timeout(30000)
+        Document login = Jsoup.connect(LOGIN).cookies(cookies_jwts).timeout(5000)
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -232,7 +216,7 @@ public class ActivityLoginJWTS extends BaseActivity {
                 baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_SINGLE_CHAR);
                 Bitmap bm = BitmapFactory.decodeByteArray(checkPic, 0, checkPic.length);
                 Bitmap res = SafecodeUtil.getProcessedBitmap(bm);
-               // Glide.with(ActivityLoginJWTS.this).load(res).into(safeCodeImage);
+                // Glide.with(ActivityLoginJWTS.this).load(res).into(safeCodeImage);
                 StringBuilder result = new StringBuilder();
                 for (Bitmap r : splitBitmapInto(res, 4,-6)) {
                     baseApi.setImage(r);
@@ -443,7 +427,7 @@ public class ActivityLoginJWTS extends BaseActivity {
             if (at == null || at.isFinishing() || at.isDestroyed()) return;
             at.login.setProgress(false);
             if (s.startsWith("ALT:")) {
-                HITAApplication.login = false;
+                login_jwts = false;
                 AlertDialog ad = new AlertDialog.Builder(at).create();
                 ad.setTitle("来自教务系统滴友好提示");
                 ad.setMessage(s.substring(4));
@@ -455,7 +439,7 @@ public class ActivityLoginJWTS extends BaseActivity {
                 });
                 ad.show();
             } else if (s.contains("成功")) {
-                HITAApplication.login = true;
+                login_jwts = true;
                 at.presentActivity(at, at.login);
                 if (CurrentUser != null)
                     defaultSP.edit().putString(CurrentUser.getStudentnumber() + ".password", password).commit();
@@ -463,7 +447,7 @@ public class ActivityLoginJWTS extends BaseActivity {
                 //defaultSP.edit().putString("userpassword",password).commit();
                 //finish();
             } else {
-                HITAApplication.login = false;
+                login_jwts = false;
                 //String x = Jsoup.parse(s).getElementsByTag("script").toString();
                 if (toast) {
                     AlertDialog ad = new AlertDialog.Builder(at)
@@ -509,8 +493,3 @@ public class ActivityLoginJWTS extends BaseActivity {
 
 
 }
-
-
-
-
-

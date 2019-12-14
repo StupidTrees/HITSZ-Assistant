@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 
 import org.jsoup.Jsoup;
@@ -18,7 +19,7 @@ import org.jsoup.nodes.Document;
 
 import java.text.DecimalFormat;
 
-import static com.stupidtree.hita.HITAApplication.cookies;
+import static com.stupidtree.hita.HITAApplication.cookies_jwts;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,7 +86,7 @@ public class FragmentJWTS_cjgl_xfj extends BaseFragment {
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -96,9 +97,9 @@ public class FragmentJWTS_cjgl_xfj extends BaseFragment {
 
     @Override
     public void Refresh() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new refreshTask(getContext());
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
     public interface OnFragmentInteractionListener {
@@ -115,7 +116,7 @@ public class FragmentJWTS_cjgl_xfj extends BaseFragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/xfj/queryListXfj").cookies(cookies).timeout(60000)
+                Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/xfj/queryListXfj").cookies(cookies_jwts).timeout(60000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")

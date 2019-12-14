@@ -14,16 +14,16 @@ import android.widget.TextView;
 
 
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
+import com.stupidtree.hita.diy.PickTimePeriodDialog;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.diy.HDatePickerDialog;
+import com.stupidtree.hita.diy.PickSingleTimeDialog;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-
-import java.io.IOException;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.now;
@@ -44,7 +44,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -121,28 +121,30 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
     }
 
     void Refresh(){
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask =  new getResultTask();
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
     class pickTimeListener implements View.OnClickListener {
-        HDatePickerDialog dialog;
+        PickTimePeriodDialog dialog;
 
         pickTimeListener() {
-            dialog = new HDatePickerDialog(ActivityEmptyClassroomDetail.this, setTime_txt);
-            dialog.setOnDialogConformListener(new HDatePickerDialog.onDialogConformListener() {
+            dialog =  new PickTimePeriodDialog(ActivityEmptyClassroomDetail.this, new PickTimePeriodDialog.onDialogConformListener() {
                 @Override
-                public void onClick(int week, int dow, boolean dateSet) {
-                    pageWeek = week;
-                    pageDow = dow;
-                   Refresh();
+                public void onClick(int week, int dow, int hour1, int minute1, int hour2, int minute2, boolean timeSet) {
+                    if (timeSet) {
+                        pageDow = dow;
+                        pageWeek = week;
+                        setTime_txt.setText(week + "周" + TextTools.words_time_DOW[dow - 1]);
+                    }
                 }
             });
+            dialog.dateOnly();
         }
 
         @Override
         public void onClick(View v) {
-            dialog.showDatePickerDialog();
+            dialog.show();
         }
     }
 
@@ -179,7 +181,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
             Boolean[] result = {false, false, false, false, false, false};
             try {
                 Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/kjscx/queryKjs_wdl")
-                        .timeout(20000)
+                        .timeout(5000)
                         .data("pageXnxq", xnxq)
                         .data("pageZc1", pageWeek + "").data("pageZc2", pageWeek + "")
                         .data("pageXiaoqu", "1")

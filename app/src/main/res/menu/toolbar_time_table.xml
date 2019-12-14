@@ -2,9 +2,9 @@
 <menu tools:context="com.stupidtree.hita.activities.ActivityTimeTable"
 
     xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:title="添加课程" android:id="@+id/action_add_course"
-      app:showAsAction="never"
-      android:orderInCategory="100"/>
+  <!--<item android:title="添加课程" android:id="@+id/action_add_course"-->
+      <!--app:showAsAction="never"-->
+      <!--android:orderInCategory="100"/>-->
   <!--<item android:title="仅显示课程" android:id="@+id/action_switch_timetable"-->
       <!--app:showAsAction="never"-->
       <!--android:orderInCategory="80"-->

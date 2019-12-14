@@ -17,7 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:fitsSystemWindows="true"
             app:theme="?attr/toolbarStyle" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -34,8 +34,11 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/user_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -46,9 +49,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    app:srcCompat="@drawable/ic_account_activated" />
+                    app:srcCompat="@drawable/ic_account" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -69,7 +70,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right|left"
-                        android:text="2018年12月33日"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -77,175 +77,154 @@
                 <ImageView
                     android:id="@+id/post_delete"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginRight="16dp"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackground"
+                    android:padding="16dp"
                     android:tint="?attr/colorPrimary"
-                    app:srcCompat="@drawable/ic_delete" />
+                    app:srcCompat="@drawable/ic_delete"
+                    app:theme="@style/button_ripple_primary" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/post_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="sans-serif-black"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/post_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="16sp"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/post_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:maxHeight="200dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/custom_cursor" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginTop="16dp"
                 android:background="?android:attr/listDivider" />
 
             <LinearLayout
+                android:id="@+id/phone_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/post_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="sans-serif-black"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="24sp" />
-
-                <TextView
-                    android:id="@+id/post_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:textColor="?attr/text_color_secondary"
-                    android:textSize="16sp"
-                    android:visibility="visible" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="4dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/post_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:maxHeight="200dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/custom_cursor" />
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center|top"
+                    android:layout_marginTop="2dp"
+                    android:tint="?attr/colorControlNormal"
+                    android:tintMode="src_in"
+                    app:srcCompat="@drawable/ic_person" />
 
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="8dp"
-                    app:cardBackgroundColor="?attr/background_color_second"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:orientation="vertical">
+                        android:text="联系方式"
+                        android:textColor="?attr/text_color_secondary"
+                        android:textSize="14sp" />
 
-                        <LinearLayout
-                            android:id="@+id/location_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="4dp"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackground"
-                            android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/phone_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:autoLink="all"
+                        android:textColor="?attr/text_color_primary"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="12dp"
-                                android:layout_height="12dp"
-                                android:layout_gravity="center|top"
-                                android:layout_marginTop="2dp"
-                                android:tint="?attr/colorControlNormal"
-                                android:tintMode="src_in"
-                                app:srcCompat="@drawable/ic_location2" />
+            <LinearLayout
+                android:id="@+id/location_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="4dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="8dp"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center|top"
+                    android:layout_marginTop="2dp"
+                    android:tint="?attr/colorControlNormal"
+                    android:tintMode="src_in"
+                    app:srcCompat="@drawable/ic_location2" />
 
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="丢失/寻得地点"
-                                    android:textColor="?attr/text_color_secondary"
-                                    android:textSize="14sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                                <TextView
-                                    android:id="@+id/location_text"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:text="H308"
-                                    android:textColor="?attr/text_color_primary"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-                        </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="丢失/寻得地点"
+                        android:textColor="?attr/text_color_secondary"
+                        android:textSize="14sp" />
 
-                        <LinearLayout
-                            android:id="@+id/phone_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="4dp"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackground"
-                            android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/location_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="?attr/text_color_primary"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="12dp"
-                                android:layout_height="12dp"
-                                android:layout_gravity="center|top"
-                                android:layout_marginTop="2dp"
-                                android:tint="?attr/colorControlNormal"
-                                android:tintMode="src_in"
-                                app:srcCompat="@drawable/ic_account_activated" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="8dp"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="联系方式"
-                                    android:textColor="?attr/text_color_secondary"
-                                    android:textSize="14sp" />
-
-                                <TextView
-                                    android:id="@+id/phone_text"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:autoLink="all"
-                                    android:text="H308"
-                                    android:textColor="?attr/text_color_primary"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
             </LinearLayout>
 
         </LinearLayout>

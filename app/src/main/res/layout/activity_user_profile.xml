@@ -9,8 +9,9 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
-        android:background="#00000000">
+        android:layout_height="320dp"
+        android:background="#00000000"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/usercenter_toolbarlayout"
@@ -21,71 +22,60 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
-            <ImageView
-                android:id="@+id/usercenter_appbar_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fadingEdge="vertical"
-                android:fadingEdgeLength="40dp"
-                android:foreground="#66000000"
-                android:requiresFadingEdge="vertical"
-                android:scaleType="centerCrop"
-                android:visibility="visible"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.6"
-                app:srcCompat="?attr/color_primary_fade_background" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="center|start"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="36dp"
+                android:gravity="center|start"
                 android:orientation="vertical"
                 app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.3">
-
-                <ImageView
-                    android:id="@+id/profile_avatar"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:transitionName="useravatar"
-                    app:layout_collapseMode="parallax"
-                    app:layout_collapseParallaxMultiplier="0.3" />
+                app:layout_collapseParallaxMultiplier="0.9">
 
                 <TextView
                     android:id="@+id/profile_nick"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center|start"
                     android:layout_marginBottom="8dp"
                     android:fontFamily="sans-serif-black"
                     android:gravity="center"
-                    android:text="杨涵丞"
-                    android:textColor="@color/material_background_white"
-                    android:textSize="18sp" />
+                    android:text="-"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/profile_signature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:alpha="0.8"
+                    android:layout_gravity="center|start"
                     android:gravity="center"
-                    android:text="计算机科学与技术学院"
-                    android:textColor="@color/material_background_white"
-                    android:textSize="12sp" />
+                    android:text="-"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/profile_avatar"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center|start"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:transitionName="useravatar"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.3" />
+
             </LinearLayout>
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_marginTop="@dimen/material_toolbar_top_margin"
+                android:layout_marginTop="28dp"
                 android:minHeight="0dp"
                 app:layout_collapseMode="pin"
-                app:theme="@style/ToolBarTheme_Light" />
+                app:theme="?attr/toolbarStyle" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -198,7 +188,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                app:cardBackgroundColor="?attr/background_color_second">
+                app:cardBackgroundColor="?attr/background_color_second"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -214,6 +206,15 @@
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp">
 
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="8dp"
+                            android:tint="?attr/colorControlNormal"
+                            android:tintMode="src_in"
+                            app:srcCompat="@drawable/ic_person" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -227,37 +228,9 @@
                             android:id="@+id/profile_name"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_weight="0.6"
                             android:gravity="center|right"
-                            android:text="杨涵丞"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/item_school"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center|start"
-                            android:text="学院"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/profile_school"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center|right"
-                            android:text="格兰芬多"
+                            android:text="-"
                             android:textColor="?attr/text_color_secondary"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -268,6 +241,15 @@
                         android:orientation="horizontal"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="8dp"
+                            android:tint="?attr/colorControlNormal"
+                            android:tintMode="src_in"
+                            app:srcCompat="@drawable/ic_short_text" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -282,12 +264,50 @@
                             android:id="@+id/profile_grade"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_weight="0.6"
                             android:gravity="center|right"
-                            android:text="19届"
+                            android:text="-"
                             android:textColor="?attr/text_color_secondary"
                             android:textSize="16sp" />
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/item_school"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:orientation="horizontal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
+
+                        <ImageView
+                            android:id="@+id/imageView19"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="8dp"
+                            android:tint="?attr/colorControlNormal"
+                            android:tintMode="src_in"
+                            app:srcCompat="@drawable/ic_university" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center|start"
+                            android:text="学院"
+                            android:textColor="?attr/text_color_secondary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/profile_school"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.6"
+                            android:gravity="center|right"
+                            android:text="-"
+                            android:textColor="?attr/text_color_secondary"
+                            android:textSize="16sp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

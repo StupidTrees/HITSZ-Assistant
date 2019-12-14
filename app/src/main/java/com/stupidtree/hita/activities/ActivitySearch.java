@@ -21,9 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.SearchResultAdapter;
 import com.stupidtree.hita.diy.RevealAnimation;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.online.Location;
 import com.stupidtree.hita.online.Teacher;
 
@@ -57,7 +59,7 @@ public class ActivitySearch extends BaseActivity {
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -110,11 +112,11 @@ public class ActivitySearch extends BaseActivity {
                 searchText = s.toString();
                 SearchResultList.clear();
                 listAdapter.notifyItemRangeRemoved(0, old);
-                if(pageTask!=null&&!pageTask.isCancelled()){
+                if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED){
                     pageTask.cancel(true);
                 }
                 pageTask =  new getSuggestionsTask(s.toString());
-                pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                pageTask.executeOnExecutor(HITAApplication.TPE);
 
             }
 
@@ -130,7 +132,7 @@ public class ActivitySearch extends BaseActivity {
         list = findViewById(R.id.list);
         listAdapter = new SearchResultAdapter(this, SearchResultList);
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new LinearLayoutManager(this,RecyclerView.VERTICAL,false));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(this,RecyclerView.VERTICAL,false));
     }
 
     private void onAnimateLayout(Bundle savedInstanceState, Intent intent) {

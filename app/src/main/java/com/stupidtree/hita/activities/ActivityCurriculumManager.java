@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.CurriculuManagerPagerAdapter;
 import com.stupidtree.hita.core.Curriculum;
@@ -322,7 +323,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
                         y = ((DatePickerDialog) dialog).getDatePicker().getYear();
                         m = ((DatePickerDialog) dialog).getDatePicker().getMonth() + 1;
                         d = ((DatePickerDialog) dialog).getDatePicker().getDayOfMonth();
-                        new loadCurriculumTask(file, y, m, d).execute();
+                        new loadCurriculumTask(file, y, m, d).executeOnExecutor(HITAApplication.TPE);;
                     }
                 });
                 Toast.makeText(this, "请设置课表起始日期", Toast.LENGTH_LONG).show();

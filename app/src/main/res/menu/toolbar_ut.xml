@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.stupidtree.hita.activities.ActivityUserCenter">
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="100"
+        android:title="注销大学城登录状态"
+        android:iconTint="?attr/text_color_primary"
+        app:showAsAction="never" />
+
+</menu>

@@ -30,9 +30,11 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.LocationInfoListAdapter;
 import com.stupidtree.hita.diy.MaterialCircleAnimator;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.online.Canteen;
 import com.stupidtree.hita.online.Classroom;
 import com.stupidtree.hita.online.Facility;
@@ -265,7 +267,7 @@ public class ActivityLocation extends BaseActivity {
 //            infoListRes.addAll((Collection<? extends Map>) getAction().getSerializableExtra("infos"));
 //        }
         infoListAdapter = new LocationInfoListAdapter(this,infoListRes,getColorPrimary());
-        LinearLayoutManager lm = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        LinearLayoutManager lm = new WrapContentLinearLayoutManager(this,RecyclerView.VERTICAL,false);
         infoList.setAdapter(infoListAdapter);
         infoList.setLayoutManager(lm);
     }
@@ -275,7 +277,7 @@ public class ActivityLocation extends BaseActivity {
         lafList = findViewById(R.id.location_laf_list);
         lafListAdapter = new lafListAdapter(lafListRes);
         lafList.setAdapter(lafListAdapter);
-        lafList.setLayoutManager(new LinearLayoutManager(this,RecyclerView.HORIZONTAL,false));
+        lafList.setLayoutManager(new WrapContentLinearLayoutManager(this,RecyclerView.HORIZONTAL,false));
     }
 
     void refresh(){
@@ -284,7 +286,7 @@ public class ActivityLocation extends BaseActivity {
         infoListRes.addAll(location.getInfoListArray());
         infoListAdapter.notifyDataSetChanged();
         rate.setText(df.format(location.getRate())+"/10");
-        if(location!=null) new refreshLafTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(location!=null) new refreshLafTask().executeOnExecutor(HITAApplication.TPE);
     }
 
     class lafListAdapter extends RecyclerView.Adapter<lafListAdapter.lafViewHolder>{

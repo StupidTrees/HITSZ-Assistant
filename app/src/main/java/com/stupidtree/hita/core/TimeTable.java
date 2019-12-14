@@ -1,12 +1,12 @@
 package com.stupidtree.hita.core;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.WorkerThread;
 
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.EventItemHolder;
@@ -14,21 +14,13 @@ import com.stupidtree.hita.core.timetable.HTime;
 import com.stupidtree.hita.core.timetable.Task;
 import com.stupidtree.hita.core.timetable.TimePeriod;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.login;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
-import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
-import static com.stupidtree.hita.HITAApplication.timeWatcher;
 import static com.stupidtree.hita.core.CurriculumHelper.CURRICULUM_TYPE_COURSE;
 
 /*时间表类*/
@@ -146,7 +138,8 @@ public class TimeTable{
         return uuid;
     }
     public String addEvents(List<Integer> weeks, int DOW, int type, String eventName, String tag2, String tag3, String tag4, int begin, int last,boolean isWholeDay) {
-       Log.e("add",weeks+",dow:"+DOW+",event:"+eventName+",from:"+begin+",last:"+last);
+        Log.e("add",weeks+",dow:"+DOW+",event:"+eventName+",from:"+begin+",last:"+last);
+        for(int i:weeks) if(i>core.totalWeeks) core.totalWeeks = i;
         SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
         EventItemHolder temp = new EventItemHolder(core.curriculumCode,type,eventName,tag2,tag3,tag4,getTimeAtNumber(begin,last).get(0),getTimeAtNumber(begin,last).get(1),DOW,isWholeDay);
         temp.weeks.addAll(weeks);
@@ -321,6 +314,7 @@ public class TimeTable{
     public boolean deleteTask(String uuid,boolean deleteDDL){
         SQLiteDatabase sd = mDBHelper.getWritableDatabase();
         Task ta;
+        if(TextUtils.isEmpty(uuid)) return false;
         Cursor c = sd.query("task",null,"uuid=?",new String[]{uuid},null,null,null);
         if(c.moveToNext()){
             ta = new Task(c);
@@ -345,15 +339,18 @@ public class TimeTable{
             return false;
         }
     }
-    public boolean finishTask(Task ta){
+
+    @WorkerThread
+    public boolean setFinishTask(Task ta,boolean finished){
+        Log.e("finishe:",ta.name);
         try {
             if (ta.has_deadline&&!ta.ddlName.equals("null")) {
                 String ddlUUID = ta.ddlName.split(":::")[0];
                 int week = Integer.parseInt(ta.ddlName.split(":::")[1]);
                 mainTimeTable.deleteEvent(ddlUUID,week);
             }
+            ta.setFinished(finished);
             SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-            ta.setFinished(true);
             return sd.update("task",ta.getContentValues(),"uuid=?",new String[]{ta.getUuid()})!=0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -478,6 +475,27 @@ public class TimeTable{
         }
         return result;
     }
+
+    @WorkerThread
+    public List<EventItem> getUnfinishedEvent(Calendar time,int type){
+        List<EventItem> result = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        Cursor c = sd.query("timetable",null,"type=?",new String[]{type+""},null,null,null);
+        while(c.moveToNext()){
+            result.addAll(new EventItemHolder(c).getAllEvents());
+        }
+        c.close();
+        Log.e("getUnfinishedDDL", String.valueOf(result));
+        List<EventItem> toRemove = new ArrayList<>();
+        for(EventItem ei:result){
+            if(ei.hasPassed(time)) toRemove.add(ei);
+        }
+        result.removeAll(toRemove);
+        return result;
+    }
+
+
+    @WorkerThread
     public List<EventItem> getEventFrom(Calendar from, Calendar to, int type) {
         List<EventItem> result = new ArrayList<EventItem>();
         int f_week = core.getWeekOfTerm(from);
@@ -586,6 +604,7 @@ public class TimeTable{
             return t.getUuid();
     }
 
+    @WorkerThread
     public ArrayList<Task> getUnfinishedTasks(){
         ArrayList<Task> res = new ArrayList<>();
         if(core==null) return res;
@@ -664,6 +683,7 @@ public class TimeTable{
         List<TimePeriod> result = new ArrayList<>();
         List<EventItem> temp = getEventFrom(from,to,type);
         Collections.sort(temp);
+        Log.e("!!!the temp is:", String.valueOf(temp));
         if(temp==null||temp.size()==0){
             TimePeriod m = new TimePeriod();
             m.start = new HTime(from);
@@ -724,6 +744,7 @@ public class TimeTable{
         List<EventItem> temp = getEventFrom(from,to,type);
         temp.addAll(breakT);
         Collections.sort(temp);
+        Log.e("temp event is:",temp.toString() );
         if(temp==null||temp.size()==0){
             TimePeriod m = new TimePeriod();
             m.start = new HTime(from);
@@ -798,6 +819,9 @@ public class TimeTable{
         if(res.endsWith(","))res = res.substring(0,res.length()-1);
         return res;
     }
+
+
+
 
 }
 

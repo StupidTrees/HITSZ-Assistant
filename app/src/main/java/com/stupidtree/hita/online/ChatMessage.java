@@ -8,7 +8,16 @@ import cn.bmob.v3.BmobObject;
 public class ChatMessage extends BmobObject {
     String queryText;
     String answer;
+    String tag;
     List<String> queryArray;
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
     public List<String> getQueryArray() {
         return queryArray;

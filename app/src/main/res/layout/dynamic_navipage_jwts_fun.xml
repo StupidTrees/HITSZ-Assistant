@@ -21,91 +21,120 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/layout_exam"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="16dp"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif-black"
-            android:text="教务已连接"
-            android:textColor="?attr/text_color_primary"
-            android:textSize="18sp" />
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:orientation="horizontal"
+            android:paddingRight="16dp">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/imageView17"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/gradient_round"
+                android:padding="10dp"
+                android:tint="@color/material_text_icon_white"
+                android:tintMode="src_in"
+                app:srcCompat="@drawable/ic_menu_jwts" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:orientation="horizontal">
+                    android:layout_gravity="center|top"
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="1"
+                    android:text="考试信息"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="14sp" />
 
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="8dp"
-                        android:src="@drawable/ic_menu_jwts"
-                        android:tint="?attr/colorPrimary"
-                        android:tintMode="src_in" />
-
-                    <TextView
-                        android:id="@+id/title_exam"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:text="考试信息"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="16sp" />
-
-                    <ProgressBar
-                        android:id="@+id/loading_exam"
-                        style="?android:attr/progressBarStyle"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center"
-                        android:progressTintMode="src_in"
-                        android:visibility="visible" />
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/title_exam"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|top"
+                    android:layout_weight="1"
+                    android:text="近期共有17场考试"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="16sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/list_exam"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:nestedScrollingEnabled="false"
                     android:visibility="gone" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/loading_exam"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:progressTintMode="src_in"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_xk"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center|top"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/gradient_round"
+                android:padding="10dp"
+                android:tint="@color/material_text_icon_white"
+                android:tintMode="src_in"
+                app:srcCompat="@drawable/ic_subject" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|top"
+                    android:layout_marginBottom="4dp"
+                    android:layout_weight="1"
+                    android:text="选课助手"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="14sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="16dp"
                     android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="8dp"
-                        android:tint="?attr/colorPrimary"
-                        android:tintMode="src_in"
-                        app:srcCompat="@drawable/ic_gpa" />
 
                     <TextView
                         android:id="@+id/top"
@@ -113,8 +142,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:text="选课"
-                        android:textColor="?attr/text_color_secondary"
+                        android:text="选课已结束！"
+                        android:textColor="?attr/text_color_primary"
                         android:textSize="16sp" />
 
                     <ProgressBar
@@ -130,15 +159,19 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/xklb_choose"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="36dp"
-                    android:layout_marginRight="24dp"
-                    android:orientation="horizontal">
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center|left"
+                    android:orientation="horizontal"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
 
                     <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
                         android:layout_gravity="center"
                         android:tint="?attr/colorControlNormal"
                         android:tintMode="src_in"
@@ -146,28 +179,32 @@
 
                     <TextView
                         android:id="@+id/type"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="12dp"
-                        android:layout_weight="1"
+                        android:layout_marginLeft="4dp"
                         android:textColor="?attr/text_color_secondary"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/imageView18"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginLeft="4dp"
+                        android:tint="?attr/colorPrimary"
+                        android:tintMode="src_in"
+                        app:srcCompat="@drawable/bt_edit" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="36dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="24dp"
-                    android:layout_marginBottom="8dp"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
                         android:layout_gravity="center"
                         android:tint="?attr/colorControlNormal"
                         android:tintMode="src_in"
@@ -178,36 +215,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="12dp"
+                        android:layout_marginLeft="4dp"
                         android:layout_weight="1"
                         android:textColor="?attr/text_color_secondary"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/button1"
-                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="选择类别" />
-
-                    <Button
-                        android:id="@+id/button2"
-                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="去选课" />
-                </LinearLayout>
             </LinearLayout>
-        </FrameLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

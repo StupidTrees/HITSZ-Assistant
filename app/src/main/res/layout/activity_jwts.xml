@@ -55,7 +55,7 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:clickable="true"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        app:layout_behavior="com.stupidtree.hita.diy.mBottomHideBehavior"
         android:tint="@color/material_text_icon_white"
         app:srcCompat="@drawable/ic_refresh" />
 

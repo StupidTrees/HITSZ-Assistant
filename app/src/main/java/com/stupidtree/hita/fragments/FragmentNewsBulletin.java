@@ -16,9 +16,11 @@ import android.view.ViewGroup;
 
 
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityNewsDetail;
 import com.stupidtree.hita.adapter.NewsBulletinRecyclerAdapter;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -63,7 +65,7 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
         list = v.findViewById(R.id.list);
         listRes = new ArrayList<>();
         listAdapter = new NewsBulletinRecyclerAdapter(this.getContext(), listRes);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false);
+        RecyclerView.LayoutManager manager = new WrapContentLinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false);
         list.setLayoutManager(manager);
         listAdapter.setmOnItemClickListener(new NewsBulletinRecyclerAdapter.OnItemClickListener() {
             @Override
@@ -89,9 +91,9 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
                         && lastVisibleItemPosition == totalItemCount - 1
                         && visibleItemCount > 0) {
                     offset += 20;
-                    if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+                    if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
                     pageTask = new loadTask(true);
-                    pageTask.execute();
+                    pageTask.executeOnExecutor(HITAApplication.TPE);;
                 }
             }
         });
@@ -99,9 +101,9 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
             @Override
             public void onRefresh() {
                 first = true;
-                if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+                if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
                 pageTask = new loadTask(true);
-                pageTask.execute();
+                pageTask.executeOnExecutor(HITAApplication.TPE);;
             }
         });
 
@@ -114,9 +116,9 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
 
     @Override
     public void Refresh() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new loadTask(false);
-        pageTask.execute();
+        pageTask.executeOnExecutor(HITAApplication.TPE);;
     }
 
     class loadTask extends AsyncTask {

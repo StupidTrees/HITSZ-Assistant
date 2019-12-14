@@ -1,5 +1,7 @@
 package com.stupidtree.hita.core.timetable;
 
+import android.util.Log;
+
 import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.core.TimeTable;
 
@@ -8,6 +10,7 @@ import java.util.Calendar;
 import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
+import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 
 /*事件类*/
 public class EventItem implements Serializable, Comparable {
@@ -61,6 +64,28 @@ public class EventItem implements Serializable, Comparable {
         return startTime.getDuration(endTime);
      }
 
+     public int getDuration(EventItem ei){
+        int weeks = ei.week - this.week;
+        Calendar temp1 = Calendar.getInstance();
+        temp1.set(Calendar.WEEK_OF_YEAR,0);
+        temp1.set(Calendar.HOUR_OF_DAY,startTime.hour);
+        temp1.set(Calendar.MINUTE,startTime.minute);
+        temp1.set(Calendar.DAY_OF_WEEK,DOW==7?1:DOW+1);
+        Calendar temp2 = Calendar.getInstance();
+        temp2.set(Calendar.WEEK_OF_YEAR,weeks);
+        temp2.set(Calendar.HOUR_OF_DAY,ei.startTime.hour);
+        temp2.set(Calendar.MINUTE,ei.startTime.minute);
+        temp1.set(Calendar.DAY_OF_WEEK,ei.DOW==7?1:ei.DOW+1);
+         return (int) ((temp2.getTimeInMillis()-temp1.getTimeInMillis())/3600);
+     }
+
+    public long getInWhatTimeWillItHappen(Curriculum c,Calendar x){
+        Calendar temp1 = c.getDateAt(week,DOW,startTime);
+        Calendar temp2 = Calendar.getInstance();
+        temp2.setTimeInMillis(x.getTimeInMillis());
+        //Log.e("test_date","wk:"+wk+",week:"+week+"//"+temp1.getTime().toString()+","+temp2.getTime().toString());
+        return (int) ((temp1.getTimeInMillis()-temp2.getTimeInMillis())/60000);
+    }
     public EventItem(String uuid,String curriculumCode,int type, String eventName, String tag2, String tag3, String tag4, int begin, int last, int week, int DOW,boolean isWholeDay) {
         eventType = type;
         this.curriculumCode = curriculumCode;
@@ -135,7 +160,7 @@ public class EventItem implements Serializable, Comparable {
 
     @Override
     public String toString() {
-        return mainName+",type:"+eventType+",week:"+week+",dow:"+DOW+","+startTime.tellTime()+"~"+endTime.tellTime();
+        return mainName+",type:"+eventType+",week:"+week+",dow:"+DOW+","+startTime.tellTime()+"~"+endTime.tellTime()+",tag3:"+tag3;
     }
 
     @Override

@@ -21,8 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.XSXKListAdapter;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -30,7 +32,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.cookies;
+import static com.stupidtree.hita.HITAApplication.cookies_jwts;
 
 public class FragmentJWTS_xsxk extends BaseFragment {
     RecyclerView list;
@@ -132,7 +133,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    new refreshListTask(spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value"), xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new refreshListTask(spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value"), xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value")).executeOnExecutor(HITAApplication.TPE);
                 } catch (Exception e) {
 
                 }
@@ -147,7 +148,8 @@ public class FragmentJWTS_xsxk extends BaseFragment {
         spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                new getWLTSPageTask(spinnerOptionsTYPE.get(position).get("value")).execute(AsyncTask.THREAD_POOL_EXECUTOR);
+                new getWLTSPageTask(spinnerOptionsTYPE.get(position).get("value")).execute(
+                        HITAApplication.TPE);
             }
 
             @Override
@@ -170,14 +172,14 @@ public class FragmentJWTS_xsxk extends BaseFragment {
         listAdapter = new XSXKListAdapter(v.getContext(), lisRes);
         listButtonOptions = new ArrayList<>();
         list.setAdapter(listAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext(), RecyclerView.VERTICAL, false);
+        LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(v.getContext(), RecyclerView.VERTICAL, false);
         list.setLayoutManager(layoutManager);
         listAdapter.setmOnOperateClickListsner(new XSXKListAdapter.OnOperateClickListener() {
             @Override
             public void OnClick(final View view, final int index, boolean choose, final String rwh) {
                 if (choose) {
                     if(listButtonOptions.size()==0){
-                        new chooseCourseTask(rwh,null,xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value"),spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        new chooseCourseTask(rwh,null,xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value"),spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).executeOnExecutor(HITAApplication.TPE);
 
                     }else{
                         String[] items = new String[listButtonOptions.get(index).size()];
@@ -188,7 +190,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
-                                    new chooseCourseTask(rwh,listButtonOptions.get(index).get(which).get("zy"),xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value"),spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                    new chooseCourseTask(rwh,listButtonOptions.get(index).get(which).get("zy"),xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value"),spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).executeOnExecutor(HITAApplication.TPE);
                                     //Toast.makeText(view.getContext(), "不好意思哈，客户端不支持该操作", Toast.LENGTH_SHORT).show();
                                 } catch (Exception e) {
                                     Toast.makeText(HContext,"选课出错！",Toast.LENGTH_SHORT).show();
@@ -202,7 +204,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                     }
 
                 }else{
-                    new txTask(rwh,xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value"),spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new txTask(rwh,xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value"),spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).executeOnExecutor(HITAApplication.TPE);
 
                 }
 
@@ -235,7 +237,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
 
     @Override
     public void Refresh() {
-        new getWLTSPageTask(spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).execute();
+        new getWLTSPageTask(spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value")).executeOnExecutor(HITAApplication.TPE);;
     }
 
 
@@ -266,7 +268,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
             try {
                 xnxqOptions.clear();
                 spinnerOptionsXNXQ.clear();
-                Document wltsPage = Jsoup.connect("http://jwts.hitsz.edu.cn/xsxk/queryXsxk?pageXklb=" + pageXKLB).cookies(cookies).timeout(20000)
+                Document wltsPage = Jsoup.connect("http://jwts.hitsz.edu.cn/xsxk/queryXsxk?pageXklb=" + pageXKLB).cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -301,7 +303,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
             } else
                 Toast.makeText(HContext, "页面加载失败！", Toast.LENGTH_SHORT).show();
             try {
-                new refreshListTask(spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value"), xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new refreshListTask(spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value"), xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value")).executeOnExecutor(HITAApplication.TPE);
             } catch (Exception e) {
 
             }
@@ -334,7 +336,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
             String toReturn;
             try {
                 String url = spinnerBX.getSelectedItemPosition() == 0 ? "http://jwts.hitsz.edu.cn/xsxk/queryXsxkList" : "http://jwts.hitsz.edu.cn/xsxk/queryYxkc";
-                Document xkPage = Jsoup.connect(url).cookies(cookies).timeout(20000)
+                Document xkPage = Jsoup.connect(url).cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -546,8 +548,8 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                 //trustEveryone();
                // String token = String.valueOf(new DecimalFormat("#.16").parse(String.valueOf(new Random().nextDouble())));
                 Connection connect = Jsoup.connect("http://jwts.hitsz.edu.cn/xsxk/saveXsxk");
-                connect.cookies(cookies);
-                connect.timeout(10000);
+                connect.cookies(cookies_jwts);
+                connect.timeout(5000);
                 connect.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3");
                 connect.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
                 connect.header("Content-Type", "application/x-www-form-urlencoded");
@@ -591,7 +593,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                 ad.show();
             }
             try {
-                new refreshListTask(spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value"), xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new refreshListTask(spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value"), xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value")).executeOnExecutor(HITAApplication.TPE);
             } catch (Exception e) {
 
             }
@@ -609,8 +611,8 @@ public class FragmentJWTS_xsxk extends BaseFragment {
         @Override
         protected Object doInBackground(Object[] objects) {
             Connection connect = Jsoup.connect("http://jwts.hitsz.edu.cn/xsxk/saveXstk");
-            connect.cookies(cookies);
-            connect.timeout(10000);
+            connect.cookies(cookies_jwts);
+            connect.timeout(5000);
             connect.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3");
             connect.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
             connect.header("Content-Type", "application/x-www-form-urlencoded");
@@ -649,7 +651,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
                 ad.show();
             }
             try {
-                new refreshListTask(spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value"), xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value")).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new refreshListTask(spinnerOptionsTYPE.get(spinnerType.getSelectedItemPosition()).get("value"), xnxqOptions.get(spinnerXNXQ.getSelectedItemPosition()).get("value")).executeOnExecutor(HITAApplication.TPE);
             } catch (Exception e) {
 
             }

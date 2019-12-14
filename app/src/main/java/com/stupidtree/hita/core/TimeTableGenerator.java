@@ -83,8 +83,8 @@ public class TimeTableGenerator {
         for(Map.Entry<EventItem,Float> entry:courseMap.entrySet()){
             Task t = new Task(mainTimeTable.core.curriculumCode,"预习"+entry.getKey().mainName);
             t.setType(Task.TYPE_DYNAMIC);
-            t.setLength((int) (totalLength*entry.getValue()/total));
-            t.arrangeTime(thisWeekOfTerm,TimeTable.getDOW(now),entry.getKey().week,entry.getKey().DOW,new HTime(now),entry.getKey().startTime,"null");
+            //t.setLength((int) (totalLength*entry.getValue()/total));
+           // t.arrangeTime(thisWeekOfTerm,TimeTable.getDOW(now),entry.getKey().week,entry.getKey().DOW,new HTime(now),entry.getKey().startTime,"null");
             t.setPriority(entry.getValue().intValue());
             String tag = entry.getKey().getUuid()+":::"+entry.getKey().week;
             t.setTag(tag);
@@ -124,12 +124,15 @@ public class TimeTableGenerator {
        // Log.e("spaces", String.valueOf(spaces));
         //mainTimeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break");
         Collections.sort(spaces);
+       // Log.e( "autoAdd_getTime:the free time is: ",spaces.toString() );
         if(spaces==null||spaces.size()==0) return null;
         TimePeriod tp = spaces.get(spaces.size()-1);
         String uuid = null;
         for(int i = spaces.size()-1;i>=0;i--){
             if(spaces.get(i).getLength()>duration){
-                HTime start = tp.start.getAdded(15);
+                int x = spaces.get(i).getLength()/4;
+                int padding =x >5?5:x;
+                HTime start = tp.start.getAdded(padding);
                 HTime end = tp.start.getAdded(duration);
                 SparseArray<HTime> result = new SparseArray<>(2);
                 result.put(0,start);

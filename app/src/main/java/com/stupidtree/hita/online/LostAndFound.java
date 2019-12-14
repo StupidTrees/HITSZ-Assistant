@@ -14,8 +14,27 @@ public class LostAndFound extends BmobObject{
     String contact;
     String type;
     Location location;
+    boolean anonymous;
+    boolean found;
 
 
+    public boolean isFound() {
+        return found;
+    }
+
+    public void setFound(boolean found) {
+        this.found = found;
+    }
+
+
+
+    public boolean isAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(boolean anonymous) {
+        this.anonymous = anonymous;
+    }
 
     public String getImageUri() {
         return imageUri;

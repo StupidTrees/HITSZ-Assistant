@@ -12,12 +12,68 @@
         android:background="#00000000"
         app:elevation="0dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/navi_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="sans-serif-black"
+                    android:text="10月4日"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="28sp"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed" />
+
+                <TextView
+                    android:id="@+id/navi_subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="国庆快乐！"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="16sp"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/navi_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:alpha="0.4"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:padding="24dp"
+                android:tint="?attr/colorControlNormal"
+                android:tintMode="src_in"
+                app:srcCompat="@drawable/ic_settings"
+                app:theme="@style/button_ripple_primary" />
+
+        </LinearLayout>
+
         <com.zhouwei.mzbanner.MZBannerView
             android:id="@+id/navi_banner"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="180dp"
             android:clickable="true"
             android:focusableInTouchMode="false"
+            android:visibility="visible"
             app:canLoop="true"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
             app:middle_page_cover="true"
@@ -28,11 +84,11 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:overScrollMode="never"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -40,7 +96,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animateLayoutChanges="false"
-            android:layoutAnimation="@anim/recycler_layout_animation_slide_from_right" />
+            android:layoutAnimation="@anim/recycler_layout_animation_falls_down"
+            android:overScrollMode="never" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

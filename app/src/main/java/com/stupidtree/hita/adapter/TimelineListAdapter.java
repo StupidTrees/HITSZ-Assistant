@@ -95,7 +95,7 @@ public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapte
                 v = mInflater.inflate(R.layout.dynamic_timeline_card_deadline, viewGroup, false);
                 break;
             case TimeTable.TIMETABLE_EVENT_TYPE_REMIND:
-                v = mInflater.inflate(R.layout.dynamic_timeline_card_remind, viewGroup, false);
+                v = mInflater.inflate(R.layout.dynamic_timeline_card_deadline, viewGroup, false);
                 break;
         }
         return new timelineHolder(v,type);
@@ -137,7 +137,7 @@ public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapte
                 if (mBeans.get(position)==nowEvent) {
                     timelineHolder.progressBar.setVisibility(View.VISIBLE);
                     timelineHolder.progressBar.setProgress((int) (nowProgress*100));
-                    timelineHolder.timeline.setImageDrawable(mContext.getDrawable(R.drawable.timeline_marker_now));
+                    timelineHolder.timeline.setImageDrawable(mContext.getDrawable(R.drawable.ic_timelapse));
                 } else {
                     timelineHolder.progressBar.setVisibility(View.GONE);
                 }

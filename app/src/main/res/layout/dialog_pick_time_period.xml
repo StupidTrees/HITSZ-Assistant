@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/dialog_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+
+                android:fontFamily="sans-serif-black"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="16dp"
+                android:text="5月9日（今天）"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.6"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:padding="16dp"
+                android:tint="?attr/colorControlNormal"
+                android:tintMode="src_in"
+                app:srcCompat="@drawable/bt_done"
+                app:theme="@style/button_ripple_primary" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <com.cncoderx.wheelview.Wheel3DView
+                android:id="@+id/ade_weekpicker_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                app:cyclic="false"
+                app:divider="@color/transparent_none"
+                app:selectedColor="?attr/colorPrimary"
+                app:textSize="32sp"
+                app:toward="right"
+                app:unselectedColor="?attr/background_icon_color_second"
+                app:visibleItems="3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:text="周"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp" />
+
+            <com.cncoderx.wheelview.Wheel3DView
+                android:id="@+id/ade_weekpicker_dow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="24dp"
+                app:cyclic="false"
+                app:divider="@color/transparent_none"
+                app:selectedColor="?attr/colorPrimary"
+                app:textSize="24sp"
+                app:toward="right"
+                app:unselectedColor="?attr/background_icon_color_second"
+                app:visibleItems="3" />
+
+            <!--&lt;!&ndash;<Spinner&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/ade_weekpicker_dow"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_marginLeft="8dp">&ndash;&gt;-->
+
+            <!--</Spinner>-->
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pick_time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:orientation="horizontal">
+
+            <com.cncoderx.wheelview.Wheel3DView
+                android:id="@+id/hour1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1.2"
+                app:cyclic="false"
+                app:divider="@color/transparent_none"
+                app:selectedColor="?attr/colorPrimary"
+                app:textSize="32sp"
+                app:toward="right"
+                app:unselectedColor="?attr/background_icon_color_second"
+                app:visibleItems="3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:text="时"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="14sp" />
+
+            <com.cncoderx.wheelview.Wheel3DView
+                android:id="@+id/minute1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1.2"
+                app:cyclic="false"
+                app:divider="@color/transparent_none"
+                app:selectedColor="?attr/colorPrimary"
+                app:textSize="32sp"
+                app:toward="right"
+                app:unselectedColor="?attr/background_icon_color_second"
+                app:visibleItems="3" />
+
+            <TextView
+                android:id="@+id/textView30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="分"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textView38"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:gravity="center"
+                android:text="-"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="24sp" />
+
+            <com.cncoderx.wheelview.Wheel3DView
+                android:id="@+id/hour2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1.2"
+                app:cyclic="false"
+                app:divider="@color/transparent_none"
+                app:selectedColor="?attr/colorPrimary"
+                app:textSize="32sp"
+                app:toward="right"
+                app:unselectedColor="?attr/background_icon_color_second"
+                app:visibleItems="3" />
+
+            <TextView
+                android:id="@+id/textView28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:text="时"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="14sp" />
+
+            <com.cncoderx.wheelview.Wheel3DView
+                android:id="@+id/minute2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1.2"
+                app:cyclic="false"
+                app:divider="@color/transparent_none"
+                app:selectedColor="?attr/colorPrimary"
+                app:textSize="32sp"
+                app:toward="right"
+                app:unselectedColor="?attr/background_icon_color_second"
+                app:visibleItems="3" />
+
+            <TextView
+                android:id="@+id/textView37"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="分"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <CalendarView
+        android:id="@+id/ade_calendarview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:firstDayOfWeek="2"
+        android:showWeekNumber="false" />
+
+</LinearLayout>

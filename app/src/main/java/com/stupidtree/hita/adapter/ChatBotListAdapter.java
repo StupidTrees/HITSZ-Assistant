@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.hita.ChatBotMessageItem;
 import com.stupidtree.hita.diy.CornerTransform;
 
@@ -65,7 +66,7 @@ public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.
             recyclerHolder.resultRecy.setVisibility(View.VISIBLE);
             recyclerHolder.resultEventAdapter = new ChatBotItemsAdapter(messageItem.list,messageItem.listRes, mContext);
             recyclerHolder.resultRecy.setNestedScrollingEnabled(true);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+            LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(mContext);
             recyclerHolder.resultRecy.setLayoutManager(layoutManager);
             recyclerHolder.resultRecy.setAdapter(recyclerHolder.resultEventAdapter);
             recyclerHolder.resultEventAdapter.notifyDataSetChanged();

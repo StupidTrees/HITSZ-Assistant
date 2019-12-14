@@ -11,6 +11,8 @@
     <color name="material_background_grey_300">#E0E0E0</color>
     <color name="transparent_none">#00000000</color>
     <color name="transparent_dark">#BB000000</color>
+    <color name="color_control_normal">#89000000</color>
+    <color name="text_color_secondary">@color/material_secondary_text</color>
     <color name="user_center_scrim_color">#66FFFFFF</color>
     <color name="user_center_foreground_color">#33FFFFFF</color>
     <color name="main_tabs_unselected_color">#55000000</color>
@@ -19,6 +21,7 @@
     <!-- 分割线背景色 -->
     <color name="white">#FFFFFF</color>
     <color name="colorBGChatbot">#00000000</color>
+    <color name="background_bottom_color_as_tint">#CFFAFAFA</color>
 
 
     <color name="black_overlay">#66000000</color>

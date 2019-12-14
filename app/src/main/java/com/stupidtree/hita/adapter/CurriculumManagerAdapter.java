@@ -18,6 +18,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.Curriculum;
 
@@ -76,7 +77,7 @@ public class CurriculumManagerAdapter extends RecyclerView.Adapter<CurriculumMan
                                     setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                           new deleteTask(i).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                           new deleteTask(i).executeOnExecutor(HITAApplication.TPE);
                                         }
                                     }).setNegativeButton("取消",null).
                                     create();

@@ -26,8 +26,9 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="16dp"
                 android:layout_weight="1"
-                android:text="添加任务"
-                android:textColor="?attr/text_color_primary"
+                android:fontFamily="sans-serif-black"
+                android:text="添加待办"
+                android:textColor="@color/material_secondary_text"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -47,30 +48,16 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="16dp"
-                    android:scaleType="fitCenter"
-                    android:tint="?attr/text_color_secondary"
-                    app:srcCompat="@drawable/ic_dlg_tt_tag1" />
-
-                <com.google.android.material.textfield.TextInputLayout
+                <AutoCompleteTextView
+                    android:id="@+id/adt_name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textColorHint="?attr/text_color_secondary">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/adt_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:hint="名称"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:background="@color/transparent_none"
+                    android:hint="输入任务名..."
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true" />
 
             </LinearLayout>
 
@@ -90,8 +77,9 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_weight="1"
-                android:text="有期限任务"
-                android:textColor="?attr/text_color_primary" />
+                android:text="任务期限"
+                android:textColor="?attr/text_color_primary"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/adt_arrangetime"
@@ -233,7 +221,8 @@
                 android:layout_marginBottom="16dp"
                 android:layout_weight="1"
                 android:text="有时长任务"
-                android:textColor="?attr/text_color_primary" />
+                android:textColor="?attr/text_color_primary"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/adt_arrangelength"

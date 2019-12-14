@@ -3,7 +3,7 @@ package com.stupidtree.hita.fragments;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,11 +14,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -28,57 +30,96 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
+import com.stupidtree.hita.activities.ActivityTimeTable;
 import com.stupidtree.hita.core.Subject;
 import com.stupidtree.hita.core.TimeTable;
 import com.stupidtree.hita.core.TimeTableGenerator;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.HTime;
 import com.stupidtree.hita.core.timetable.Task;
-import com.stupidtree.hita.diy.HDatePickerDialog;
+import com.stupidtree.hita.diy.PickCourseTimeDialog;
+import com.stupidtree.hita.diy.PickInfoDialog;
+import com.stupidtree.hita.diy.PickSingleTimeDialog;
+import com.stupidtree.hita.diy.PickTimePeriodDialog;
+import com.stupidtree.hita.hita.TextTools;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.getDataState;
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 import static com.stupidtree.hita.activities.ActivityMain.app_task_enabled;
+import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_COURSE;
 import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_EXAM;
 import static com.stupidtree.hita.core.TimeTable.contains_integer;
 
 @SuppressLint("ValidFragment")
 public class FragmentAddEvent extends BottomSheetDialogFragment {
-    private boolean dateSet = false, fromTSet = false, toTSet = false, courseSet = false, taskSet = false;
+    private boolean timeSet = false, subjectSet = false, taskSet = false,locationSet = false;
+    private boolean timeSet_course = false;
     private RadioGroup mRadioGroup;
-    private EditText name, tag2, tag3;
-    private TextView fromTimeShow, toTimeShow, dateShow, courseShow, examPlace, taskShow;
+    private EditText name, tag2, tag3,extra;
+    //private TextView  examPlace;
+    private String locationStr = "";
     FloatingActionButton done;
     private String subjectCode,subjectName;
     private Task task;
-    private LinearLayout pickToTimeLayout, pickFromTimeLayout, pickCourseLayout, nameLayout, pickTaskLayout;
+    private LinearLayout nameLayout;
+  //  pickLocation,
     private ExpandableLayout mExpandableLayout;
-    private Switch wholeDaySwitch, autoAllocation, dealWithTask;
+    private Switch wholeDaySwitch;
+    //autoAllocation
     private HTime fromT, toT;
     private int week = 1;
     private int dow = 1;
-
+    private int initIndex = 0;
+    List<Integer> weeks = new ArrayList<Integer>();
+    private int begin,last;
+    CardView pickTime;
+    ImageView pickTimeIcon;
+    TextView pickTimeText;
+    CardView pickTask;
+    ImageView pickTaskIcon;
+    TextView pickTaskText;
+    ImageView pickTaskCancel;
+    CardView pickSubject;
+    ImageView pickSubjectIcon;
+    TextView pickSubjectText;
+    CardView pickLocation;
+    ImageView pickLocationIcon;
+    TextView pickLocationText;
+    ImageView pickLocationCancel;
+    OnFragmentInteractionListener onFragmentInteractionListener;
     public FragmentAddEvent() {
 
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof  OnFragmentInteractionListener) onFragmentInteractionListener = (OnFragmentInteractionListener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        onFragmentInteractionListener = null;
+    }
+
+    public void showFor(FragmentManager fragmentManager, int index){
+        this.initIndex = index;
+        this.show(fragmentManager,"fae");
     }
 
     public static FragmentAddEvent newInstance() {
@@ -97,12 +138,17 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         View view = View.inflate(getContext(), R.layout.fragment_add_event, null);
         dialog.setContentView(view);
         ((View) view.getParent()).setBackgroundColor(Color.TRANSPARENT);
-        dateSet = false;
-        fromTSet = false;
-        toTSet = false;
-        courseSet = false;
+        timeSet = false;
+        subjectSet = false;
         taskSet = false;
         initViews(view);
+        int initCheckedId = R.id.ade_arrange;
+        switch(initIndex){
+            case 0:initCheckedId = R.id.ade_arrange;break;
+            case 1:initCheckedId = R.id.ade_ddl;break;
+            case 2:initCheckedId = R.id.ade_exam;break;
+        }
+       mRadioGroup.check(initCheckedId);
         return dialog;
     }
 
@@ -118,90 +164,69 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         name = v.findViewById(R.id.ade_name);
         tag2 = v.findViewById(R.id.ade_tag2);
         tag3 = v.findViewById(R.id.ade_tag3);
-        dealWithTask = v.findViewById(R.id.ade_switch_dealwithtask);
-        if(!app_task_enabled) dealWithTask.setVisibility(View.GONE);
-        taskShow = v.findViewById(R.id.ade_choose_deal_task);
+        pickTimeIcon = v.findViewById(R.id.pick_time_icon);
+        pickTimeText = v.findViewById(R.id.time_show);
+        pickTime = v.findViewById(R.id.pick_time);
+        extra = v.findViewById(R.id.ade_extra);
+        //pickTimeBG = v.findViewById(R.id.pick_time_bg);
+        pickTaskIcon = v.findViewById(R.id.pick_task_icon);
+        pickTaskText = v.findViewById(R.id.pick_task_text);
+        pickTask = v.findViewById(R.id.pick_task);
+        pickTaskCancel = v.findViewById(R.id.pick_task_cancel);
+        pickSubjectIcon = v.findViewById(R.id.pick_subject_icon);
+        pickSubjectText = v.findViewById(R.id.pick_subject_text);
+        pickSubject = v.findViewById(R.id.pick_subject);
+        pickLocationIcon = v.findViewById(R.id.pick_location_icon);
+        pickLocationCancel = v.findViewById(R.id.pick_location_cancel);
+        pickLocationText = v.findViewById(R.id.pick_location_text);
+        pickLocation = v.findViewById(R.id.pick_location);
+        if(!app_task_enabled) pickTask.setVisibility(View.GONE);
         nameLayout = v.findViewById(R.id.ade_namelayout);
-        pickCourseLayout = v.findViewById(R.id.ade_courselayout);
-        pickTaskLayout = v.findViewById(R.id.ade_picktasklayout);
         mExpandableLayout = v.findViewById(R.id.ade_expandlayout);
         ImageView bt_expand = v.findViewById(R.id.ade_expand_button);
-        fromTimeShow = v.findViewById(R.id.ade_time_from_show);
-        toTimeShow = v.findViewById(R.id.ade_time_to_show);
-        dateShow = v.findViewById(R.id.ade_date_show);
-        courseShow = v.findViewById(R.id.ade_text_course);
-        examPlace = v.findViewById(R.id.ade_nexam_place);
-        courseShow.setText("选择考试科目");
-        taskShow.setText("选择任务");
-        ImageView pickFromTime = v.findViewById(R.id.ade_bt_picktime_from);
-        ImageView pickToTime = v.findViewById(R.id.ade_bt_picktime_to);
-        ImageView pickDate = v.findViewById(R.id.ade_bt_pickdate);
-        ImageView pickCourse = v.findViewById(R.id.ade_pick_course_button);
-        ImageView pickTask = v.findViewById(R.id.ade_pick_task_button);
+        //examPlace = v.findViewById(R.id.ade_nexam_place);
         done = v.findViewById(R.id.ade_bt_done);
-        pickToTimeLayout = v.findViewById(R.id.ade_picktotimelayout);
-        pickFromTimeLayout = v.findViewById(R.id.ade_pickfromtimelayout);
         wholeDaySwitch = v.findViewById(R.id.ade_switch_wholeday);
-        autoAllocation = v.findViewById(R.id.ade_switch_autoallocation);
-        pickTaskLayout.setVisibility(View.GONE);
-        autoAllocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+       // autoAllocation = v.findViewById(R.id.ade_switch_autoallocation);
+        pickTime.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(!dateSet){
+            public boolean onLongClick(View view) {
+                if(!timeSet){
                     Toast.makeText(HContext,"请先设置日期！",Toast.LENGTH_SHORT).show();
-                    autoAllocation.setChecked(!isChecked);
-                    return;
+                    //autoAllocation.setChecked(!isChecked);
+                    return false;
                 }
-                if (isChecked) {
-                    SparseArray<HTime> times = TimeTableGenerator.autoAdd_getTime(now,week,dow,40);
+                    SparseArray<HTime> times = TimeTableGenerator.autoAdd_getTime(now,week,dow,25);
                     if(times!=null){
                         setFromTime(times.get(0).hour,times.get(0).minute);
                         setToTime(times.get(1).hour,times.get(1).minute);
                     }else{
                         Toast.makeText(HContext,"没有找到合适的分配时间！",Toast.LENGTH_SHORT).show();
-                        autoAllocation.setChecked(false);
-                        return;
+                        //autoAllocation.setChecked(false);
+                        return false;
                     }
-                    wholeDaySwitch.setChecked(false);
-                    wholeDaySwitch.setVisibility(View.GONE);
-                } else {
-                    wholeDaySwitch.setChecked(false);
-                    wholeDaySwitch.setVisibility(View.VISIBLE);
-
-                }
+                refreshTimeBlock();
+                return true;
             }
         });
         wholeDaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    pickTaskLayout.setVisibility(View.GONE);
-                    dealWithTask.setVisibility(View.GONE);
-                    autoAllocation.setChecked(false);
-                    autoAllocation.setVisibility(View.GONE);
-                    pickToTimeLayout.setVisibility(View.GONE);
-                    pickFromTimeLayout.setVisibility(View.GONE);
+                    pickTask.setVisibility(View.GONE);
+                    taskSet = false;
+                    task = null;
                 } else {
-                    dealWithTask.setChecked(false);
-                    pickTaskLayout.setVisibility(View.GONE);
-                    autoAllocation.setChecked(false);
-                    autoAllocation.setVisibility(View.VISIBLE);
+
                     switch (mRadioGroup.getCheckedRadioButtonId()) {
                         case R.id.ade_arrange:
-                            pickFromTimeLayout.setVisibility(View.VISIBLE);
-                            pickToTimeLayout.setVisibility(View.VISIBLE);
-                            if(app_task_enabled)dealWithTask.setVisibility(View.VISIBLE);
-                            break;
-                        case R.id.ade_remind:
-                            pickFromTimeLayout.setVisibility(View.VISIBLE);
-                            pickToTimeLayout.setVisibility(View.GONE);
+                            if(app_task_enabled) pickTask.setVisibility(View.VISIBLE);
                             break;
                         case R.id.ade_ddl:
-                            pickFromTimeLayout.setVisibility(View.VISIBLE);
-                            pickToTimeLayout.setVisibility(View.GONE);
                             break;
                     }
                 }
+                refreshTimeBlock();
             }
         });
         bt_expand.setOnClickListener(new View.OnClickListener() {
@@ -210,121 +235,173 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                 mExpandableLayout.toggle();
             }
         });
-        pickCourse.setOnClickListener(new View.OnClickListener() {
+        pickSubject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new showSubjectsDialogTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new showSubjectsDialogTask().executeOnExecutor(HITAApplication.TPE);
             }
         });
         pickTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new showTasksDialogTask().execute();
+                new showTasksDialogTask().executeOnExecutor(HITAApplication.TPE);;
             }
         });
-        dealWithTask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        pickTaskCancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) pickTaskLayout.setVisibility(View.VISIBLE);
-                else pickTaskLayout.setVisibility(View.GONE);
+            public void onClick(View view) {
+                taskSet = false;
+                task = null;
+                name.setText("");
+                refreshTaskBlock();
             }
         });
-
+        pickLocationCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               locationSet = false;
+               locationStr = null;
+               refreshLocationBlock();
+            }
+        });
+        pickLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new PickInfoDialog(getContext(), "选择地点", PickInfoDialog.LOCATION_ALL, new PickInfoDialog.OnPickListener() {
+                    @Override
+                    public void OnPick(String title, Object obj) {
+                        locationSet = true;
+                        locationStr = title;
+                        refreshLocationBlock();
+                    }
+                }).show();
+            }
+        });
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 wholeDaySwitch.setChecked(false);
-                autoAllocation.setChecked(false);
+                //autoAllocation.setChecked(false);
                 switch (checkedId) {
                     case R.id.ade_arrange:
-                        pickTaskLayout.setVisibility(View.GONE);
-                        if(app_task_enabled) dealWithTask.setVisibility(View.VISIBLE);
+                        if(false) pickTask.setVisibility(View.VISIBLE);
                         wholeDaySwitch.setVisibility(View.VISIBLE);
-                        autoAllocation.setVisibility(View.VISIBLE);
-                        pickCourseLayout.setVisibility(View.GONE);
+                       // autoAllocation.setVisibility(View.VISIBLE);
+                        pickLocation.setVisibility(View.GONE);
+                        pickSubject.setVisibility(View.GONE);
                         nameLayout.setVisibility(View.VISIBLE);
                         mExpandableLayout.setVisibility(View.VISIBLE);
-                        pickFromTimeLayout.setVisibility(View.VISIBLE);
-                        pickToTimeLayout.setVisibility(View.VISIBLE);
-                        break;
-                    case R.id.ade_remind:
-                        pickTaskLayout.setVisibility(View.GONE);
-                        dealWithTask.setVisibility(View.GONE);
-                        wholeDaySwitch.setVisibility(View.VISIBLE);
-                        autoAllocation.setVisibility(View.VISIBLE);
-                        pickToTimeLayout.setVisibility(View.GONE);
-                        pickCourseLayout.setVisibility(View.GONE);
-                        nameLayout.setVisibility(View.VISIBLE);
-                        mExpandableLayout.setVisibility(View.VISIBLE);
+                        extra.setVisibility(View.GONE);
                         break;
                     case R.id.ade_ddl:
-                        pickTaskLayout.setVisibility(View.GONE);
-                        dealWithTask.setVisibility(View.GONE);
+                        pickTask.setVisibility(View.GONE);
                         wholeDaySwitch.setVisibility(View.VISIBLE);
-                        autoAllocation.setVisibility(View.VISIBLE);
-                        pickToTimeLayout.setVisibility(View.GONE);
-                        pickCourseLayout.setVisibility(View.GONE);
+                       // autoAllocation.setVisibility(View.VISIBLE);
+                        pickLocation.setVisibility(View.GONE);
+                        pickSubject.setVisibility(View.GONE);
                         nameLayout.setVisibility(View.VISIBLE);
+                        extra.setVisibility(View.GONE);
                         mExpandableLayout.setVisibility(View.VISIBLE);
                         break;
                     case R.id.ade_exam:
-                        pickTaskLayout.setVisibility(View.GONE);
-                        dealWithTask.setVisibility(View.GONE);
-                        pickFromTimeLayout.setVisibility(View.VISIBLE);
-                        pickToTimeLayout.setVisibility(View.VISIBLE);
+                        pickTask.setVisibility(View.GONE);
                         wholeDaySwitch.setVisibility(View.GONE);
-                        autoAllocation.setVisibility(View.GONE);
-                        pickCourseLayout.setVisibility(View.VISIBLE);
+                        //autoAllocation.setVisibility(View.GONE);
+                        pickLocation.setVisibility(View.VISIBLE);
+                        pickSubject.setVisibility(View.VISIBLE);
+                        nameLayout.setVisibility(View.GONE);
+                        extra.setVisibility(View.VISIBLE);
+                        extra.setHint("输入考试名称...");
+                        mExpandableLayout.setVisibility(View.GONE);
+                        break;
+                    case R.id.ade_course:
+                        pickTask.setVisibility(View.GONE);
+                        wholeDaySwitch.setVisibility(View.GONE);
+                        //autoAllocation.setVisibility(View.GONE);
+                        pickLocation.setVisibility(View.VISIBLE);
+                        pickSubject.setVisibility(View.VISIBLE);
+                        extra.setVisibility(View.VISIBLE);
+                        extra.setHint("设置任课教师...");
                         nameLayout.setVisibility(View.GONE);
                         mExpandableLayout.setVisibility(View.GONE);
                         break;
-
                 }
-            }
-        });
-        pickFromTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerDialog TPD = new TimePickerDialog(FragmentAddEvent.this.getActivity(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        setFromTime(hourOfDay,minute);
-                    }
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
-                TPD.create();
-                TPD.show();
-
-            }
-        });
-        pickToTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerDialog TPD = new TimePickerDialog(FragmentAddEvent.this.getActivity(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        setToTime(hourOfDay,minute);
-                    }
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
-                TPD.create();
-                TPD.show();
+                refreshTimeBlock();
             }
         });
 
-        pickDate.setOnClickListener(new View.OnClickListener() {
+        pickTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HDatePickerDialog dlg = new HDatePickerDialog((BaseActivity) FragmentAddEvent.this.getActivity(), dateShow);
-                dlg.setOnDialogConformListener(new HDatePickerDialog.onDialogConformListener() {
-                    @Override
-                    public void onClick(int week, int dow, boolean dateSet) {
-
-                        FragmentAddEvent.this.dateSet = dateSet;
-                        FragmentAddEvent.this.dow = dow;
-                        FragmentAddEvent.this.week = week;
-                        //Log.e("!!",week+"x"+dow);
+                if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_ddl){
+                    if(!wholeDaySwitch.isChecked()){
+                        PickSingleTimeDialog pstd = new PickSingleTimeDialog((BaseActivity) FragmentAddEvent.this.getActivity(),new PickSingleTimeDialog.onDialogConformListener() {
+                            @Override
+                            public void onClick(int week, int dow, int hour,int minute,boolean dateSet) {
+                                timeSet = dateSet;
+                                if(dateSet){
+                                    FragmentAddEvent.this.timeSet = dateSet;
+                                    FragmentAddEvent.this.dow = dow;
+                                    FragmentAddEvent.this.week = week;
+                                    fromT.setTime(hour,minute);
+                                    toT.setTime(hour,minute);
+                                    refreshTimeBlock(); }
+                                //Log.e("!!",week+"x"+dow);
+                            }
+                        });
+                        if(timeSet) pstd.setInitialValue(week,dow,fromT);
+                        pstd.show();
+                    }else{
+                        PickTimePeriodDialog ptpd = new PickTimePeriodDialog((BaseActivity) getActivity(), new PickTimePeriodDialog.onDialogConformListener() {
+                            @Override
+                            public void onClick(int week, int dow, int hour1, int minute1, int hour2, int minute2, boolean dateSet) {
+                                timeSet = dateSet;
+                                if(dateSet){
+                                    FragmentAddEvent.this.timeSet = dateSet;
+                                    FragmentAddEvent.this.dow = dow;
+                                    FragmentAddEvent.this.week = week;
+                                    refreshTimeBlock(); }
+                            }
+                        });
+                        if(timeSet) ptpd.setInitialValue(week,dow,fromT,toT);
+                        ptpd.dateOnly();;
+                        ptpd.show();
                     }
-                });
-                dlg.showDatePickerDialog();
+
+
+                }else if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_course){
+                    PickCourseTimeDialog pctd = new PickCourseTimeDialog((BaseActivity) getActivity(), new PickCourseTimeDialog.onDialogConformListener() {
+                        @Override
+                        public void onClick(List<Integer> newWeeks, int newDow, int newBegin, int newLast) {
+                            timeSet_course = true;
+                            weeks.clear();
+                            weeks.addAll(newWeeks);
+                            begin = newBegin;
+                            last = newLast;
+                            dow = newDow;
+                            refreshTimeBlock();
+                        }
+                    });
+                    if(timeSet_course) pctd.setInitialValue(weeks,dow,begin,last);
+                    pctd.show();
+                } else{
+                    PickTimePeriodDialog ptpd = new PickTimePeriodDialog((BaseActivity) getActivity(), new PickTimePeriodDialog.onDialogConformListener() {
+                        @Override
+                        public void onClick(int week, int dow, int hour1, int minute1, int hour2, int minute2, boolean dateSet) {
+                            timeSet = dateSet;
+                            FragmentAddEvent.this.timeSet = FragmentAddEvent.this.timeSet;
+                            FragmentAddEvent.this.dow = dow;
+                            FragmentAddEvent.this.week = week;
+                            fromT.setTime(hour1,minute1);
+                            toT.setTime(hour2,minute2);
+                            refreshTimeBlock();
+                        }
+                    });
+                    if(timeSet) ptpd.setInitialValue(week,dow,fromT,toT);
+                    if(wholeDaySwitch.isChecked()) ptpd.dateOnly();
+                    ptpd.show();
+                }
+
             }
         });
         done.setOnClickListener(new View.OnClickListener() {
@@ -332,9 +409,6 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 int type = 0;
                 switch (mRadioGroup.getCheckedRadioButtonId()) {
-                    case R.id.ade_remind:
-                        type = TimeTable.TIMETABLE_EVENT_TYPE_REMIND;
-                        break;
                     case R.id.ade_arrange:
                         type = TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT;
                         break;
@@ -344,45 +418,51 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                     case R.id.ade_exam:
                         type = TimeTable.TIMETABLE_EVENT_TYPE_EXAM;
                         break;
+                    case R.id.ade_course:
+                        type = TIMETABLE_EVENT_TYPE_COURSE;
+                        break;
                 }
-                if (type != TimeTable.TIMETABLE_EVENT_TYPE_EXAM && TextUtils.isEmpty(name.getText())) {
+                if (type != TimeTable.TIMETABLE_EVENT_TYPE_EXAM && type!=TIMETABLE_EVENT_TYPE_COURSE&&TextUtils.isEmpty(name.getText())) {
                     Toast.makeText(HContext, "请输入事件名称!", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (!dateSet) {
-                    Toast.makeText(HContext, "请设置事件日期！", Toast.LENGTH_SHORT).show();
+                } else if(type==TIMETABLE_EVENT_TYPE_EXAM&&TextUtils.isEmpty(extra.getText().toString())) {
+                    Toast.makeText(HContext, "请输入考试名称!", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (!fromTSet && pickFromTimeLayout.getVisibility() == View.VISIBLE) {
-                    Toast.makeText(HContext, "请设置开始时间！", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if (!toTSet && pickToTimeLayout.getVisibility() == View.VISIBLE) {
-                    Toast.makeText(HContext, "请设置结束时间！", Toast.LENGTH_SHORT).show();
+                }else if ((mRadioGroup.getCheckedRadioButtonId()!=R.id.ade_course&&!timeSet)
+                ||(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_course&&!timeSet_course)
+                ) {
+                    Toast.makeText(HContext, "请设置事件时间", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (type != TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE && type != TimeTable.TIMETABLE_EVENT_TYPE_REMIND && fromT.compareTo(toT) > 0) {
                     Toast.makeText(HContext, "请输入正确的事件时间！", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (type == TimeTable.TIMETABLE_EVENT_TYPE_EXAM && !courseSet) {
+                } else if (type == TimeTable.TIMETABLE_EVENT_TYPE_EXAM && !subjectSet) {
                     Toast.makeText(HContext, "请选择考试科目！", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (dealWithTask.isChecked() && !taskSet) {
-                    Toast.makeText(HContext, "请选择处理的任务！", Toast.LENGTH_SHORT).show();
+                } else if (type == TIMETABLE_EVENT_TYPE_COURSE && !subjectSet) {
+                    Toast.makeText(HContext, "请选择课程科目！", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (dealWithTask.isChecked() && taskSet && fromTSet && toTSet && fromT.getDuration(toT) > task.getLength()) {
+                }else if (taskSet&&task!=null && fromT.getDuration(toT) > task.getLength()) {
                     Toast.makeText(HContext, "时长超过任务时长！", Toast.LENGTH_SHORT).show();
-                    toTSet = true;
                     toT = fromT.getAdded(task.getLength());
-                    toTimeShow.setText(toT.tellTime());
-                    // toTimeShow.setTextColor(ContextCompat.getColor(HContext,R.color.material_secondary_text));
+                    // toTimeShow.setTextColor(ContextCompat.getColor(getActivity(),R.color.material_secondary_text));
                     return;
                 }
+                if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_course){
+                    new  addCourseTask(mainTimeTable.core.curriculumCode,weeks,
+                            extra.getText().toString(),locationStr ,subjectName,begin,last,dow).executeOnExecutor(HITAApplication.TPE);;
+                    return;
+                }
+
                 String Tname, Ttag2, Ttag3;
                 if (type == TimeTable.TIMETABLE_EVENT_TYPE_EXAM) {
-                    Ttag2 = examPlace.getText().toString().isEmpty() ? "" : examPlace.getText().toString();
+                    Ttag2 = TextUtils.isEmpty(locationStr)? "" : locationStr;
                     if(TextUtils.isEmpty(subjectCode)){
                         Ttag3 = "科目名称：" + subjectName;
                     }else Ttag3 = "科目代码："+subjectCode;
 
-                    Tname = courseShow.getText() + "考试";
-                    //  Ttag4 = fromT.tellTime()+"-"+toT.tellTime();
+                    Tname = extra.getText().toString();
+                     //Ttag4 = fromT.tellTime()+"-"+toT.tellTime();
                 } else {
                     Tname = name.getText().toString().isEmpty() ? "" : name.getText().toString();
                     Ttag2 = tag2.getText().toString().isEmpty() ? "" : tag2.getText().toString();
@@ -395,38 +475,119 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
 //                } else {
                 HTime tempToTime = type == TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT || type == TimeTable.TIMETABLE_EVENT_TYPE_EXAM ? toT : fromT;
                 new addEventTask(mainTimeTable.core.curriculumCode,
-                        type,Tname,Ttag2,Ttag3,fromT,tempToTime,week,dow,wholeDaySwitch.isChecked(),dealWithTask.isChecked()).execute();
+                        type,Tname,Ttag2,Ttag3,fromT,tempToTime,week,dow,wholeDaySwitch.isChecked(),taskSet).executeOnExecutor(HITAApplication.TPE);;
             }
         });
 
 
     }
 
+    private void refreshTimeBlock(){
+        if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_course){
+            if(timeSet_course){
+                pickTime.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
+                pickTimeIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
+                pickTimeText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+                pickTimeText.setText(TextTools.words_time_DOW[dow-1]+begin+"-"+(begin+last-1)+"节");
+            }else{
+                pickTimeText.setText("设置日期与时间段");
+                pickTime.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+                pickTimeText.setTextColor(ContextCompat.getColor(getActivity(),R.color.text_color_secondary));
+                pickTimeIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+            }
+            return;
+        }
+        if(timeSet){
+            pickTime.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
+            pickTimeIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
+            pickTimeText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+           // pickTimeBG.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
+            if(wholeDaySwitch.isChecked()){
+                pickTimeText.setText(week+"周"+TextTools.words_time_DOW[dow-1]);
+            }else if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_ddl){
+                pickTimeText.setText(week+"周"+TextTools.words_time_DOW[dow-1]+" "+fromT.tellTime());
+            }else{
+                pickTimeText.setText(week+"周"+TextTools.words_time_DOW[dow-1]+" "+fromT.tellTime()+"-"+toT.tellTime());
+            }
+        }else{
+            pickTime.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+            pickTimeText.setTextColor(ContextCompat.getColor(getActivity(),R.color.text_color_secondary));
+            pickTimeIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+            if(wholeDaySwitch.isChecked()){
+                pickTimeText.setText("设置日期");
+            }else if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_ddl){
+                pickTimeText.setText("设置日期与时间");
+            }else{
+                pickTimeText.setText("设置日期与时间段");
+            }
+        }
+    }
+    private void refreshTaskBlock(){
+        if(taskSet&&task!=null){
 
+            pickTaskIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
+            pickTaskText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+            pickTask.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
+            pickTaskText.setText(task.name);
+            pickTaskCancel.setVisibility(View.VISIBLE);
+        }else{
+            pickTaskText.setText("处理任务");
+            pickTask.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+            pickTaskText.setTextColor(ContextCompat.getColor(getActivity(),R.color.text_color_secondary));
+            //pickTaskText.invalidate();
+            pickTaskIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+            pickTaskCancel.setVisibility(View.GONE);
+        }
+    }
+    private void refreshLocationBlock(){
+        if(locationSet){
+            pickLocationIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
+            pickLocationText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+            pickLocation.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
+            pickLocationText.setText(locationStr);
+            pickLocationCancel.setVisibility(View.VISIBLE);
+        }else{
+            pickLocationText.setText("设置地点");
+            pickLocationText.postInvalidate();
+            pickLocation.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+            pickLocationText.setTextColor(ContextCompat.getColor(getActivity(),R.color.text_color_secondary));
+            //pickLocationText.invalidate();
+            pickLocationIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+            pickLocationCancel.setVisibility(View.GONE);
+        }
+    }
+    private void refreshExamBlock(){
+        if(subjectSet&&subjectName!=null){
+            pickSubjectIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
+            pickSubjectText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+            pickSubject.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
+            pickSubjectText.setText(subjectName);
+        }else{
+            pickTaskText.setText("选择考试科目");
+        }
+    }
     private void setFromTime(int hour,int minute){
         fromT.hour = hour;
         fromT.minute = minute;
-        fromTimeShow.setText(fromT.tellTime());
-        fromTimeShow.setTextColor(((BaseActivity) Objects.requireNonNull(FragmentAddEvent.this.getActivity())).getColorPrimary());
-        fromTSet = true;
     }
 
     private void setToTime(int hour,int minute){
         toT.hour = hour;
         toT.minute = minute;
-        toTimeShow.setText(toT.tellTime());
-        toTimeShow.setTextColor(((BaseActivity) Objects.requireNonNull(FragmentAddEvent.this.getActivity())).getColorPrimary());
-        toTSet = true;
     }
     private void sendRefreshMessages() {
         Intent tlr = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(tlr);
         Intent tlr2 = new Intent("COM.STUPIDTREE.HITA.TASK_REFRESH");
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(tlr2);
+        if(onFragmentInteractionListener!=null){
+            onFragmentInteractionListener.onCalledRefresh();
+        }
     }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
+        void onCalledRefresh();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -453,11 +614,11 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                     .setItems(res, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            courseShow.setText(res[which]);
-                            courseSet = true;
-                            courseShow.setTextColor(((BaseActivity) FragmentAddEvent.this.getActivity()).getColorPrimary());
+                            subjectSet = true;
                             subjectCode = subjects.get(which).code;
                             subjectName = subjects.get(which).name;
+                            if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_exam)extra.setText(subjectName+"考试");
+                            refreshExamBlock();
                         }
                     }).create();
             dialog.show();
@@ -473,6 +634,13 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         @Override
         protected Object doInBackground(Object[] objects) {
             tasks = mainTimeTable.getUnfinishedTaskWithLength();
+            List<Task> toRemove = new ArrayList<>();
+            for(Task t:tasks){
+                int left = t.getLength() -   t.getDealtTime_All();
+                if(left<= 0){
+                    toRemove.add(t);}
+            }
+            tasks.removeAll(toRemove);
             res = new String[tasks.size()];
             dealtTime = new int[tasks.size()];
             for (int i = 0; i < tasks.size(); i++) {
@@ -495,18 +663,14 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                             @SuppressLint("SetTextI18n")
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                taskShow.setText(res[which]);
                                 taskSet = true;
-                                taskShow.setTextColor(((BaseActivity) Objects.requireNonNull(FragmentAddEvent.this.getActivity())).getColorPrimary());
                                 task = tasks.get(which);
                                 name.setText("处理任务：" + task.name );
-                                if (fromTSet && toTSet && fromT.getDuration(toT) > task.getLength()) {
+                                if ( fromT.getDuration(toT) > task.getLength()) {
                                     Toast.makeText(HContext, "时长超过任务时长！", Toast.LENGTH_SHORT).show();
-                                    toTSet = false;
                                     toT = new HTime(now);
-                                    toTimeShow.setText("设置结束时间");
-                                    toTimeShow.setTextColor(ContextCompat.getColor(HContext, R.color.material_secondary_text));
                                 }
+                                refreshTaskBlock();
                             }
                         }).create();
                 dialog.show();
@@ -530,7 +694,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         int DOW;
         boolean isWholeDay;
         String uuid;
-        Task ddl_task = null;
+      //  Task ddl_task = null;
         boolean dealWithTask;
 
         public addEventTask(String curriculumCode, int type, String eventName, String tag2, String tag3,  HTime start, HTime end, int week, int DOW, boolean isWholeDay
@@ -553,12 +717,15 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             if (dealWithTask && taskSet && task != null) {
                 tag4 = task.getUuid();
                 tag3 = "任务处理事件";
-            } else if (type == TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE) {
-                ddl_task = new Task(mainTimeTable.core.curriculumCode, "处理DDL:" + name.getText().toString(), allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now), TimeTable.getDOW(now),
-                        new HTime(now), week, dow, toT, "");
-                tag4 = ddl_task.getUuid();
-            } else if(type==TIMETABLE_EVENT_TYPE_EXAM){
-                tag4 = TextUtils.isEmpty(subjectCode)?subjectName:subjectCode;
+            }
+//            else if (type == TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE) {
+//                ddl_task = new Task(mainTimeTable.core.curriculumCode, "处理DDL:" + eventName, allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now), TimeTable.getDOW(now),
+//                        new HTime(now), week, dow, toT, "");
+//                tag4 = ddl_task.getUuid();
+//            }
+            else if(type==TIMETABLE_EVENT_TYPE_EXAM){
+                //tag4 = TextUtils.isEmpty(subjectCode)?subjectName:subjectCode;
+                tag4 = fromT.tellTime()+"-"+toT.tellTime();
             }
             int[] types_length = new int[]{TimeTable.TIMETABLE_EVENT_TYPE_EXAM
                     ,TimeTable.TIMETABLE_EVENT_TYPE_COURSE,TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT,TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC};
@@ -570,10 +737,10 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                 uuid = mainTimeTable.addEvent(toAdd);
                 if (dealWithTask && task != null && taskSet)
                     task.putEventMap(uuid+":::"+toAdd.week, false);
-                if (type == TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE) {
-                    ddl_task.setDdlName(uuid, week + "");
-                    mainTimeTable.addTask(ddl_task);
-                }
+//                if (type == TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE) {
+//                    ddl_task.setDdlName(uuid, week + "");
+//                    mainTimeTable.addTask(ddl_task);
+//                }
                 return null;
             }
         }
@@ -592,10 +759,52 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             }else{
                 ActivityMain.saveData();
                 sendRefreshMessages();
-                if(!this.isCancelled())dismiss();
+                if(this.getStatus()!=AsyncTask.Status.FINISHED)dismiss();
             }
 
         }
+
+
     }
 
+    class addCourseTask extends AsyncTask {
+        String curriculumCode;
+        List<Integer> weeks;
+        String teacher;
+        String location;
+        String name;
+        int from;
+        int last;
+        int dow;
+
+        public addCourseTask(String curriculumCode, List<Integer> weeks, String teacher, String location, String name, int from, int last, int dow) {
+            this.curriculumCode = curriculumCode;
+            this.weeks = weeks;
+            this.teacher = teacher;
+            this.location = location;
+            this.name = name;
+            this.from = from;
+            this.last = last;
+            this.dow = dow;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            StringBuilder sb = new StringBuilder();
+            for(int i=0;i<last;i++){
+                sb.append(i+from);
+                if(i!=last-1)sb.append(",");
+            }
+            mainTimeTable.addEvents(weeks, dow, TIMETABLE_EVENT_TYPE_COURSE, name, location, teacher,  sb.subSequence(0,sb.toString().length()-1).toString(), from, last, false);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            ActivityMain.saveData();
+            sendRefreshMessages();
+            if (this.getStatus()!=AsyncTask.Status.FINISHED) dismiss();
+        }
+    }
 }

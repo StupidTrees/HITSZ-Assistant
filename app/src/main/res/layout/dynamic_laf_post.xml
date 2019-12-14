@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="8dp"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
-    app:cardBackgroundColor="?attr/background_color_second"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="1dp">
+    app:cardBackgroundColor="?attr/background_color_second">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,7 +59,7 @@
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             android:visibility="visible"
-            app:cardBackgroundColor="?attr/background_icon_color"
+            app:cardBackgroundColor="?attr/background_icon_color_bottom"
             app:cardCornerRadius="8dp"
             app:cardElevation="0dp">
 

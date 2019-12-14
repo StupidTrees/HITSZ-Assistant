@@ -3,41 +3,94 @@ package com.stupidtree.hita;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.text.TextUtils;
+import android.os.Build;
+import android.util.Base64;
 import android.util.Log;
 
-import androidx.core.graphics.ColorUtils;
-
-import com.googlecode.tesseract.android.TessBaseAPI;
-import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.util.FileOperator;
 import com.stupidtree.hita.util.SafecodeUtil;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import io.reactivex.Observable;
-
-import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.cookies;
+import jxl.biff.ByteArray;
 
 public class QACrawler {
 
     public static void main(String[] args) {
-//        TextTools tt = new TextTools();
-//        StringBuilder sb = new StringBuilder("<string-array name=\"sentence_fun_infos\">\n");
-//        for(String x: tt. sentence_fun_infos){
-//            sb.append("<item>").append(x).append("</item>\n");
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    for(int i = 0;i<1000;i++) {
+                        HashMap<String, String> cookies2 = new HashMap<>();
+                        Connection.Response r = Jsoup.connect(" https://www.dutenews.com/p/203216.html").
+                                userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36").
+                                timeout(10000).response();
+                        cookies2.clear();
+                        cookies2.putAll(r.cookies());
+                        try {
+                            Document d = Jsoup.connect("https://m.dutenews.com/wap/article/vote").cookies(cookies2)
+                                    .timeout(10000).
+                                            userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36").
+                                            data("contentid", "203216").data(
+                                            "itemid[]", "111").ignoreContentType(true).post();
+                            System.out.println(d);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
+
+
+
+//        System.out.println( android.util.Base64.encodeToString("20000525".getBytes(), Base64.DEFAULT));
+//
+//        try {
+//            cookies2 = new HashMap<>();
+//            Connection.Response response = Jsoup.connect("https://idp.utsz.edu.cn/cas/login").timeout(5000).execute();;
+//            //得到系统返回的Cookies
+//            cookies2.clear();
+//            cookies2.putAll(response.cookies_jwts());
+//           Document after =  Jsoup.connect("https://idp.utsz.edu.cn/cas/login")
+//                    .cookies_jwts(cookies2).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
+//                    .data("username","333180110324")
+//                    .data("password","MjAwMDA1MjU=")
+//                    .data("lt",lt)
+//                    .data("_eventId","submit").post();
+//            System.out.println(after);
+//            //Log.e("cookie:",cookies_jwts.toString()+" ");
+//            //请求获得验证码的内容
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //        }
-//        sb.append(" </string-array>");
-//        System.out.println(sb);
     }
+
+
+    static String EnChTo(String input){
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<input.length();i++){
+            int unicode =  input.charAt(i);;
+            sb.append(unicode);
+        }
+        return sb.toString();
+    }
+//    /*任意进制解密*/
+//    function DeChTo(txtvalue){
+//        return txtvalue;
+//        var h=8;
+//        var monyer = new Array();var i;
+//        var s=txtvalue.split(" ");
+//        for(i=0;i<s.length;i++)
+//            monyer+=String.fromCharCode(parseInt(s[i],h));
+//        return monyer;
+//    }
 
     public static void gogogo(final String path) {
 
@@ -160,10 +213,6 @@ public class QACrawler {
         temp.setPixels(pix, 0, width, 0, 0, width, height);
         return temp;
     }
-
-
-
-
 
 
 }

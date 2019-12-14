@@ -27,11 +27,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.SubjectsListAdapter;
 import com.stupidtree.hita.adapter.TimeTablePagerAdapter;
 import com.stupidtree.hita.core.Subject;
 import com.stupidtree.hita.fragments.FragmentAddCourse;
+import com.stupidtree.hita.fragments.FragmentAddEvent;
 import com.stupidtree.hita.fragments.FragmentTimeTablePage;
 import com.stupidtree.hita.util.ColorBox;
 
@@ -43,6 +45,7 @@ import java.util.Calendar;
 import static com.stupidtree.hita.HITAApplication.DATA_STATE_HEALTHY;
 import static com.stupidtree.hita.HITAApplication.DATA_STATE_NONE_CURRICULUM;
 import static com.stupidtree.hita.HITAApplication.DATA_STATE_NULL;
+import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.correctData;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
@@ -54,7 +57,7 @@ import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
 import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
 import static com.stupidtree.hita.HITAApplication.timeWatcher;
 
-public class ActivityTimeTable extends BaseActivity implements FragmentTimeTablePage.OnFragmentInteractionListener {
+public class ActivityTimeTable extends BaseActivity implements FragmentTimeTablePage.OnFragmentInteractionListener,FragmentAddEvent.OnFragmentInteractionListener {
     /*标志类常量*/
     final int FROM_SPINNER_Curriculum = 1;
     final int FROM_SPINNER_TIMETABLE = 2;
@@ -73,7 +76,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 
     ViewPager viewPager;
     TimeTablePagerAdapter pagerAdapter;
-    FloatingActionButton fab;
+    FloatingActionButton fab,fab_add;
     TabLayout tabs;
     RefreshTask pageTask;
     FragmentAddCourse fragmentAddCourse;
@@ -83,6 +86,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
     /*初始化_获取所有控件对象*/
     void initAllViews() {
         fab = findViewById(R.id.fab_thisweek);
+        fab_add = findViewById(R.id.fab_add);
         //toolbar_title = findViewById(R.id.toolbar_title);
         mAppBarLayout = findViewById(R.id.app_bar);
         invalidLayout = findViewById(R.id.tt_invalidview);
@@ -102,6 +106,12 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
                         pageWeekOfTerm = thisWeekOfTerm;
                         viewPager.setCurrentItem(thisWeekOfTerm-1);
                     }
+            }
+        });
+        fab_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FragmentAddEvent().show(getSupportFragmentManager(),"fae");
             }
         });
         initViewPager();
@@ -164,9 +174,9 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
                 int id = menuItem.getItemId();
                 boolean isChecked = !menuItem.isChecked();
                 switch (id) {
-                    case R.id.action_add_course:
-                       fragmentAddCourse.show(getSupportFragmentManager(),"fac");
-                        break;
+//                    case R.id.action_add_course:
+//                       fragmentAddCourse.show(getSupportFragmentManager(),"fac");
+//                        break;
 //                    case R.id.action_switch_timetable:
 //                        menuItem.setChecked(isChecked);
 //                         PreferenceManager.getDefaultSharedPreferences(ActivityTimeTable.this).edit().putBoolean("timetable_curriculumonly",isChecked).apply();
@@ -202,7 +212,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
                                 .setNegativeButton("取消",null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        new resetColorTask().execute();
+                                        new resetColorTask().executeOnExecutor(TPE);;
                                     }
                                 }).create();
                         ad.show();
@@ -212,7 +222,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
                                 .setNegativeButton("取消",null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        new resetColorToThemeTask().execute();
+                                        new resetColorToThemeTask().executeOnExecutor(HITAApplication.TPE);;
                                     }
                                 }).create();
                         ad2.show();
@@ -228,9 +238,9 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 
     /*刷新课表视图函数*/
     public void Refresh(int from) {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new RefreshTask(from);
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
 
@@ -244,6 +254,11 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onCalledRefresh() {
+        pagerAdapter.notifyAllFragments();
     }
 
 
@@ -349,7 +364,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -377,7 +392,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
         }
 
         InitTask it = new InitTask(this);
-        it.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        it.executeOnExecutor(HITAApplication.TPE);
         //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
     }

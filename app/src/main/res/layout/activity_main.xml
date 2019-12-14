@@ -69,6 +69,7 @@
             app:fab_shadowColor="?attr/colorPrimary"
             app:fab_shadowRadius="16dp"
             app:fab_showShadow="true"
+            app:layout_behavior=".diy.mBottomHideBehavior"
             app:srcCompat="@drawable/bt_timeline_toolbar_timetable" />
 
 

@@ -3,10 +3,13 @@ package com.stupidtree.hita.fragments;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -30,7 +33,8 @@ import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.core.TimeTable;
 import com.stupidtree.hita.core.timetable.HTime;
 import com.stupidtree.hita.core.timetable.Task;
-import com.stupidtree.hita.diy.HDatePickerDialog;
+import com.stupidtree.hita.diy.PickSingleTimeDialog;
+import com.stupidtree.hita.hita.TextTools;
 
 import java.util.Calendar;
 
@@ -56,6 +60,7 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
     NumberPicker adt_lengthpicker;
     EditText name;
     LinearLayout arrangetime,arrangelength;
+    AddTaskDoneListener addTaskDoneListener;
    // FragmentTasks attachedFragment;
 //    @Nullable
 //    @Override
@@ -65,6 +70,16 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
 //
 //        return v;
 //    }
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof AddTaskDoneListener){
+            addTaskDoneListener = (AddTaskDoneListener) context;
+        }
+
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -76,7 +91,14 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
         ((View) view.getParent()).setBackgroundColor(Color.TRANSPARENT);
         initViews(view);
         setViewFunctions();
-        return dialog;
+        //name.requestFocus();
+         return dialog;
+    }
+
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+         super.onDismiss(dialog);
     }
 
     @Override
@@ -122,33 +144,36 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
         fD_pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HDatePickerDialog dlg =  new HDatePickerDialog((BaseActivity) getActivity(),fD_show);
-                dlg.setOnDialogConformListener(new HDatePickerDialog.onDialogConformListener() {
+                new PickSingleTimeDialog((BaseActivity) getActivity(),new PickSingleTimeDialog.onDialogConformListener() {
                     @Override
-                    public void onClick(int week, int dow, boolean dateSet) {
+                    public void onClick(int week, int dow,int hour,int minute, boolean dateSet) {
                         fDset = dateSet;
                         fDOW = dow;
                         fW = week;
+                        if(dateSet){
+                            fD_show.setText(week+"周"+ TextTools.words_time_DOW[dow-1]+" "+hour+":"+minute);
+                            fD_show.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+                        }
                     }
-                });
-                dlg.showDatePickerDialog();
+                }).show();
             }
         });
 
         tD_pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HDatePickerDialog dlg =  new HDatePickerDialog((BaseActivity) getActivity(),tD_show);
-                dlg.setOnDialogConformListener(new HDatePickerDialog.onDialogConformListener() {
+                new PickSingleTimeDialog((BaseActivity) getActivity(),new PickSingleTimeDialog.onDialogConformListener() {
                     @Override
-                    public void onClick(int week, int dow, boolean dateSet) {
+                    public void onClick(int week, int dow,int hour,int minute, boolean dateSet) {
                         tDset = dateSet;
                         tDOW = dow;
                         tW = week;
+                        if(dateSet){
+                            tD_show.setText(week+"周"+ TextTools.words_time_DOW[dow-1]+" "+hour+":"+minute);
+                            tD_show.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+                        }
                     }
-                });
-
-                dlg.showDatePickerDialog();
+                }).show();
             }
         });
 
@@ -218,6 +243,7 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes);
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes2);
                     ActivityMain.saveData();
+                    if(addTaskDoneListener!=null)addTaskDoneListener.OnDone();
                 }
             }
         });
@@ -228,8 +254,9 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
 //    }
 
  
-  
-
+    public interface AddTaskDoneListener{
+        void OnDone();
+    }
 
 
 }

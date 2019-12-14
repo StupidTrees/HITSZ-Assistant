@@ -27,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.core.Subject;
@@ -102,7 +103,7 @@ public class FragmentAddCourse extends BottomSheetDialogFragment {
         subjectText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new showSubjectsDialogTask().execute();
+                new showSubjectsDialogTask().executeOnExecutor(HITAApplication.TPE);;
             }
         });
         pickDow.setEntries(new String[]{"星期一","星期二","星期三","星期四","星期五","星期六","星期日"});
@@ -189,7 +190,7 @@ public class FragmentAddCourse extends BottomSheetDialogFragment {
                     Toast.makeText(getContext(),"你好像泳有使时间倒流的能力",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                new addCourseTask(mainTimeTable.core.curriculumCode,weeks,teacher_text.getEditText().getText().toString(),location_text.getEditText().getText().toString() ,subjectText.getText().toString(),pickFromT.getCurrentIndex()+1,pickToT.getCurrentIndex()-pickFromT.getCurrentIndex()+1,pickDow.getCurrentIndex()+1).execute();
+                new addCourseTask(mainTimeTable.core.curriculumCode,weeks,teacher_text.getEditText().getText().toString(),location_text.getEditText().getText().toString() ,subjectText.getText().toString(),pickFromT.getCurrentIndex()+1,pickToT.getCurrentIndex()-pickFromT.getCurrentIndex()+1,pickDow.getCurrentIndex()+1).executeOnExecutor(HITAApplication.TPE);;
             }
         });
 
@@ -281,7 +282,7 @@ public class FragmentAddCourse extends BottomSheetDialogFragment {
             super.onPostExecute(o);
             ActivityMain.saveData();
             sendRefreshMessages();
-            if (!this.isCancelled()) dismiss();
+            if (this.getStatus()!=AsyncTask.Status.FINISHED) dismiss();
         }
     }
 

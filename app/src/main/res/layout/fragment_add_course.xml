@@ -52,7 +52,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:paddingTop="4dp"
-                    android:tint="?attr/colorPrimary"
+                    android:tint="?attr/colorControlNormal"
                     android:tintMode="src_in"
                     app:srcCompat="@drawable/ic_menu_subject" />
 
@@ -85,7 +85,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginRight="8dp"
-                    android:tint="?attr/colorPrimary"
+                    android:tint="?attr/colorControlNormal"
                     android:tintMode="src_in"
                     app:srcCompat="@drawable/ic_dlg_tt_teacher" />
 
@@ -123,7 +123,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginRight="8dp"
-                    android:tint="?attr/colorPrimary"
+                    android:tint="?attr/colorControlNormal"
                     android:tintMode="src_in"
                     app:srcCompat="@drawable/ic_location2" />
 
@@ -160,7 +160,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:tint="?attr/colorPrimary"
+                    android:tint="?attr/colorControlNormal"
                     android:tintMode="src_in"
                     app:srcCompat="@drawable/ic_dlg_timetable_date" />
 
@@ -193,7 +193,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:tint="?attr/colorPrimary"
+                    android:tint="?attr/colorControlNormal"
                     android:tintMode="src_in"
                     app:srcCompat="@drawable/ic_access_time" />
 
@@ -203,7 +203,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:cyclic="false"
-                    app:divider="?attr/background_icon_color"
+                    app:divider="?attr/background_icon_color_bottom"
                     app:selectedColor="?attr/text_color_primary"
                     app:toward="right"
                     app:unselectedColor="?attr/text_color_secondary"
@@ -215,7 +215,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:cyclic="false"
-                    app:divider="?attr/background_icon_color"
+                    app:divider="?attr/background_icon_color_bottom"
                     app:selectedColor="?attr/text_color_primary"
                     app:toward="right"
                     app:unselectedColor="?attr/text_color_secondary"
@@ -233,7 +233,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:cyclic="false"
-                    app:divider="?attr/background_icon_color"
+                    app:divider="?attr/background_icon_color_bottom"
                     app:selectedColor="?attr/text_color_primary"
                     app:toward="right"
                     app:unselectedColor="?attr/text_color_secondary"

@@ -33,6 +33,15 @@ public class HTime implements Comparable, Serializable {
         return new HTime(Nhour,Nminute);
     }
 
+    public HTime getSub(int minute){
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY,hour);
+        c.set(Calendar.MINUTE,this.minute);
+        c.add(Calendar.MINUTE,-minute);
+        int Nhour = c.get(Calendar.HOUR_OF_DAY);
+        int Nminute = c.get(Calendar.MINUTE);
+        return new HTime(Nhour,Nminute);
+    }
 
     @Override
     public boolean equals(Object o) {

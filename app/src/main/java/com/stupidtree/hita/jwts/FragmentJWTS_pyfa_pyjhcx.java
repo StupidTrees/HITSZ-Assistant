@@ -16,22 +16,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.adapter.PYJHListAdapter;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.stupidtree.hita.HITAApplication.cookies;
+import static com.stupidtree.hita.HITAApplication.cookies_jwts;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
 
 public class FragmentJWTS_pyfa_pyjhcx extends BaseFragment {
@@ -72,7 +73,7 @@ public class FragmentJWTS_pyfa_pyjhcx extends BaseFragment {
         pyjhList = v.findViewById(R.id.jwts_pyjh_lish);
         pyjhAdapter = new PYJHListAdapter(this.getContext(), subjectsItems);
         pyjhList.setAdapter(pyjhAdapter);
-        pyjhList.setLayoutManager(new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
+        pyjhList.setLayoutManager(new WrapContentLinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
 
     }
 
@@ -96,7 +97,7 @@ public class FragmentJWTS_pyfa_pyjhcx extends BaseFragment {
 
     @Override
     protected void stopTasks() {
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -111,7 +112,7 @@ public class FragmentJWTS_pyfa_pyjhcx extends BaseFragment {
     public void Refresh() {
         stopTasks();
         pageTask = new getPYJHTask(getContext());
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
 
@@ -132,7 +133,7 @@ public class FragmentJWTS_pyfa_pyjhcx extends BaseFragment {
             Document page = null;
             try {
                 subjectsItems.clear();
-                page = Jsoup.connect("http://jwts.hitsz.edu.cn/pyfa/queryPykc").cookies(cookies).timeout(60000)
+                page = Jsoup.connect("http://jwts.hitsz.edu.cn/pyfa/queryPykc").cookies(cookies_jwts).timeout(60000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")

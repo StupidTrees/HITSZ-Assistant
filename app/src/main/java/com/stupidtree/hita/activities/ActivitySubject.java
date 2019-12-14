@@ -27,10 +27,12 @@ import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerDialog;
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.Subject;
 import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.adapter.SubjectCoursesListAdapter;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.util.ActivityUtils;
 
 import java.text.DecimalFormat;
@@ -38,21 +40,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
+import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
+import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
 
 
 public class ActivitySubject extends BaseActivity {
 
+    boolean isFirst = true;
     public static final int RESULT_COLOR_CHANGED = 817;
     Subject subject;
     TextView ratingText;
     RecyclerView courseList;
     SubjectCoursesListAdapter listAdapter;
     ArcProgress arcProgress;
-    CollapsingToolbarLayout toolbarLayout;
+    net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout toolbarLayout;
     TextView name,point, attr, totalcourses, exam, school, xnxq, type, code, score_qz, score_qm, score_none;
     CardView  card_scores, card_allcourses;
     View card_rate,card_color;
@@ -61,37 +66,33 @@ public class ActivitySubject extends BaseActivity {
     //RefreshRatingTask pageTask_rating;
     ImageView pickColor,colorSample;
     InitCourseListTask pageTask_courseList;
-    DecimalFormat df = new DecimalFormat("#.00");
+    DecimalFormat df = new DecimalFormat("#0.00");
+
+    boolean useCode;
+    String subjectKey;
 
     //WebView webView;
 
 
     @Override
     protected void stopTasks() {
-        if(pageTask_progress!=null&&!pageTask_progress.isCancelled()) pageTask_progress.cancel(true);
-       // if(pageTask_rating!=null&&!pageTask_rating.isCancelled()) pageTask_rating.cancel(true);
-        if(pageTask_courseList!=null&&!pageTask_courseList.isCancelled()) pageTask_courseList.cancel(true);
+        if(pageTask_progress!=null&&pageTask_progress.getStatus()!=AsyncTask.Status.FINISHED) pageTask_progress.cancel(true);
+       if(pageTask_courseList!=null&&pageTask_courseList.getStatus()!=AsyncTask.Status.FINISHED) pageTask_courseList.cancel(true);
 
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true, false, false);
+        setWindowParams(true, true, false);
+        useCode = getIntent().getBooleanExtra("useCode", false);
+        subjectKey = getIntent().getStringExtra("subject");
         //requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS);//申请动画
-        Transition explode = TransitionInflater.from(this).inflateTransition(android.R.transition.explode);
-        getWindow().setEnterTransition(explode);
+        //Transition explode = TransitionInflater.from(this).inflateTransition(android.R.transition.explode);
+        //getWindow().setEnterTransition(explode);
         setContentView(R.layout.activity_subject);
-        if (!getIntent().getBooleanExtra("useCode", false)) {
-            subject = allCurriculum.get(thisCurriculumIndex).getSubjectByName(getIntent().getStringExtra("subject"));
-        } else {
-            subject = allCurriculum.get(thisCurriculumIndex).getSubjectByCourseCode(getIntent().getStringExtra("subject"));
-        }
-        if (subject == null) return;
-        initViews();
-        initToolBar();
-        initCourseList();
-        initProgress();
+        new InitSubjectTask().executeOnExecutor(TPE);
+
     }
 
     void initViews() {
@@ -147,10 +148,13 @@ public class ActivitySubject extends BaseActivity {
     }
 
     void initToolBar() {
+//        toolbarLayout = findViewById(R.id.toolbarlayout);
+//        toolbarLayout.setExpandedTitleColor(getTextColorPrimary());
+//        toolbarLayout.setCollapsedTitleTextColor(getTextColorSecondary());
+        //toolbarLayout.setTitle(subject.name);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbarLayout = findViewById(R.id.toolbarlayout);
         ratingText = findViewById(R.id.text_rate);
-        toolbar.setTitle("");
+        toolbar.setTitle(subject.name);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -165,16 +169,13 @@ public class ActivitySubject extends BaseActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if(item.getItemId()==R.id.action_subject_manager){
-                    Intent i = new Intent(ActivitySubject.this,ActivitySubjectManager.class);
+                    Intent i = new Intent(ActivitySubject.this,ActivityCurriculumManager.class);
                     ActivitySubject.this.startActivity(i);
                 }
                 return true;
             }
         });
-        toolbarLayout.setExpandedTitleGravity(CollapsingToolbarLayout.TEXT_ALIGNMENT_CENTER);
-        toolbarLayout.setExpandedTitleColor(Color.parseColor("#00FFFFFF"));
-        toolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this,R.color.material_text_icon_white));
-
+       // toolbarLayout.setExpandedTitleGravity(CollapsingToolbarLayout.TEXT_ALIGNMENT_CENTER);
 
     }
 
@@ -247,18 +248,18 @@ public class ActivitySubject extends BaseActivity {
 
     void initCourseList() {
         courseList = findViewById(R.id.subject_recycler);
-        if(pageTask_courseList!=null&&!pageTask_courseList.isCancelled()) pageTask_courseList.cancel(true);
+        if(pageTask_courseList!=null&&pageTask_courseList.getStatus()!=AsyncTask.Status.FINISHED) pageTask_courseList.cancel(true);
         pageTask_courseList = new InitCourseListTask();
-        pageTask_courseList.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask_courseList.executeOnExecutor(HITAApplication.TPE);
 
     }
 
     void initProgress() {
         arcProgress = findViewById(R.id.subject_progress);
         //arcProgress.setTextColor(getColorAccent());
-       if(pageTask_progress!=null&&!pageTask_progress.isCancelled()) pageTask_progress.cancel(true);
+       if(pageTask_progress!=null&&pageTask_progress.getStatus()!=AsyncTask.Status.FINISHED) pageTask_progress.cancel(true);
        pageTask_progress =  new InitProgressTask();
-       pageTask_progress.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+       pageTask_progress.executeOnExecutor(HITAApplication.TPE);
     }
 
     class InitProgressTask extends AsyncTask<String, Integer, Integer> {
@@ -305,18 +306,18 @@ public class ActivitySubject extends BaseActivity {
             if (eventItems != null) {
                 listAdapter = new SubjectCoursesListAdapter(ActivitySubject.this, eventItems);
                 courseList.setAdapter(listAdapter);
-                LinearLayoutManager ll = new LinearLayoutManager(ActivitySubject.this, LinearLayoutManager.HORIZONTAL, false);
+                LinearLayoutManager ll = new WrapContentLinearLayoutManager(ActivitySubject.this, LinearLayoutManager.HORIZONTAL, false);
                 courseList.setLayoutManager(ll);
                 listAdapter.setOnItemClickListener(new SubjectCoursesListAdapter.OnItemClickListener() {
                     @Override
                     public void OnClick(View v, int position, EventItem ei) {
-                        Intent i = new Intent(ActivitySubject.this, ActivityCourse.class);
-                        Bundle b = new Bundle();
-                        b.putSerializable("eventitem", ei);
-                        i.putExtra("showSubject", false);
-                        i.putExtras(b);
-                        ActivitySubject.this.startActivity(i);
-                        //showEventDialog(ActivitySubject.this,ei,v,null);
+//                        Intent i = new Intent(ActivitySubject.this, ActivityCourse.class);
+//                        Bundle b = new Bundle();
+//                        b.putSerializable("eventitem", ei);
+//                        i.putExtra("showSubject", false);
+//                        i.putExtras(b);
+//                        ActivitySubject.this.startActivity(i);
+                        showEventDialog(ActivitySubject.this,ei,v,null);
                     }
                 });
             }
@@ -324,27 +325,80 @@ public class ActivitySubject extends BaseActivity {
         }
     }
 
+
+    class InitSubjectTask extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            if (!useCode) {
+                subject = allCurriculum.get(thisCurriculumIndex).getSubjectByName(subjectKey);
+            } else {
+                subject = allCurriculum.get(thisCurriculumIndex).getSubjectByCourseCode(subjectKey);
+            }
+            return subject!=null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            isFirst = false;
+            if((boolean)o){
+
+                initViews();
+                initToolBar();
+                initCourseList();
+                initProgress();
+                setInfos();
+                Double rate = 0.0;
+                Double sum = 0.0;
+                int size = 0;
+                for (Double f : subject.getRatingMap().values()) {
+                    if (f < 0) continue;
+                    sum += f;
+                    size++;
+                }
+                if (size == 0) rate = 0.0;
+                else rate =  sum / size;
+                ratingText.setText(df.format(rate) + "/5");
+            }
+        }
+    }
+
+    class RefreshSubjectTask extends AsyncTask{
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            if (!useCode) {
+                subject = allCurriculum.get(thisCurriculumIndex).getSubjectByName(subjectKey);
+            } else {
+                subject = allCurriculum.get(thisCurriculumIndex).getSubjectByCourseCode(subjectKey);
+            }
+            return subject!=null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+            if((boolean)o){
+                setInfos();
+                Double rate = 0.0;
+                Double sum = 0.0;
+                int size = 0;
+                for (Double f : subject.getRatingMap().values()) {
+                    if (f < 0) continue;
+                    sum += f;
+                    size++;
+                }
+                if (size == 0) rate = 0.0;
+                else rate =  sum / size;
+                ratingText.setText(df.format(rate) + "/5");
+            }
+        }
+    }
     @Override
     protected void onResume() {
         super.onResume();
-        if (!getIntent().getBooleanExtra("useCode", false)) {
-            subject = allCurriculum.get(thisCurriculumIndex).getSubjectByName(getIntent().getStringExtra("subject"));
-        } else {
-            subject = allCurriculum.get(thisCurriculumIndex).getSubjectByCourseCode(getIntent().getStringExtra("subject"));
-        }
-        if (subject != null){
-            setInfos();
-            Double rate = 0.0;
-            Double sum = 0.0;
-            int size = 0;
-            for (Double f : subject.getRatingMap().values()) {
-                if (f < 0) continue;
-                sum += f;
-                size++;
-            }
-            if (size == 0) rate = 0.0;
-            else rate =  sum / size;
-            ratingText.setText(df.format(rate) + "/5");
-        }
+        if(!isFirst) new RefreshSubjectTask().executeOnExecutor(TPE);
     }
 }

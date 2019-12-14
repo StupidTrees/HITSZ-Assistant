@@ -4,11 +4,12 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- 设置toolbar按钮样式-->
         <item name="drawerArrowStyle">@style/left_Drawer_Arrow_Style</item>
-        <item name="background_color_bottom">?android:attr/colorBackground</item>
+        <item name="background_color_bottom">@color/material_background_grey_50</item>
         <item name="text_color_primary">?android:attr/textColorPrimary</item>
         <item name="text_color_secondary">?android:attr/textColorSecondary</item>
         <item name="background_color_second">?android:attr/colorBackgroundFloating</item>
-        <item name="background_icon_color">#eEeEeE</item>
+        <item name="background_icon_color_bottom">#eDeDeD</item>
+        <item name="background_icon_color_second">#eDeDeD</item>
         <item name="toolbar_icon_color">#202020</item>
         <item name="text_color_iconic">#202020</item>
         <item name="toolbarStyle">@style/ToolBarTheme</item>
@@ -75,16 +76,18 @@
         <!--<item name="barLength">10dp</item>-->
         <!--<item name="gapBetweenBars">3dp</item>-->
     </style>
-    <!-- Timetable的toolbar三线按钮样式颜色-->
-    <style name="left_Drawer_Arrow_Style_TimeTable" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">true</item>
-        <item name="color">@color/material_text_icon_white</item>
-        <item name="barLength">6dp</item>
-        <item name="gapBetweenBars">2dp</item>
-        <item name="thickness">2dp</item>
+
+    <style name="Text_style_28sp_bold_primary">
+        <item name="android:textSize">28sp</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:textColor">?attr/text_color_primary</item>
+        <item name="android:fontFamily">sans-serif-black</item>
     </style>
-
-
+    <style name="Text_style_18sp_bold_secondary">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">?attr/text_color_secondary</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+    </style>
     <!--水波纹风格-->
     <style name="button_ripple_primary">
         <item name="android:colorControlHighlight">?attr/colorPrimary</item>
@@ -106,6 +109,23 @@
         <item name="android:radius">24dp</item>
     </style>
 
+    <!--水波纹风格-->
+    <style name="attitude_button_ripple_blue">
+        <item name="android:colorControlHighlight">@color/blue_primary</item>
+        <item name="android:radius">36dp</item>
+    </style>
+
+    <!--水波纹风格-->
+    <style name="attitude_button_ripple_red">
+        <item name="android:colorControlHighlight">@color/red_primary</item>
+        <item name="android:radius">36dp</item>
+    </style>
+
+    <!--水波纹风格-->
+    <style name="attitude_button_ripple_green">
+        <item name="android:colorControlHighlight">@color/green_primary</item>
+        <item name="android:radius">36dp</item>
+    </style>
     <!--switch风格-->
     <style name="switch_white" parent="Theme.AppCompat.Light">
         <!-- Active thumb color & Active track color(30% transparency) switch 打开时的拇指按钮的颜色 轨迹颜色默认为30%这个颜色 -->
@@ -146,9 +166,15 @@
         <!--<item name="colorControlNormal">?attr/toolbar_icon_color</item>-->
     </style>
 
-    <style name="ToolBarTheme_Light" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="ToolBarTheme_Light" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorButtonNormal">#FFFFFF</item>
         <item name="colorControlNormal">#FFFFFF</item>
+        <item name="actionMenuTextColor">#FFFFFF</item>
+        <item name="android:titleTextAppearance">@style/Toolbar_Light_TitleStyle</item>
+    </style>
+    
+    <style name="Toolbar_Light_TitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">#ffffff</item>
     </style>
 
     <style name="ToolBarTheme_Dark" parent="Theme.AppCompat.Light.NoActionBar">

@@ -8,7 +8,16 @@ import cn.bmob.v3.BmobObject;
 
 public class Infos extends BmobObject {
     String name;
+    String type;
     String json;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public JsonObject getJson(){
         try {
@@ -16,7 +25,7 @@ public class Infos extends BmobObject {
             return jp.parse(json).getAsJsonObject();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new JsonObject();
         }
     }
 
@@ -28,5 +37,18 @@ public class Infos extends BmobObject {
             e.printStackTrace();
             return null;
         }
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setJson(JsonObject jo){
+        json = jo.toString();
     }
 }

@@ -133,6 +133,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         getTheme().resolveAttribute(R.attr.text_color_primary, typedValue, true);
         return typedValue.data;
     }
+    public int getTextColorSecondary(){
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.text_color_secondary, typedValue, true);
+        return typedValue.data;
+    }
     public int getTextColorIconic(){
         TypedValue typedValue = new TypedValue();
         getTheme().resolveAttribute(R.attr.text_color_iconic, typedValue, true);
@@ -153,6 +158,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     public int getColorAccent(){
         TypedValue typedValue = new  TypedValue();
         getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true);
+        return typedValue.data;
+    }
+    public int getColorFade(){
+        TypedValue typedValue = new  TypedValue();
+        getTheme().resolveAttribute(R.attr.colorFade, typedValue, true);
+        return typedValue.data;
+    }
+
+    public int getColorControlNormal(){
+        TypedValue typedValue = new  TypedValue();
+        getTheme().resolveAttribute(R.attr.colorControlNormal, typedValue, true);
         return typedValue.data;
     }
 

@@ -37,6 +37,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -56,6 +57,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.getkeepsafe.taptargetview.TapTargetView;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.googlecode.tesseract.android.TessBaseAPI;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
@@ -68,24 +71,32 @@ import com.stupidtree.hita.fragments.FragmentTasks;
 import com.stupidtree.hita.fragments.FragmentTheme;
 import com.stupidtree.hita.fragments.FragmentTimeLine;
 import com.stupidtree.hita.fragments.FragmentTimeTablePage;
+import com.stupidtree.hita.online.ChatMessage;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.FileOperator;
 import com.tencent.bugly.beta.Beta;
 
+import org.ansj.domain.Term;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
 import static com.stupidtree.hita.HITAApplication.*;
 import static com.stupidtree.hita.activities.ActivityLoginJWTS.loginCheck;
+import static com.stupidtree.hita.activities.ActivityLoginUT.UT_login_url;
+import static com.stupidtree.hita.util.FileOperator.analyzeXls;
 import static com.stupidtree.hita.util.SafecodeUtil.getProcessedBitmap;
 import static com.stupidtree.hita.util.SafecodeUtil.splitBitmapInto;
 import static com.stupidtree.hita.util.UpdateManager.checkUpdate;
@@ -108,7 +119,6 @@ public class ActivityMain extends BaseActivity
     NavigationView mNavigationView;
     ImageView drawerUserAvatar;
     TextView drawerUserName, drawerSignature;
-    //FrameLayout drawerheader;
     ActionBarDrawerToggle mActionBarDrawerToggle;
     ViewPager mainPager;
     TabLayout mainTabs;
@@ -119,6 +129,7 @@ public class ActivityMain extends BaseActivity
     MenuItem dark_mode_menu;
     boolean isFirst;
 
+    boolean upDateNoti1202;
     @Override
     protected void stopTasks() {
 
@@ -129,20 +140,18 @@ public class ActivityMain extends BaseActivity
         super.onCreate(savedInstanceState);
         setWindowParams(true, true, false);
         isFirst = defaultSP.getBoolean("firstOpen", true);
-        app_task_enabled = defaultSP.getBoolean("app_task_enabled", false);
+        app_task_enabled = defaultSP.getBoolean("app_events_enabled", true);
+        upDateNoti1202 = defaultSP.getBoolean("update_noti_1202",true);
         tlf = FragmentTimeLine.newInstance(isFirst);
         nvf = new FragmentNavi();
         if (app_task_enabled) tskf = new FragmentTasks();
         checkAPPPermission();
         setContentView(R.layout.activity_main);
         fabmain = findViewById(R.id.fab_main);
-
         fabmain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // QACrawler.gogogo(String.valueOf(getExternalFilesDir("")));
-//
-                //List a = new ArrayList();
+                //buildHita();
                 if(isDataAvailable()){
                     Intent i = new Intent(ActivityMain.this, ActivityTimeTable.class);
                     startActivity(i);
@@ -165,7 +174,17 @@ public class ActivityMain extends BaseActivity
                 e.printStackTrace();
             }
         }
-        new InitTask(this).execute();
+        if(upDateNoti1202){
+            TapTargetView.showFor(this,   TapTarget.forView(mainTabs, "首页第三屏已解锁！", "如果不喜欢，可以到设置里关闭嘤嘤嘤")
+                    .drawShadow(true)
+                    .cancelable(false)
+                    .tintTarget(true)
+                    .transparentTarget(false)
+                    .outerCircleColor(R.color.blue_accent)
+                    .titleTextSize(24));
+            defaultSP.edit().putBoolean("update_noti_1202",false).commit();
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -176,30 +195,26 @@ public class ActivityMain extends BaseActivity
     }
 
     public static void autoLogin() {
+       // if (!defaultSP.getBoolean("ut_autologin", true)) return;
+        String ut_un = defaultSP.getString("ut_username",null);
+        if(ut_un!=null){
+            String ut_pw = defaultSP.getString(ut_un+".password",null);
+            if(ut_pw!=null) new loginUTInBackgroundTask(ut_un,ut_pw).executeOnExecutor(HITAApplication.TPE);
+        }
+
         if (!defaultSP.getBoolean("jwts_autologin", true)) return;
         if (CurrentUser != null) {
             String stun = CurrentUser.getStudentnumber();
             String password = null;
             if (!TextUtils.isEmpty(stun)) password = defaultSP.getString(stun + ".password", null);
             if (password != null) {
-                new loginJWTSInBackgroundTask(stun, password).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new loginJWTSInBackgroundTask(stun, password).executeOnExecutor(HITAApplication.TPE);
             }
         }
-    }
-    public static void autoLogin(SwipeRefreshLayout refreshLayout) {
-        if (!defaultSP.getBoolean("jwts_autologin", true)) {
-            refreshLayout.setRefreshing(false);
-            return;
-        }
-        if (CurrentUser != null) {
-            String stun = CurrentUser.getStudentnumber();
-            String password = null;
-            if (!TextUtils.isEmpty(stun)) password = defaultSP.getString(stun + ".password", null);
-            if (password != null) {
-                new loginJWTSInBackgroundTask(stun, password,refreshLayout).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }else  refreshLayout.setRefreshing(false);
-        }else  refreshLayout.setRefreshing(false);
-    }
+
+
+     }
+
 
     void initToolBar() {
         mToolbar = findViewById(R.id.toolbar);
@@ -232,9 +247,10 @@ public class ActivityMain extends BaseActivity
         ArrayList fragments = new ArrayList();
         fragments.add(nvf);
         fragments.add(tlf);
+       // fragments.add(new FragmentTasksBackUp());
         if (tskf != null & app_task_enabled) fragments.add(tskf);
         mainTabs.setSelectedTabIndicatorColor(Color.parseColor("#00000000"));
-        pagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), fragments, new String[]{"校园", "今日", "任务"});
+        pagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), fragments, new String[]{"校园", "今日","事务"});
         mainTabs.setupWithViewPager(mainPager);
 
         mainPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -263,24 +279,6 @@ public class ActivityMain extends BaseActivity
         mainPager.setAdapter(pagerAdapter);
         mainPager.setCurrentItem(1);
 
-    }
-
-    public void presentActivity(Activity activity, View view) {
-        int revealX, revealY;
-        if (view == null) {
-            revealX = 0;
-            revealY = 0;
-        } else {
-            revealX = (int) (view.getX() + view.getWidth() / 2);
-            revealY = (int) (view.getY() + view.getHeight() / 2);
-        }
-        Intent intent = new Intent(this, ActivityChatbot.class);
-        intent.putExtra(ActivityJWTS.EXTRA_CIRCULAR_REVEAL_X, revealX);
-        intent.putExtra(ActivityJWTS.EXTRA_CIRCULAR_REVEAL_Y, revealY);
-
-        if (view != null) view.setVisibility(View.VISIBLE);
-        ActivityCompat.startActivity(activity, intent, null);
-        overridePendingTransition(0, 0);
     }
 
     public void presentActivity(Activity activity, int revealX, int revealY) {
@@ -411,7 +409,7 @@ public class ActivityMain extends BaseActivity
 
 
     public static void saveData() {
-        new SaveDataTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new SaveDataTask().executeOnExecutor(HITAApplication.TPE);
     }
 
 
@@ -494,14 +492,8 @@ public class ActivityMain extends BaseActivity
         drawer_card_dynamic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!app_task_enabled) {
-                    Toast.makeText(HContext, "开启任务模块方可使用！", Toast.LENGTH_SHORT).show();
-                } else {
                     Intent pp = new Intent(ActivityMain.this, ActivityDynamicTable.class);
                     ActivityMain.this.startActivity(pp);
-                }
-//
-
             }
         });
         avatar_card.setOnClickListener(new onUserAvatarClickListener());
@@ -520,29 +512,6 @@ public class ActivityMain extends BaseActivity
         });
         mDrawerLayout.setStatusBarBackgroundColor(Color.parseColor("#00000000"));
         mDrawerLayout.setScrimColor(Color.parseColor("#00000000"));
-//        final CoordinatorLayout mainPage = findViewById(R.id.mainpage);
-//        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-//
-//            @Override
-//            public void onDrawerSlide(@NonNull View view, float v) {
-//                mainPage.setX(v * view.getWidth());
-//            }
-//
-//            @Override
-//            public void onDrawerOpened(@NonNull View view) {
-//
-//            }
-//
-//            @Override
-//            public void onDrawerClosed(@NonNull View view) {
-//
-//            }
-//
-//            @Override
-//            public void onDrawerStateChanged(int i) {
-//
-//            }
-//        });
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -556,23 +525,6 @@ public class ActivityMain extends BaseActivity
                         Intent d = new Intent(ActivityMain.this, ActivityAboutHITA.class);
                         ActivityMain.this.startActivity(d);
                         break;
-//                    case R.id.drawer_nav_user:
-//                        drawerUserAvatar.callOnClick();
-//                        break;
-//                    case R.id.drawer_nav_theme:
-//                        Intent p = new Intent(ActivityMain.this,FragmentTheme.class);
-//                        ActivityMain.this.startActivity(p);
-//                        break;
-//                    case R.id.drawer_nav_dynamictimetable:
-//                        Intent pp = new Intent(ActivityMain.this,ActivityDynamicTable.class);
-//                        ActivityMain.this.startActivity(pp);
-//                        break;
-//                    case R.id.drawer_nav_datamanage:
-//                        //ActivityOptionsCompat op = ActivityOptionsCompat.makeSceneTransitionAnimation(ActivityMain.this);
-//                        Intent i = new Intent(ActivityMain.this, ActivityCurriculumManager.class);
-//                        startActivity(i);
-//                        break;
-
                     case R.id.drawer_nav_info:
                         Intent ppp = new Intent(ActivityMain.this, ActivityHITSZInfo.class);
                         startActivity(ppp);
@@ -587,6 +539,9 @@ public class ActivityMain extends BaseActivity
                         break;
                     case R.id.drawer_nav_jwts:
                         ActivityUtils.startJWTSActivity(ActivityMain.this);
+                        break;
+                    case R.id.drawer_nav_ut:
+                        ActivityUtils.startUTActivity(ActivityMain.this);
                         break;
                     case R.id.drawer_nav_report:
                         try {
@@ -677,6 +632,11 @@ public class ActivityMain extends BaseActivity
         refreshDrawerHeader();
     }
 
+    @Override
+    public void onCalledRefresh() {
+
+    }
+
 
     class onUserAvatarClickListener implements View.OnClickListener {
         @Override
@@ -744,34 +704,6 @@ public class ActivityMain extends BaseActivity
     }
 
 
-    static class InitTask extends AsyncTask {
-
-        Activity activity;
-
-        InitTask(Activity f) {
-            activity = f;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //Log.e("time_test","initialize:begin");
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            initCoreData();
-
-            timeWatcher.refreshProgress(true, true);
-            //Log.e("time_test","initialize:end");
-            Intent i = new Intent();
-            i.setAction("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
-            activity.sendBroadcast(i);
-
-            return null;
-        }
-
-    }
 
     public static class loginJWTSInBackgroundTask extends AsyncTask {
 
@@ -796,7 +728,7 @@ public class ActivityMain extends BaseActivity
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            if (checkLogin()) return true;
+            if (checkLogin_jwts()) return true;
             File dict = new File(HContext.getFilesDir() + "/tessdata/eng.traineddata");
             String path = HContext.getFilesDir() + "/tessdata/";
             File f = new File(path);
@@ -818,14 +750,14 @@ public class ActivityMain extends BaseActivity
                 byte[] checkPic;
                 try {
                     //第一次访问登录界面
-                    Connection.Response response = Jsoup.connect("http://jwts.hitsz.edu.cn/").timeout(30000).execute();
+                    Connection.Response response = Jsoup.connect("http://jwts.hitsz.edu.cn/").timeout(5000).execute();;
                     //得到系统返回的Cookies
-                    cookies.clear();
-                    cookies.putAll(response.cookies());
-                    //Log.e("cookie:",cookies.toString()+" ");
+                    cookies_jwts.clear();
+                    cookies_jwts.putAll(response.cookies());
+                    //Log.e("cookie:",cookies_jwts.toString()+" ");
                     //请求获得验证码的内容
-                    checkPic = Jsoup.connect("http://jwts.hitsz.edu.cn/captchaImage").cookies(cookies).ignoreContentType(true).execute().bodyAsBytes();
-                    if (checkPic.length == 0 || cookies.size() == 0) continue;
+                    checkPic = Jsoup.connect("http://jwts.hitsz.edu.cn/captchaImage").cookies(cookies_jwts).ignoreContentType(true).execute().bodyAsBytes();
+                    if (checkPic.length == 0 || cookies_jwts.size() == 0) continue;
                     Bitmap bm = BitmapFactory.decodeByteArray(checkPic, 0, checkPic.length);
                     Bitmap res = getProcessedBitmap(bm);
                     StringBuilder result = new StringBuilder();
@@ -836,20 +768,20 @@ public class ActivityMain extends BaseActivity
                     }
                     String loginResult = loginCheck(username, password, result.toString());
                     if (loginResult.contains("成功")) {
-                        HITAApplication.login = true;
+                        HITAApplication.login_jwts = true;
                         break;
                     } else if (loginResult.startsWith("ALT:") && loginResult.contains("密码")) {
-                        cookies.clear();
+                        cookies_jwts.clear();
                         Message msg = ToastHander.obtainMessage();
                         Bundle b = new Bundle();
                         b.putString("msg", "密码错误，后台登录失败");
                         msg.setData(b);
                         ToastHander.sendMessage(msg);
-                        HITAApplication.login = false;
+                        HITAApplication.login_jwts = false;
                         break;
                     } else {
-                        cookies.clear();
-                        login = false;
+                        cookies_jwts.clear();
+                        login_jwts = false;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -857,7 +789,7 @@ public class ActivityMain extends BaseActivity
                 }
             }
             baseApi.end();
-            return !cookies.isEmpty();
+            return !cookies_jwts.isEmpty();
         }
 
         @Override
@@ -870,18 +802,148 @@ public class ActivityMain extends BaseActivity
                 i.setAction("COM.STUPIDTREE.HITA.JWTS_AUTO_LOGIN_DONE");
                 LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
             } else {
-                cookies.clear();
-                login = false;
+                cookies_jwts.clear();
+                login_jwts = false;
                 Intent i = new Intent();
                 i.setAction("COM.STUPIDTREE.HITA.JWTS_LOGIN_FAIL");
                 LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
             }
         }
     }
+    public static class loginUTInBackgroundTask extends AsyncTask {
 
-    public static boolean checkLogin() {
+        String username, password;
+       // SwipeRefreshLayout refreshLayout = null;
+
+        loginUTInBackgroundTask(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+          //  if(refreshLayout!=null) refreshLayout.setRefreshing(true);
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            if(cookies_ut.isEmpty()){
+                String temped = defaultSP.getString("ut_cookies",null);
+                if(temped!=null){
+                    HashMap cookies = new Gson().fromJson(temped,HashMap.class);
+                    cookies_ut.putAll(cookies);
+                }
+            }
+            if (checkLogin_UT()) return true;
+            try {
+                Connection.Response response = Jsoup.connect(UT_login_url)
+                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .timeout(5000).execute();
+                cookies_ut.clear();
+                cookies_ut.putAll(response.cookies());
+                Document d = Jsoup.connect(UT_login_url)
+                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .cookies(cookies_ut).get();
+                //System.out.println(d);
+                String lt = d.getElementsByAttributeValue("name","lt").first().attr("value");
+
+                Document after =  Jsoup.connect(UT_login_url)
+                        .cookies(cookies_ut).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
+                        .data("username",username)
+                        .data("password", Base64.encodeToString(password.getBytes(),Base64.DEFAULT))
+                        .data("lt",lt)
+                        .data("Connection","keep-alive")
+                        .data("_eventId","submit").post();
+                //System.out.println(after);
+                //Log.e("cookies", String.valueOf(cookies_ut));
+                if (after.toString().contains("姓 名：")) return true;
+                else if(after.toString().contains("您已在别的终端登录"))
+                {
+                    Log.e("UT","多终端登录，改变链接");
+                    Document after2 =  Jsoup.connect(UT_login_url)
+                            .cookies(cookies_ut).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
+                            .data("username",username)
+                            .data("password", Base64.encodeToString(password.getBytes(),Base64.DEFAULT))
+                            .data("Connection","keep-alive")
+                            .data("lt",lt)
+                            .data("continueLogin","1")
+                            .data("_eventId","submit").post();
+                   if(after2.toString().contains("姓 名：")){
+                       ut_username = username;
+                       return true;
+                   }else return false;
+                }
+                else return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+          //  return !cookies_ut.isEmpty();
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+           // if(refreshLayout!=null) refreshLayout.setRefreshing(false);
+            if ((Boolean) o) {
+                login_ut = true;
+                ut_username = username;
+                Log.e("!", "UT登录成功");
+                Intent i = new Intent();
+                i.setAction("COM.STUPIDTREE.HITA.UT_AUTO_LOGIN_DONE");
+                LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
+            } else {
+                cookies_ut.clear();
+                login_ut = false;
+                Intent i = new Intent();
+                i.setAction("COM.STUPIDTREE.HITA.UT_LOGIN_FAIL");
+                LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
+            }
+        }
+    }
+
+    void buildHita(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, List<List<String>>> m = analyzeXls(getExternalFilesDir(null)+"/table.xls");
+                for(Map.Entry<String,List<List<String>>> qa:m.entrySet()){
+                    List<List<String>> row = qa.getValue();
+                    for(List<String> column:row){
+                        String q = column.get(0);
+                        String a = column.get(1);
+                        ChatMessage cm = new ChatMessage();
+                        cm.setTag("baseQA");
+                        cm.setQueryText(q);
+                        JsonObject jo = new JsonObject();
+                        jo.addProperty("message_show",a);
+                        cm.setAnswer(jo.toString());
+                        List<String> arr = new ArrayList();
+                        for(Term t: ToAnalysis.parse(q)) arr.add(t.getName());
+                        cm.setQueryArray(arr);
+                        try {
+                            cm.saveSync();
+                            Log.e("done","q:"+q+";a:"+a);
+                        } catch (Exception e) {
+                            continue;
+                        }
+
+                    }
+                }
+            }
+        }).start();
+
+
+    }
+
+    public static boolean checkLogin_jwts() {
         try {
-            Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn/xswhxx/queryXswhxx").cookies(cookies).timeout(20000)
+            Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn/xswhxx/queryXswhxx").cookies(cookies_jwts).timeout(5000)
                     .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                     .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                     .header("Content-Type", "application/x-www-form-urlencoded")
@@ -895,5 +957,30 @@ public class ActivityMain extends BaseActivity
         }
         return true;
     }
-
+    public static boolean checkLogin_UT(){
+        try {
+            //  HashMap tempC = new HashMap()
+            Connection.Response r = Jsoup.connect("http://10.64.1.15/sfrzwhlgportalHome.action")
+                    .data("errorcode","1")
+                    .header("Connection","keep-alive")
+                    .data("continueurl","http://ecard.utsz.edu.cn/accountcardUser.action")
+                    .data("ssoticketid",ut_username)
+                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36").header("Connection","keep-alive")
+                    .execute();
+            cookies_ut_card.clear();
+            cookies_ut_card.putAll(r.cookies());
+            Document d2 = Jsoup.connect("http://10.64.1.15/accountcardUser.action")
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+                    .header("Connection","keep-alive")
+                    .header("Host","10.64.1.15")
+                    .cookies(cookies_ut_card)
+                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .get();
+            return  d2.toString().contains("余额");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

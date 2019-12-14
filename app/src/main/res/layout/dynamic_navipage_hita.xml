@@ -25,9 +25,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginRight="24dp"
+            android:layout_marginRight="16dp"
             android:layout_marginBottom="8dp"
             android:orientation="horizontal">
 
@@ -38,7 +38,7 @@
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-black"
                 android:gravity="center|start"
-                android:text="希塔"
+                android:text="校园生活"
                 android:textColor="?attr/text_color_primary"
                 android:textSize="18sp" />
 
@@ -50,7 +50,8 @@
                 android:gravity="center"
                 android:text="希塔"
                 android:textColor="?attr/text_color_primary"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -61,152 +62,205 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/hita_item1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackground"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/gradient_round"
-                    android:padding="10dp"
-                    android:tint="@color/material_text_icon_white"
-                    app:srcCompat="@drawable/ic_lunch" />
+                <LinearLayout
+                    android:id="@+id/hita_item2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center|left"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/gradient_round"
+                        android:padding="10dp"
+                        android:tint="@color/material_text_icon_white"
+                        app:srcCompat="@drawable/ic_lostandfound" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="丢东西了吗"
+                            android:textColor="?attr/text_color_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/hita_course"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|top"
+                            android:layout_marginTop="4dp"
+                            android:text="失物寻物"
+                            android:textColor="?attr/text_color_primary"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/hita_item3"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="16dp"
-                    android:orientation="vertical">
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="24dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:orientation="horizontal">
 
-                    <TextView
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/gradient_round"
+                        android:padding="10dp"
+                        android:tint="@color/material_text_icon_white"
+                        app:srcCompat="@drawable/ic_thumbs_up_down" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="排行榜"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="12sp" />
+                        android:layout_marginLeft="16dp"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/hita_canteen"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|top"
-                        android:layout_marginTop="4dp"
-                        android:text="食堂排行"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="表个态吧"
+                            android:textColor="?attr/text_color_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/hita_explore"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|top"
+                            android:layout_marginTop="4dp"
+                            android:text="态度墙"
+                            android:textColor="?attr/text_color_primary"
+                            android:textSize="16sp" />
+                    </LinearLayout>
                 </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/hita_item2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackground"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/gradient_round"
-                    android:padding="10dp"
-                    android:tint="@color/material_text_icon_white"
-                    app:srcCompat="@drawable/ic_lostandfound" />
-
                 <LinearLayout
+                    android:id="@+id/hita_item4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-                    android:orientation="vertical">
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="24dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:orientation="horizontal">
 
-                    <TextView
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/gradient_round"
+                        android:padding="10dp"
+                        android:tint="@color/material_text_icon_white"
+                        app:srcCompat="@drawable/ic_card" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="丢东西了吗"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="12sp" />
+                        android:layout_marginLeft="16dp"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/hita_course"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|top"
-                        android:layout_marginTop="4dp"
-                        android:text="失物招领"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="应该能用的"
+                            android:textColor="?attr/text_color_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/hita_ut"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|top"
+                            android:layout_marginTop="4dp"
+                            android:text="校园卡管理"
+                            android:textColor="?attr/text_color_primary"
+                            android:textSize="16sp" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/hita_item3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="24dp"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackground"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/gradient_round"
-                    android:padding="10dp"
-                    android:tint="@color/material_text_icon_white"
-                    app:srcCompat="@drawable/fab_navigation" />
 
                 <LinearLayout
+                    android:id="@+id/hita_item1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-                    android:orientation="vertical">
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:orientation="horizontal">
 
-                    <TextView
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/gradient_round"
+                        android:padding="10dp"
+                        android:tint="@color/material_text_icon_white"
+                        app:srcCompat="@drawable/ic_lunch" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="发现今日大学城"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="12sp" />
+                        android:layout_marginLeft="16dp"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/hita_explore"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|top"
-                        android:layout_marginTop="4dp"
-                        android:text="探索模式"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="用户评分"
+                            android:textColor="?attr/text_color_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/hita_canteen"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|top"
+                            android:layout_marginTop="4dp"
+                            android:text="食堂排行"
+                            android:textColor="?attr/text_color_primary"
+                            android:textSize="16sp" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
-            <Button
-                android:id="@+id/button"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="和希塔对话"
-                android:textColor="?attr/text_color_secondary"
-                android:visibility="gone" />
+            </LinearLayout>
 
         </LinearLayout>
 

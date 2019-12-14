@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.diy.CornerTransform;
 import com.stupidtree.hita.online.Location;
@@ -100,7 +101,8 @@ public class LostAndFoundListAdapter extends RecyclerView.Adapter <LostAndFoundL
         if(mBeans.get(i).getLocation()!=null&&mBeans.get(i).getLocation().getName()==null
         ||mBeans.get(i).getAuthor().getNick()==null
         ){
-            new loadLAFTask(societyViewholder,mBeans.get(i)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new loadLAFTask(societyViewholder,mBeans.get(i)).executeOnExecutor(
+                    HITAApplication.TPE);
         }
         if(CurrentUser!=null&& CurrentUser.getObjectId() .equals(mBeans.get(i).getAuthor().getObjectId())){
             societyViewholder.delete.setVisibility(View.VISIBLE);
@@ -200,10 +202,12 @@ public class LostAndFoundListAdapter extends RecyclerView.Adapter <LostAndFoundL
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            BmobQuery<HITAUser> bq_usr= new BmobQuery();
-            bq_usr.addWhereEqualTo("objectId",lostAndFound.getAuthor().getObjectId());
-            List<HITAUser> res_usr = bq_usr.findObjectsSync(HITAUser.class);
-                    if(res_usr!=null&&res_usr.size()>0) user = res_usr.get(0);
+            if(!lostAndFound.isAnonymous()){
+                BmobQuery<HITAUser> bq_usr= new BmobQuery();
+                bq_usr.addWhereEqualTo("objectId",lostAndFound.getAuthor().getObjectId());
+                List<HITAUser> res_usr = bq_usr.findObjectsSync(HITAUser.class);
+                if(res_usr!=null&&res_usr.size()>0) user = res_usr.get(0);
+            }
             if(lostAndFound.getLocation()!=null){
                 BmobQuery<Location> bq = new BmobQuery();
                 bq.addWhereEqualTo("objectId",lostAndFound.getLocation().getObjectId());
@@ -225,16 +229,18 @@ public class LostAndFoundListAdapter extends RecyclerView.Adapter <LostAndFoundL
                             //.signature(new ObjectKey(String.valueOf(System.currentTimeMillis())))
                             .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                             .into(viewholder.avatar);
-                    if(mOnPostClickListener!=null){
-                        viewholder.card.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mOnPostClickListener.OnClick(v,lostAndFound,user);
-                            }
-                        });
-                    }
+                }else if(lostAndFound.isAnonymous()){
+                    viewholder.author.setText("匿名");
+                    viewholder.image.setImageResource(R.drawable.ic_account);
                 }else Toast.makeText(HContext,"获取用户信息失败！",Toast.LENGTH_SHORT).show();
-
+                if(mOnPostClickListener!=null){
+                    viewholder.card.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mOnPostClickListener.OnClick(v,lostAndFound,user);
+                        }
+                    });
+                }
 
                 if(location!=null){
                     viewholder.location_card.setVisibility(View.VISIBLE);

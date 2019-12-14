@@ -17,7 +17,7 @@
         android:visibility="visible"
         app:cardBackgroundColor="?attr/background_color_second"
         app:cardCornerRadius="16dp"
-        app:cardElevation="@dimen/navi_page_card_elevation">
+        app:cardElevation="8dp">
 
 
         <ImageView

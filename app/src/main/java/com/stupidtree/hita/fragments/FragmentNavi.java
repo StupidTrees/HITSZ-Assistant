@@ -4,26 +4,29 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.AttributeSet;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,60 +35,70 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.activities.ActivityRankBoard;
 import com.stupidtree.hita.adapter.HITSZInfoPagerAdapter;
 
 import com.stupidtree.hita.adapter.NaviPageAdapter;
+import com.stupidtree.hita.core.TimeTable;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
+import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.online.BannerItem;
 
+import com.stupidtree.hita.online.HITAUser;
+import com.stupidtree.hita.online.Infos;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZHolderCreator;
 import com.zhouwei.mzbanner.holder.MZViewHolder;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.FindListener;
 
+import static com.stupidtree.hita.HITAApplication.CurrentUser;
+import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
+import static com.stupidtree.hita.HITAApplication.isDataAvailable;
+import static com.stupidtree.hita.HITAApplication.mainTimeTable;
+import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_BOARD_JW;
+import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_CARD;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_HINT;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_HITA;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_JWTS_FUN;
+import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_MOOD;
+import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_NEWS;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.strToIntegerList;
 
 public class FragmentNavi extends BaseFragment {
 
-
-    // SearchView searchview;
-   MZBannerView banner;
+    public static final String ORDER_NAME = "navi_page_order_9";
+   MZBannerView<BannerItem> banner;
     List<BannerItem> bannerItemList;
-
-    HITSZInfoPagerAdapter pagerAdapter;
-    //List<Fragment> fragments;
-    //TabLayout tab;
-    //ViewPager pager;
-    LinearLayout card_info_layout;
+    TextView title,subtitle;
+    ImageView settingButton;
     BroadcastReceiver broadcastReceiver;
     List<Integer> listRes;
     RecyclerView list;
     NaviPageAdapter listAdapter;
     SwipeRefreshLayout refreshLayout;
     Gson gson;
-
+    HashMap<Integer,String> type_name_map = new HashMap();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -95,38 +108,25 @@ public class FragmentNavi extends BaseFragment {
         initBanner(v);
         // initCanteen(v);
 //        pagePreference(v);
-        refreshBanner();
+        //refreshBanner();
         initBroadcastReceiver();
         initList(v);
         return v;
     }
 
     void initList(View v) {
+        type_name_map.put(TYPE_MOOD,"navi_enabled_mood");
+        type_name_map.put(TYPE_NEWS,"navi_enabled_news");
+        type_name_map.put(TYPE_BOARD_JW,"navi_enabled_jw");
+        type_name_map.put(TYPE_JWTS_FUN,"navi_enabled_jw_sync");
+        type_name_map.put(TYPE_CARD,"navi_enabled_card");
+        type_name_map.put(TYPE_HITA,"navi_enabled_life");
         gson = new Gson();
         list = v.findViewById(R.id.navipage_list);
         listRes = new ArrayList<>();
-        List<Integer> order  = strToIntegerList(defaultSP.getString("navi_page_order_2","[]"));
-        if(order.size()>0){
-            for(int i=0;i<order.size();i++){
-                if(order.get(i)!=TYPE_JWTS_FUN&&order.get(i)!=TYPE_HINT) listRes.add(order.get(i));
-            }
-            if(!order.contains(TYPE_HITA)) listRes.add(NaviPageAdapter.TYPE_HITA);
-        }else{
-            listRes.add(NaviPageAdapter.TYPE_HITA);
-            listRes.add(NaviPageAdapter.TYPE_BULLETIN);
-            listRes.add(NaviPageAdapter.TYPE_BOARD_JW);
-           // listRes.add(NaviPageAdapter.TYPE_BOARD_SERVICE);
-            listRes.add(NaviPageAdapter.TYPE_LECTURE);
-            listRes.add(NaviPageAdapter.TYPE_IPNEWS);
-
-        }
-        if(defaultSP.getBoolean("first_enter_navipage_hint_drag",true)){
-            listRes.add(0,NaviPageAdapter.TYPE_HINT);
-        }
-    
         listAdapter = new NaviPageAdapter(listRes, getContext());
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         NaviPageAdapter.mCallBack mCallBack = new NaviPageAdapter.mCallBack(listAdapter);
         ItemTouchHelper helper = new ItemTouchHelper(mCallBack);
         helper.attachToRecyclerView(list);
@@ -139,39 +139,24 @@ public class FragmentNavi extends BaseFragment {
                 if (intent.getAction().equals("COM.STUPIDTREE.HITA.JWTS_AUTO_LOGIN_DONE")) {
                     Log.e("接受到广播：", "登录教务完成");
                     int addIndex_jw_fun = listRes.indexOf(defaultSP.getInt("navi_page_order_before_jwts", TYPE_BOARD_JW))+1;
-//                    int addIndex_exam = listRes.indexOf(defaultSP.getInt("navi_page_order_before_jwts_exam", TYPE_BOARD_JW))+1;
-//                    int addIndex_xfj = listRes.indexOf(defaultSP.getInt("navi_page_order_before_jwts_xfj", TYPE_BOARD_JW))+1;
-//                    int addIndex_xk = listRes.indexOf(defaultSP.getInt("navi_page_order_before_jwts_xk", TYPE_BOARD_JW))+1;
-//                    SparseArray<Integer> m_exam,m_xfj,m_xk;
-//                    m_exam = new SparseArray<>();
-//                    m_xfj = new SparseArray<>();
-//                    m_xk = new SparseArray<>();
-//                    m_exam.put(0,TYPE_EXAM);
-//                    m_exam.put(1,addIndex_exam);
-//                    m_xfj.put(0,TYPE_JWTS_XFJ);
-//                    m_xfj.put(1,addIndex_xfj);
-//                    m_xk.put(0,TYPE_JWTS_XK);
-//                    m_xk.put(1,addIndex_xk);
-//                    SparseArray<Integer>[] list = new SparseArray[]{m_exam,m_xfj,m_xk};
-//                    for(int i= 1;i>=0;i--){
-//                        for(int j=0;j<=i;j++){
-//                            if(list[j].get(1)<list[j+1].get(1)){
-//                                SparseArray temp = list[j];
-//                                list[j] = list[j+1];
-//                                list[j+1] = temp;
-//                            }
-//                        }
-//                    }
-//                    for(int i=0;i<3;i++){
-//                        listAdapter.addItem(list[i].get(0),list[i].get(1));
-//                    }
-                    listAdapter.addItem(TYPE_JWTS_FUN,addIndex_jw_fun);
-//                    listAdapter.addItem(TYPE_JWTS_XFJ,addIndex_xfj);
-//                    listAdapter.addItem(TYPE_EXAM, addIndex_exam);
-                    //list.scrollToPosition(0);
+                    if(PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("navi_enabled_jw_sync",true))listAdapter.addItem(TYPE_JWTS_FUN,addIndex_jw_fun);
                 } else if (intent.getAction().equals("COM.STUPIDTREE.HITA.JWTS_LOGIN_FAIL")) {
                     Log.e("接受到广播：", "登录教务失效");
                     listAdapter.removeItems(new int[]{TYPE_JWTS_FUN});
+                }
+
+                if (intent.getAction().equals("COM.STUPIDTREE.HITA.UT_AUTO_LOGIN_DONE")) {
+                    Log.e("接受到广播：", "登录大学城完成");
+                    int addIndex_ut_card = listRes.indexOf(defaultSP.getInt("navi_page_order_before_ut_card", TYPE_BOARD_JW))+1;
+                    if(PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("navi_enabled_card",true)) listAdapter.addItem(TYPE_CARD,addIndex_ut_card);
+                } else if (intent.getAction().equals("COM.STUPIDTREE.HITA.UT_LOGIN_FAIL")) {
+                    Log.e("接受到广播：", "登录大学城失效");
+                    listAdapter.removeItems(new int[]{TYPE_CARD});
+                }
+                if(intent.getAction().equals("COM.STUPIDTREE.HITA.USER_INFO_FETCHED")){
+                    Log.e("接受到广播：", "用户信息同步完成");
+                    listAdapter.notifyItemChanged(listRes.indexOf(TYPE_MOOD));
+                   // list.scrollToPosition(0);
                 }
 
             }
@@ -179,16 +164,56 @@ public class FragmentNavi extends BaseFragment {
         IntentFilter ifi = new IntentFilter();
         ifi.addAction("COM.STUPIDTREE.HITA.JWTS_AUTO_LOGIN_DONE");
         ifi.addAction("COM.STUPIDTREE.HITA.JWTS_LOGIN_FAIL");
+        ifi.addAction("COM.STUPIDTREE.HITA.UT_AUTO_LOGIN_DONE");
+        ifi.addAction("COM.STUPIDTREE.HITA.UT_LOGIN_FAIL");
+        ifi.addAction("COM.STUPIDTREE.HITA.USER_INFO_FETCHED");
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, ifi);
     }
 
     void initViews(View v) {
+        settingButton = v.findViewById(R.id.navi_setting);
+        title = v.findViewById(R.id.navi_title);
+        subtitle = v.findViewById(R.id.navi_subtitle);
         refreshLayout = v.findViewById(R.id.refresh);
         refreshLayout.setColorSchemeColors(new int[]{((BaseActivity)getActivity()).getColorPrimary(),((BaseActivity)getActivity()).getColorPrimaryDark()});
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ActivityMain.autoLogin(refreshLayout);
+             Refresh(true,true);
+            }
+        });
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final List<Integer> order = strToIntegerList(defaultSP.getString(ORDER_NAME,"[]"));
+                SharedPreferences sp =  PreferenceManager.getDefaultSharedPreferences(HContext);
+                String[] x = new String[]{"校区新闻","校园生活","校园心情","教务功能","教务同步窗(教务连接后显示)","校园卡管理（连接大学城内网后显示）"};
+                final String[] preferenceIds = new String[]{"navi_enabled_news","navi_enabled_life","navi_enabled_mood","navi_enabled_jw","navi_enabled_jw_sync","navi_enabled_card"};
+                final Integer[] preferenceTyps = new Integer[]{TYPE_NEWS,TYPE_HITA,TYPE_MOOD,TYPE_BOARD_JW,TYPE_JWTS_FUN,TYPE_CARD};
+                boolean[] y = new boolean[6];
+                for(int i=0;i<6;i++) y[i] = sp.getBoolean(preferenceIds[i],true);
+                final SharedPreferences.Editor edt = sp.edit();
+                final boolean[] changed = {false};
+                AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle("设置导航页内容").setMultiChoiceItems(x, y,new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        changed[0] = true;
+                        edt.putBoolean(preferenceIds[i],b).commit();
+                        if(b&&!order.contains(preferenceTyps[i])) order.add(preferenceTyps[i]);
+                        listAdapter.saveOrders(order);
+                    }
+                }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Refresh(true,false);
+                    }
+                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        Refresh(changed[0],false);
+                    }
+                }).create();
+                ad.show();
             }
         });
     }
@@ -226,6 +251,13 @@ public class FragmentNavi extends BaseFragment {
 
     @Override
     public void Refresh() {
+
+    }
+
+
+    public void Refresh(boolean animate,boolean swipe) {
+        refreshBanner();
+        new RefreshTask(animate,swipe).executeOnExecutor(TPE);
     }
 
 
@@ -276,10 +308,12 @@ public class FragmentNavi extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Refresh();
-        banner.start();
-
-
+        title.setText((now.get(Calendar.MONTH)+1)+"月"+now.get(Calendar.DAY_OF_MONTH)+"日");
+        if(isDataAvailable()){
+            subtitle.setText("第"+mainTimeTable.core.getWeekOfTerm(now)+"周 "+ TextTools.words_time_DOW[TimeTable.getDOW(now)-1]);
+        }else subtitle.setText("无学期数据");
+        Refresh(false,false);
+        //banner.start();
         //refreshBanner();
         //refreshCanteen();
         //banner.start();
@@ -355,6 +389,137 @@ public class FragmentNavi extends BaseFragment {
         }
     }
 
+
+//    class refreshPageTask extends AsyncTask{
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            refreshLayout.setRefreshing(true);
+//            Refresh();
+//        }
+//
+//        @Override
+//        protected Object doInBackground(Object[] objects) {
+//            try {
+//
+//                BmobQuery<BannerItem> bq = new BmobQuery<>();
+//                List<BannerItem> result = bq.findObjectsSync(BannerItem.class);
+//                if(result.size()>0){
+//                    bannerItemList.clear();
+//                    bannerItemList.addAll(result);
+//                }
+//                ActivityMain.autoLogin();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @SuppressLint("SetTextI18n")
+//        @Override
+//        protected void onPostExecute(Object o) {
+//            super.onPostExecute(o);
+//            refreshLayout.setRefreshing(false);
+//            if (bannerItemList.size() > 0) {
+//                if (bannerItemList.size() == 1) banner.setCanLoop(false);
+//                else banner.setCanLoop(true);
+//                banner.setPages(bannerItemList, new MZHolderCreator<BannerViewHolder>() {
+//                    @Override
+//                    public BannerViewHolder createViewHolder() {
+//                        return new BannerViewHolder();
+//                    }
+//                });
+//                banner.start();
+//            } else if (bannerItemList.size() == 0) {
+//                BannerItem temp = new BannerItem();
+//                temp.setImageUri("https://bmob-cdn-26359.bmobpay.com/2019/08/10/23ab6917400d551a805267303f0f840a.jpg");
+//                temp.setTitle("同学们好");
+//                temp.setAction(new JsonObject().toString());
+//                temp.setSubtitle("加载banner失败");
+//                bannerItemList.add(temp);
+//                banner.setCanLoop(false);
+//                banner.setPages(bannerItemList, new MZHolderCreator<BannerViewHolder>() {
+//                    @Override
+//                    public BannerViewHolder createViewHolder() {
+//                        return new BannerViewHolder();
+//                    }
+//                });
+//                banner.start();
+//                //Toast.makeText(HContext,"加载banner出错！"+e.toString(),Toast.LENGTH_SHORT).show();
+//            }
+//            listAdapter.notifyDataSetChanged();
+//            list.scheduleLayoutAnimation();
+//        }
+//    }
+
+    class RefreshTask extends AsyncTask{
+        List<Integer> order;
+        boolean animate;
+        boolean swipeRefresh;
+        HashMap<Integer,Boolean> enabled;
+        RefreshTask(boolean animate,boolean swipeRefresh){
+            enabled = new HashMap<>();
+            this.animate = animate;
+            this.swipeRefresh = swipeRefresh;
+        }
+        boolean first_enter_drag_hint = false;
+
+        @Override
+        protected void onPreExecute() {
+            if(swipeRefresh)refreshLayout.setRefreshing(true);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            order = strToIntegerList(defaultSP.getString(ORDER_NAME,"[]"));
+            if(order.size()>0){
+                for(int i=0;i<order.size();i++){
+                    if(order.get(i)!=TYPE_JWTS_FUN&&order.get(i)!=TYPE_HINT&&order.get(i)!=TYPE_CARD
+                    ) {
+                        enabled.put(order.get(i),PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean(type_name_map.get(order.get(i)),true));
+                    }
+                }
+
+            }
+            first_enter_drag_hint = defaultSP.getBoolean("first_enter_navipage_hint_drag",true);
+            BmobUser.fetchUserInfo(new FetchUserInfoListener<BmobUser>() {
+                @Override
+                public void done(BmobUser bmobUser, BmobException e) {
+                    if(e==null){
+                        CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
+                        Intent i = new Intent();
+                        i.setAction("COM.STUPIDTREE.HITA.USER_INFO_FETCHED");
+                        LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
+                    }
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if(swipeRefresh)refreshLayout.setRefreshing(false);
+            listRes.clear();
+            if(order.size()>0){
+                for(int i=0;i<order.size();i++){
+                    if(order.get(i)!=TYPE_JWTS_FUN&&order.get(i)!=TYPE_HINT&&order.get(i)!=TYPE_CARD
+                    ) {
+                        if(enabled.get(order.get(i))&&!listRes.contains(order.get(i))) listRes.add(order.get(i));
+                    }
+                }
+                if(!order.contains(TYPE_HITA)) listRes.add(NaviPageAdapter.TYPE_HITA);
+            }else{
+                listRes.add(NaviPageAdapter.TYPE_MOOD);
+                listRes.add(NaviPageAdapter.TYPE_HITA);
+                listRes.add(NaviPageAdapter.TYPE_NEWS);
+                listRes.add(NaviPageAdapter.TYPE_BOARD_JW);
+            }
+            if(first_enter_drag_hint) listRes.add(0,NaviPageAdapter.TYPE_HINT);
+            if(animate)list.scheduleLayoutAnimation();
+        }
+    }
 
 }
 

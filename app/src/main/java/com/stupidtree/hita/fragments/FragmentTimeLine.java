@@ -40,7 +40,10 @@ import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.material.snackbar.Snackbar;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.activities.ActivityUserCenter;
+import com.stupidtree.hita.diy.CourseDialog;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityCourse;
@@ -248,7 +251,7 @@ public class FragmentTimeLine extends BaseFragment implements
 
     @Override
     protected void stopTasks() {
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -335,8 +338,8 @@ public class FragmentTimeLine extends BaseFragment implements
     }
 
     public void initListAndAdapter(View v) {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext());
+        LinearLayoutManager layoutManager2 = new WrapContentLinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         TimeLineList = v.findViewById(R.id.timelinelist);
         swipeRefreshLayout = v.findViewById(R.id.timeline_refresh);
         timelineWholedayList = v.findViewById(R.id.timeline_wholeday_list);
@@ -362,7 +365,7 @@ public class FragmentTimeLine extends BaseFragment implements
                 if (todaysEvents.get(position).eventType != TimeTable.TIMETABLE_EVENT_TYPE_COURSE && todaysEvents.get(position).eventType != TIMETABLE_EVENT_TYPE_DYNAMIC) {
                     ExplosionField ef = ExplosionField.attach2Window(FragmentTimeLine.this.getActivity());
                     ef.explode(view);
-                    new DeleteTask_timeline(position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new DeleteTask_timeline(position).executeOnExecutor(HITAApplication.TPE);
                 }
             }
         });
@@ -407,7 +410,7 @@ public class FragmentTimeLine extends BaseFragment implements
             public boolean OnLongClick(View v, int position) {
                 ExplosionField ef = ExplosionField.attach2Window(FragmentTimeLine.this.getActivity());
                 ef.explode(v);
-                new DeleteTask_wholeday(position).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new DeleteTask_wholeday(position).executeOnExecutor(HITAApplication.TPE);
                 return true;
             }
         });
@@ -541,9 +544,9 @@ public class FragmentTimeLine extends BaseFragment implements
 
     private void Refresh(int from, boolean swipe) {
         if (!hasInit) return;
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new RefreshTask(from, swipe);
-        pageTask.execute();
+        pageTask.executeOnExecutor(HITAApplication.TPE);;
     }
 
     private class RefreshTask extends AsyncTask<String, Integer, Integer> {
@@ -667,10 +670,7 @@ public class FragmentTimeLine extends BaseFragment implements
                 timeWatcher.refreshNowAndNextEvent();
                 todaysEvents.remove(wholeDayRes.get(position));
                 wholeDayRes.remove(position);
-                if (todaysEvents.size() == 0) {
-                    noneLayout.setVisibility(View.VISIBLE);
-                    TimeLineList.setVisibility(View.GONE);
-                }
+
             }
             return res;
 
@@ -679,6 +679,10 @@ public class FragmentTimeLine extends BaseFragment implements
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            if (todaysEvents.size() == 0) {
+                noneLayout.setVisibility(View.VISIBLE);
+                TimeLineList.setVisibility(View.GONE);
+            }
             if ((Boolean) o) {
                 timelineWholedayAdapter.notifyItemRemoved(position);
                 if (position != wholeDayRes.size()) { // 如果移除的是最后一个，忽略
@@ -792,94 +796,7 @@ public class FragmentTimeLine extends BaseFragment implements
         final AlertDialog dialog = new AlertDialog.Builder(a).create();
 
         if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
-            //Log.e("======!!!", String.valueOf(ei));
-            dlgView = inflater.inflate(R.layout.dialog_timetable_course, null);
-            final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
-            final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
-            final TextView value4 = dlgView.findViewById(R.id.tt_dlg_value4);
-            final TextView value5 = dlgView.findViewById(R.id.tt_dlg_value5);
-            final TextView name = dlgView.findViewById(R.id.tt_dlg_name);
-            final ImageView detail = dlgView.findViewById(R.id.dlg_bt_detail);
-            final LinearLayout teacher_detail = dlgView.findViewById(R.id.tt_dlg_value3_detail);
-            final LinearLayout classroom_detail = dlgView.findViewById(R.id.tt_dlg_value2_detail);
-            final LinearLayout card = dlgView.findViewById(R.id.card);
-            ImageView classroom_detail_icon = dlgView.findViewById(R.id.classroom_detail_icon);
-            value2.setText(ei.tag2.isEmpty() ? "无" : ei.tag2);
-            value3.setText(ei.tag3.isEmpty() ? "无" : ei.tag3);
-            value4.setText(ei.startTime.tellTime() + "-" + ei.endTime.tellTime());
-            value5.setText(ei.tag4.isEmpty() ? "无" : ei.tag4);
-            //dialog.setTitle(ei.mainName);
-            name.setText(ei.mainName);
-            detail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //ActivityOptionsCompat ops = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) a,card,"card");
-                    Intent i = new Intent(a, ActivityCourse.class);
-                    Bundle b = new Bundle();
-                    b.putSerializable("eventitem", ei);
-                    i.putExtras(b);
-                    a.startActivity(i);
-                    //dialog.dismiss();
-                }
-            });
-            teacher_detail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final String[] names = ei.tag3.split("，");
-                    if (names.length > 1) {
-                        AlertDialog ad = new AlertDialog.Builder(a).setTitle("选择教师").setItems(names, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent il = new Intent(a, ActivityTeacher.class);
-                                il.putExtra("name", names[i]);
-                                a.startActivity(il);
-                            }
-                        }).create();
-                        ad.show();
-                    } else {
-                        Intent i = new Intent(a, ActivityTeacher.class);
-                        i.putExtra("name", ei.tag3);
-                        a.startActivity(i);
-                    }
-                }
-            });
-            if (ei.tag2.isEmpty()) {
-                classroom_detail_icon.setVisibility(View.GONE);
-            } else {
-                classroom_detail_icon.setVisibility(View.VISIBLE);
-                classroom_detail.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final String cr[] = ei.tag2.split("，\\[");
-                        final ArrayList<String> classRooms = new ArrayList<>(Arrays.asList(cr));
-                        if (classRooms.size() > 1) {
-                            ArrayList<String> toRemove = new ArrayList<>();
-                            for (int i = 0; i < classRooms.size(); i++) {
-                                classRooms.set(i, classRooms.get(i).substring(classRooms.get(i).lastIndexOf("周") + 1));
-                            }
-                            for (String x : classRooms) {
-                                if (TextUtils.isEmpty(x)) toRemove.add(x);
-                            }
-                            classRooms.removeAll(toRemove);
-                            String classRoomItems[] = new String[classRooms.size()];
-                            for (int i = 0; i < classRoomItems.length; i++)
-                                classRoomItems[i] = classRooms.get(i);
-                            AlertDialog ad = new AlertDialog.Builder(a).setTitle("选择教室").setItems(classRoomItems, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    ActivityUtils.startLocationActivity_name(a, classRooms.get(i));
-                                }
-                            }).create();
-                            ad.show();
-                        } else ActivityUtils.startLocationActivity_name(a, ei.tag2);
-//                    Intent i = new Intent(a,ActivityExplore.class);
-//                    i.putExtra("terminal",ei.tag2);
-//                    a.startActivity(i);
-                    }
-                });
-            }
-
-
+            new CourseDialog(a,ei).show();
         } else if (ei.eventType == TIMETABLE_EVENT_TYPE_DYNAMIC) {
             //Log.e("======!!!", String.valueOf(ei));
             dlgView = inflater.inflate(R.layout.dialog_timetable_dynamic, null);
@@ -894,8 +811,6 @@ public class FragmentTimeLine extends BaseFragment implements
             dlgView = inflater.inflate(R.layout.dialog_timetable_exam, null);
             final TextView value1 = dlgView.findViewById(R.id.tt_dlg_value1);
             final TextView value2 = dlgView.findViewById(R.id.tt_dlg_value2);
-
-
             value1.setText(ei.tag2);//考场
             value2.setText(ei.tag4.isEmpty() ? "无" : ei.tag4);//具体考试时间
 
@@ -925,92 +840,100 @@ public class FragmentTimeLine extends BaseFragment implements
             value3.setText(ei.startTime.tellTime());
         }
 
-        TextView date = dlgView.findViewById(R.id.tt_dlg_date);
-        final TextView name = dlgView.findViewById(R.id.tt_dlg_name);
-        name.setText(ei.mainName);
-        ImageView detail = dlgView.findViewById(R.id.dlg_bt_detail);
-        final Calendar c = allCurriculum.get(thisCurriculumIndex).getDateAtWOT(ei.week, ei.DOW);
-        date.setText(c.get(Calendar.MONTH) + 1 + "月" + c.get(Calendar.DAY_OF_MONTH) + "日" + "(第" + ei.week + "周" + TextTools.words_time_DOW[ei.DOW - 1] + ")");
-        detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu pm = new PopupMenu(a, v);
-                int menuId;
-                switch (ei.eventType) {
-                    case TIMETABLE_EVENT_TYPE_COURSE:
-                        menuId = R.menu.menu_opr_dialog_detail_course;
-                        break;
-                    case TIMETABLE_EVENT_TYPE_EXAM:
-                        menuId = R.menu.menu_opr_dialog_detail_exam;
-                        break;
-                    default:
-                        menuId = R.menu.menu_opr_dialog_detail_normal;
-                }
-                pm.inflate(menuId);
-                pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.opr_delete) {
-                            android.app.AlertDialog ad = new android.app.AlertDialog.Builder(a).
-                                    setNegativeButton("取消", null)
-                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface d, int which) {
-                                            if (mainTimeTable.deleteEvent(ei, ei.eventType == TIMETABLE_EVENT_TYPE_DEADLINE)) {
-                                                Toast.makeText(a, "删除成功！", Toast.LENGTH_SHORT).show();
-                                                Intent i = new Intent();
-                                                i.putExtra("week", ei.week);
-                                                i.setAction("COM.STUPIDTREE.HITA.TIMETABLE_PAGE_REFRESH");
-                                                LocalBroadcastManager.getInstance(a).sendBroadcast(i);
-                                                dialog.dismiss();
-                                            }
-                                        }
-                                        }).create();
-                            ad.setTitle("确定删除吗？");
-                            if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
-                                ad.setMessage("删除课程后,可以通过导入课表或同步云端数据恢复初始课表");
-                            }
-                            ad.show();
-                        } else if (item.getItemId() == R.id.opr_subject) {
-                            if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
-                                ActivityUtils.startSubjectActivity_name(a, ei.mainName);
-                            } else if (ei.eventType == TIMETABLE_EVENT_TYPE_EXAM) {
-                                if (ei.tag3.startsWith("科目代码：")) {
-                                    ActivityUtils.startSubjectActivity_code(a, ei.tag3.substring(5));
-                                } else if (ei.tag3.startsWith("科目名称：")) {
-                                    ActivityUtils.startSubjectActivity_name(a, ei.tag3.substring(5));
-                                } else {
-                                    ActivityUtils.startSubjectActivity_name(a, ei.tag3);
-                                }
-                            }
+        if(ei.eventType!=TIMETABLE_EVENT_TYPE_COURSE){
 
-                        } else if (item.getItemId() == R.id.opr_detail) {
-                            Intent i = new Intent(a, ActivityCourse.class);
-                            Bundle b = new Bundle();
-                            b.putSerializable("eventitem", ei);
-                            i.putExtra("showSubject", true);
-                            i.putExtras(b);
-                            a.startActivity(i);
-                        }
-                        return true;
+            TextView date = dlgView.findViewById(R.id.tt_dlg_date);
+            final TextView name = dlgView.findViewById(R.id.tt_dlg_name);
+            name.setText(ei.mainName);
+            ImageView detail = dlgView.findViewById(R.id.dlg_bt_detail);
+            final Calendar c = allCurriculum.get(thisCurriculumIndex).getDateAtWOT(ei.week, ei.DOW);
+            date.setText(c.get(Calendar.MONTH) + 1 + "月" + c.get(Calendar.DAY_OF_MONTH) + "日" + "(第" + ei.week + "周" + TextTools.words_time_DOW[ei.DOW - 1] + ")");
+            detail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu pm = new PopupMenu(a, v);
+                    int menuId;
+                    switch (ei.eventType) {
+                        case TIMETABLE_EVENT_TYPE_COURSE:
+                            menuId = R.menu.menu_opr_dialog_detail_course;
+                            break;
+                        case TIMETABLE_EVENT_TYPE_EXAM:
+                            menuId = R.menu.menu_opr_dialog_detail_exam;
+                            break;
+                        default:
+                            menuId = R.menu.menu_opr_dialog_detail_normal;
                     }
-                });
-                pm.show();
-            }
-        });
+                    pm.inflate(menuId);
+                    pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.opr_delete) {
+                                android.app.AlertDialog ad = new android.app.AlertDialog.Builder(a).
+                                        setNegativeButton("取消", null)
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface d, int which) {
+                                                if (mainTimeTable.deleteEvent(ei, ei.eventType == TIMETABLE_EVENT_TYPE_DEADLINE)) {
+                                                    Toast.makeText(a, "删除成功！", Toast.LENGTH_SHORT).show();
+                                                    Intent i = new Intent();
+                                                    i.putExtra("week", ei.week);
+                                                    i.setAction("COM.STUPIDTREE.HITA.TIMETABLE_PAGE_REFRESH");
+                                                    LocalBroadcastManager.getInstance(a).sendBroadcast(i);
+                                                    dialog.dismiss();
+                                                }
+                                            }
+                                        }).create();
+                                ad.setTitle("确定删除吗？");
+                                if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
+                                    ad.setMessage("删除课程后,可以通过导入课表或同步云端数据恢复初始课表");
+                                }
+                                ad.show();
+                            } else if (item.getItemId() == R.id.opr_subject) {
+                                if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
+                                    ActivityUtils.startSubjectActivity_name(a, ei.mainName);
+                                } else if (ei.eventType == TIMETABLE_EVENT_TYPE_EXAM) {
+                                    if (ei.tag3.startsWith("科目代码：")) {
+                                        ActivityUtils.startSubjectActivity_code(a, ei.tag3.substring(5));
+                                    } else if (ei.tag3.startsWith("科目名称：")) {
+                                        ActivityUtils.startSubjectActivity_name(a, ei.tag3.substring(5));
+                                    } else {
+                                        ActivityUtils.startSubjectActivity_name(a, ei.tag3);
+                                    }
+                                }
+
+                            }
+//                            else if (item.getItemId() == R.id.opr_detail) {
+//                                Intent i = new Intent(a, ActivityCourse.class);
+//                                Bundle b = new Bundle();
+//                                b.putSerializable("eventitem", ei);
+//                                i.putExtra("showSubject", true);
+//                                i.putExtras(b);
+//                                a.startActivity(i);
+//                            }
+                            return true;
+                        }
+                    });
+                    pm.show();
+                }
+            });
+        }
+
         if (ei.isWholeDay) {
             final TextView value3 = dlgView.findViewById(R.id.tt_dlg_value3);
             value3.setText("全天");
         }
 
-        dialog.setView(dlgView);
-        dialog.show();
-        dialog.getWindow().
+        if(ei.eventType!= TIMETABLE_EVENT_TYPE_COURSE){
+            dialog.setView(dlgView);
+            dialog.show();
+            dialog.getWindow().
 
-                setLayout(dip2px(a, 320), LinearLayout.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().
+                    setLayout(dip2px(a, 320), LinearLayout.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().
 
-                setBackgroundDrawableResource(R.drawable.dialog_background_radius);
+                    setBackgroundDrawableResource(R.drawable.dialog_background_radius);
+        }
+
 
     }
 

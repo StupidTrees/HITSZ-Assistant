@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.CanteenListAdapter;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.online.Canteen;
 import com.stupidtree.hita.online.Infos;
 import com.stupidtree.hita.online.Location;
@@ -74,7 +75,7 @@ public class FragmentCanteenList extends BaseFragment {
         head_bg = v.findViewById(R.id.head_bg);
         listRes = new ArrayList<>();
         listAdapter = new CanteenListAdapter(this.getContext(), listRes);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false);
         list.setAdapter(listAdapter);
         list.setLayoutManager(layoutManager);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

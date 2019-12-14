@@ -1,6 +1,7 @@
 package com.stupidtree.hita;
 
 import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.util.TypedValue;
 
@@ -16,7 +17,7 @@ public abstract class BaseFragment extends Fragment {
 
     public int getBGIconColor(){
         TypedValue typedValue = new  TypedValue();
-        getActivity().getTheme().resolveAttribute(R.attr.background_icon_color, typedValue, true);
+        getActivity().getTheme().resolveAttribute(R.attr.background_icon_color_bottom, typedValue, true);
         return typedValue.data;
     }
     public int getColorPrimary(){

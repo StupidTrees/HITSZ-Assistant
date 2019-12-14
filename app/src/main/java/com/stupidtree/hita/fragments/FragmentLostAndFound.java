@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.LostAndFoundListAdapter;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.online.LostAndFound;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -80,7 +81,7 @@ public class FragmentLostAndFound extends BaseFragment {
         list.setItemViewCacheSize(30);
         listAdapter = new LostAndFoundListAdapter(getActivity(), listRes);
         list.setAdapter(listAdapter);
-        RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        RecyclerView.LayoutManager lm = new WrapContentLinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         list.setLayoutManager(lm);
         pullRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

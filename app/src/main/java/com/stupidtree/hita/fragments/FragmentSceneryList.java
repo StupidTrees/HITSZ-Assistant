@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.SceneryListAdapter;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.online.Location;
 import com.stupidtree.hita.online.Scenery;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -66,7 +67,7 @@ public class FragmentSceneryList extends BaseFragment {
         list = v.findViewById(R.id.scenery_list);
         listRes = new ArrayList<>();
         listAdapter = new SceneryListAdapter(this.getContext(), listRes);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
         list.setAdapter(listAdapter);
         list.setLayoutManager(layoutManager);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

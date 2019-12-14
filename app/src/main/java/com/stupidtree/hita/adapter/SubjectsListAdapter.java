@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityTimeTable;
 import com.stupidtree.hita.core.Curriculum;
@@ -101,7 +102,7 @@ public class SubjectsListAdapter extends RecyclerView.Adapter {
             //int colorPos = i>=colors.length?colors.length-(i%colors.length)-1:i;
             //subjectViewHolder.image.setColorFilter(colors[colorPos]);
             //subjectViewHolder.label.setCardBackgroundColor(colors[colorPos]);
-            if(subjectViewHolder.progressBar!=null)new CalcProgressTask(subjectViewHolder.progress,subjectViewHolder.progressBar,s,subjectViewHolder.icon).execute();
+            if(subjectViewHolder.progressBar!=null)new CalcProgressTask(subjectViewHolder.progress,subjectViewHolder.progressBar,s,subjectViewHolder.icon).executeOnExecutor(HITAApplication.TPE);;
             if(mOnItemClickListener!=null){
                 subjectViewHolder.card.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -127,7 +128,7 @@ public class SubjectsListAdapter extends RecyclerView.Adapter {
                             .setNegativeButton("取消",null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    new  resetColorTask().execute();
+                                    new  resetColorTask().executeOnExecutor(HITAApplication.TPE);;
                                 }
                             }).create();
                     ad.show();
@@ -140,7 +141,7 @@ public class SubjectsListAdapter extends RecyclerView.Adapter {
                             .setNegativeButton("取消",null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    new resetColorToThemeTask().execute();
+                                    new resetColorToThemeTask().executeOnExecutor(HITAApplication.TPE);;
                                 }
                             }).create();
                     ad.show();

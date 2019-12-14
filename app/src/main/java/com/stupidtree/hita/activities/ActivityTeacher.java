@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.online.Teacher;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -57,7 +58,7 @@ public class ActivityTeacher extends BaseActivity {
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -80,7 +81,7 @@ public class ActivityTeacher extends BaseActivity {
 //        webView.setVisibility(View.INVISIBLE);
 //        notfoundView.setVisibility(View.INVISIBLE);
 //      //  loadingView.setBackgroundColor(getColorPrimary());
-//        new LoadTeacherPageTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        new LoadTeacherPageTask().executeOnExecutor(HITAApplication.TPE);
     }
 
     void refreshPage_search() {
@@ -105,10 +106,10 @@ public class ActivityTeacher extends BaseActivity {
                             }).setNeutralButton("查找教师网站", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    if (pageTask != null && !pageTask.isCancelled())
+                                    if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED)
                                         pageTask.cancel(true);
                                     pageTask = new LoadTeacherPageTask();
-                                    pageTask.execute();
+                                    pageTask.executeOnExecutor(HITAApplication.TPE);;
                                 }
                             })
 
@@ -138,9 +139,9 @@ public class ActivityTeacher extends BaseActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.action_website) {
-                    if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+                    if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
                     pageTask = new LoadTeacherPageTask();
-                    pageTask.execute();
+                    pageTask.executeOnExecutor(HITAApplication.TPE);;
                     return true;
                 }
                 return false;

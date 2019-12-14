@@ -1,20 +1,18 @@
 package com.stupidtree.hita.adapter;
 
-import android.app.Activity;
-import android.content.Context;
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.diy.TaskDialog;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
@@ -26,8 +24,6 @@ import java.util.Calendar;
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
 
-import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
-
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolder> {
     public static final int TYPE_FREE = -11;
     public static final int TYPE_ARRANGED_NOT_YET = -22;
@@ -37,7 +33,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
     LayoutInflater mInflater;
     OnItemLongClickListener mOnItemLongClickListener;
     OnFinishClickListener mOnFinishClickListener;
-    Activity context;
+    BaseActivity context;
 
 
 
@@ -45,7 +41,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
         boolean OnClick(View v,int position);
     }
     public interface OnFinishClickListener{
-        boolean OnClick(View v,int position);
+        boolean OnClick(View v,Task t,int position);
     }
     public void setmOnItemLongClickListener(OnItemLongClickListener X){
         this.mOnItemLongClickListener = X;
@@ -56,7 +52,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
         this.mOnFinishClickListener = mOnFinishClickListener;
     }
 
-    public TaskListAdapter(Activity context, ArrayList<Task> res){
+    public TaskListAdapter(BaseActivity context, ArrayList<Task> res){
         mInflater = LayoutInflater.from(context);
         mBeans = res;
         this.context = context;
@@ -65,14 +61,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int type) {
-        View v = null;
-        switch(type){
-            case TYPE_FREE:v = mInflater.inflate(R.layout.dynamic_tasks_card_free,viewGroup,false);break;
-            case TYPE_ARRANGED_NOT_YET:v = mInflater.inflate(R.layout.dynamic_tasks_card_arranged,viewGroup,false);break;
-            case TYPE_ARRANGED_ONGOING:v = mInflater.inflate(R.layout.dynamic_tasks_card_arranged_today,viewGroup,false);break;
-            case TYPE_DONE: v = mInflater.inflate(R.layout.dynamic_tasks_card_done,viewGroup,false);break;
-        }
-        return new TaskViewHolder(v,type);
+        View v = mInflater.inflate(R.layout.dynamic_tasks_item,viewGroup,false);
+        return new TaskViewHolder(v);
     }
 
     @Override
@@ -88,7 +78,19 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
                 else taskViewHolder.progress.setVisibility(View.GONE);
                 taskViewHolder.progress.setProgress(mBeans.get(position).getProgress());
             }
-            if(taskViewHolder.done!=null) taskViewHolder.done.setChecked(false);
+            if(taskViewHolder.done!=null){
+                taskViewHolder.done.setChecked(mBeans.get(position).isFinished());
+                if(mBeans.get(position).isFinished()){
+                    taskViewHolder.name.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                    taskViewHolder.name.setAlpha(0.3f);
+
+                    //taskViewHolder.name.setTextColor(context.getTextColorSecondary());
+                }else{
+                    taskViewHolder.name.setPaintFlags( taskViewHolder.name.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    //taskViewHolder.name.setTextColor(context.getTextColorPrimary());
+                    taskViewHolder.name.setAlpha(1f);
+                }
+            }
             if(mBeans.get(position).isHas_length()&&taskViewHolder.done!=null) taskViewHolder.done.setVisibility(View.GONE);
             else if(!mBeans.get(position).isHas_length()&&taskViewHolder.done!=null) taskViewHolder.done.setVisibility(View.VISIBLE);
             if(mOnItemLongClickListener!=null){
@@ -103,7 +105,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
                 taskViewHolder.done.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(isChecked) mOnFinishClickListener.OnClick(taskViewHolder.card,position);
+                        //Log.e("checked:", String.valueOf(position));
+                        if(buttonView.isPressed()&&mBeans.get(position).isFinished()!=isChecked) mOnFinishClickListener.OnClick(taskViewHolder.card,mBeans.get(position),position);
                     }
                 });
 
@@ -120,25 +123,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 
     }
 
-
-    @Override
-    public int getItemViewType(int position) {
-
-        Task t = mBeans.get(position);
-//        int dow = now.get(Calendar.DAY_OF_WEEK)==1?7:now.get(Calendar.DAY_OF_WEEK)-1;
-//        if(t.isFinished()) return TYPE_DONE;
-//        if(!t.has_deadline) return TYPE_FREE;
-//        else{
-//            if(thisWeekOfTerm>=t.fW&&thisWeekOfTerm<=t.tW){
-//                if(thisWeekOfTerm==t.fW)return t.fDOW == dow? TYPE_ARRANGED_ONGOING : TYPE_ARRANGED_NOT_YET;
-//                if(thisWeekOfTerm==t.tW)return t.tDOW == dow? TYPE_ARRANGED_ONGOING : TYPE_ARRANGED_NOT_YET;
-//                return TYPE_ARRANGED_ONGOING;
-//            }else{
-//                return TYPE_ARRANGED_NOT_YET;
-//            }
-//        }
-        return getTaskState(t);
-    }
 
     public static int getTaskState(Task t){
         //int dow = now.get(Calendar.DAY_OF_WEEK)==1?7:now.get(Calendar.DAY_OF_WEEK)-1;
@@ -168,16 +152,15 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
 
     class TaskViewHolder extends RecyclerView.ViewHolder{
         TextView name;
-        CardView card;
+        ViewGroup card;
         TextView limit;
         CheckBox done;
         ProgressBar progress;
         int type;
-        public TaskViewHolder(@NonNull View itemView,int type) {
+        public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.task_card_name);
             card = itemView.findViewById(R.id.card);
-            limit = itemView.findViewById(R.id.task_card_limit);
             done = itemView.findViewById(R.id.done);
             progress = itemView.findViewById(R.id.progress);
             this.type = type;

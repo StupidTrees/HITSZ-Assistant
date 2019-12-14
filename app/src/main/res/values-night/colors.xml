@@ -5,4 +5,7 @@
     <color name="main_tabs_unselected_color">#55FFFFFF</color>
     <color name="main_tabs_selected_color">#FFFFFF</color>
     <color name="navi_page_card_image_foreground_color">#00000000</color>
+    <color name="background_bottom_color_as_tint">#CF242424</color>
+    <color name="color_control_normal">#99FFFFFF</color>
+    <color name="text_color_secondary">#89FFFFFF</color>
 </resources>

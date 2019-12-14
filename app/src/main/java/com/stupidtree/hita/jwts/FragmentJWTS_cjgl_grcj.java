@@ -17,9 +17,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.core.Curriculum;
 import com.stupidtree.hita.core.Subject;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,8 +35,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.cookies;
+import static com.stupidtree.hita.HITAApplication.cookies_jwts;
 
 public class FragmentJWTS_cjgl_grcj extends BaseFragment {
     RecyclerView qzcj_list,qmcj_list;
@@ -98,15 +101,15 @@ public class FragmentJWTS_cjgl_grcj extends BaseFragment {
         qmcj_adapter = new CJXXListAdapter(v.getContext(),qmcj_listRes);
         qzcj_list.setAdapter(qzcj_adapter);
         qmcj_list.setAdapter(qmcj_adapter);
-        LinearLayoutManager layoutManager1 = new LinearLayoutManager(v.getContext(),LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager1 = new WrapContentLinearLayoutManager(v.getContext(),RecyclerView.VERTICAL,false);
         qzcj_list.setLayoutManager(layoutManager1);
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(v.getContext(),LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager2 = new WrapContentLinearLayoutManager(v.getContext(),RecyclerView.VERTICAL,false);
 
         qmcj_list.setLayoutManager(layoutManager2);
         qmcj_xnxq_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                new refreshQMCJListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new refreshQMCJListTask(getContext()).executeOnExecutor(TPE);
             }
 
             @Override
@@ -139,13 +142,13 @@ public class FragmentJWTS_cjgl_grcj extends BaseFragment {
 
     @Override
     protected void stopTasks() {
-        for(AsyncTask at:taskSet) if(at!=null&&!at.isCancelled()) at.cancel(true);
+        for(AsyncTask at:taskSet) if(at!=null&&at.getStatus()!=AsyncTask.Status.FINISHED) at.cancel(true);
     }
 
     @Override
     public void Refresh() {
-        new refreshQZCJListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new refreshXNXQSpinnerTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new refreshQZCJListTask(getContext()).executeOnExecutor(HITAApplication.TPE);
+        new refreshXNXQSpinnerTask(getContext()).executeOnExecutor(HITAApplication.TPE);
     }
 
 
@@ -174,7 +177,7 @@ public class FragmentJWTS_cjgl_grcj extends BaseFragment {
         protected String doInBackground(String... strings) {
             try {
                 qzcj_listRes.clear();
-                 Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/cjcx/queryQzcj").cookies(cookies).timeout(20000)
+                 Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/cjcx/queryQzcj").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -245,7 +248,7 @@ public class FragmentJWTS_cjgl_grcj extends BaseFragment {
             try {
                 xnxqValueRes.clear();
                 xnxqAdapterRes.clear();
-                Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/cjcx/queryQmcj").cookies(cookies).timeout(20000)
+                Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/cjcx/queryQmcj").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -284,6 +287,7 @@ public class FragmentJWTS_cjgl_grcj extends BaseFragment {
     class refreshQMCJListTask extends  loadJWTSinfoTask{
 
 
+        String pageXnxq;
         refreshQMCJListTask(Context context) {
             super(context);
         }
@@ -292,6 +296,7 @@ public class FragmentJWTS_cjgl_grcj extends BaseFragment {
         protected void onPreExecute() {
             taskSet.add(this);
             super.onPreExecute();
+            pageXnxq = xnxqValueRes.get(qmcj_xnxq_spinner.getSelectedItemPosition()).get("value");
             qmcj_list.setVisibility(View.GONE);
             loadingView_qmcj.setVisibility(View.VISIBLE);
         }
@@ -300,12 +305,12 @@ public class FragmentJWTS_cjgl_grcj extends BaseFragment {
         protected String doInBackground(String... strings) {
                 try {
                     qmcj_listRes.clear();
-                    Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/cjcx/queryQmcj").cookies(cookies).timeout(20000)
+                    Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/cjcx/queryQmcj").cookies(cookies_jwts).timeout(5000)
                             .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                             .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                             .header("Content-Type", "application/x-www-form-urlencoded")
                             .ignoreContentType(true)
-                            .data("pageXnxq",xnxqValueRes.get(qmcj_xnxq_spinner.getSelectedItemPosition()).get("value"))
+                            .data("pageXnxq",pageXnxq)
                             .data("pageSize","100")
                             .post();
                     String r = super.doInBackground(xkPage.toString());

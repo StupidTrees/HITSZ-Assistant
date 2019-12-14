@@ -212,7 +212,7 @@
                             android:gravity="bottom|start"
                             android:maxEms="9"
                             android:text="2小时20分钟"
-                            android:textColor="?attr/text_color_secondary"
+                            android:textColor="?attr/text_color_primary"
                             android:textSize="24sp"
                             android:textStyle="bold" />
 
@@ -237,9 +237,9 @@
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:layout_marginBottom="4dp"
-                        android:alpha=".8"
+                        android:alpha="0.4"
                         android:scaleType="centerCrop"
-                        android:tint="?attr/colorPrimary"
+                        android:tint="?attr/colorControlNormal"
                         android:tintMode="src_in"
                         android:visibility="visible"
                         app:srcCompat="@drawable/ic_access_alarm_black_24dp" />
@@ -250,9 +250,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="48dp"
                         android:alpha="0.8"
+                        android:background="@drawable/radius_primay_lgiht_button_bg"
+                        android:backgroundTint="@color/background_bottom_color_as_tint"
+                        android:backgroundTintMode="src_over"
                         android:fontFamily="sans-serif-black"
                         android:gravity="center"
                         android:maxEms="8"
+                        android:padding="10dp"
                         android:singleLine="true"
                         android:text="高等数学B"
                         android:textColor="?attr/colorPrimary"
@@ -300,7 +304,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|top"
             android:layout_marginBottom="300dp"
-            android:tint="?attr/background_icon_color"
+            android:tint="?attr/background_icon_color_bottom"
             android:tintMode="src_in"
             app:srcCompat="@drawable/ic_timeline" />
     </androidx.core.widget.NestedScrollView>

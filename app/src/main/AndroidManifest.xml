@@ -30,9 +30,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
     <meta-data
         android:name="IFLYTEK_APPKEY"
-        android:value="5c4aa1d3" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
+        android:value="5c4aa1d3" /> <!-- To auto-complete the email text field in the login_jwts form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
 
@@ -44,11 +45,19 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity android:name=".activities.ActivityTasks"
+            android:windowSoftInputMode="adjustPan"
+            />
+        <activity android:name=".activities.ActivityUTMood" />
+        <activity
+            android:name=".activities.ActivityAttitude"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.ActivityUTService" />
         <activity
             android:name=".activities.ActivitySearch"
             android:label="@string/title_activity_search"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/ChatBotTheme" />
+            android:theme="@style/ChatBotTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.ActivityXL"
             android:label="@string/title_activity_xl"
@@ -122,10 +131,14 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityLostAndFound"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.ActivityLoginJWTS"
             android:label="@string/title_activity_gfh"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.ActivityLoginUT"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityHITSZInfo"
@@ -153,8 +166,8 @@
         <activity
             android:name=".activities.ActivityMain"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.ActivityCampusLocations" />
         <activity
             android:name=".activities.ActivityCurriculumManager"
@@ -169,9 +182,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-             <meta-data
-             android:name="android.app.shortcuts"
-             android:resource="@xml/shortcuts" />
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".activities.ActivityUserCenter"

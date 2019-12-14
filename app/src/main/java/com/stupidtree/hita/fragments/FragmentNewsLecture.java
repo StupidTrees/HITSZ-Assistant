@@ -15,10 +15,12 @@ import android.view.ViewGroup;
 
 
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityExplore;
 import com.stupidtree.hita.activities.ActivityNewsDetail;
 import com.stupidtree.hita.adapter.NewsLectureListAdapter;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -65,7 +67,7 @@ public class FragmentNewsLecture extends BaseFragment  {
         listRes = new ArrayList<>();
         listAdapter = new NewsLectureListAdapter(this.getContext(), listRes);
         list.setAdapter(listAdapter);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext(),RecyclerView.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext(),RecyclerView.VERTICAL, false);
         list.setLayoutManager(layoutManager);
         list.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -115,14 +117,14 @@ public class FragmentNewsLecture extends BaseFragment  {
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
     public void Refresh() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new LoadTask(false);
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
 

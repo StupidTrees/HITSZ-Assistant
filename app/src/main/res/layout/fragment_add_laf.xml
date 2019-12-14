@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_sheet_radius_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:background="@drawable/gradient_round"
+            android:padding="4dp"
+            android:tint="@color/material_background_white"
+            app:srcCompat="@drawable/ic_lostandfound" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center|start"
+            android:text="发布"
+            android:textColor="?attr/text_color_primary"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:tint="?attr/colorControlNormal"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_subtitles" />
+
+        <EditText
+            android:id="@+id/edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:background="@color/transparent_none"
+            android:ems="10"
+            android:hint="输入标题"
+            android:textColorHint="?attr/text_color_secondary"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:tint="?attr/colorControlNormal"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_short_text" />
+
+        <EditText
+            android:id="@+id/edit_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:background="@color/transparent_none"
+            android:hint="输入详细内容"
+            android:inputType="textPersonName"
+            android:singleLine="false"
+            android:textColorHint="?attr/text_color_secondary"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:minHeight="48dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:tint="?attr/colorControlNormal"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_image" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/laf_add"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center|start"
+                android:text="添加图片"
+                android:textColor="?attr/colorControlNormal"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/laf_image"
+                android:layout_width="100dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center|start"
+                android:maxHeight="56dp" />
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/image_clear"
+            android:layout_width="36dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="8dp"
+            android:tint="?attr/colorControlNormal"
+            android:tintMode="src_in"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_clear"
+            app:theme="@style/button_ripple_primary"
+            tools:ignore="KeyboardInaccessibleWidget" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/phone_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="4dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:tint="?attr/colorControlNormal"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_account_activated" />
+
+        <EditText
+            android:id="@+id/edit_contact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:background="@color/transparent_none"
+            android:ems="10"
+            android:hint="设置联系方式"
+            android:inputType="textPersonName"
+            android:textColorHint="?attr/text_color_secondary"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="4dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:tint="?attr/colorControlNormal"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_location2" />
+
+        <TextView
+            android:id="@+id/location_text"
+            android:layout_width="308dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center|start"
+            android:text="不设置地点"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/location_clear"
+            android:layout_width="36dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="8dp"
+            android:tint="?attr/colorControlNormal"
+            android:tintMode="src_in"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_clear"
+            app:theme="@style/button_ripple_primary"
+            tools:ignore="KeyboardInaccessibleWidget" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:tint="?attr/colorControlNormal"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_people_outline" />
+
+        <Switch
+            android:id="@+id/anonymous"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:gravity="center|start"
+            android:text="匿名发布"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancel"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="取消"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/post"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="发布"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</LinearLayout>

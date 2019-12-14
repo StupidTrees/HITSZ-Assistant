@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.FacilityListAdapter;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.online.Location;
 import com.stupidtree.hita.online.Facility;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -65,7 +66,7 @@ public class FragmentFacilityList extends BaseFragment {
         list = v.findViewById(R.id.facility_list);
         listRes = new ArrayList<>();
         listAdapter = new FacilityListAdapter(this.getContext(), listRes);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
         list.setAdapter(listAdapter);
         list.setLayoutManager(layoutManager);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

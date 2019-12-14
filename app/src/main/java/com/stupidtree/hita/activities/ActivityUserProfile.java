@@ -101,32 +101,10 @@ public class ActivityUserProfile extends BaseActivity
                     grade.setText(getGradeText(user.getStudentnumber()));
                     Glide.with(ActivityUserProfile.this).load(user.getAvatarUri()).apply(RequestOptions.circleCropTransform())
                             .placeholder(R.drawable.ic_account_activated).into(avatar);
-                    Glide.with(ActivityUserProfile.this).load(user.getAvatarUri())
-                            //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
-                            //.placeholder(R.drawable.ic_account_activated)
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    appbarBg.setImageDrawable(resource);
-                                    appbarBg.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            MaterialCircleAnimator.animShow(appbarBg,700);
-                                        }
-                                    });
-                                    return true;
-                                }
-                            })
-                            .apply(RequestOptions.bitmapTransform(new mBlurTransformation(ActivityUserProfile.this, 22, 6)))
-                            .into(appbarBg);
 
                 }else{
-                    Toast.makeText(HContext,"获取用户信息失败！",Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+
                 }
             }
         });

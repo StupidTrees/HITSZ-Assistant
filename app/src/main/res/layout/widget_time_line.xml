@@ -7,25 +7,31 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/widget_radius_background"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/widget_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_gravity="center"
-            android:layout_margin="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="16dp"
             android:padding="16dp"
-            android:scaleType="centerInside"
-            android:tint="@color/material_text_icon_white"
+            android:scaleType="centerCrop"
+            android:tint="@color/blue_primary"
             app:srcCompat="@drawable/ic_moon" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
@@ -35,9 +41,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginBottom="4dp"
                 android:fontFamily="sans-serif-black"
                 android:text="今日事件已结束"
-                android:textColor="@color/material_text_icon_white"
+                android:textColor="@color/material_primary_text"
                 android:textSize="24sp" />
 
             <TextView
@@ -45,9 +52,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="8dp"
                 android:text="晚安！"
-                android:textColor="@color/material_text_icon_white" />
+                android:textColor="@color/material_secondary_text" />
 
             <ProgressBar
                 android:id="@+id/widget_progress"
@@ -55,7 +61,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginRight="16dp"
                 android:progressDrawable="@drawable/style_progressbar_widget_light" />
 
         </LinearLayout>
@@ -63,10 +68,11 @@
         <ImageButton
             android:id="@+id/widget_refresh"
             android:layout_width="56dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:background="#00000000"
             android:padding="16dp"
-            android:tint="@color/material_text_icon_white"
+            android:tint="@color/material_secondary_text"
             app:srcCompat="@drawable/ic_refresh" />
 
     </LinearLayout>

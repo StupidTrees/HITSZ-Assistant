@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.core.TimeTable;
@@ -23,6 +26,7 @@ import com.stupidtree.hita.core.timetable.EventItem;
 import com.stupidtree.hita.core.timetable.HTime;
 import com.stupidtree.hita.diy.ButtonLoading;
 import com.stupidtree.hita.adapter.KSXXListAdapter;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -39,10 +43,11 @@ import java.util.List;
 import java.util.Map;
 
 import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.cookies;
+import static com.stupidtree.hita.HITAApplication.cookies_jwts;
 import static com.stupidtree.hita.HITAApplication.isDataAvailable;
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
+import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
 
 
 public class FragmentJWTS_ksxx extends BaseFragment {
@@ -96,7 +101,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
                     Toast.makeText(FragmentJWTS_ksxx.this.getContext(),"请先导入一个课表！",Toast.LENGTH_SHORT).show();
                 }else{
                     if(exams!=null&&exams.size()>0){
-                        new addExamsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        new addExamsTask().executeOnExecutor(HITAApplication.TPE);
                     }else{
                         Toast.makeText(FragmentJWTS_ksxx.this.getContext(),"没有可导入的考试信息！",Toast.LENGTH_SHORT).show();
                     }
@@ -120,10 +125,16 @@ public class FragmentJWTS_ksxx extends BaseFragment {
         exams = new ArrayList<>();
         list = v.findViewById(R.id.ksxx_list);
         lisRes = new ArrayList<>();
-        listAdapter = new KSXXListAdapter(v.getContext(),lisRes);
+        listAdapter = new KSXXListAdapter(v.getContext(),lisRes,false);
         list.setAdapter(listAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext(),RecyclerView.VERTICAL,false);
+        LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(v.getContext(),RecyclerView.VERTICAL,false);
         list.setLayoutManager(layoutManager);
+        listAdapter.setmOnOperateClickListsner(new KSXXListAdapter.OnOperateClickListener() {
+            @Override
+            public void OnClick(View view, int index, boolean choose) {
+                showEventDialog(getActivity(),exams.get(index),null,null);
+            }
+        });
     }
 
 
@@ -149,14 +160,14 @@ public class FragmentJWTS_ksxx extends BaseFragment {
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
     public void Refresh() {
         stopTasks();
         pageTask =  new refreshListTask();
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
 
@@ -165,12 +176,24 @@ public class FragmentJWTS_ksxx extends BaseFragment {
     }
 
     void addExamEvent(String name,String code,String place,String time){
-        String dateS = time.substring(0,time.indexOf("，"));
-        String hourS = time.substring(time.lastIndexOf("，")+1);
+        String dateS = null;
+        String hourS = null;
+        SimpleDateFormat sdf1;
+        try {
+            dateS = time.substring(0,time.indexOf("，"));
+            hourS = time.substring(time.lastIndexOf("，")+1);
+            sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        } catch (Exception e) {
+            dateS = time.substring(0,time.indexOf("("));
+            hourS = time.substring(time.lastIndexOf(")")+1);
+            sdf1 = new SimpleDateFormat("yyyy年MM月dd日");
+        }
+
+
         String[] hourSS = hourS.split("-");
 
         //Log.e("TIME",total);
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+
         SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
         Date date = new Date();
         Date from = new Date();
@@ -194,7 +217,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
         int DOW = tempDate.get(Calendar.DAY_OF_WEEK)==1?7:tempDate.get(Calendar.DAY_OF_WEEK)-1;
         //Log.e("date",tempDate.toString());
         EventItem add = new EventItem(null,allCurriculum.get(thisCurriculumIndex).curriculumCode,TimeTable.TIMETABLE_EVENT_TYPE_EXAM,name+"考试",place,"科目代码："+code,time,new HTime(tempFrom),new HTime(tempTo),allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(tempDate),DOW,false);
-        //Log.e("!!",add.toString());
+        Log.e("!!",add.toString());
         exams.add(add);
 
     }
@@ -214,7 +237,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
             try {
                 exams.clear();
                 lisRes.clear();
-                 Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/kscx/queryKcForXs").cookies(cookies).timeout(20000)
+                 Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/kscx/queryKcForXs").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -225,7 +248,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
                 Elements rows = xkPage.getElementsByClass("bot_line").first().select("tr");
                 rows.remove(0);
                 for(Element tr:rows){
-                    //Log.e("!",tr.toString());
+                    Log.e("!",tr.toString());
                     Elements tds = tr.select("td");
                     Map m = new HashMap();
                     String name = tds.get(1).text();
@@ -241,6 +264,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
                 }
                 return lisRes.size()>0;
             } catch (Exception e) {
+                e.printStackTrace();
                return false;
             }
         }

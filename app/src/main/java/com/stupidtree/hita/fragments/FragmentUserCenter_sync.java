@@ -55,7 +55,7 @@ public class FragmentUserCenter_sync extends BaseFragment {
 //        save_to_cloud.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                new upLoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                new upLoadTask().executeOnExecutor(HITAApplication.TPE);
 //            }
 //        });
         load_from_cloud.setOnClickListener(new View.OnClickListener() {

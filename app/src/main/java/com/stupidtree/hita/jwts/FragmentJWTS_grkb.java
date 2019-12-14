@@ -9,7 +9,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,11 +46,10 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.cookies;
+import static com.stupidtree.hita.HITAApplication.cookies_jwts;
 
 
 public class FragmentJWTS_grkb extends BaseFragment {
@@ -112,7 +110,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
             @Override
             public void onClick() {
                 if (curriculumItems.size() > 0)
-                    new importGRKBTask().execute();
+                    new importGRKBTask().executeOnExecutor(HITAApplication.TPE);;
 
             }
 
@@ -153,7 +151,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
     }
 
     protected void getSubjectsInfo(CurriculumHelper ci, String xnxq) throws IOException {
-        Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryXsxkXq").cookies(cookies).timeout(60000)
+        Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryXsxkXq").cookies(cookies_jwts).timeout(60000)
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -233,7 +231,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
 //        for(Subject x:ci.Subjects){
 //            if(x.code.equals("无数据")) continue;
 //
-//            Document kcInfo = Jsoup.connect("http://jwts.hitsz.edu.cn/pub/queryKcxxView?kcdm="+x.code+"&flag=1").cookies(cookies).timeout(60000)
+//            Document kcInfo = Jsoup.connect("http://jwts.hitsz.edu.cn/pub/queryKcxxView?kcdm="+x.code+"&flag=1").cookies_jwts(cookies_jwts).timeout(60000)
 //                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
 //                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
 //                    .header("Content-Type", "application/x-www-form-urlencoded")
@@ -246,7 +244,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
     }
 
     protected void getSubjectsInfo2(CurriculumHelper ci, String xnxq) throws IOException {
-        Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/zxjh/queryZxkc").cookies(cookies).timeout(30000)
+        Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/zxjh/queryZxkc").cookies(cookies_jwts).timeout(5000)
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -275,7 +273,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
 
 
     protected void getTeacherInfos(String type, String xnxq) throws IOException {
-        Document page = Jsoup.connect(" http://jwts.hitsz.edu.cn/xsxk/queryYxkc").cookies(cookies).timeout(30000)
+        Document page = Jsoup.connect(" http://jwts.hitsz.edu.cn/xsxk/queryYxkc").cookies(cookies_jwts).timeout(5000)
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -289,7 +287,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
         for (Element e : links) {
             String onclick = e.attr("onclick");
             final String teacherCode = onclick.substring(onclick.indexOf("('") + 2, onclick.indexOf("')"));
-            Document teacher = Jsoup.connect("http://jwts.hitsz.edu.cn/pub/queryJsxxView?zgh=" + teacherCode).cookies(cookies).timeout(30000)
+            Document teacher = Jsoup.connect("http://jwts.hitsz.edu.cn/pub/queryJsxxView?zgh=" + teacherCode).cookies(cookies_jwts).timeout(5000)
                     .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                     .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                     .header("Content-Type", "application/x-www-form-urlencoded")
@@ -317,9 +315,9 @@ public class FragmentJWTS_grkb extends BaseFragment {
                 public void done(List<Teacher> list, BmobException e) {
                     try {
                         if (e == null && list != null && list.size() > 0) {
-                            new uploadTeacherTask(t, list.get(0)).execute();
+                            new uploadTeacherTask(t, list.get(0)).executeOnExecutor(HITAApplication.TPE);;
                         } else {
-                            new uploadTeacherTask(t).execute();
+                            new uploadTeacherTask(t).executeOnExecutor(HITAApplication.TPE);;
                         }
                     } catch (Exception e1) {
                         e1.printStackTrace();
@@ -332,14 +330,14 @@ public class FragmentJWTS_grkb extends BaseFragment {
 
     @Override
     protected void stopTasks() {
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
     public void Refresh() {
         stopTasks();
         pageTask = new refreshPageTask();
-        pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
     class refreshPageTask extends AsyncTask {
@@ -349,7 +347,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
             Map result = new HashMap();
             try {
                 curriculumItems.clear();
-                Document dd = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryGrkb").cookies(cookies).timeout(20000)
+                Document dd = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryGrkb").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -414,7 +412,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
         protected Object doInBackground(Object[] objects) {
             Document page;
             try {
-                page = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryGrkb").cookies(cookies).timeout(60000)
+                page = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryGrkb").cookies(cookies_jwts).timeout(60000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -439,7 +437,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                     rowsList.add(oneRow);
                 }
                 curriculum.put("table", rowsList);
-                Document ddd = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryXszkb").cookies(cookies).timeout(60000)
+                Document ddd = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryXszkb").cookies(cookies_jwts).timeout(60000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -515,7 +513,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                 ad.show();
             } else {
                 Toast.makeText(HContext, o.toString(), Toast.LENGTH_SHORT).show();
-                //if(o.toString().contains("成功")) new ActivityJWTS.getPYJHTask().executeOnExecutor(THREAD_POOL_EXECUTOR);
+                //if(o.toString().contains("成功")) new ActivityJWTS.getPYJHTask().executeOnExecutor(HITAApplication.TPE);
             }
         }
     }
@@ -544,7 +542,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                 if (old == null) {
                     String photo = "http://jwts.hitsz.edu.cn/xxgl/showPhoto?zgh=" + t.getTeacherCode();
                     byte[] teacherPhoto;
-                    teacherPhoto = Jsoup.connect(photo).cookies(cookies).ignoreContentType(true).execute().bodyAsBytes();
+                    teacherPhoto = Jsoup.connect(photo).cookies(cookies_jwts).ignoreContentType(true).execute().bodyAsBytes();
                     String path = Objects.requireNonNull(getActivity()).getCacheDir().toString() + "/tpt/teacher:" + t.getTeacherCode() + ".png";
                     FileOperator.saveByteImageToFile(path, BitmapFactory.decodeByteArray(teacherPhoto, 0, teacherPhoto.length));
                     final BmobFile bf = new BmobFile(new File(path));

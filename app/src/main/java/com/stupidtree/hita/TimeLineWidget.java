@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Set;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
 
 
 /**
@@ -195,20 +196,22 @@ public class TimeLineWidget extends AppWidgetProvider {
             Intent i = new Intent();
             PendingIntent pi;
             switch (IntentTerminal){
+                case 6:
                 case 0:i = new Intent(context, ActivityMain.class);break;
                 case 2:i = new Intent(context, ActivityLogin.class);break;
                 case 3:i = new Intent(context, ActivityExplore.class);break;
                 case 4:i = new Intent(context, ActivityRankBoard.class);break;
-                case 6:i = new Intent(context,TimeLineWidget.class);break;
+              // :i = new Intent(context,TimeLineWidget.class);break;
             }
             if(IntentTerminal==3)i.putExtra("terminal",classroom);
-            if(IntentTerminal==6){
-                i.setAction("TIMELINE_WIDGET_ACTION_SHOW_EVENT_DIALOG");
-                Bundle b = new Bundle();
-                b.putSerializable("ei",nowEvent);
-                i.putExtras(b);
-                pi = PendingIntent.getBroadcast(context,0,i, FLAG_UPDATE_CURRENT);
-            }else pi = PendingIntent.getActivity(context,0,i, FLAG_UPDATE_CURRENT);
+//            if(IntentTerminal==6){
+//                i.setAction("TIMELINE_WIDGET_ACTION_SHOW_EVENT_DIALOG");
+//                Bundle b = new Bundle();
+//                b.putSerializable("ei",nowEvent);
+//                i.putExtras(b);
+//                pi = PendingIntent.getBroadcast(context,0,i, FLAG_UPDATE_CURRENT);
+//            }else
+                pi = PendingIntent.getActivity(context,0,i, FLAG_UPDATE_CURRENT);
             Intent i2 = new Intent(context,TimeLineWidget.class);
             i2.setAction("TIMELINE_WIDGET_ACTION_REFRESH");
             PendingIntent pi2 = PendingIntent.getBroadcast(context,0,i2,FLAG_UPDATE_CURRENT);
@@ -236,8 +239,9 @@ public class TimeLineWidget extends AppWidgetProvider {
             Toast.makeText(context,"刷新部件",Toast.LENGTH_SHORT).show();
         } else if(action.equals("TIMELINE_WIDGET_ACTION_SHOW_EVENT_DIALOG")){
             EventItem ei = (EventItem) intent.getExtras().getSerializable("ei");
-            Toast.makeText(context,ei.toString(),Toast.LENGTH_SHORT).show();
-            //showEventDialog(context,ei,null,null);
+           // Toast.makeText(context,ei.toString(),Toast.LENGTH_SHORT).show();
+
+           // showEventDialog(context,ei,null,null);
         }
         else if (intent.hasCategory(Intent.CATEGORY_ALTERNATIVE)) {
         }

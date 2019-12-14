@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stupidtree.hita.BaseFragment;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivitySubject;
 import com.stupidtree.hita.adapter.SubjectsListAdapter;
@@ -99,7 +100,7 @@ public class FragmentSubjects extends BaseFragment {
 
     @Override
     protected void stopTasks() {
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -108,9 +109,9 @@ public class FragmentSubjects extends BaseFragment {
     }
 
     public void Refresh(boolean anim){
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new refreshListTask(anim);
-        pageTask.execute();
+        pageTask.executeOnExecutor(HITAApplication.TPE);;
     }
 
     public interface OnFragmentInteractionListener {

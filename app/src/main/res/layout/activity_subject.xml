@@ -9,17 +9,41 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/color_primary_fade_background"
+        android:layout_height="180dp"
+        android:background="#00000000"
+        android:fitsSystemWindows="true"
+        android:minHeight="180dp"
         app:elevation="0dp">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
+        <net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
             android:id="@+id/toolbarlayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll"
+            android:layout_height="match_parent"
+            android:minHeight="180dp"
+            app:collapsedTitleGravity="left|center"
+            app:collapsedTitleTextAppearance="@style/Text_style_18sp_bold_secondary"
+            app:contentScrim="?attr/background_color_bottom"
+            app:expandedTitleGravity="left|bottom|center"
+            app:expandedTitleMarginBottom="20dp"
+            app:expandedTitleMarginEnd="36dp"
+            app:expandedTitleMarginStart="24dp"
+            app:expandedTitleMarginTop="56dp"
+            app:expandedTitleTextAppearance="@style/Text_style_28sp_bold_primary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:maxLines="4"
+
             app:scrimAnimationDuration="200"
+            app:statusBarScrim="?attr/background_color_bottom"
+            app:titleEnabled="true"
             app:toolbarId="@+id/toolbar">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:contentInsetStartWithNavigation="0dp"
+                app:layout_collapseMode="pin"
+                app:theme="?attr/toolbarStyle" />
 
             <TextView
                 android:id="@+id/subject_name"
@@ -35,26 +59,19 @@
                 android:singleLine="false"
                 android:text="新科学家英语演讲与写作（英）"
                 android:textColor="@color/material_text_icon_white"
-                android:textSize="24sp"
-                android:visibility="visible"
+                android:textSize="22sp"
+                android:visibility="gone"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.89" />
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_marginTop="@dimen/material_toolbar_top_margin"
-                app:layout_collapseMode="pin"
-                app:theme="@style/ToolBarTheme_Light" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:behavior_overlapTop="36dp"
+        android:overScrollMode="never"
+        app:behavior_overlapTop="0dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
@@ -66,9 +83,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="?attr/background_color_second"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp">
@@ -76,8 +93,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical">
+                    android:background="?attr/color_primary_fade_background"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -92,7 +110,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="性质"
-                            android:textColor="?attr/text_color_secondary"
+                            android:textColor="@color/material_text_icon_white"
                             android:textSize="12sp" />
 
                         <TextView
@@ -102,7 +120,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="学分"
-                            android:textColor="?attr/text_color_secondary"
+                            android:textColor="@color/material_text_icon_white"
                             android:textSize="12sp" />
 
                         <TextView
@@ -112,7 +130,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="总学时"
-                            android:textColor="?attr/text_color_secondary"
+                            android:textColor="@color/material_text_icon_white"
                             android:textSize="12sp" />
 
                         <TextView
@@ -122,7 +140,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="考试课"
-                            android:textColor="?attr/text_color_secondary"
+                            android:textColor="@color/material_text_icon_white"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -137,9 +155,10 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="1"
+                            android:fontFamily="sans-serif-black"
                             android:gravity="center"
                             android:text="必修"
-                            android:textColor="?attr/text_color_primary"
+                            android:textColor="@color/material_text_icon_white"
                             android:textSize="18sp" />
 
                         <TextView
@@ -148,9 +167,10 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="1"
+                            android:fontFamily="sans-serif-black"
                             android:gravity="center"
                             android:text="3.0"
-                            android:textColor="?attr/text_color_primary"
+                            android:textColor="@color/material_text_icon_white"
                             android:textSize="18sp" />
 
                         <TextView
@@ -159,9 +179,10 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="1"
+                            android:fontFamily="sans-serif-black"
                             android:gravity="center"
                             android:text="3周"
-                            android:textColor="?attr/text_color_primary"
+                            android:textColor="@color/material_text_icon_white"
                             android:textSize="18sp" />
 
                         <TextView
@@ -170,9 +191,10 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="1"
+                            android:fontFamily="sans-serif-black"
                             android:gravity="center"
                             android:text="是"
-                            android:textColor="?attr/text_color_primary"
+                            android:textColor="@color/material_text_icon_white"
                             android:textSize="18sp" />
                     </LinearLayout>
 
@@ -183,12 +205,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:transitionName="card"
                 app:cardBackgroundColor="?attr/background_color_second"
-                app:cardCornerRadius="12dp">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -207,12 +230,13 @@
                         android:fontFamily="sans-serif-black"
                         android:text="科目信息"
                         android:textColor="?attr/text_color_primary"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="16dp"
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
@@ -334,72 +358,17 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/subject_card_color"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="8dp"
-                app:cardBackgroundColor="?attr/background_color_second"
-                app:cardCornerRadius="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="16dp"
-                        android:fontFamily="sans-serif-black"
-                        android:text="课程颜色"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="18sp" />
-
-                    <ImageView
-                        android:id="@+id/color_sample"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="8dp"
-                        app:srcCompat="@drawable/gradient_round" />
-
-                    <Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:id="@+id/pick_color"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="4dp"
-                        android:clickable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:padding="16dp"
-                        android:tint="?attr/colorControlNormal"
-                        android:tintMode="src_in"
-                        app:srcCompat="@drawable/bt_edit"
-                        app:theme="@style/button_ripple_primary" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
                 android:id="@+id/subject_card_allcourses"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:visibility="visible"
                 app:cardBackgroundColor="?attr/background_color_second"
-                app:cardCornerRadius="12dp">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -427,13 +396,14 @@
                         app:arc_stroke_width="6dp"
                         app:arc_text_color="?attr/colorPrimary"
                         app:arc_text_size="28sp"
-                        app:arc_unfinished_color="?attr/background_icon_color" />
+                        app:arc_unfinished_color="?attr/background_icon_color_bottom" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/subject_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:nestedScrollingEnabled="false" />
+                        android:nestedScrollingEnabled="false"
+                        android:overScrollMode="never" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -443,11 +413,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="?attr/background_color_second"
-                app:cardCornerRadius="12dp">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -459,7 +430,7 @@
                         android:id="@+id/subject_card_rate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="24dp"
+                        android:layout_marginBottom="32dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -565,6 +536,63 @@
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/subject_card_color"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="?attr/background_color_second"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="16dp"
+                        android:fontFamily="sans-serif-black"
+                        android:text="课程颜色"
+                        android:textColor="?attr/text_color_primary"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/color_sample"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        app:srcCompat="@drawable/gradient_round" />
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/pick_color"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="4dp"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="16dp"
+                        android:tint="?attr/colorControlNormal"
+                        android:tintMode="src_in"
+                        app:srcCompat="@drawable/bt_edit"
+                        app:theme="@style/button_ripple_primary" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

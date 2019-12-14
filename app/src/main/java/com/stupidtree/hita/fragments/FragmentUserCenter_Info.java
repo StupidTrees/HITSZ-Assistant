@@ -36,6 +36,12 @@ public class FragmentUserCenter_Info extends BaseFragment {
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Refresh();
+    }
+
     void initViews(View v) {
         username = v.findViewById(R.id.text_username);
         nick = v.findViewById(R.id.text_nick);
@@ -46,12 +52,7 @@ public class FragmentUserCenter_Info extends BaseFragment {
         nickItem = v.findViewById(R.id.item_nick);
         signatureItem = v.findViewById(R.id.item_signature);
         studentsnumberItem = v.findViewById(R.id.item_studensnumber);
-        username.setText(showText(CurrentUser.getUsername()));
-        nick.setText(showText(CurrentUser.getNick()));
-        studentnumber.setText(showText(CurrentUser.getStudentnumber()));
-        realname.setText(showText(CurrentUser.getRealname()));
-        school.setText(showText(CurrentUser.getSchool()));
-        signature.setText(showText(CurrentUser.getSignature()));
+
 
 
         signatureItem.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +193,15 @@ public class FragmentUserCenter_Info extends BaseFragment {
 
     @Override
     public void Refresh() {
-
+        try {
+            username.setText(showText(CurrentUser.getUsername()));
+            nick.setText(showText(CurrentUser.getNick()));
+            studentnumber.setText(showText(CurrentUser.getStudentnumber()));
+            realname.setText(showText(CurrentUser.getRealname()));
+            school.setText(showText(CurrentUser.getSchool()));
+            signature.setText(showText(CurrentUser.getSignature()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

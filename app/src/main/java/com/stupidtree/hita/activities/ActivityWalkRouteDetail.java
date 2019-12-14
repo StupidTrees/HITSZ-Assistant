@@ -99,7 +99,7 @@
 //        mWalkSegmentListAdapter = new WalkSegmentListAdapter(
 //                this.getApplicationContext(), mWalkPath.getSteps());
 //        mWalkSegmentList.setAdapter(mWalkSegmentListAdapter);
-//        LinearLayoutManager lm = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+//        LinearLayoutManager lm = new WrapContentLinearLayoutManager(this,RecyclerView.VERTICAL,false);
 //        mWalkSegmentList.setLayoutManager(lm);
 //
 //    }

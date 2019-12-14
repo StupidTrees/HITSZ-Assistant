@@ -4,22 +4,30 @@
         android:layout_width="match_parent"
         android:title="功能开关">
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
+            android:key="app_events_enabled"
+            android:summary="开启后首页将展示事务"
+            android:textColor="?attr/text_color_primary"
+            android:textColorHint="?attr/text_color_secondary"
+            android:title="首页第三屏" />
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="app_task_enabled"
             android:summary="开启后方可使用学习助手"
             android:textColor="?attr/text_color_primary"
             android:textColorHint="?attr/text_color_secondary"
             android:title="任务模块(开发阶段)" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="教务设置">
+        </PreferenceCategory>
+
+    <PreferenceCategory android:title="自动登录设置">
         <SwitchPreference
             android:defaultValue="true"
             android:key="jwts_autologin"
             android:summary="需要绑定学号并设置本地登录密码"
-            android:title="后台自动登录同步" />
+            android:title="后台自动登录教务" />
         <EditTextPreference
-            android:key="jwts_password"
             android:inputType="textPassword"
+            android:key="jwts_password"
             android:summary="出于隐私安全，密码不会保存在云"
             android:title="设置教务登录密码" />
     </PreferenceCategory>
@@ -31,7 +39,6 @@
             android:key="dark_mode_mode"
             android:title="深色模式选项"></ListPreference>
     </PreferenceCategory>
-
     <PreferenceCategory android:title="课程表设置">
         <SwitchPreference
             android:defaultValue="true"

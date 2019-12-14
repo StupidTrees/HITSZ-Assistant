@@ -139,8 +139,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         @Override
         public void onClick(View v) {
             if(l==null) return;
-            l.setSearch(l.getSearch()+1);
-            l.update(l.getObjectId(), new UpdateListener() {
+            Location up = new Location(l);
+            up.setSearch(l.getSearch()+1);
+            up.update(new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
                     if(e!=null) Log.e("!",e.toString());

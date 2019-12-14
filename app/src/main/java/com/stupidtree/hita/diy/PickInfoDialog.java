@@ -11,9 +11,11 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -21,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivitySearch;
 import com.stupidtree.hita.adapter.SearchResultAdapter;
@@ -40,6 +43,7 @@ import cn.bmob.v3.BmobQuery;
 
 import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.searchText;
+import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
 public class PickInfoDialog extends AlertDialog {
     EditText searchview;
@@ -49,10 +53,12 @@ public class PickInfoDialog extends AlertDialog {
     getSuggestionsTask pageTask;
     int mode;
     OnPickListener onPickListener;
+    ImageView done;
+    TextView title;
+    String titleStr;
     public static List<BmobObject> listRes;
     public static final int TEACHER = 378;
     public static final int LOCATION_ALL = 875;
-    public static final int LOCATION_CLASSROOM = 990;
     public static final int ALL = 327;
 
     public interface OnPickListener{
@@ -63,16 +69,19 @@ public class PickInfoDialog extends AlertDialog {
         super(context);
         View v = getLayoutInflater().inflate(R.layout.dialog_pick_info,null,false);
         setView(v);
+        this.titleStr = title;
         this.mode = mode;
         this.onPickListener = onPickListener;
-        setTitle(title);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getWindow().
+                setLayout(dip2px(getContext(), 320), LinearLayout.LayoutParams.WRAP_CONTENT);
+        getWindow().
+                setBackgroundDrawableResource(R.drawable.dialog_background_radius);
         initToolbar();
         initList();
     }
@@ -87,11 +96,11 @@ public class PickInfoDialog extends AlertDialog {
     protected void onStart() {
         super.onStart();
         if(searchview!=null){
-            if(pageTask!=null&&!pageTask.isCancelled()){
+            if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED){
                 pageTask.cancel(true);
             }
             pageTask =  new getSuggestionsTask(  searchview.getText().toString());
-            pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            pageTask.executeOnExecutor(HITAApplication.TPE);
 
         }
 
@@ -114,11 +123,11 @@ public class PickInfoDialog extends AlertDialog {
                 searchText = s.toString();
                 listRes.clear();
                 listAdapter.notifyItemRangeRemoved(0, old);
-                if(pageTask!=null&&!pageTask.isCancelled()){
+                if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED){
                     pageTask.cancel(true);
                 }
                 pageTask =  new getSuggestionsTask(s.toString());
-                pageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                pageTask.executeOnExecutor(HITAApplication.TPE);
 
             }
 
@@ -132,9 +141,12 @@ public class PickInfoDialog extends AlertDialog {
     void initList(){
         listRes = new ArrayList<>();
         list = findViewById(R.id.list);
+        done = findViewById(R.id.done);
+        title = findViewById(R.id.title);
+        title.setText(titleStr);
         listAdapter = new SearchResultAdapter(this.getContext(), listRes);
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
         listAdapter.setOnItemClickListener(new SearchResultAdapter.OnItemClickListener() {
             @Override
             public void Onlick(View v, int position) {
@@ -146,6 +158,16 @@ public class PickInfoDialog extends AlertDialog {
                 }
                 onPickListener.OnPick(name,listRes.get(position));
                 dismiss();
+            }
+        });
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(TextUtils.isEmpty(searchview.getText().toString())) Toast.makeText(getContext(),"输入地点！",Toast.LENGTH_SHORT).show();
+                else{
+                    onPickListener.OnPick(searchview.getText().toString(),null);
+                    dismiss();
+                }
             }
         });
     }

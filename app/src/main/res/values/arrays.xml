@@ -4,13 +4,11 @@
 
     <string-array name="preference_dark_mode">
         <item>手动开关</item>
-        <item>跟随系统</item>
-        <item>按时间自动开关</item>
+        <item>跟随系统（仅测试原生和MIUI11）</item>
     </string-array>
     <string-array name="preference_dark_mode_values">
         <item>dark_mode_normal</item>
         <item>dark_mode_follow</item>
-        <item>dark_mode_auto</item>
     </string-array>
     <string-array name="words_search"><item>查找</item>
         <item>搜索</item>

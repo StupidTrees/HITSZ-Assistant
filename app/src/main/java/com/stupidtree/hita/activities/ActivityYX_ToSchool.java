@@ -27,6 +27,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.online.Infos;
 
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class ActivityYX_ToSchool extends BaseActivity {
         listAdapter = new mainPageAdapter();
         routeListAdapter = new routeAdapter();
         routeList.setAdapter(routeListAdapter);
-        routeList.setLayoutManager(new LinearLayoutManager(ActivityYX_ToSchool.this,RecyclerView.VERTICAL,false));
+        routeList.setLayoutManager(new WrapContentLinearLayoutManager(ActivityYX_ToSchool.this,RecyclerView.VERTICAL,false));
         list.setAdapter(listAdapter);
         final CarouselLayoutManager layoutManager = new CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL);
         layoutManager.setMaxVisibleItems(8);

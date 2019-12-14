@@ -19,6 +19,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,7 @@ public class FragmentFDY extends BaseFragment {
         qqList = v.findViewById(R.id.qq_list);
         listAdapter = new qqListAdapter();
         qqList.setAdapter(listAdapter);
-        qqList.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
+        qqList.setLayoutManager(new WrapContentLinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
     }
 
 

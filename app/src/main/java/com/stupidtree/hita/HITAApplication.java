@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,16 +35,16 @@ import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
 
-import org.ansj.splitWord.analysis.ToAnalysis;
-
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobObject;
@@ -72,8 +71,12 @@ public class HITAApplication extends Application {
     public static int thisWeekOfTerm = -1;
     /*核心的变量*/
     public static ArrayList<Curriculum> allCurriculum;
-    public static HashMap<String, String> cookies = new HashMap<>();
-    public static boolean login = false;
+    public static HashMap<String, String> cookies_jwts = new HashMap<>();
+    public static HashMap<String, String> cookies_ut = new HashMap<>();
+    public static HashMap<String,String> cookies_ut_card = new HashMap<>();
+    public static String ut_username;
+    public static boolean login_jwts = false;
+    public static boolean login_ut = false;
     public static TimeTable mainTimeTable;
     public static SharedPreferences defaultSP;
     public static int thisCurriculumIndex;
@@ -89,15 +92,16 @@ public class HITAApplication extends Application {
     public static HITAUser CurrentUser = null;
     public static HITADBHelper mDBHelper;
     public static Handler ToastHander;
-
+    public static ThreadPoolExecutor TPE;
 
     @SuppressLint("HandlerLeak")
     @Override
     public void onCreate() {
         super.onCreate();
         now = Calendar.getInstance();
+        TPE = new ThreadPoolExecutor(0,Integer.MAX_VALUE,60L, TimeUnit.SECONDS,new SynchronousQueue<Runnable>());
         HContext = getApplicationContext();
-        defaultSP = PreferenceManager.getDefaultSharedPreferences(this);
+        defaultSP = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
         mDBHelper = new HITADBHelper(HContext);
         allCurriculum = new ArrayList<>();
         ChatBotListRes = new ArrayList<>();
@@ -105,6 +109,7 @@ public class HITAApplication extends Application {
         timeWatcher = new TimeWatcher(this);
         mainTimeTable = new TimeTable(null);
         initUpgradeDialog();
+        new InitTask(this).executeOnExecutor(HITAApplication.TPE);;
         ToastHander = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -119,11 +124,11 @@ public class HITAApplication extends Application {
         getThemeID();
     }
 
-    public static boolean copyAssetsSingleFile(File file, String fileName) {
+    public static void copyAssetsSingleFile(File file, String fileName) {
         if (!file.exists()) {
             if (!file.mkdirs()) {
                 Log.e("--Method--", "copyAssetsSingleFile: cannot create directory.");
-                return false;
+                return;
             }
         }
         try {
@@ -139,10 +144,8 @@ public class HITAApplication extends Application {
             inputStream.close();
             fileOutputStream.flush();
             fileOutputStream.close();
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -174,24 +177,10 @@ public class HITAApplication extends Application {
          * 设置状态栏小图标，smallIconId为项目中的图片资源Id;
          */
         Beta.smallIconId = R.mipmap.ic_launcher_round;
-        /**
-         * 设置更新弹窗默认展示的banner，defaultBannerId为项目中的图片资源Id;
-         * 当后台配置的banner拉取失败时显示此banner，默认不设置则展示“loading“;
-         */
         //Beta.defaultBannerId = R.mipmap.ic_launcher_round;
-        /**
-         * 设置sd卡的Download为更新资源保存目录;
-         * 后续更新资源会保存在此目录，需要在manifest中添加WRITE_EXTERNAL_STORAGE权限;
-         */
         Beta.storageDir = Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        /**
-         * 已经确认过的弹窗在APP下次启动自动检查更新时会再次显示;
-         */
         Beta.showInterruptedStrategy = true;
-        /**
-         * 只允许在MainActivity上显示更新弹窗，其他activity上不显示弹窗; 不设置会默认所有activity都可以显示弹窗;
-         */
         Beta.canShowUpgradeActs.add(ActivityMain.class);
 
         /**
@@ -529,7 +518,7 @@ public class HITAApplication extends Application {
             public void done(List<Bmob_User_Data> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
                 Log.e("下载","done");
                 if (e == null && list != null && list.size() > 0) {
-                    new writeDataToLocalTask(list.get(0)).execute();
+                    new writeDataToLocalTask(list.get(0)).executeOnExecutor(HITAApplication.TPE);;
                 }else {
                     Toast.makeText(HContext,"云端没有数据！",Toast.LENGTH_SHORT).show();
                     Log.e("下载失败",e==null?"空结果":e.toString());
@@ -538,6 +527,12 @@ public class HITAApplication extends Application {
         });
 
 
+        return true;
+    }
+    public static boolean loadDataFromCloud(Bmob_User_Data bud) {
+        if (CurrentUser == null) return false;
+        clearData();
+        new writeDataToLocalTask(bud).executeOnExecutor(HITAApplication.TPE);;
         return true;
     }
     public static boolean loadDataFromCloud(final Activity toFinish) {
@@ -550,7 +545,7 @@ public class HITAApplication extends Application {
             public void done(List<Bmob_User_Data> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
                 Log.e("下载","done");
                 if (e == null && list != null && list.size() > 0) {
-                    new writeDataToLocalTask(list.get(0),toFinish).execute();
+                    new writeDataToLocalTask(list.get(0),toFinish).executeOnExecutor(HITAApplication.TPE);;
                 }else {
                    if(toFinish!=null) toFinish.finish();
                     Log.e("下载失败",e==null?"空结果":e.toString());
@@ -649,4 +644,32 @@ public class HITAApplication extends Application {
     }
 
 
+    static class InitTask extends AsyncTask {
+
+        Context context;
+
+        InitTask(Context f) {
+            context = f;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //Log.e("time_test","initialize:begin");
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            initCoreData();
+
+            timeWatcher.refreshProgress(true, true);
+            //Log.e("time_test","initialize:end");
+            Intent i = new Intent();
+            i.setAction("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
+            context.sendBroadcast(i);
+
+            return null;
+        }
+
+    }
 }

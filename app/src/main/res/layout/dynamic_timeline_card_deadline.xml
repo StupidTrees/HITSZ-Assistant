@@ -13,7 +13,7 @@
         app:timeline_drawInternal="false"
         app:timeline_indicatorColor="?attr/colorPrimary"
         app:timeline_indicatorSize="8dp"
-        app:timeline_lineColor="?attr/background_icon_color"
+        app:timeline_lineColor="?attr/background_icon_color_bottom"
         app:timeline_lineStyle="linear"
         app:timeline_lineWidth="6dp" />
 
@@ -30,7 +30,7 @@
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:longClickable="true"
         app:cardBackgroundColor="?attr/colorPrimary"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="16dp"
         app:cardElevation="@dimen/timeline_card_elevation">
 
         <LinearLayout

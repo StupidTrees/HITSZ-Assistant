@@ -4,9 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/opr_detail"
-        android:title="课时详情" />
-    <item
         android:id="@+id/opr_subject"
         android:title="查看科目" />
     <item

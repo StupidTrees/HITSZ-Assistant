@@ -14,6 +14,7 @@
             android:layout_margin="16dp"
             android:clickable="true"
             app:backgroundTint="?attr/colorAccent"
+            app:layout_behavior="com.stupidtree.hita.diy.mBottomHideBehavior"
             app:srcCompat="@drawable/fab_add" />
 
         <com.google.android.material.appbar.AppBarLayout
@@ -31,6 +32,7 @@
                     android:minHeight="?attr/actionBarSize"
                     app:contentInsetStart="0dp"
                     app:contentInsetStartWithNavigation="0dp"
+                    app:layout_scrollFlags="scroll|enterAlways"
                     app:theme="?attr/toolbarStyle">
 
                         <com.google.android.material.tabs.TabLayout

@@ -13,7 +13,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="28dp"
         android:layout_marginRight="16dp"
-        android:gravity="center"
+        android:gravity="center|start"
         android:orientation="horizontal">
 
         <ImageView
@@ -28,28 +28,31 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|left"
-            android:layout_marginLeft="8dp"
+            android:layout_gravity="start"
+            android:fontFamily="sans-serif-black"
+            android:gravity="start"
             android:text="Hita养成计划"
-            android:textSize="30sp" />
+            android:textColor="?attr/text_color_primary"
+            android:textSize="24sp" />
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="start"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
         android:layout_marginRight="16dp"
         android:fontFamily="sans-serif-condensed-light"
-        android:gravity="center"
-        android:text="一起打造哈工深的专有问答库"
-        android:textSize="12sp" />
+        android:gravity="start"
+        android:text="一起打造希塔的专有问答库"
+        android:textSize="14sp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:layout_marginRight="16dp">
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -67,7 +70,7 @@
         android:layout_marginRight="16dp"
         android:layout_weight="1"
         android:text="若有多种问法，使用@@分隔"
-        android:textColor="?attr/colorAccent"
+        android:textColor="?attr/text_color_secondary"
         android:textSize="12sp" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -90,7 +93,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="16dp"
         android:text="若有多种回答，使用@@分隔"
-        android:textColor="?attr/colorAccent"
+        android:textColor="?attr/text_color_secondary"
         android:textSize="12sp" />
 
     <TextView

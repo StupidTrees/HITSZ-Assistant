@@ -25,7 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -50,7 +52,7 @@ public class ActivityXL extends BaseActivity {
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&!pageTask.isCancelled()) pageTask.cancel(true);
+        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
     @Override
@@ -111,14 +113,14 @@ public class ActivityXL extends BaseActivity {
         list = findViewById(R.id.list);
         listAdapter = new MonthAdapter();
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(this, RecyclerView.VERTICAL, false));
     }
 
 
     protected void Refresh() {
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new refreshTask();
-        pageTask.execute();
+        pageTask.executeOnExecutor(HITAApplication.TPE);;
     }
 
     private class WeekViewRes {
@@ -244,7 +246,7 @@ public class ActivityXL extends BaseActivity {
                 weeks = itemView.findViewById(R.id.month_list);
                 weekAdapter = new WeekAdapter();
                 weeks.setAdapter(weekAdapter);
-                weeks.setLayoutManager(new LinearLayoutManager(ActivityXL.this, RecyclerView.VERTICAL, false));
+                weeks.setLayoutManager(new WrapContentLinearLayoutManager(ActivityXL.this, RecyclerView.VERTICAL, false));
             }
         }
     }

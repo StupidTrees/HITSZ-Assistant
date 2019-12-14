@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:orientation="vertical"
+    app:cardBackgroundColor="?attr/background_color_second"
+    app:cardCornerRadius="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="你觉得呢？"
+            android:textColor="?attr/text_color_primary"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:alpha="0.4"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:id="@+id/voting"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+            <ImageView
+                android:id="@+id/down"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:paddingTop="24dp"
+                android:paddingBottom="16dp"
+                android:tint="@color/red_primary_light"
+                android:tintMode="src_in"
+                app:srcCompat="@drawable/ic_thumb_down"
+                app:theme="@style/attitude_button_ripple_red" />
+
+            <ImageView
+                android:id="@+id/up"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:paddingTop="24dp"
+                android:paddingBottom="16dp"
+                android:tint="@color/blue_primary"
+                android:tintMode="src_in"
+                app:srcCompat="@drawable/ic_thumb_up"
+                app:theme="@style/attitude_button_ripple_blue" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/voted"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/vote_result"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:progressDrawable="@drawable/style_progressbar_attitude" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:alpha="0.8"
+                    android:focusable="true"
+                    android:tint="@color/material_background_white"
+                    android:tintMode="src_in"
+                    app:srcCompat="@drawable/ic_thumb_down"
+                    app:theme="@style/button_ripple_primary" />
+
+                <TextView
+                    android:id="@+id/down_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="12"
+                    android:textColor="@color/material_text_icon_white"
+                    android:textSize="12sp" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/up_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:text="12"
+                    android:textColor="@color/material_text_icon_white"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:alpha="0.8"
+                    android:focusable="true"
+                    android:tint="@color/material_background_white"
+                    android:tintMode="src_in"
+                    app:srcCompat="@drawable/ic_thumb_up"
+                    app:theme="@style/button_ripple_primary" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

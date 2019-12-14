@@ -8,8 +8,8 @@
     android:clickable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
     app:cardBackgroundColor="?attr/background_color_second"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="18dp"
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/tl_wholeday_icon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
             android:layout_gravity="center"
             android:layout_marginLeft="16dp"
             android:tint="?attr/colorPrimary"
@@ -41,7 +41,7 @@
                 android:singleLine="true"
                 android:text="很长很长很长很长"
                 android:textColor="?attr/text_color_primary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
