@@ -336,6 +336,7 @@
                         android:backgroundTintMode="src_atop"
                         android:clickable="true"
                         android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:visibility="gone"
                         app:cardBackgroundColor="?attr/colorControlNormal"
                         app:cardCornerRadius="24dp"
                         app:cardElevation="0dp">

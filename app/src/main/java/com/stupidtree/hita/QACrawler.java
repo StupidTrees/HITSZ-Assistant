@@ -101,7 +101,7 @@ public class QACrawler {
                     Log.e("!", i + "");
                     byte[] checkPic;
                     try {
-                        checkPic = Jsoup.connect("http://jwts.hitsz.edu.cn/captchaImage").ignoreContentType(true).execute().bodyAsBytes();
+                        checkPic = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/captchaImage").ignoreContentType(true).execute().bodyAsBytes();
                         Bitmap bm = BitmapFactory.decodeByteArray(checkPic, 0, checkPic.length);
                         Bitmap res = SafecodeUtil.getProcessedBitmap(bm);
                         int j = 0;

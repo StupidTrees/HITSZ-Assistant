@@ -1,0 +1,57 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-night-v8\\values-night-v8.xml",
+            "map": [
+                {
+                    "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\values-night\\styles.xml",
+                    "from": {
+                        "startLines": "-1,-1,-1,-1,-1",
+                        "startColumns": "-1,-1,-1,-1,-1",
+                        "startOffsets": "-1,-1,-1,-1,-1"
+                    },
+                    "to": {
+                        "startLines": "10,25,29,34,38",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "556,1473,1644,1867,2046",
+                        "endLines": "24,28,33,37,43",
+                        "endColumns": "12,12,12,12,12",
+                        "endOffsets": "1468,1639,1862,2041,2249"
+                    }
+                },
+                {
+                    "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\values-night\\colors.xml",
+                    "from": {
+                        "startLines": "-1,8,-1,-1,-1,-1,-1,-1",
+                        "startColumns": "-1,4,-1,-1,-1,-1,-1,-1",
+                        "startOffsets": "-1,442,-1,-1,-1,-1,-1,-1",
+                        "endColumns": "-1,56,-1,-1,-1,-1,-1,-1",
+                        "endOffsets": "-1,494,-1,-1,-1,-1,-1,-1"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,123,180,239,302,376,433,498",
+                        "endColumns": "67,56,58,62,73,56,64,57",
+                        "endOffsets": "118,175,234,297,371,428,493,551"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\values-night-v8\\values-night-v8.xml",
+                    "from": {
+                        "startLines": "-1,-1,-1,-1,-1,-1,-1,-1",
+                        "startColumns": "-1,-1,-1,-1,-1,-1,-1,-1",
+                        "startOffsets": "-1,-1,-1,-1,-1,-1,-1,-1"
+                    },
+                    "to": {
+                        "startLines": "44,45,46,47,48,49,50,51",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "2254,2324,2408,2492,2588,2690,2792,2886",
+                        "endColumns": "69,83,83,95,101,101,93,88",
+                        "endOffsets": "2319,2403,2487,2583,2685,2787,2881,2970"
+                    }
+                }
+            ]
+        }
+    ]
+}

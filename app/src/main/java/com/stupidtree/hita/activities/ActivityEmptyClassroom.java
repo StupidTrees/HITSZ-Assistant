@@ -185,7 +185,7 @@ public class ActivityEmptyClassroom extends BaseActivity {
         @Override
         protected Object doInBackground(Object[] objects) {
             try {
-                Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/kjscx/queryKjs_wdl")
+                Document page = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kjscx/queryKjs_wdl")
                         .timeout(5000)
                         .data("pageXnxq",allCurriculum.get(thisCurriculumIndex).curriculumCode)
                         .data("pageZc1","1").data("pageZc2","1")

@@ -55,9 +55,9 @@ import static com.stupidtree.hita.HITAApplication.themeID;
 
 public class FragmentBindStuNum extends BottomSheetDialogFragment {
     //登录请求地址
-    private final static String LOGIN = "http://jwts.hitsz.edu.cn/login";
-    private final static String LOGIN_VIEW = "http://jwts.hitsz.edu.cn/";
-    private final static String CHECK_CODE = "http://jwts.hitsz.edu.cn/captchaImage";
+    private final static String LOGIN = "http://jwts.hitsz.edu.cn:8080/login";
+    private final static String LOGIN_VIEW = "http://jwts.hitsz.edu.cn:8080/";
+    private final static String CHECK_CODE = "http://jwts.hitsz.edu.cn:8080/captchaImage";
 
     ImageView safeCodeImage;
     EditText username, password, safecode;
@@ -260,7 +260,7 @@ public class FragmentBindStuNum extends BottomSheetDialogFragment {
                 String result = loginCheck(username, password, safecode);
                 if (result.contains("成功")) {
                     try {
-                        Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn/xswhxx/queryXswhxx").cookies(localCookies).timeout(5000)
+                        Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/xswhxx/queryXswhxx").cookies(localCookies).timeout(5000)
                                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                                 .header("Content-Type", "application/x-www-form-urlencoded")

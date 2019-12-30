@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.stupidtree.hita.activities.ActivityTeacher">
+    <item
+        android:id="@+id/action_website"
+        android:orderInCategory="100"
+        android:title="浏览器打开"
+        app:showAsAction="never" />
+
+</menu>

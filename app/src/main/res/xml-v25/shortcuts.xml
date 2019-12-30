@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/shortcut_timetable"
+        android:shortcutId="shortcut_timetable"
+        android:shortcutLongLabel="@string/shortcut_timetable_long"
+        android:shortcutShortLabel="@string/shortcut_timetable_short">
+        <intent
+            android:action="android.action.action.VIEW"
+            android:targetClass="com.stupidtree.hita.activities.ActivityTimeTable"
+            android:targetPackage="com.stupidtree.hita" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/shortcut_news"
+        android:shortcutId="shortcut_news"
+        android:shortcutLongLabel="@string/shortcut_news_long"
+        android:shortcutShortLabel="@string/shortcut_news_short">
+
+        <intent
+            android:action="android.action.action.VIEW"
+            android:targetClass="com.stupidtree.hita.activities.ActivityHITSZInfo"
+            android:targetPackage="com.stupidtree.hita" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/shortcut_empty_classroom"
+        android:shortcutId="shortcut_empty_classroom"
+        android:shortcutLongLabel="@string/shortcut_empty_classroom_long"
+        android:shortcutShortLabel="@string/shortcut_empty_classroom_short">
+
+        <intent
+            android:action="android.action.action.VIEW"
+            android:targetClass="com.stupidtree.hita.activities.ActivityEmptyClassroom"
+            android:targetPackage="com.stupidtree.hita" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/shortcut_explore"
+        android:shortcutId="shortcut_explore"
+        android:shortcutLongLabel="@string/shortcut_explore_long"
+        android:shortcutShortLabel="@string/shortcut_explore_short">
+
+        <intent
+            android:action="android.action.action.VIEW"
+            android:targetClass="com.stupidtree.hita.activities.ActivityChatbot"
+            android:targetPackage="com.stupidtree.hita" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

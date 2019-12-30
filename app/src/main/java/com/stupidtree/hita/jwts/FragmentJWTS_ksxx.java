@@ -237,7 +237,7 @@ public class FragmentJWTS_ksxx extends BaseFragment {
             try {
                 exams.clear();
                 lisRes.clear();
-                 Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/kscx/queryKcForXs").cookies(cookies_jwts).timeout(5000)
+                 Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kscx/queryKcForXs").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")

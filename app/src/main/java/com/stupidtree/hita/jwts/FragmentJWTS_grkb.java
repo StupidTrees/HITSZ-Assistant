@@ -151,7 +151,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
     }
 
     protected void getSubjectsInfo(CurriculumHelper ci, String xnxq) throws IOException {
-        Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryXsxkXq").cookies(cookies_jwts).timeout(60000)
+        Document page = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kbcx/queryXsxkXq").cookies(cookies_jwts).timeout(60000)
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -231,7 +231,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
 //        for(Subject x:ci.Subjects){
 //            if(x.code.equals("无数据")) continue;
 //
-//            Document kcInfo = Jsoup.connect("http://jwts.hitsz.edu.cn/pub/queryKcxxView?kcdm="+x.code+"&flag=1").cookies_jwts(cookies_jwts).timeout(60000)
+//            Document kcInfo = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/pub/queryKcxxView?kcdm="+x.code+"&flag=1").cookies_jwts(cookies_jwts).timeout(60000)
 //                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
 //                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
 //                    .header("Content-Type", "application/x-www-form-urlencoded")
@@ -244,7 +244,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
     }
 
     protected void getSubjectsInfo2(CurriculumHelper ci, String xnxq) throws IOException {
-        Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/zxjh/queryZxkc").cookies(cookies_jwts).timeout(5000)
+        Document page = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/zxjh/queryZxkc").cookies(cookies_jwts).timeout(5000)
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -273,7 +273,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
 
 
     protected void getTeacherInfos(String type, String xnxq) throws IOException {
-        Document page = Jsoup.connect(" http://jwts.hitsz.edu.cn/xsxk/queryYxkc").cookies(cookies_jwts).timeout(5000)
+        Document page = Jsoup.connect(" http://jwts.hitsz.edu.cn:8080/xsxk/queryYxkc").cookies(cookies_jwts).timeout(5000)
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                 .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -287,7 +287,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
         for (Element e : links) {
             String onclick = e.attr("onclick");
             final String teacherCode = onclick.substring(onclick.indexOf("('") + 2, onclick.indexOf("')"));
-            Document teacher = Jsoup.connect("http://jwts.hitsz.edu.cn/pub/queryJsxxView?zgh=" + teacherCode).cookies(cookies_jwts).timeout(5000)
+            Document teacher = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/pub/queryJsxxView?zgh=" + teacherCode).cookies(cookies_jwts).timeout(5000)
                     .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                     .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                     .header("Content-Type", "application/x-www-form-urlencoded")
@@ -347,7 +347,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
             Map result = new HashMap();
             try {
                 curriculumItems.clear();
-                Document dd = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryGrkb").cookies(cookies_jwts).timeout(5000)
+                Document dd = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kbcx/queryGrkb").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -412,7 +412,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
         protected Object doInBackground(Object[] objects) {
             Document page;
             try {
-                page = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryGrkb").cookies(cookies_jwts).timeout(60000)
+                page = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kbcx/queryGrkb").cookies(cookies_jwts).timeout(60000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -437,7 +437,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
                     rowsList.add(oneRow);
                 }
                 curriculum.put("table", rowsList);
-                Document ddd = Jsoup.connect("http://jwts.hitsz.edu.cn/kbcx/queryXszkb").cookies(cookies_jwts).timeout(60000)
+                Document ddd = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kbcx/queryXszkb").cookies(cookies_jwts).timeout(60000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -540,7 +540,7 @@ public class FragmentJWTS_grkb extends BaseFragment {
             // Log.e("add teacher:",t.getName());
             try {
                 if (old == null) {
-                    String photo = "http://jwts.hitsz.edu.cn/xxgl/showPhoto?zgh=" + t.getTeacherCode();
+                    String photo = "http://jwts.hitsz.edu.cn:8080/xxgl/showPhoto?zgh=" + t.getTeacherCode();
                     byte[] teacherPhoto;
                     teacherPhoto = Jsoup.connect(photo).cookies(cookies_jwts).ignoreContentType(true).execute().bodyAsBytes();
                     String path = Objects.requireNonNull(getActivity()).getCacheDir().toString() + "/tpt/teacher:" + t.getTeacherCode() + ".png";

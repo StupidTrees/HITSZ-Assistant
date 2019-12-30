@@ -55,7 +55,7 @@
                     android:layout_gravity="center"
                     android:alpha="0.7"
                     android:gravity="center"
-                    android:text="https://jwts.hitsz.edu.cn"
+                    android:text="https://jwts.hitsz.edu.cn:8080"
                     android:textColor="@color/material_text_icon_white"
                     android:textSize="14sp" />
 

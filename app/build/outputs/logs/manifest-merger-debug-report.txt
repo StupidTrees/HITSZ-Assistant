@@ -1,0 +1,769 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+MERGED from [net.opacapp:multiline-collapsingtoolbar:27.1.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\e9dbb72c0f4edcbec3bfee03ce97bb58\AndroidManifest.xml:2:1-11:12
+MERGED from [com.google.android.material:material:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\68d881f58a1fefe712b9bba171779a36\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.preference:preference:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3eb0a1f76a48f25a2a61848295967183\AndroidManifest.xml:17:1-24:12
+MERGED from [com.getkeepsafe.taptargetview:taptargetview:1.12.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9724ddf651d0a03f8cc686a662479267\AndroidManifest.xml:2:1-8:12
+MERGED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:2:1-34:12
+MERGED from [com.github.rasoulmiri:buttonloading:v1.0.8] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\f4d5db6d3c1217058960f8016c2337ab\AndroidManifest.xml:2:1-13:12
+MERGED from [com.github.Jay-Goo:WaveLineView:v1.0.3] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\14afcd8b7b0a5d7b0ec8ae2f6fb8882f\AndroidManifest.xml:2:1-17:12
+MERGED from [com.github.alorma:timelineview:2.3.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\66c7804b1a2f14ff2802cfb4bad92edf\AndroidManifest.xml:2:1-12:12
+MERGED from [com.github.pinguo-zhouwei:MZBannerView:v2.0.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\5e5f267f1d99bea6bee8e23881819bca\AndroidManifest.xml:2:1-17:12
+MERGED from [com.airbnb.android:lottie:3.0.7] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\8dab2e1b181f3b8c9049b28b86546d4a\AndroidManifest.xml:2:1-11:12
+MERGED from [com.github.skydoves:colorpickerview:2.1.5] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9dbae6a940123debfb38b7e179aad5e5\AndroidManifest.xml:2:1-10:12
+MERGED from [com.yuyh.easyadapter:library:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\45d801727ea04d2685492a75961989bb\AndroidManifest.xml:2:1-17:12
+MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\541b18460e37234a28c1dbcddda8444c\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.legacy:legacy-support-v4:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4ef7ebe2d7f5965ea254aa919070472d\AndroidManifest.xml:17:1-22:12
+MERGED from [net.cachapa.expandablelayout:expandablelayout:2.9.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\60c9e66493d75799cdf6e1e9b4b37ecc\AndroidManifest.xml:2:1-12:12
+MERGED from [com.gordonwong:material-sheet-fab:1.2.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\c320e7149092cd13f7b587a5ca9fbd48\AndroidManifest.xml:2:1-12:12
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\7d2b62454191b06e20f6418475346f63\AndroidManifest.xml:2:1-11:12
+MERGED from [tyrantgit:explosionfield:1.0.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\28ab87fe2847cc467a2d95e49f662f23\AndroidManifest.xml:2:1-16:12
+MERGED from [jp.wasabeef:glide-transformations:2.0.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\55b6c861def537aa141dc9fcb8533291\AndroidManifest.xml:2:1-12:12
+MERGED from [com.github.bumptech.glide:glide:4.9.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\456bf3b89c947ca0483d93ebfc8e3e8f\AndroidManifest.xml:2:1-12:12
+MERGED from [com.azoft.carousellayoutmanager:carousel:1.2.4] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\f684bb6af9b116f5bc024271aa4a13e9\AndroidManifest.xml:2:1-13:12
+MERGED from [com.bm.photoview:library:1.4.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\73e8e247f39a4a9cd93be0e07ca20bdb\AndroidManifest.xml:2:1-14:12
+MERGED from [com.github.clans:fab:1.6.4] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\01f0a02bc8fb9989454e857897775633\AndroidManifest.xml:2:1-14:12
+MERGED from [com.github.lzyzsd:circleprogress:1.2.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\da96b2196122dff9dde05f43644c9255\AndroidManifest.xml:2:1-12:12
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:2:1-45:12
+MERGED from [com.tencent.bugly:nativecrashreport:3.7.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\1be59ee523b5e7fda7ba5e4d0dfe4975\AndroidManifest.xml:2:1-9:12
+MERGED from [com.cncoderx.wheelview:library:1.2.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9daa38074b58de3a0be372830d28e545\AndroidManifest.xml:2:1-17:12
+MERGED from [io.reactivex.rxjava2:rxandroid:2.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\491bfd24c618e2ecdc1f35f9330f898e\AndroidManifest.xml:15:1-20:12
+MERGED from [com.rmtheis:tess-two:9.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\6a726cab432e69859a694cfa9efe086d\AndroidManifest.xml:17:1-26:12
+MERGED from [com.github.PhilJay:MPAndroidChart:v3.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fc00e859df18fcc340e5ae2e7bf42d95\AndroidManifest.xml:2:1-20:12
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0500e6502f30f0e91574ff97b0556575\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\13c28f7d3365ecc8e43e426a2dd5c4f3\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.recyclerview:recyclerview:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\56c2b0045bc46f6b1e76e5617bf82ec1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\284cd09383e63fa56136bf8fc76f6a3e\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\769eed92b74a2aeabc457a73d9630be9\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media:media:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\8a02bc1e20866477c0a8fda76cb646d9\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\eee4cc6dad9d99e60b871fa1388ef839\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.transition:transition:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\1ab30bbeffa12537cdddd2f434dd5524\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\644ded4eff80d95b45a4ab87c789bd8c\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\294496882d8ad450b3ead21ea1ee62e2\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4831ef84d142eaf96c98c59e2137a4c0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\c6d44e697a5c0e3e715e453c331c9ea7\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\380c66a766b9e96edc6f86ce6f0578ed\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\79560706aa7d5780478484476e5b7c29\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\2e3ba8d4e393939837f5ad374a9bbed4\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\5cf294e9cd585ed355c22dcb80f49e8f\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\b7169e7dbd10c67192ce2c0954375c87\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\73a5ded688304cc81b7d3a87cfa5258a\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4082c5a69c53a62dd52b1fadf1592f6e\AndroidManifest.xml:17:1-26:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\493009e6e4c763a78eb40d5aa87646b7\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fbc987227ffc0f9b92e40b27a4161561\AndroidManifest.xml:17:1-22:12
+MERGED from [com.github.bumptech.glide:gifdecoder:4.9.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\499aed86eb4f3b973e27da7e62382a4f\AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\dbf115df705c99e9be1554d80762dd12\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\6388f20655734f0284715593dbb20c7d\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fddc54be8e52840d4eba6bbd59ad1e8a\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fbfee06ddcf3c572ec230ec5b0ae8327\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9d465e8821a3af4d51ad1446d8db4b4e\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0ef3b71b886829db55be2183c31590f1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\cf014d75de906723e057f566d241eaac\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\373b2b39c49ec814de4843bb991ec58f\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\a8dca0ba1728997af2f89a89d885d4a4\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\1dc41837949dc8b9da9710b05ed739d2\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\cee44eb5f9072bc10c72b3b7568bc0f4\AndroidManifest.xml:17:1-22:12
+MERGED from [com.github.asyl.animation:arcanimator:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fb82675e4d69f1c7170e4ab50a1acb43\AndroidManifest.xml:2:1-14:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+	package
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:4:5-34
+		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:3:5-51
+	android:versionCode
+		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:6:5-80
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:6:22-77
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:7:5-81
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:14:5-81
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:14:5-81
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:7:22-78
+uses-permission#android.permission.INTERNET
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:8:5-67
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:11:5-67
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:11:5-67
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:8:22-64
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:9:5-71
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:9:22-68
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:10:5-79
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:12:5-79
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:12:5-79
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:10:22-76
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:11:5-76
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:13:5-76
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:13:5-76
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:11:22-73
+uses-permission#android.permission.CHANGE_NETWORK_STATE
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:12:5-79
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:12:22-76
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:13:5-75
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:13:22-72
+uses-permission#android.permission.READ_CONTACTS
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:14:5-72
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:14:22-69
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:17:5-79
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:17:22-76
+uses-permission#android.permission.CAMERA
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:18:5-65
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:18:22-62
+uses-permission#android.permission.WAKE_LOCK
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:20:5-68
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:20:22-65
+uses-permission#android.permission.READ_LOGS
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:21:5-23:47
+	tools:ignore
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:23:9-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:22:9-52
+uses-permission#android.permission.REQUEST_INSTALL_PACKAGES
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:24:5-83
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:15:5-83
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:15:5-83
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:24:22-80
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:25:5-81
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:25:22-78
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:28:5-76
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:28:22-73
+uses-permission#android.permission.ACCESS_LOCATION_EXTRA_COMMANDS
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:29:5-89
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:29:22-86
+uses-permission#android.permission.BLUETOOTH
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:30:5-68
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:30:22-65
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:31:5-74
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:31:22-71
+uses-permission#android.permission.ACCESS_NOTIFICATION_POLICY
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:32:5-85
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:32:22-82
+meta-data#IFLYTEK_APPKEY
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:34:5-36:36
+	android:value
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:36:9-33
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:35:9-38
+uses-permission#android.permission.GET_ACCOUNTS
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:37:5-71
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:37:22-68
+uses-permission#android.permission.READ_PROFILE
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:38:5-71
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:38:22-68
+application
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:40:5-204:19
+MERGED from [com.google.android.material:material:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\68d881f58a1fefe712b9bba171779a36\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\68d881f58a1fefe712b9bba171779a36\AndroidManifest.xml:22:5-20
+MERGED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:11:5-32:19
+MERGED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:11:5-32:19
+MERGED from [com.github.rasoulmiri:buttonloading:v1.0.8] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\f4d5db6d3c1217058960f8016c2337ab\AndroidManifest.xml:11:5-20
+MERGED from [com.github.rasoulmiri:buttonloading:v1.0.8] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\f4d5db6d3c1217058960f8016c2337ab\AndroidManifest.xml:11:5-20
+MERGED from [com.github.Jay-Goo:WaveLineView:v1.0.3] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\14afcd8b7b0a5d7b0ec8ae2f6fb8882f\AndroidManifest.xml:11:5-15:19
+MERGED from [com.github.Jay-Goo:WaveLineView:v1.0.3] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\14afcd8b7b0a5d7b0ec8ae2f6fb8882f\AndroidManifest.xml:11:5-15:19
+MERGED from [com.github.pinguo-zhouwei:MZBannerView:v2.0.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\5e5f267f1d99bea6bee8e23881819bca\AndroidManifest.xml:11:5-15:19
+MERGED from [com.github.pinguo-zhouwei:MZBannerView:v2.0.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\5e5f267f1d99bea6bee8e23881819bca\AndroidManifest.xml:11:5-15:19
+MERGED from [com.airbnb.android:lottie:3.0.7] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\8dab2e1b181f3b8c9049b28b86546d4a\AndroidManifest.xml:9:5-20
+MERGED from [com.airbnb.android:lottie:3.0.7] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\8dab2e1b181f3b8c9049b28b86546d4a\AndroidManifest.xml:9:5-20
+MERGED from [com.yuyh.easyadapter:library:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\45d801727ea04d2685492a75961989bb\AndroidManifest.xml:11:5-15:19
+MERGED from [com.yuyh.easyadapter:library:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\45d801727ea04d2685492a75961989bb\AndroidManifest.xml:11:5-15:19
+MERGED from [com.gordonwong:material-sheet-fab:1.2.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\c320e7149092cd13f7b587a5ca9fbd48\AndroidManifest.xml:10:5-20
+MERGED from [com.gordonwong:material-sheet-fab:1.2.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\c320e7149092cd13f7b587a5ca9fbd48\AndroidManifest.xml:10:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\7d2b62454191b06e20f6418475346f63\AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\7d2b62454191b06e20f6418475346f63\AndroidManifest.xml:9:5-20
+MERGED from [tyrantgit:explosionfield:1.0.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\28ab87fe2847cc467a2d95e49f662f23\AndroidManifest.xml:11:5-14:19
+MERGED from [tyrantgit:explosionfield:1.0.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\28ab87fe2847cc467a2d95e49f662f23\AndroidManifest.xml:11:5-14:19
+MERGED from [com.github.bumptech.glide:glide:4.9.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\456bf3b89c947ca0483d93ebfc8e3e8f\AndroidManifest.xml:10:5-20
+MERGED from [com.github.bumptech.glide:glide:4.9.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\456bf3b89c947ca0483d93ebfc8e3e8f\AndroidManifest.xml:10:5-20
+MERGED from [com.azoft.carousellayoutmanager:carousel:1.2.4] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\f684bb6af9b116f5bc024271aa4a13e9\AndroidManifest.xml:11:5-20
+MERGED from [com.azoft.carousellayoutmanager:carousel:1.2.4] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\f684bb6af9b116f5bc024271aa4a13e9\AndroidManifest.xml:11:5-20
+MERGED from [com.bm.photoview:library:1.4.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\73e8e247f39a4a9cd93be0e07ca20bdb\AndroidManifest.xml:11:5-12:19
+MERGED from [com.bm.photoview:library:1.4.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\73e8e247f39a4a9cd93be0e07ca20bdb\AndroidManifest.xml:11:5-12:19
+MERGED from [com.github.clans:fab:1.6.4] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\01f0a02bc8fb9989454e857897775633\AndroidManifest.xml:12:5-20
+MERGED from [com.github.clans:fab:1.6.4] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\01f0a02bc8fb9989454e857897775633\AndroidManifest.xml:12:5-20
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:18:5-43:19
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:18:5-43:19
+MERGED from [com.cncoderx.wheelview:library:1.2.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9daa38074b58de3a0be372830d28e545\AndroidManifest.xml:11:5-15:19
+MERGED from [com.cncoderx.wheelview:library:1.2.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9daa38074b58de3a0be372830d28e545\AndroidManifest.xml:11:5-15:19
+MERGED from [androidx.core:core:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4082c5a69c53a62dd52b1fadf1592f6e\AndroidManifest.xml:24:5-89
+MERGED from [androidx.core:core:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4082c5a69c53a62dd52b1fadf1592f6e\AndroidManifest.xml:24:5-89
+MERGED from [com.github.bumptech.glide:gifdecoder:4.9.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\499aed86eb4f3b973e27da7e62382a4f\AndroidManifest.xml:9:5-20
+MERGED from [com.github.bumptech.glide:gifdecoder:4.9.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\499aed86eb4f3b973e27da7e62382a4f\AndroidManifest.xml:9:5-20
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\dbf115df705c99e9be1554d80762dd12\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\dbf115df705c99e9be1554d80762dd12\AndroidManifest.xml:24:5-25:19
+MERGED from [com.github.asyl.animation:arcanimator:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fb82675e4d69f1c7170e4ab50a1acb43\AndroidManifest.xml:11:5-12:19
+MERGED from [com.github.asyl.animation:arcanimator:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fb82675e4d69f1c7170e4ab50a1acb43\AndroidManifest.xml:11:5-12:19
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4082c5a69c53a62dd52b1fadf1592f6e\AndroidManifest.xml:24:18-86
+	android:supportsRtl
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:45:9-35
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:44:9-41
+	tools:ignore
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:47:9-60
+	android:icon
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:43:9-49
+	android:allowBackup
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:42:9-35
+	android:usesCleartextTraffic
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:46:9-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:41:9-40
+activity#com.stupidtree.hita.activities.ActivityTasks
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:48:9-50:15
+	android:windowSoftInputMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:49:13-52
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:48:19-59
+activity#com.stupidtree.hita.activities.ActivityUTMood
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:51:9-63
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:51:19-60
+activity#com.stupidtree.hita.activities.ActivityAttitude
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:52:9-54:55
+	android:windowSoftInputMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:54:13-52
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:53:13-56
+activity#com.stupidtree.hita.activities.ActivityUTService
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:55:9-66
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:55:19-63
+activity#com.stupidtree.hita.activities.ActivitySearch
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:56:9-60:55
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:58:13-58
+	android:windowSoftInputMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:60:13-52
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:59:13-48
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:57:13-54
+activity#com.stupidtree.hita.activities.ActivityXL
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:61:9-64:59
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:63:13-54
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:64:13-56
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:62:13-50
+activity#com.stupidtree.hita.activities.ActivityYX_FDY
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:65:9-63
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:65:19-60
+activity#com.stupidtree.hita.activities.ActivityYX_ToSchool
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:66:9-68
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:66:19-65
+activity#com.stupidtree.hita.activities.ActivityEmptyClassroomDetail
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:67:9-77
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:67:19-74
+activity#com.stupidtree.hita.activities.ActivityEmptyClassroom
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:68:9-71
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:68:19-68
+activity#com.stupidtree.hita.activities.ActivityPostDetail
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:69:9-67
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:69:19-64
+activity#com.stupidtree.hita.activities.ActivityUserProfile
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:70:9-73:59
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:72:13-64
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:73:13-56
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:71:13-59
+activity#com.stupidtree.hita.activities.ActivityLocation
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:74:9-65
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:74:19-62
+service#com.stupidtree.hita.WidgetService
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:76:9-82:19
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:76:18-47
+intent-filter#action:name:android.appwidget.action.APP_WIDGET_SERVICE
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:77:13-81:29
+action#android.appwidget.action.APP_WIDGET_SERVICE
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:80:17-86
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:80:25-83
+receiver#com.stupidtree.hita.TimeLineWidget
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:84:9-93:20
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:84:19-49
+intent-filter#action:name:android.appwidget.action.APPWIDGET_UPDATE+action:name:com.stupidtree.hita.UPDATE_ALL
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:85:13-88:29
+action#android.appwidget.action.APPWIDGET_UPDATE
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:86:17-84
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:86:25-81
+action#com.stupidtree.hita.UPDATE_ALL
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:87:17-73
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:87:25-70
+meta-data#android.appwidget.provider
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:90:13-92:65
+	android:resource
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:92:17-62
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:91:17-58
+receiver#com.stupidtree.hita.NotificationClickReceiver
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:94:9-63
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:94:19-60
+activity#com.stupidtree.hita.activities.ActivitySetting
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:96:9-64
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:96:19-61
+service#com.amap.api.location.APSService
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:98:9-68
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:98:18-65
+provider#cn.bmob.v3.util.BmobContentProvider
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:100:9-102:77
+	android:authorities
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:102:13-74
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:101:13-63
+activity#com.stupidtree.hita.activities.ActivityRankBoard
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:104:9-107:59
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:106:13-56
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:107:13-56
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:105:13-57
+activity#com.stupidtree.hita.activities.ActivityTeacher
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:108:9-110:59
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:110:13-56
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:109:13-55
+activity#com.stupidtree.hita.activities.ActivitySubjectManager
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:111:9-113:47
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:113:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:112:13-62
+activity#com.stupidtree.hita.activities.ActivityDynamicTable
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:114:9-69
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:114:19-66
+activity#com.stupidtree.hita.activities.ActivityCourse
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:115:9-118:47
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:117:13-57
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:118:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:116:13-54
+activity#com.stupidtree.hita.activities.ActivityJWTS
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:119:9-121:47
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:121:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:120:13-52
+activity#com.stupidtree.hita.activities.ActivityAboutHITA
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:122:9-124:47
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:124:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:123:13-57
+activity#com.tencent.bugly.beta.ui.BetaActivity
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:125:9-128:64
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:21:9-25:56
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:21:9-25:56
+	android:configChanges
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:127:13-81
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:128:13-61
+	tools:replace
+		ADDED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:25:13-53
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:126:13-66
+activity#com.stupidtree.hita.activities.ActivityNewsDetail
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:129:9-131:47
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:131:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:130:13-58
+activity#com.stupidtree.hita.activities.ActivityLostAndFound
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:132:9-135:55
+	android:windowSoftInputMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:135:13-52
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:134:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:133:13-60
+activity#com.stupidtree.hita.activities.ActivityLoginJWTS
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:136:9-139:47
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:138:13-55
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:139:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:137:13-57
+activity#com.stupidtree.hita.activities.ActivityLoginUT
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:140:9-142:47
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:142:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:141:13-55
+activity#com.stupidtree.hita.activities.ActivityHITSZInfo
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:143:9-145:47
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:145:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:144:13-57
+activity#com.stupidtree.hita.activities.ActivityLogin
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:146:9-148:47
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:148:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:147:13-53
+activity#com.stupidtree.hita.activities.ActivityTimeTable
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:149:9-151:47
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:151:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:150:13-57
+activity#com.stupidtree.hita.activities.ActivitySubject
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:152:9-155:47
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:154:13-59
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:155:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:153:13-55
+activity#com.stupidtree.hita.activities.ActivityPhotoDetail
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:156:9-158:47
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:158:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:157:13-59
+activity#com.stupidtree.hita.activities.ActivityNotes
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:159:9-162:47
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:161:13-57
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:162:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:160:13-53
+activity#com.stupidtree.hita.activities.ActivityUniversity
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:163:9-165:47
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:165:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:164:13-58
+activity#com.stupidtree.hita.activities.ActivityMain
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:166:9-170:55
+	android:launchMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:168:13-44
+	android:windowSoftInputMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:170:13-52
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:169:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:167:13-52
+activity#com.stupidtree.hita.activities.ActivityCampusLocations
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:171:9-72
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:171:19-69
+activity#com.stupidtree.hita.activities.ActivityCurriculumManager
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:172:9-175:47
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:174:13-63
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:175:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:173:13-65
+activity#com.stupidtree.hita.activities.ActivitySplash
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:176:9-188:20
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:178:13-47
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:177:13-54
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:179:13-183:29
+action#android.intent.action.MAIN
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:180:17-69
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:180:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:182:17-77
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:182:27-74
+meta-data#android.app.shortcuts
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:185:13-187:53
+	android:resource
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:187:17-50
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:186:17-53
+activity#com.stupidtree.hita.activities.ActivityUserCenter
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:189:9-192:47
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:191:13-63
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:192:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:190:13-58
+activity#com.stupidtree.hita.activities.ActivityChatbot
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:193:9-196:67
+	android:windowSoftInputMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:196:13-64
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:195:13-48
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:194:13-55
+activity#com.stupidtree.hita.activities.ActivityExplore
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:197:9-199:47
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:199:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:198:13-55
+meta-data#com.amap.api.v2.apikey
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:201:9-203:64
+	android:value
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:203:13-61
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:202:13-50
+uses-sdk
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+MERGED from [net.opacapp:multiline-collapsingtoolbar:27.1.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\e9dbb72c0f4edcbec3bfee03ce97bb58\AndroidManifest.xml:7:5-9:41
+MERGED from [net.opacapp:multiline-collapsingtoolbar:27.1.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\e9dbb72c0f4edcbec3bfee03ce97bb58\AndroidManifest.xml:7:5-9:41
+MERGED from [com.google.android.material:material:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\68d881f58a1fefe712b9bba171779a36\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\68d881f58a1fefe712b9bba171779a36\AndroidManifest.xml:20:5-44
+MERGED from [androidx.preference:preference:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3eb0a1f76a48f25a2a61848295967183\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.preference:preference:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3eb0a1f76a48f25a2a61848295967183\AndroidManifest.xml:20:5-22:41
+MERGED from [com.getkeepsafe.taptargetview:taptargetview:1.12.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9724ddf651d0a03f8cc686a662479267\AndroidManifest.xml:6:5-44
+MERGED from [com.getkeepsafe.taptargetview:taptargetview:1.12.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9724ddf651d0a03f8cc686a662479267\AndroidManifest.xml:6:5-44
+MERGED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:7:5-9:41
+MERGED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.rasoulmiri:buttonloading:v1.0.8] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\f4d5db6d3c1217058960f8016c2337ab\AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.rasoulmiri:buttonloading:v1.0.8] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\f4d5db6d3c1217058960f8016c2337ab\AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.Jay-Goo:WaveLineView:v1.0.3] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\14afcd8b7b0a5d7b0ec8ae2f6fb8882f\AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.Jay-Goo:WaveLineView:v1.0.3] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\14afcd8b7b0a5d7b0ec8ae2f6fb8882f\AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.alorma:timelineview:2.3.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\66c7804b1a2f14ff2802cfb4bad92edf\AndroidManifest.xml:8:5-10:41
+MERGED from [com.github.alorma:timelineview:2.3.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\66c7804b1a2f14ff2802cfb4bad92edf\AndroidManifest.xml:8:5-10:41
+MERGED from [com.github.pinguo-zhouwei:MZBannerView:v2.0.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\5e5f267f1d99bea6bee8e23881819bca\AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.pinguo-zhouwei:MZBannerView:v2.0.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\5e5f267f1d99bea6bee8e23881819bca\AndroidManifest.xml:7:5-9:41
+MERGED from [com.airbnb.android:lottie:3.0.7] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\8dab2e1b181f3b8c9049b28b86546d4a\AndroidManifest.xml:5:5-7:41
+MERGED from [com.airbnb.android:lottie:3.0.7] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\8dab2e1b181f3b8c9049b28b86546d4a\AndroidManifest.xml:5:5-7:41
+MERGED from [com.github.skydoves:colorpickerview:2.1.5] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9dbae6a940123debfb38b7e179aad5e5\AndroidManifest.xml:6:5-8:41
+MERGED from [com.github.skydoves:colorpickerview:2.1.5] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9dbae6a940123debfb38b7e179aad5e5\AndroidManifest.xml:6:5-8:41
+MERGED from [com.yuyh.easyadapter:library:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\45d801727ea04d2685492a75961989bb\AndroidManifest.xml:7:5-9:41
+MERGED from [com.yuyh.easyadapter:library:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\45d801727ea04d2685492a75961989bb\AndroidManifest.xml:7:5-9:41
+MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\541b18460e37234a28c1dbcddda8444c\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\541b18460e37234a28c1dbcddda8444c\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.legacy:legacy-support-v4:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4ef7ebe2d7f5965ea254aa919070472d\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-v4:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4ef7ebe2d7f5965ea254aa919070472d\AndroidManifest.xml:20:5-44
+MERGED from [net.cachapa.expandablelayout:expandablelayout:2.9.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\60c9e66493d75799cdf6e1e9b4b37ecc\AndroidManifest.xml:8:5-10:41
+MERGED from [net.cachapa.expandablelayout:expandablelayout:2.9.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\60c9e66493d75799cdf6e1e9b4b37ecc\AndroidManifest.xml:8:5-10:41
+MERGED from [com.gordonwong:material-sheet-fab:1.2.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\c320e7149092cd13f7b587a5ca9fbd48\AndroidManifest.xml:6:5-8:41
+MERGED from [com.gordonwong:material-sheet-fab:1.2.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\c320e7149092cd13f7b587a5ca9fbd48\AndroidManifest.xml:6:5-8:41
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\7d2b62454191b06e20f6418475346f63\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\7d2b62454191b06e20f6418475346f63\AndroidManifest.xml:5:5-7:41
+MERGED from [tyrantgit:explosionfield:1.0.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\28ab87fe2847cc467a2d95e49f662f23\AndroidManifest.xml:7:5-9:41
+MERGED from [tyrantgit:explosionfield:1.0.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\28ab87fe2847cc467a2d95e49f662f23\AndroidManifest.xml:7:5-9:41
+MERGED from [jp.wasabeef:glide-transformations:2.0.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\55b6c861def537aa141dc9fcb8533291\AndroidManifest.xml:8:5-10:41
+MERGED from [jp.wasabeef:glide-transformations:2.0.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\55b6c861def537aa141dc9fcb8533291\AndroidManifest.xml:8:5-10:41
+MERGED from [com.github.bumptech.glide:glide:4.9.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\456bf3b89c947ca0483d93ebfc8e3e8f\AndroidManifest.xml:6:5-8:41
+MERGED from [com.github.bumptech.glide:glide:4.9.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\456bf3b89c947ca0483d93ebfc8e3e8f\AndroidManifest.xml:6:5-8:41
+MERGED from [com.azoft.carousellayoutmanager:carousel:1.2.4] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\f684bb6af9b116f5bc024271aa4a13e9\AndroidManifest.xml:7:5-9:41
+MERGED from [com.azoft.carousellayoutmanager:carousel:1.2.4] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\f684bb6af9b116f5bc024271aa4a13e9\AndroidManifest.xml:7:5-9:41
+MERGED from [com.bm.photoview:library:1.4.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\73e8e247f39a4a9cd93be0e07ca20bdb\AndroidManifest.xml:7:5-9:41
+MERGED from [com.bm.photoview:library:1.4.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\73e8e247f39a4a9cd93be0e07ca20bdb\AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.clans:fab:1.6.4] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\01f0a02bc8fb9989454e857897775633\AndroidManifest.xml:8:5-10:41
+MERGED from [com.github.clans:fab:1.6.4] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\01f0a02bc8fb9989454e857897775633\AndroidManifest.xml:8:5-10:41
+MERGED from [com.github.lzyzsd:circleprogress:1.2.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\da96b2196122dff9dde05f43644c9255\AndroidManifest.xml:8:5-10:41
+MERGED from [com.github.lzyzsd:circleprogress:1.2.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\da96b2196122dff9dde05f43644c9255\AndroidManifest.xml:8:5-10:41
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:6:5-8:41
+MERGED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:6:5-8:41
+MERGED from [com.tencent.bugly:nativecrashreport:3.7.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\1be59ee523b5e7fda7ba5e4d0dfe4975\AndroidManifest.xml:5:5-7:41
+MERGED from [com.tencent.bugly:nativecrashreport:3.7.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\1be59ee523b5e7fda7ba5e4d0dfe4975\AndroidManifest.xml:5:5-7:41
+MERGED from [com.cncoderx.wheelview:library:1.2.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9daa38074b58de3a0be372830d28e545\AndroidManifest.xml:7:5-9:41
+MERGED from [com.cncoderx.wheelview:library:1.2.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9daa38074b58de3a0be372830d28e545\AndroidManifest.xml:7:5-9:41
+MERGED from [io.reactivex.rxjava2:rxandroid:2.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\491bfd24c618e2ecdc1f35f9330f898e\AndroidManifest.xml:18:5-43
+MERGED from [io.reactivex.rxjava2:rxandroid:2.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\491bfd24c618e2ecdc1f35f9330f898e\AndroidManifest.xml:18:5-43
+MERGED from [com.rmtheis:tess-two:9.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\6a726cab432e69859a694cfa9efe086d\AndroidManifest.xml:22:5-24:41
+MERGED from [com.rmtheis:tess-two:9.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\6a726cab432e69859a694cfa9efe086d\AndroidManifest.xml:22:5-24:41
+MERGED from [com.github.PhilJay:MPAndroidChart:v3.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fc00e859df18fcc340e5ae2e7bf42d95\AndroidManifest.xml:16:5-18:41
+MERGED from [com.github.PhilJay:MPAndroidChart:v3.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fc00e859df18fcc340e5ae2e7bf42d95\AndroidManifest.xml:16:5-18:41
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0500e6502f30f0e91574ff97b0556575\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0500e6502f30f0e91574ff97b0556575\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\13c28f7d3365ecc8e43e426a2dd5c4f3\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\13c28f7d3365ecc8e43e426a2dd5c4f3\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\56c2b0045bc46f6b1e76e5617bf82ec1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\56c2b0045bc46f6b1e76e5617bf82ec1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\284cd09383e63fa56136bf8fc76f6a3e\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\284cd09383e63fa56136bf8fc76f6a3e\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\769eed92b74a2aeabc457a73d9630be9\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\769eed92b74a2aeabc457a73d9630be9\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media:media:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\8a02bc1e20866477c0a8fda76cb646d9\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media:media:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\8a02bc1e20866477c0a8fda76cb646d9\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\eee4cc6dad9d99e60b871fa1388ef839\AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\eee4cc6dad9d99e60b871fa1388ef839\AndroidManifest.xml:20:5-44
+MERGED from [androidx.transition:transition:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\1ab30bbeffa12537cdddd2f434dd5524\AndroidManifest.xml:20:5-44
+MERGED from [androidx.transition:transition:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\1ab30bbeffa12537cdddd2f434dd5524\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\644ded4eff80d95b45a4ab87c789bd8c\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\644ded4eff80d95b45a4ab87c789bd8c\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\294496882d8ad450b3ead21ea1ee62e2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\294496882d8ad450b3ead21ea1ee62e2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4831ef84d142eaf96c98c59e2137a4c0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4831ef84d142eaf96c98c59e2137a4c0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\c6d44e697a5c0e3e715e453c331c9ea7\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\c6d44e697a5c0e3e715e453c331c9ea7\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\380c66a766b9e96edc6f86ce6f0578ed\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\380c66a766b9e96edc6f86ce6f0578ed\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\79560706aa7d5780478484476e5b7c29\AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\79560706aa7d5780478484476e5b7c29\AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\2e3ba8d4e393939837f5ad374a9bbed4\AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\2e3ba8d4e393939837f5ad374a9bbed4\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\5cf294e9cd585ed355c22dcb80f49e8f\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\5cf294e9cd585ed355c22dcb80f49e8f\AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\b7169e7dbd10c67192ce2c0954375c87\AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\b7169e7dbd10c67192ce2c0954375c87\AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\73a5ded688304cc81b7d3a87cfa5258a\AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\73a5ded688304cc81b7d3a87cfa5258a\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4082c5a69c53a62dd52b1fadf1592f6e\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\4082c5a69c53a62dd52b1fadf1592f6e\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\493009e6e4c763a78eb40d5aa87646b7\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\493009e6e4c763a78eb40d5aa87646b7\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fbc987227ffc0f9b92e40b27a4161561\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fbc987227ffc0f9b92e40b27a4161561\AndroidManifest.xml:20:5-44
+MERGED from [com.github.bumptech.glide:gifdecoder:4.9.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\499aed86eb4f3b973e27da7e62382a4f\AndroidManifest.xml:5:5-7:41
+MERGED from [com.github.bumptech.glide:gifdecoder:4.9.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\499aed86eb4f3b973e27da7e62382a4f\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\dbf115df705c99e9be1554d80762dd12\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\dbf115df705c99e9be1554d80762dd12\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\6388f20655734f0284715593dbb20c7d\AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\6388f20655734f0284715593dbb20c7d\AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fddc54be8e52840d4eba6bbd59ad1e8a\AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fddc54be8e52840d4eba6bbd59ad1e8a\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fbfee06ddcf3c572ec230ec5b0ae8327\AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fbfee06ddcf3c572ec230ec5b0ae8327\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9d465e8821a3af4d51ad1446d8db4b4e\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\9d465e8821a3af4d51ad1446d8db4b4e\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0ef3b71b886829db55be2183c31590f1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0ef3b71b886829db55be2183c31590f1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\cf014d75de906723e057f566d241eaac\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\cf014d75de906723e057f566d241eaac\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\373b2b39c49ec814de4843bb991ec58f\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\373b2b39c49ec814de4843bb991ec58f\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\a8dca0ba1728997af2f89a89d885d4a4\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\a8dca0ba1728997af2f89a89d885d4a4\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\1dc41837949dc8b9da9710b05ed739d2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\1dc41837949dc8b9da9710b05ed739d2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\cee44eb5f9072bc10c72b3b7568bc0f4\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\cee44eb5f9072bc10c72b3b7568bc0f4\AndroidManifest.xml:20:5-44
+MERGED from [com.github.asyl.animation:arcanimator:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fb82675e4d69f1c7170e4ab50a1acb43\AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.asyl.animation:arcanimator:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fb82675e4d69f1c7170e4ab50a1acb43\AndroidManifest.xml:7:5-9:41
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
+activity#com.yuyh.library.imgsel.ui.ISListActivity
+ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:12:9-14:47
+	android:theme
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:14:13-44
+	android:name
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:13:13-69
+activity#com.yuyh.library.imgsel.ui.ISCameraActivity
+ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:15:9-17:66
+	android:theme
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:17:13-63
+	android:name
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:16:13-71
+meta-data#APP_ID
+ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:19:9-21:48
+	android:value
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:21:13-45
+	android:name
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:20:13-34
+provider#androidx.core.content.FileProvider
+ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:23:9-31:20
+	android:grantUriPermissions
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:27:13-47
+	android:authorities
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:25:13-66
+	android:exported
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:26:13-37
+	android:name
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:24:13-62
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:28:13-30:58
+	android:resource
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:30:17-55
+	android:name
+		ADDED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:29:17-67
+provider#com.tencent.bugly.beta.utils.BuglyFileProvider
+ADDED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:27:9-37:20
+	android:grantUriPermissions
+		ADDED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:31:13-47
+	android:authorities
+		ADDED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:29:13-64
+	android:exported
+		ADDED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:30:13-37
+	tools:replace
+		ADDED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:32:13-74
+	android:name
+		ADDED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:28:13-74
+service#com.tencent.bugly.beta.tinker.TinkerResultService
+ADDED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:39:9-42:72
+	android:exported
+		ADDED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:41:13-37
+	android:permission
+		ADDED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:42:13-69
+	android:name
+		ADDED from [com.tencent.bugly:crashreport_upgrade:1.4.2] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\0d67822431edb905589d2957b227cd66\AndroidManifest.xml:40:13-77

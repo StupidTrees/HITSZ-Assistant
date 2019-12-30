@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.stupidtree.hita"
+    android:versionCode="20191217"
+    android:versionName="12.17" >
+
+    <uses-sdk
+        android:minSdkVersion="23"
+        android:targetSdkVersion="29" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> <!-- 用于申请获取蓝牙信息进行室内定位 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
+    <meta-data
+        android:name="IFLYTEK_APPKEY"
+        android:value="5c4aa1d3" /> <!-- To auto-complete the email text field in the login_jwts form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+
+    <application
+        android:name="com.stupidtree.hita.HITAApplication"
+        android:allowBackup="true"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:debuggable="true"
+        android:icon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="true" >
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityTasks"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name="com.stupidtree.hita.activities.ActivityUTMood" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityAttitude"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name="com.stupidtree.hita.activities.ActivityUTService" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivitySearch"
+            android:label="@string/title_activity_search"
+            android:theme="@style/ChatBotTheme"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityXL"
+            android:label="@string/title_activity_xl"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="com.stupidtree.hita.activities.ActivityYX_FDY" />
+        <activity android:name="com.stupidtree.hita.activities.ActivityYX_ToSchool" />
+        <activity android:name="com.stupidtree.hita.activities.ActivityEmptyClassroomDetail" />
+        <activity android:name="com.stupidtree.hita.activities.ActivityEmptyClassroom" />
+        <activity android:name="com.stupidtree.hita.activities.ActivityPostDetail" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityUserProfile"
+            android:label="@string/title_activity_user_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="com.stupidtree.hita.activities.ActivityLocation" />
+
+        <service android:name="com.stupidtree.hita.WidgetService" >
+            <intent-filter>
+
+                <!-- 用来启动服务 -->
+                <action android:name="android.appwidget.action.APP_WIDGET_SERVICE" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name="com.stupidtree.hita.TimeLineWidget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.stupidtree.hita.UPDATE_ALL" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/time_line_widget_info" />
+        </receiver>
+        <receiver android:name="com.stupidtree.hita.NotificationClickReceiver" />
+
+        <activity android:name="com.stupidtree.hita.activities.ActivitySetting" />
+
+        <service android:name="com.amap.api.location.APSService" />
+
+        <provider
+            android:name="cn.bmob.v3.util.BmobContentProvider"
+            android:authorities="com.stupidtree.hita.BmobContentProvider" />
+
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityRankBoard"
+            android:label="@string/title_activity_food"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityTeacher"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivitySubjectManager"
+            android:theme="@style/AppTheme" />
+        <activity android:name="com.stupidtree.hita.activities.ActivityDynamicTable" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityCourse"
+            android:label="@string/title_activity_couse"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityJWTS"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityAboutHITA"
+            android:theme="@style/AppTheme" /> <!-- <provider -->
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityNewsDetail"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityLostAndFound"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityLoginJWTS"
+            android:label="@string/title_activity_gfh"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityLoginUT"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityHITSZInfo"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityLogin"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityTimeTable"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivitySubject"
+            android:label="@string/title_activity_subject"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityPhotoDetail"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityNotes"
+            android:label="@string/title_activity_notes"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityUniversity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityMain"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name="com.stupidtree.hita.activities.ActivityCampusLocations" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityCurriculumManager"
+            android:label="@string/title_activity_import_data"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivitySplash"
+            android:theme="@style/SplashTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityUserCenter"
+            android:label="@string/title_activity_user_center"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityChatbot"
+            android:theme="@style/ChatBotTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityExplore"
+            android:theme="@style/AppTheme" />
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="5883fb948ec30c3f56f65e46e65f0b09" />
+
+        <activity
+            android:name="com.yuyh.library.imgsel.ui.ISListActivity"
+            android:theme="@style/SelTheme" />
+        <activity
+            android:name="com.yuyh.library.imgsel.ui.ISCameraActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <meta-data
+            android:name="APP_ID"
+            android:value="com.stupidtree.hita" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.stupidtree.hita.image_provider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider> <!-- Custom FileProvider for 7.x -->
+        <provider
+            android:name="com.tencent.bugly.beta.utils.BuglyFileProvider"
+            android:authorities="com.stupidtree.hita.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider> <!-- 配置tinker合成结果service -->
+        <service
+            android:name="com.tencent.bugly.beta.tinker.TinkerResultService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+    </application>
+
+</manifest>

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.gordonwong:material-sheet-fab:1.2.1@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c320e7149092cd13f7b587a5ca9fbd48/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c320e7149092cd13f7b587a5ca9fbd48/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.gordonwong/material-sheet-fab/1.2.1/a7d5f916943ec4c002bf10931cde9a5251090115/material-sheet-fab-1.2.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

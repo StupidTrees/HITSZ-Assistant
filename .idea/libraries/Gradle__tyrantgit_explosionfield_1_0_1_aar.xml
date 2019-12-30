@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: tyrantgit:explosionfield:1.0.1@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/28ab87fe2847cc467a2d95e49f662f23/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/28ab87fe2847cc467a2d95e49f662f23/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/tyrantgit/explosionfield/1.0.1/5e0de9c74e2855b253ee49e30d0a540ebac78dc5/explosionfield-1.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

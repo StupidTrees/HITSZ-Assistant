@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.alorma:timelineview:2.3.0@aar">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/66c7804b1a2f14ff2802cfb4bad92edf/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/66c7804b1a2f14ff2802cfb4bad92edf/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/66c7804b1a2f14ff2802cfb4bad92edf/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.alorma/timelineview/2.3.0/ec6b932382cc259fdace7251ec26ca6da212e486/timelineview-2.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

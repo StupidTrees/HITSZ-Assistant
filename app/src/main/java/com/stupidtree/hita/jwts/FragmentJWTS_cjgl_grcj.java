@@ -177,7 +177,7 @@ public class FragmentJWTS_cjgl_grcj extends BaseFragment {
         protected String doInBackground(String... strings) {
             try {
                 qzcj_listRes.clear();
-                 Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/cjcx/queryQzcj").cookies(cookies_jwts).timeout(5000)
+                 Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/cjcx/queryQzcj").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -248,7 +248,7 @@ public class FragmentJWTS_cjgl_grcj extends BaseFragment {
             try {
                 xnxqValueRes.clear();
                 xnxqAdapterRes.clear();
-                Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/cjcx/queryQmcj").cookies(cookies_jwts).timeout(5000)
+                Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/cjcx/queryQmcj").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -305,7 +305,7 @@ public class FragmentJWTS_cjgl_grcj extends BaseFragment {
         protected String doInBackground(String... strings) {
                 try {
                     qmcj_listRes.clear();
-                    Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn/cjcx/queryQmcj").cookies(cookies_jwts).timeout(5000)
+                    Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/cjcx/queryQmcj").cookies(cookies_jwts).timeout(5000)
                             .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                             .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                             .header("Content-Type", "application/x-www-form-urlencoded")

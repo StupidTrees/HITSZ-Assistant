@@ -124,7 +124,7 @@ public class FragmentJWTS_info extends BaseFragment {
             for(int i = 0;i<tds.size();i++){
                 if(tds.get(i).toString().contains("<img")){
                     String image;
-                    image = "http://jwts.hitsz.edu.cn/"+tds.get(i).select("img").attr("src");
+                    image = "http://jwts.hitsz.edu.cn:8080/"+tds.get(i).select("img").attr("src");
                     // userInfos.put("头像",image);
                     avatar = Jsoup.connect(image).cookies(cookies_jwts).ignoreContentType(true).execute().bodyAsBytes();
                     new saveAvatarTask(image).executeOnExecutor(HITAApplication.TPE);
@@ -165,7 +165,7 @@ public class FragmentJWTS_info extends BaseFragment {
         @Override
         protected Boolean doInBackground(String... strings) {
             try {
-                Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn/xswhxx/queryXswhxx").cookies(cookies_jwts).timeout(5000)
+                Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/xswhxx/queryXswhxx").cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.stupidtree.hita"
+      android:versionCode="20191202"
+      android:versionName="12.2 教务变动适配"
+      split="lib_slice_3_apk">
+</manifest>

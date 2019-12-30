@@ -220,7 +220,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
 
                     switch (mRadioGroup.getCheckedRadioButtonId()) {
                         case R.id.ade_arrange:
-                            if(app_task_enabled) pickTask.setVisibility(View.VISIBLE);
+                            //if(app_task_enabled) pickTask.setVisibility(View.VISIBLE);
                             break;
                         case R.id.ade_ddl:
                             break;

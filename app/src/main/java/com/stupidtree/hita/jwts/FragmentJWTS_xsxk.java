@@ -268,7 +268,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
             try {
                 xnxqOptions.clear();
                 spinnerOptionsXNXQ.clear();
-                Document wltsPage = Jsoup.connect("http://jwts.hitsz.edu.cn/xsxk/queryXsxk?pageXklb=" + pageXKLB).cookies(cookies_jwts).timeout(5000)
+                Document wltsPage = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/xsxk/queryXsxk?pageXklb=" + pageXKLB).cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("Content-Type", "application/x-www-form-urlencoded")
@@ -335,7 +335,7 @@ public class FragmentJWTS_xsxk extends BaseFragment {
         protected Object doInBackground(Object[] objects) {
             String toReturn;
             try {
-                String url = spinnerBX.getSelectedItemPosition() == 0 ? "http://jwts.hitsz.edu.cn/xsxk/queryXsxkList" : "http://jwts.hitsz.edu.cn/xsxk/queryYxkc";
+                String url = spinnerBX.getSelectedItemPosition() == 0 ? "http://jwts.hitsz.edu.cn:8080/xsxk/queryXsxkList" : "http://jwts.hitsz.edu.cn:8080/xsxk/queryYxkc";
                 Document xkPage = Jsoup.connect(url).cookies(cookies_jwts).timeout(5000)
                         .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
@@ -547,17 +547,17 @@ public class FragmentJWTS_xsxk extends BaseFragment {
             try {
                 //trustEveryone();
                // String token = String.valueOf(new DecimalFormat("#.16").parse(String.valueOf(new Random().nextDouble())));
-                Connection connect = Jsoup.connect("http://jwts.hitsz.edu.cn/xsxk/saveXsxk");
+                Connection connect = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/xsxk/saveXsxk");
                 connect.cookies(cookies_jwts);
                 connect.timeout(5000);
                 connect.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3");
                 connect.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
                 connect.header("Content-Type", "application/x-www-form-urlencoded");
-                connect.header("Referer", "http://jwts.hitsz.edu.cn/xsxk/queryXsxkList?pageXklb=" + xklb + "&pageXnxq=" + xnxq);
+                connect.header("Referer", "http://jwts.hitsz.edu.cn:8080/xsxk/queryXsxkList?pageXklb=" + xklb + "&pageXnxq=" + xnxq);
                 connect.header("Upgrade-Insecure-Requests", "1");
                 connect.header("Connection", "keep-alive");
-                connect.header("Origin", "http://jwts.hitsz.edu.cn");
-                connect.header("Host", "jwts.hitsz.edu.cn");
+                connect.header("Origin", "http://jwts.hitsz.edu.cn:8080");
+                connect.header("Host", "jwts.hitsz.edu.cn:8080");
                 connect.data("rwh", rwh);
                 connect.data("pageXnxq", xnxq);
                 connect.data("pageXklb", xklb);
@@ -610,17 +610,17 @@ public class FragmentJWTS_xsxk extends BaseFragment {
         }
         @Override
         protected Object doInBackground(Object[] objects) {
-            Connection connect = Jsoup.connect("http://jwts.hitsz.edu.cn/xsxk/saveXstk");
+            Connection connect = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/xsxk/saveXstk");
             connect.cookies(cookies_jwts);
             connect.timeout(5000);
             connect.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3");
             connect.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
             connect.header("Content-Type", "application/x-www-form-urlencoded");
-            connect.header("Referer", "http://jwts.hitsz.edu.cn/xsxk/queryXsxkList?pageXklb=" + xklb + "&pageXnxq=" + xnxq);
+            connect.header("Referer", "http://jwts.hitsz.edu.cn:8080/xsxk/queryXsxkList?pageXklb=" + xklb + "&pageXnxq=" + xnxq);
             connect.header("Upgrade-Insecure-Requests", "1");
             connect.header("Connection", "keep-alive");
-            connect.header("Origin", "http://jwts.hitsz.edu.cn");
-            connect.header("Host", "jwts.hitsz.edu.cn");
+            connect.header("Origin", "http://jwts.hitsz.edu.cn:8080");
+            connect.header("Host", "jwts.hitsz.edu.cn:8080");
             connect.data("rwh", id);
             connect.data("pageXnxq", xnxq);
             connect.data("pageXklb", xklb);

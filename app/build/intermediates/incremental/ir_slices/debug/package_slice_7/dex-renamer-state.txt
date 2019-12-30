@@ -1,0 +1,4 @@
+#Tue Dec 17 15:07:01 CST 2019
+base.0=C\:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\7
+path.0=classes.dex
+renamed.0=classes.dex

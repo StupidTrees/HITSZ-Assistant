@@ -129,7 +129,7 @@ public class ActivityMain extends BaseActivity
     MenuItem dark_mode_menu;
     boolean isFirst;
 
-    boolean upDateNoti1202;
+    //boolean upDateNoti1202;
     @Override
     protected void stopTasks() {
 
@@ -141,7 +141,7 @@ public class ActivityMain extends BaseActivity
         setWindowParams(true, true, false);
         isFirst = defaultSP.getBoolean("firstOpen", true);
         app_task_enabled = defaultSP.getBoolean("app_events_enabled", true);
-        upDateNoti1202 = defaultSP.getBoolean("update_noti_1202",true);
+       // upDateNoti1202 = defaultSP.getBoolean("update_noti_1202",true);
         tlf = FragmentTimeLine.newInstance(isFirst);
         nvf = new FragmentNavi();
         if (app_task_enabled) tskf = new FragmentTasks();
@@ -174,16 +174,16 @@ public class ActivityMain extends BaseActivity
                 e.printStackTrace();
             }
         }
-        if(upDateNoti1202){
-            TapTargetView.showFor(this,   TapTarget.forView(mainTabs, "首页第三屏已解锁！", "如果不喜欢，可以到设置里关闭嘤嘤嘤")
-                    .drawShadow(true)
-                    .cancelable(false)
-                    .tintTarget(true)
-                    .transparentTarget(false)
-                    .outerCircleColor(R.color.blue_accent)
-                    .titleTextSize(24));
-            defaultSP.edit().putBoolean("update_noti_1202",false).commit();
-        }
+//        if(upDateNoti1202){
+//            TapTargetView.showFor(this,   TapTarget.forView(mainTabs, "首页第三屏已解锁！", "如果不喜欢，可以到设置里关闭嘤嘤嘤")
+//                    .drawShadow(true)
+//                    .cancelable(false)
+//                    .tintTarget(true)
+//                    .transparentTarget(false)
+//                    .outerCircleColor(R.color.blue_accent)
+//                    .titleTextSize(24));
+//            defaultSP.edit().putBoolean("update_noti_1202",false).commit();
+//        }
 
         new Thread(new Runnable() {
             @Override
@@ -750,13 +750,13 @@ public class ActivityMain extends BaseActivity
                 byte[] checkPic;
                 try {
                     //第一次访问登录界面
-                    Connection.Response response = Jsoup.connect("http://jwts.hitsz.edu.cn/").timeout(5000).execute();;
+                    Connection.Response response = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/").timeout(5000).execute();;
                     //得到系统返回的Cookies
                     cookies_jwts.clear();
                     cookies_jwts.putAll(response.cookies());
                     //Log.e("cookie:",cookies_jwts.toString()+" ");
                     //请求获得验证码的内容
-                    checkPic = Jsoup.connect("http://jwts.hitsz.edu.cn/captchaImage").cookies(cookies_jwts).ignoreContentType(true).execute().bodyAsBytes();
+                    checkPic = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/captchaImage").cookies(cookies_jwts).ignoreContentType(true).execute().bodyAsBytes();
                     if (checkPic.length == 0 || cookies_jwts.size() == 0) continue;
                     Bitmap bm = BitmapFactory.decodeByteArray(checkPic, 0, checkPic.length);
                     Bitmap res = getProcessedBitmap(bm);
@@ -943,7 +943,7 @@ public class ActivityMain extends BaseActivity
 
     public static boolean checkLogin_jwts() {
         try {
-            Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn/xswhxx/queryXswhxx").cookies(cookies_jwts).timeout(5000)
+            Document userinfo = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/xswhxx/queryXswhxx").cookies(cookies_jwts).timeout(5000)
                     .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                     .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                     .header("Content-Type", "application/x-www-form-urlencoded")

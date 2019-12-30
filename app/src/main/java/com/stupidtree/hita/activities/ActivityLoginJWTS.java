@@ -54,11 +54,11 @@ import static com.stupidtree.hita.util.SafecodeUtil.splitBitmapInto;
 
 public class ActivityLoginJWTS extends BaseActivity {
     //登录请求地址
-    private final static String LOGIN = "http://jwts.hitsz.edu.cn/login";
+    private final static String LOGIN = "http://jwts.hitsz.edu.cn:8080/login";
     //登录界面
-    private final static String LOGIN_VIEW = "http://jwts.hitsz.edu.cn/";
+    private final static String LOGIN_VIEW = "http://jwts.hitsz.edu.cn:8080/";
     //验证码请求地址
-    private final static String CHECK_CODE = "http://jwts.hitsz.edu.cn/captchaImage";
+    private final static String CHECK_CODE = "http://jwts.hitsz.edu.cn:8080/captchaImage";
     //固定的参数值（URL编码）
 
     ImageView safeCodeImage;

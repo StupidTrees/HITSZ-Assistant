@@ -156,7 +156,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
                 .append("pageXiaoqu=").append("1").append("&")
                 .append("pageLhdm=").append(lh).append("&")
                 .append("pageCddm=").append(cd);
-        webView.postUrl("http://jwts.hitsz.edu.cn/kjscx/queryKjs_wdl",
+        webView.postUrl("http://jwts.hitsz.edu.cn:8080/kjscx/queryKjs_wdl",
                 sb.toString().getBytes()
         );
 
@@ -180,7 +180,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
         protected Object doInBackground(Object[] objects) {
             Boolean[] result = {false, false, false, false, false, false};
             try {
-                Document page = Jsoup.connect("http://jwts.hitsz.edu.cn/kjscx/queryKjs_wdl")
+                Document page = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kjscx/queryKjs_wdl")
                         .timeout(5000)
                         .data("pageXnxq", xnxq)
                         .data("pageZc1", pageWeek + "").data("pageZc2", pageWeek + "")

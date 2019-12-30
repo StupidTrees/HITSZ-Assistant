@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.ansj:ansj_seg:5.1.6@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ansj/ansj_seg/5.1.6/13efb245cf05f50388394498aa37ee13779ed4e4/ansj_seg-5.1.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ansj/ansj_seg/5.1.6/4e9475eadd0df4c5aab54c96a8c5ae4adad3b3ff/ansj_seg-5.1.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
