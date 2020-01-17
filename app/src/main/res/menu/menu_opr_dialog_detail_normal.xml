@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/opr_delete"
-        android:title="删除" />
+        android:title="@string/menu_delete" />
 
 
 </menu>

@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -20,12 +19,12 @@ import android.widget.Toast;
 
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.Curriculum;
+import com.stupidtree.hita.timetable.Curriculum;
 
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.deleteCurriculum;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class CurriculumManagerAdapter extends RecyclerView.Adapter<CurriculumManagerAdapter.CMViewHolder> {
 
@@ -49,11 +48,11 @@ public class CurriculumManagerAdapter extends RecyclerView.Adapter<CurriculumMan
 
     @Override
     public void onBindViewHolder(@NonNull CMViewHolder cmViewHolder, final int i) {
-        final String name = mBeans.get(i).name;
+        final String name = mBeans.get(i).getName();
         if(name.indexOf("(")>0)cmViewHolder.name.setText(name.substring(0,name.indexOf("(")));
         else  cmViewHolder.name.setText(name);
         cmViewHolder.from.setText("开始于"+mBeans.get(i).readStartDate());
-        cmViewHolder.totalWeeks.setText("共"+mBeans.get(i).totalWeeks+"周");
+        cmViewHolder.totalWeeks.setText("共"+mBeans.get(i).getTotalWeeks()+"周");
         if(name.contains("春")) cmViewHolder.image.setImageResource(R.drawable.ic_spring);
         else if(name.contains("夏")) cmViewHolder.image.setImageResource(R.drawable.ic_summer);
         else if(name.contains("秋")) cmViewHolder.image.setImageResource(R.drawable.ic_autumn);
@@ -69,7 +68,7 @@ public class CurriculumManagerAdapter extends RecyclerView.Adapter<CurriculumMan
                     public boolean onMenuItemClick(MenuItem item) {
                         if(item.getItemId()==R.id.curriculum_opr_detail){
                             AlertDialog ad = new AlertDialog.Builder(mContext).setTitle("课表详情").
-                                    setMessage("课表名称："+name+"\n课表代码："+mBeans.get(i).curriculumCode).create();
+                                    setMessage("课表名称："+name+"\n课表代码："+mBeans.get(i).getCurriculumCode()).create();
                             ad.show();
                             return true;
                         }else if(item.getItemId()==R.id.curriculum_opr_delete){
@@ -94,7 +93,7 @@ public class CurriculumManagerAdapter extends RecyclerView.Adapter<CurriculumMan
             @Override
             public void onClick(View v) {
                 AlertDialog ad = new AlertDialog.Builder(mContext).setTitle("课表详情").
-                        setMessage("课表名称："+name+"\n课表代码："+mBeans.get(i).curriculumCode).create();
+                        setMessage("课表名称："+name+"\n课表代码："+mBeans.get(i).getCurriculumCode()).create();
                 ad.show();
             }
         });
@@ -131,7 +130,7 @@ public class CurriculumManagerAdapter extends RecyclerView.Adapter<CurriculumMan
         }
         @Override
         protected Object doInBackground(Object[] objects) {
-            return deleteCurriculum(position);
+            return timeTableCore.deleteCurriculum(mBeans.get(position).getCurriculumCode());
         }
 
         @Override

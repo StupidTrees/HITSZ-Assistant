@@ -6,7 +6,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -36,13 +38,12 @@ import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
-import com.stupidtree.hita.activities.ActivityTimeTable;
-import com.stupidtree.hita.core.Subject;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.TimeTableGenerator;
-import com.stupidtree.hita.core.timetable.EventItem;
-import com.stupidtree.hita.core.timetable.HTime;
-import com.stupidtree.hita.core.timetable.Task;
+import com.stupidtree.hita.timetable.Subject;
+import com.stupidtree.hita.timetable.TimeTableGenerator;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.HTime;
+import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.diy.PickCourseTimeDialog;
 import com.stupidtree.hita.diy.PickInfoDialog;
 import com.stupidtree.hita.diy.PickSingleTimeDialog;
@@ -55,14 +56,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.activities.ActivityMain.app_task_enabled;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_COURSE;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_EXAM;
-import static com.stupidtree.hita.core.TimeTable.contains_integer;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_COURSE;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_EXAM;
+import static com.stupidtree.hita.timetable.TimetableCore.contains_integer;
 
 @SuppressLint("ValidFragment")
 public class FragmentAddEvent extends BottomSheetDialogFragment {
@@ -192,7 +191,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             @Override
             public boolean onLongClick(View view) {
                 if(!timeSet){
-                    Toast.makeText(HContext,"请先设置日期！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HContext,getString(R.string.ade_set_time_first),Toast.LENGTH_SHORT).show();
                     //autoAllocation.setChecked(!isChecked);
                     return false;
                 }
@@ -201,7 +200,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                         setFromTime(times.get(0).hour,times.get(0).minute);
                         setToTime(times.get(1).hour,times.get(1).minute);
                     }else{
-                        Toast.makeText(HContext,"没有找到合适的分配时间！",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HContext,getString(R.string.ade_no_suitable_allocation),Toast.LENGTH_SHORT).show();
                         //autoAllocation.setChecked(false);
                         return false;
                     }
@@ -244,7 +243,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         pickTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new showTasksDialogTask().executeOnExecutor(HITAApplication.TPE);;
+                new showTasksDialogTask().executeOnExecutor(HITAApplication.TPE);
             }
         });
         pickTaskCancel.setOnClickListener(new View.OnClickListener() {
@@ -267,7 +266,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         pickLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new PickInfoDialog(getContext(), "选择地点", PickInfoDialog.LOCATION_ALL, new PickInfoDialog.OnPickListener() {
+                new PickInfoDialog(getContext(), getString(R.string.pick_location), PickInfoDialog.LOCATION_ALL, new PickInfoDialog.OnPickListener() {
                     @Override
                     public void OnPick(String title, Object obj) {
                         locationSet = true;
@@ -311,7 +310,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                         pickSubject.setVisibility(View.VISIBLE);
                         nameLayout.setVisibility(View.GONE);
                         extra.setVisibility(View.VISIBLE);
-                        extra.setHint("输入考试名称...");
+                        extra.setHint(getString(R.string.ade_exam_name));
                         mExpandableLayout.setVisibility(View.GONE);
                         break;
                     case R.id.ade_course:
@@ -321,7 +320,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                         pickLocation.setVisibility(View.VISIBLE);
                         pickSubject.setVisibility(View.VISIBLE);
                         extra.setVisibility(View.VISIBLE);
-                        extra.setHint("设置任课教师...");
+                        extra.setHint(getString(R.string.ade_teacher_name));
                         nameLayout.setVisibility(View.GONE);
                         mExpandableLayout.setVisibility(View.GONE);
                         break;
@@ -340,7 +339,6 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                             public void onClick(int week, int dow, int hour,int minute,boolean dateSet) {
                                 timeSet = dateSet;
                                 if(dateSet){
-                                    FragmentAddEvent.this.timeSet = dateSet;
                                     FragmentAddEvent.this.dow = dow;
                                     FragmentAddEvent.this.week = week;
                                     fromT.setTime(hour,minute);
@@ -357,14 +355,13 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                             public void onClick(int week, int dow, int hour1, int minute1, int hour2, int minute2, boolean dateSet) {
                                 timeSet = dateSet;
                                 if(dateSet){
-                                    FragmentAddEvent.this.timeSet = dateSet;
                                     FragmentAddEvent.this.dow = dow;
                                     FragmentAddEvent.this.week = week;
                                     refreshTimeBlock(); }
                             }
                         });
                         if(timeSet) ptpd.setInitialValue(week,dow,fromT,toT);
-                        ptpd.dateOnly();;
+                        ptpd.dateOnly();
                         ptpd.show();
                     }
 
@@ -389,7 +386,6 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                         @Override
                         public void onClick(int week, int dow, int hour1, int minute1, int hour2, int minute2, boolean dateSet) {
                             timeSet = dateSet;
-                            FragmentAddEvent.this.timeSet = FragmentAddEvent.this.timeSet;
                             FragmentAddEvent.this.dow = dow;
                             FragmentAddEvent.this.week = week;
                             fromT.setTime(hour1,minute1);
@@ -410,52 +406,52 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                 int type = 0;
                 switch (mRadioGroup.getCheckedRadioButtonId()) {
                     case R.id.ade_arrange:
-                        type = TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT;
+                        type = TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT;
                         break;
                     case R.id.ade_ddl:
-                        type = TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE;
+                        type = TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE;
                         break;
                     case R.id.ade_exam:
-                        type = TimeTable.TIMETABLE_EVENT_TYPE_EXAM;
+                        type = TimetableCore.TIMETABLE_EVENT_TYPE_EXAM;
                         break;
                     case R.id.ade_course:
                         type = TIMETABLE_EVENT_TYPE_COURSE;
                         break;
                 }
-                if (type != TimeTable.TIMETABLE_EVENT_TYPE_EXAM && type!=TIMETABLE_EVENT_TYPE_COURSE&&TextUtils.isEmpty(name.getText())) {
-                    Toast.makeText(HContext, "请输入事件名称!", Toast.LENGTH_SHORT).show();
+                if (type != TimetableCore.TIMETABLE_EVENT_TYPE_EXAM && type!=TIMETABLE_EVENT_TYPE_COURSE&&TextUtils.isEmpty(name.getText())) {
+                    Toast.makeText(HContext, getString(R.string.ade_noti_event_name), Toast.LENGTH_SHORT).show();
                     return;
                 } else if(type==TIMETABLE_EVENT_TYPE_EXAM&&TextUtils.isEmpty(extra.getText().toString())) {
-                    Toast.makeText(HContext, "请输入考试名称!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HContext, getString(R.string.ade_noti_exam_name), Toast.LENGTH_SHORT).show();
                     return;
                 }else if ((mRadioGroup.getCheckedRadioButtonId()!=R.id.ade_course&&!timeSet)
                 ||(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_course&&!timeSet_course)
                 ) {
-                    Toast.makeText(HContext, "请设置事件时间", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HContext, getString(R.string.ade_noti_set_time), Toast.LENGTH_SHORT).show();
                     return;
-                } else if (type != TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE && type != TimeTable.TIMETABLE_EVENT_TYPE_REMIND && fromT.compareTo(toT) > 0) {
-                    Toast.makeText(HContext, "请输入正确的事件时间！", Toast.LENGTH_SHORT).show();
+                } else if (type != TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE && fromT.compareTo(toT) > 0) {
+                    Toast.makeText(HContext, getString(R.string.ade_noti_time_ircorrect), Toast.LENGTH_SHORT).show();
                     return;
-                } else if (type == TimeTable.TIMETABLE_EVENT_TYPE_EXAM && !subjectSet) {
-                    Toast.makeText(HContext, "请选择考试科目！", Toast.LENGTH_SHORT).show();
+                } else if (type == TimetableCore.TIMETABLE_EVENT_TYPE_EXAM && !subjectSet) {
+                    Toast.makeText(HContext, getString(R.string.ade_noti_set_subject), Toast.LENGTH_SHORT).show();
                     return;
                 } else if (type == TIMETABLE_EVENT_TYPE_COURSE && !subjectSet) {
-                    Toast.makeText(HContext, "请选择课程科目！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HContext, getString(R.string.ade_noti_set_subject_course), Toast.LENGTH_SHORT).show();
                     return;
                 }else if (taskSet&&task!=null && fromT.getDuration(toT) > task.getLength()) {
-                    Toast.makeText(HContext, "时长超过任务时长！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HContext, getString(R.string.ade_noti_too_long), Toast.LENGTH_SHORT).show();
                     toT = fromT.getAdded(task.getLength());
                     // toTimeShow.setTextColor(ContextCompat.getColor(getActivity(),R.color.material_secondary_text));
                     return;
                 }
                 if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_course){
-                    new  addCourseTask(mainTimeTable.core.curriculumCode,weeks,
-                            extra.getText().toString(),locationStr ,subjectName,begin,last,dow).executeOnExecutor(HITAApplication.TPE);;
+                    new  addCourseTask(timeTableCore.getCurrentCurriculum().getCurriculumCode(),weeks,
+                            extra.getText().toString(),locationStr ,subjectName,begin,last,dow).executeOnExecutor(HITAApplication.TPE);
                     return;
                 }
 
                 String Tname, Ttag2, Ttag3;
-                if (type == TimeTable.TIMETABLE_EVENT_TYPE_EXAM) {
+                if (type == TimetableCore.TIMETABLE_EVENT_TYPE_EXAM) {
                     Ttag2 = TextUtils.isEmpty(locationStr)? "" : locationStr;
                     if(TextUtils.isEmpty(subjectCode)){
                         Ttag3 = "科目名称：" + subjectName;
@@ -473,27 +469,29 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
 //                if (autoAllocation.isChecked()) {
 //                    uuid = TimeTableGenerator.autoAdd(week, dow, Tname, Ttag2, Ttag3, tag4, type, 120);
 //                } else {
-                HTime tempToTime = type == TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT || type == TimeTable.TIMETABLE_EVENT_TYPE_EXAM ? toT : fromT;
-                new addEventTask(mainTimeTable.core.curriculumCode,
-                        type,Tname,Ttag2,Ttag3,fromT,tempToTime,week,dow,wholeDaySwitch.isChecked(),taskSet).executeOnExecutor(HITAApplication.TPE);;
+                HTime tempToTime = type == TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT || type == TimetableCore.TIMETABLE_EVENT_TYPE_EXAM ? toT : fromT;
+                new addEventTask(timeTableCore.getCurrentCurriculum().getCurriculumCode(),
+                        type,Tname,Ttag2,Ttag3,fromT,tempToTime,week,dow,wholeDaySwitch.isChecked(),taskSet).executeOnExecutor(HITAApplication.TPE);
             }
         });
 
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void refreshTimeBlock(){
         if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_course){
             if(timeSet_course){
                 pickTime.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
                 pickTimeIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
                 pickTimeText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
-                pickTimeText.setText(TextTools.words_time_DOW[dow-1]+begin+"-"+(begin+last-1)+"节");
+                pickTimeText.setText(getResources().getStringArray(R.array.dow1)[dow-1]+" "+begin+"-"+(begin+last-1));
             }else{
-                pickTimeText.setText("设置日期与时间段");
+                pickTimeText.setText(getString(R.string.ade_set_time_period));
                 pickTime.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
                 pickTimeText.setTextColor(ContextCompat.getColor(getActivity(),R.color.text_color_secondary));
-                pickTimeIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+                pickTimeIcon.clearColorFilter();
+                //pickTimeIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal), PorterDuff.Mode.SRC_IN);
             }
             return;
         }
@@ -502,23 +500,26 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             pickTimeIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
             pickTimeText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
            // pickTimeBG.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
+            String weekTempl = getString(R.string.week);
+            String[] dows = getResources().getStringArray(R.array.dow1);
             if(wholeDaySwitch.isChecked()){
-                pickTimeText.setText(week+"周"+TextTools.words_time_DOW[dow-1]);
+                pickTimeText.setText(String.format(weekTempl,week)+" "+dows[dow-1]);
             }else if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_ddl){
-                pickTimeText.setText(week+"周"+TextTools.words_time_DOW[dow-1]+" "+fromT.tellTime());
+                pickTimeText.setText(String.format(weekTempl,week)+" "+dows[dow-1]+" "+fromT.tellTime());
             }else{
-                pickTimeText.setText(week+"周"+TextTools.words_time_DOW[dow-1]+" "+fromT.tellTime()+"-"+toT.tellTime());
+                pickTimeText.setText(String.format(weekTempl,week)+" "+dows[dow-1]+" "+fromT.tellTime()+"-"+toT.tellTime());
             }
         }else{
             pickTime.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
             pickTimeText.setTextColor(ContextCompat.getColor(getActivity(),R.color.text_color_secondary));
-            pickTimeIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+            pickTimeIcon.clearColorFilter();
+            //pickTimeIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
             if(wholeDaySwitch.isChecked()){
-                pickTimeText.setText("设置日期");
+                pickTimeText.setText(getString(R.string.ade_set_date));
             }else if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_ddl){
-                pickTimeText.setText("设置日期与时间");
+                pickTimeText.setText(getString(R.string.ade_set_time_date));
             }else{
-                pickTimeText.setText("设置日期与时间段");
+                pickTimeText.setText(getString(R.string.ade_set_time_period));
             }
         }
     }
@@ -531,11 +532,11 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             pickTaskText.setText(task.name);
             pickTaskCancel.setVisibility(View.VISIBLE);
         }else{
-            pickTaskText.setText("处理任务");
+            pickTaskText.setText(getString(R.string.ade_pick_task));
             pickTask.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
             pickTaskText.setTextColor(ContextCompat.getColor(getActivity(),R.color.text_color_secondary));
-            //pickTaskText.invalidate();
-            pickTaskIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+           // pickTaskIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+            pickTaskIcon.clearColorFilter();
             pickTaskCancel.setVisibility(View.GONE);
         }
     }
@@ -547,12 +548,12 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             pickLocationText.setText(locationStr);
             pickLocationCancel.setVisibility(View.VISIBLE);
         }else{
-            pickLocationText.setText("设置地点");
+            pickLocationText.setText(getString(R.string.ade_pick_location));
             pickLocationText.postInvalidate();
             pickLocation.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
             pickLocationText.setTextColor(ContextCompat.getColor(getActivity(),R.color.text_color_secondary));
-            //pickLocationText.invalidate();
-            pickLocationIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal));
+            pickLocationIcon.clearColorFilter();
+            //pickLocationIcon.setColorFilter(ContextCompat.getColor(getActivity(),R.color.color_control_normal), PorterDuff.Mode.SRC_IN);
             pickLocationCancel.setVisibility(View.GONE);
         }
     }
@@ -563,7 +564,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             pickSubject.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
             pickSubjectText.setText(subjectName);
         }else{
-            pickTaskText.setText("选择考试科目");
+            pickTaskText.setText(getString(R.string.ade_pick_subject));
         }
     }
     private void setFromTime(int hour,int minute){
@@ -597,10 +598,10 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            subjects = allCurriculum.get(thisCurriculumIndex).getSubjects();
+            subjects = timeTableCore.getCurrentCurriculum().getSubjects();
             res = new String[subjects.size()];
             for (int i = 0; i < subjects.size(); i++) {
-                res[i] = subjects.get(i).name;
+                res[i] = subjects.get(i).getName();
             }
             return null;
 
@@ -610,13 +611,13 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             AlertDialog dialog = new AlertDialog.Builder(FragmentAddEvent.this.getContext()).
-                    setTitle("选择考试科目")
+                    setTitle(getString(R.string.ade_pick_subject))
                     .setItems(res, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             subjectSet = true;
-                            subjectCode = subjects.get(which).code;
-                            subjectName = subjects.get(which).name;
+                            subjectCode = subjects.get(which).getCode();
+                            subjectName = subjects.get(which).getName();
                             if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_exam)extra.setText(subjectName+"考试");
                             refreshExamBlock();
                         }
@@ -633,7 +634,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            tasks = mainTimeTable.getUnfinishedTaskWithLength();
+            tasks = timeTableCore.getUnfinishedTaskWithLength();
             List<Task> toRemove = new ArrayList<>();
             for(Task t:tasks){
                 int left = t.getLength() -   t.getDealtTime_All();
@@ -649,8 +650,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                // Log.e("task:",tasks.get(i).name+",all:"+tasks.get(i).getLength()+",dealt:"+delt);
                 res[i] = tasks.get(i).name;
             }
-            if(res.length==0) return false;
-            return true;
+            return res.length != 0;
         }
 
         @Override
@@ -658,7 +658,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             super.onPostExecute(o);
             if((Boolean)o){
                 AlertDialog dialog = new AlertDialog.Builder(FragmentAddEvent.this.getContext()).
-                        setTitle("选择任务")
+                        setTitle(getString(R.string.ade_pick_task))
                         .setItems(res, new DialogInterface.OnClickListener() {
                             @SuppressLint("SetTextI18n")
                             @Override
@@ -718,8 +718,8 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                 tag4 = task.getUuid();
                 tag3 = "任务处理事件";
             }
-//            else if (type == TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE) {
-//                ddl_task = new Task(mainTimeTable.core.curriculumCode, "处理DDL:" + eventName, allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now), TimeTable.getDOW(now),
+//            else if (type == TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE) {
+//                ddl_task = new Task(timeTableCore.getCurrentCurriculum().curriculumCode, "处理DDL:" + eventName, timeTableCore.getCurrentCurriculum().getWeekOfTerm(now), TimetableCore.getDOW(now),
 //                        new HTime(now), week, dow, toT, "");
 //                tag4 = ddl_task.getUuid();
 //            }
@@ -727,19 +727,19 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                 //tag4 = TextUtils.isEmpty(subjectCode)?subjectName:subjectCode;
                 tag4 = fromT.tellTime()+"-"+toT.tellTime();
             }
-            int[] types_length = new int[]{TimeTable.TIMETABLE_EVENT_TYPE_EXAM
-                    ,TimeTable.TIMETABLE_EVENT_TYPE_COURSE,TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT,TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC};
-            List<EventItem> overlapEvents = mainTimeTable.getEventFrom_typeLimit(week,dow,start,week,dow,end,types_length);
+            int[] types_length = new int[]{TimetableCore.TIMETABLE_EVENT_TYPE_EXAM
+                    ,TimetableCore.TIMETABLE_EVENT_TYPE_COURSE,TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT,TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC};
+            List<EventItem> overlapEvents = timeTableCore.getEventFrom_typeLimit(week,dow,start,week,dow,end,types_length);
             if(!isWholeDay&&contains_integer(types_length,type)&&overlapEvents.size()>0){
                 return overlapEvents;
             }else{
-                EventItem toAdd = new EventItem(null, allCurriculum.get(thisCurriculumIndex).curriculumCode,type, eventName, tag2, tag3, tag4, start,end, week, dow, isWholeDay);
-                uuid = mainTimeTable.addEvent(toAdd);
+                EventItem toAdd = new EventItem(null, timeTableCore.getCurrentCurriculum().getCurriculumCode(),type, eventName, tag2, tag3, tag4, start,end, week, dow, isWholeDay);
+                uuid = timeTableCore.addEvent(toAdd);
                 if (dealWithTask && task != null && taskSet)
                     task.putEventMap(uuid+":::"+toAdd.week, false);
-//                if (type == TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE) {
+//                if (type == TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE) {
 //                    ddl_task.setDdlName(uuid, week + "");
-//                    mainTimeTable.addTask(ddl_task);
+//                    timeTableCore.addTask(ddl_task);
 //                }
                 return null;
             }
@@ -795,7 +795,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
                 sb.append(i+from);
                 if(i!=last-1)sb.append(",");
             }
-            mainTimeTable.addEvents(weeks, dow, TIMETABLE_EVENT_TYPE_COURSE, name, location, teacher,  sb.subSequence(0,sb.toString().length()-1).toString(), from, last, false);
+            timeTableCore.addEvents(weeks, dow, TIMETABLE_EVENT_TYPE_COURSE, name, location, teacher,  sb.subSequence(0,sb.toString().length()-1).toString(), from, last, false);
             return null;
         }
 

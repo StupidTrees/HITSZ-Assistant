@@ -1,43 +1,29 @@
 package com.stupidtree.hita;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Application;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.stupidtree.hita.core.Curriculum;
-import com.stupidtree.hita.core.CurriculumHelper;
-import com.stupidtree.hita.core.HITADBHelper;
-import com.stupidtree.hita.core.timetable.Task;
-import com.stupidtree.hita.online.Bmob_User_Data;
-import com.stupidtree.hita.online.TimeTable_upload_helper;
+import com.stupidtree.hita.timetable.HITADBHelper;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.jw.JWCore;
 import com.stupidtree.hita.online.HITAUser;
-import com.stupidtree.hita.core.Subject;
-import com.stupidtree.hita.core.TimeTable;
 import com.stupidtree.hita.hita.ChatBotMessageItem;
 import com.stupidtree.hita.activities.ActivityMain;
-import com.stupidtree.hita.util.FileOperator;
 import com.stupidtree.hita.util.mUpgradeListener;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -48,12 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobObject;
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * 全局Application类，生命周期和整个应用相同
@@ -64,35 +45,23 @@ public class HITAApplication extends Application {
     public static Context HContext;
     public static TimeWatcher timeWatcher;
     public static int themeID;
-
-    /*重要变量*/
     public static Calendar now;
-    public static boolean isThisTerm = true;
-    public static int thisWeekOfTerm = -1;
-    /*核心的变量*/
-    public static ArrayList<Curriculum> allCurriculum;
-    public static HashMap<String, String> cookies_jwts = new HashMap<>();
+    public static HITADBHelper mDBHelper;
+    public static JWCore jwCore;
+    public static TimetableCore timeTableCore;
     public static HashMap<String, String> cookies_ut = new HashMap<>();
     public static HashMap<String,String> cookies_ut_card = new HashMap<>();
     public static String ut_username;
-    public static boolean login_jwts = false;
     public static boolean login_ut = false;
-    public static TimeTable mainTimeTable;
     public static SharedPreferences defaultSP;
-    public static int thisCurriculumIndex;
-    /*刻画数据状态的标志常量*/
-    public static int DATA_STATE_NULL = 13;
-    public static int DATA_STATE_NONE_CURRICULUM = 14;
-    public static int DATA_STATE_GET_ERROR = 16;
-    public static int DATA_STATE_HEALTHY = 17;
-
     public static List<ChatBotMessageItem> ChatBotListRes;//聊天机器人的聊天记录
     public static List<BmobObject> SearchResultList;
     public static String searchText ="";
     public static HITAUser CurrentUser = null;
-    public static HITADBHelper mDBHelper;
+
     public static Handler ToastHander;
     public static ThreadPoolExecutor TPE;
+
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -101,15 +70,16 @@ public class HITAApplication extends Application {
         now = Calendar.getInstance();
         TPE = new ThreadPoolExecutor(0,Integer.MAX_VALUE,60L, TimeUnit.SECONDS,new SynchronousQueue<Runnable>());
         HContext = getApplicationContext();
-        defaultSP = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
         mDBHelper = new HITADBHelper(HContext);
-        allCurriculum = new ArrayList<>();
+        defaultSP = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
         ChatBotListRes = new ArrayList<>();
         SearchResultList = new ArrayList<>();
+        jwCore = new JWCore();
+        timeTableCore = new TimetableCore();
         timeWatcher = new TimeWatcher(this);
-        mainTimeTable = new TimeTable(null);
+
         initUpgradeDialog();
-        new InitTask(this).executeOnExecutor(HITAApplication.TPE);;
+        new InitTask(this).executeOnExecutor(HITAApplication.TPE);
         ToastHander = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -124,30 +94,6 @@ public class HITAApplication extends Application {
         getThemeID();
     }
 
-    public static void copyAssetsSingleFile(File file, String fileName) {
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                Log.e("--Method--", "copyAssetsSingleFile: cannot create directory.");
-                return;
-            }
-        }
-        try {
-            InputStream inputStream = HContext.getAssets().open(fileName);
-            File outFile = new File(file, fileName);
-            FileOutputStream fileOutputStream = new FileOutputStream(outFile);
-            // Transfer bytes from inputStream to fileOutputStream
-            byte[] buffer = new byte[1024];
-            int byteRead;
-            while (-1 != (byteRead = inputStream.read(buffer))) {
-                fileOutputStream.write(buffer, 0, byteRead);
-            }
-            inputStream.close();
-            fileOutputStream.flush();
-            fileOutputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
 
@@ -196,19 +142,17 @@ public class HITAApplication extends Application {
         Beta.upgradeStateListener = new UpgradeStateListener() {
             @Override
             public void onUpgradeFailed(boolean isManual) {
-//                Intent intent = new Intent();
-//                intent.setAction("android.intent.updatebroadcast");
-//                localBroadcastManager.sendBroadcast(intent);
-                Toast.makeText(getApplicationContext(), "检查更新失败！", Toast.LENGTH_SHORT).show();
-            }
+                Intent intent = new Intent();
+                intent.setAction("com.stupidtree.hita.upgrade_failed");
+                sendBroadcast(intent);
+                    }
 
             @Override
             public void onUpgradeSuccess(boolean b) {
-//                Intent intent = new Intent();
-//                intent.setAction("android.intent.updatebroadcast");
-//                localBroadcastManager.sendBroadcast(intent);
-                Toast.makeText(getApplicationContext(), "检查到更新", Toast.LENGTH_SHORT).show();
-            }
+                Intent intent = new Intent();
+                intent.setAction("com.stupidtree.hita.upgrade_success");
+                sendBroadcast(intent);
+                  }
 
             @Override
             public void onUpgrading(boolean isManual) {
@@ -231,7 +175,10 @@ public class HITAApplication extends Application {
 
             @Override
             public void onUpgradeNoVersion(boolean isManual) {
-            }
+                Intent intent = new Intent();
+                intent.setAction("com.stupidtree.hita.upgrade_no_version");
+                sendBroadcast(intent);
+               }
         };
 
 
@@ -289,363 +236,19 @@ public class HITAApplication extends Application {
     }
 
 
-    public static boolean deleteCurriculum(int index){
-        if(index>allCurriculum.size()-1) return false;
-        String oldCode = allCurriculum.get(thisCurriculumIndex).curriculumCode;
-        Curriculum toDel = allCurriculum.get(index);
-        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-        sd.delete("curriculum","curriculum_code=? and name=?",new String[]{toDel.curriculumCode,toDel.name});
-        sd.delete("timetable","curriculum_code=?",new String[]{toDel.curriculumCode});
-        sd.delete("task","curriculum_code=?",new String[]{toDel.curriculumCode});
-        sd.delete("subject","curriculum_code=?",new String[]{toDel.curriculumCode});
-//        if(index==thisCurriculumIndex){
-//            if(allCurriculum.size()==1) mainTimeTable.upDateCore(null);
-//            else  mainTimeTable.upDateCore(allCurriculum.get(allCurriculum.size()-2));
-//            thisCurriculumIndex = allCurriculum.size()-1;
-//        }
-        allCurriculum.remove(index);
-        boolean hasMatch = false;
-        for(int i=0;i<allCurriculum.size();i++){
-            if(allCurriculum.get(i).curriculumCode.equals(oldCode)) {
-                hasMatch = true;
-                thisCurriculumIndex = i;
-            }
-        }
-        if(!hasMatch) thisCurriculumIndex = allCurriculum.size()-1;
 
-        return true;
-    }
-    public static boolean deleteCurriculum(String curriculumCode){
-        String oldCode = allCurriculum.get(thisCurriculumIndex).curriculumCode;
-        int index = -1;
-        for(int i = 0;i<allCurriculum.size();i++){
-            if(allCurriculum.get(i).curriculumCode.equals(curriculumCode)) index = i;
-        }
-        if(index<0) return false;
-        Curriculum toDel = allCurriculum.get(index);
-        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-        sd.delete("curriculum","curriculum_code=? and name=?",new String[]{toDel.curriculumCode,toDel.name});
-        sd.delete("timetable","curriculum_code=?",new String[]{toDel.curriculumCode});
-        sd.delete("task","curriculum_code=?",new String[]{toDel.curriculumCode});
-        sd.delete("subject","curriculum_code=?",new String[]{toDel.curriculumCode});
-//        if(index==thisCurriculumIndex){
-//            if(allCurriculum.size()==1) mainTimeTable.upDateCore(null);
-//            else  mainTimeTable.upDateCore(allCurriculum.get(allCurriculum.size()-2));
-//            thisCurriculumIndex = allCurriculum.size()-1;
-//        }
-        allCurriculum.remove(index);
-        boolean hasMatch = false;
-        for(int i=0;i<allCurriculum.size();i++){
-            if(allCurriculum.get(i).curriculumCode.equals(oldCode)) {
-                hasMatch = true;
-                thisCurriculumIndex = i;
-            }
-        }
-        if(!hasMatch) thisCurriculumIndex = allCurriculum.size()-1;
-
-
-        return true;
-    }
-    public static boolean addCurriculumToTimeTable(CurriculumHelper il) {
-        if (il == null) return false;
-        List<Curriculum> toDEl = new ArrayList<>();
-        for (Curriculum temp : allCurriculum) {
-            if (temp.curriculumCode.equals(il.curriculumCode)) {
-                toDEl.add(temp);
-            }
-        }
-        allCurriculum.removeAll(toDEl);
-        Curriculum cur = il.getCurriculum();
-        if (toDEl.size() > 0) cur.setObjectId(toDEl.get(0).getObjectId());
-        if (cur.getWeekOfTerm(now) > cur.totalWeeks) cur.totalWeeks = cur.getWeekOfTerm(now);
-        allCurriculum.add(cur);
-        thisCurriculumIndex = allCurriculum.size() - 1;
-       // mainTimeTable.clearCurriculum(il.curriculumCode);
-        mainTimeTable.core = cur;//顺序不能乱
-        mainTimeTable.addCurriculum(il);
-        addSubjects(il);
-        defaultSP.edit().putInt("thisCurriculum", thisCurriculumIndex).apply();
-        return true;
-    }
-
-    static void addSubjects(CurriculumHelper ch) {
-        // Log.e("subjects:", String.valueOf(ch.Subjects));
-        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-
-        //sd.delete("subject","curriculum_code=?",new String[]{ch.curriculumCode});
-        for (Subject s : ch.Subjects) {
-            String ratesText = null;
-            String scoresText = null;
-            Cursor c = sd.query("subject",new String[]{"rates,scores"},"curriculum_code =? AND name=?",
-                    new String[]{ch.curriculumCode,s.name},null,null,null);
-            if(c.moveToNext()){
-                ratesText = c.getString(0);
-                scoresText = c.getString(1);
-            }
-            c.close();
-            ContentValues cv = s.getContentValues();
-            if(ratesText!=null) cv.put("rates",ratesText);
-            if(scoresText!=null) cv.put("scores",scoresText);
-//            sd.delete("subject","name=? and curriculum_code=? and code=?",
-//                    new String[]{s.name,s.curriculumCode,s.code});
-            sd.replace("subject",null,cv);
-//            if (sd.update("subject", s.getContentValues(), "name=? and curriculum_code=? and code=?",
-//                    new String[]{s.name,s.curriculumCode,s.code}) == 0) {
-//                sd.insert("subject", null, s.getContentValues());
-//            }
-        }
-    }
-
-    public static void initCoreData(){
-        allCurriculum.clear();
-        ArrayList<Curriculum> temp1 = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        Cursor c = sd.query("curriculum",null,null,null,null,null,null);
-        //ArrayList temp1 = FileOperator.loadCurriculumFromFile(this.getFilesDir());
-        while (c.moveToNext()){
-            temp1.add(new Curriculum(c));
-        }
-        c.close();
-        allCurriculum.addAll(temp1);
-        correctData();
-        thisCurriculumIndex = defaultSP.getInt("thisCurriculum",0);
-        try {
-            allCurriculum.get(thisCurriculumIndex);
-            thisWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
-        } catch (Exception e) {
-            thisCurriculumIndex = 0;
-        }
-        if(isDataAvailable()&&thisWeekOfTerm>allCurriculum.get(thisCurriculumIndex).totalWeeks) allCurriculum.get(thisCurriculumIndex).totalWeeks = thisWeekOfTerm;
-    }
-    public static void correctData() {
-        if (allCurriculum == null || mainTimeTable == null) return;
-        int allCurriculumSize = allCurriculum.size();
-        if (thisCurriculumIndex >= allCurriculumSize) {
-            if (allCurriculumSize > 0) thisCurriculumIndex = allCurriculumSize - 1;
-            else thisCurriculumIndex = 0;
-        }
-        if (allCurriculum.size() > 0) {
-            mainTimeTable.core = allCurriculum.get(thisCurriculumIndex);
-        }
-
-    }
-
-    public static boolean isDataAvailable() {
-        if (mainTimeTable == null) return false;
-        if(mainTimeTable.core == null) return false;
-        try {
-            allCurriculum.get(thisCurriculumIndex);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
-
-    public static int getDataState() {
-        if (allCurriculum == null || mainTimeTable == null) return DATA_STATE_NULL;
-        if (allCurriculum.size() == 0) return DATA_STATE_NONE_CURRICULUM;
-        if (!isDataAvailable()) return DATA_STATE_GET_ERROR;
-        return DATA_STATE_HEALTHY;
-    }
-
-    public static boolean saveDataToCloud(final boolean showToast) {
-        if (CurrentUser == null) return false;
-        Log.e("开始上传数据", "尝试");
-        for (final Curriculum ci : allCurriculum) {
-            ci.setHitaUser(CurrentUser);
-            ci.setSubjectsText();
-        }
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        ArrayList<TimeTable_upload_helper> TUHs = new ArrayList<>();
-        final Cursor c = sd.query("timetable", null, null, null, null, null, null);
-        while (c.moveToNext()) {
-            TimeTable_upload_helper bc = new TimeTable_upload_helper(c);
-            if (bc.type == TimeTable.TIMETABLE_EVENT_TYPE_COURSE || bc.type == TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC)
-                continue;
-            else TUHs.add(bc);
-        }
-        c.close();
-        ArrayList<Task> tasks = new ArrayList<>();
-        Cursor c2 = sd.query("task", null, null, null, null, null, null);
-        while (c2.moveToNext()) {
-            Task t = new Task(c2);
-            if(!t.isFinished()&&t.getType()!=Task.TYPE_DYNAMIC)tasks.add(t);
-        }
-        c2.close();
-        final Bmob_User_Data BUD = new Bmob_User_Data(allCurriculum, TUHs, tasks);
-        BUD.setHitaUser(CurrentUser);
-        BmobQuery<Bmob_User_Data> bq = new BmobQuery<>();
-        bq.addWhereEqualTo("hitaUser", CurrentUser);
-        bq.findObjects(new FindListener<Bmob_User_Data>() {
-            @Override
-            public void done(List<Bmob_User_Data> list, BmobException e) {
-                Log.e("found:", e == null ? "null" : e.toString());
-                if (e != null || list == null || list.size() == 0) {
-                    BUD.save(new SaveListener<String>() {
-                        @Override
-                        public void done(String s, BmobException e) {
-                            if(showToast) Toast.makeText(HContext,"上传成功！",Toast.LENGTH_SHORT).show();
-                            if (e == null) Log.e("新增用户数据", "成功");
-                            else Log.e("新增用户数据", e.toString());
-                        }
-                    });
-                } else {
-                    if (list != null && list.size() > 0) {
-                        BUD.setObjectId(list.get(0).getObjectId());
-                        BUD.update(new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if(showToast)Toast.makeText(HContext,"上传成功！",Toast.LENGTH_SHORT).show();
-                                if (e == null) Log.e("更新用户数据", "成功");
-                                else Log.e("更新用户数据", e.toString());
-                            }
-                        });
-                    }
-                }
-            }
-        });
-        return true;
-    }
-
-
-    public static boolean loadDataFromCloud() {
-        if (CurrentUser == null) return false;
-        clearData();
-        BmobQuery<Bmob_User_Data> query = new BmobQuery<>();
-        query.addWhereEqualTo("hitaUser", CurrentUser);
-        query.findObjects(new FindListener<Bmob_User_Data>() {
-            @Override
-            public void done(List<Bmob_User_Data> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
-                Log.e("下载","done");
-                if (e == null && list != null && list.size() > 0) {
-                    new writeDataToLocalTask(list.get(0)).executeOnExecutor(HITAApplication.TPE);;
-                }else {
-                    Toast.makeText(HContext,"云端没有数据！",Toast.LENGTH_SHORT).show();
-                    Log.e("下载失败",e==null?"空结果":e.toString());
-                }
-            }
-        });
-
-
-        return true;
-    }
-    public static boolean loadDataFromCloud(Bmob_User_Data bud) {
-        if (CurrentUser == null) return false;
-        clearData();
-        new writeDataToLocalTask(bud).executeOnExecutor(HITAApplication.TPE);;
-        return true;
-    }
-    public static boolean loadDataFromCloud(final Activity toFinish) {
-        if (CurrentUser == null) return false;
-        clearData();
-        BmobQuery<Bmob_User_Data> query = new BmobQuery<>();
-        query.addWhereEqualTo("hitaUser", CurrentUser);
-        query.findObjects(new FindListener<Bmob_User_Data>() {
-            @Override
-            public void done(List<Bmob_User_Data> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
-                Log.e("下载","done");
-                if (e == null && list != null && list.size() > 0) {
-                    new writeDataToLocalTask(list.get(0),toFinish).executeOnExecutor(HITAApplication.TPE);;
-                }else {
-                   if(toFinish!=null) toFinish.finish();
-                    Log.e("下载失败",e==null?"空结果":e.toString());
-                }
-            }
-        });
-
-
-        return true;
-    }
-
-    public static void clearData() {
-        mDBHelper.clearTables();
-        allCurriculum.clear();
-        thisCurriculumIndex = 0;
-        mainTimeTable.core = null;
-    }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        mDBHelper.getWritableDatabase().close();
+        timeTableCore.onTerminate();
     }
 
-//    class InitDataTask extends AsyncTask{
-//        @Override
-//        protected Object doInBackground(Object[] objects) {
-//            initCoreData();
-////            ((HITAApplication)ActivityMain.this.getApplication()).copyAssetsSingleFile(HContext.getFilesDir(), "mDict_default.dic");
-////            ((HITAApplication)ActivityMain.this.getApplication()).copyAssetsSingleFile(HContext.getFilesDir(), "mDict_ambiguity.dic");
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object o) {
-//            super.onPostExecute(o);
-//
-//            // tlf.Refresh(FragmentTimeLine.TL_REFRESH_FROM_UNHIDE);
-//        }
-//    }
-
-    static class writeDataToLocalTask extends AsyncTask{
-
-        Bmob_User_Data user_data;
-        Activity tofinish;
-        writeDataToLocalTask(Bmob_User_Data bmob_user_data,Activity tofinish){
-            this.user_data = bmob_user_data;
-            this.tofinish = tofinish;
-        }
-        writeDataToLocalTask(Bmob_User_Data bmob_user_data){
-            this.user_data = bmob_user_data;
-            this.tofinish = null;
-        }
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            try {
-                SQLiteDatabase sqd = mDBHelper.getWritableDatabase();
-                for (Curriculum ci : user_data.getCurriculumsFromText()) {
-                    sqd.insert("curriculum", null, ci.getContentValues());
-                    addCurriculumToTimeTable(FileOperator.loadCurriculumHelperFromCurriculumText(ci));
-                    sqd.delete("subject", "curriculum_code=?", new String[]{ci.curriculumCode});
-                    for (Subject s : ci.getSubjectsFromString()) {
-                        sqd.insert("subject", null, s.getContentValues());
-                    }
-                }
-                for (TimeTable_upload_helper tuh :user_data.getTimeTableHelpersFromString()) {
-                    sqd.insert("timetable", null, tuh.getContentValues());
-                }
-                for (Task t : user_data.getTasksFromText()) {
-                    sqd.insert("task", null, t.getContentValues());
-                }
-
-                return true;
-
-            } catch (Exception e1) {
-                e1.printStackTrace();
-               return false;
-            }
-
-
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            if((Boolean)o){
-                Toast.makeText(HContext,"成功同步该账号的课表！",Toast.LENGTH_SHORT).show();
-                if(isDataAvailable()) timeWatcher.refreshNowAndNextEvent();
-                if(tofinish!=null){
-                    tofinish.finish();
-                }
-            }else{
-                Toast.makeText(HContext,"同步用户数据出错！",Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
 
     static class InitTask extends AsyncTask {
 
+        @SuppressLint("StaticFieldLeak")
         Context context;
 
         InitTask(Context f) {
@@ -660,14 +263,12 @@ public class HITAApplication extends Application {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            initCoreData();
-
+            timeTableCore.initCoreData();
             timeWatcher.refreshProgress(true, true);
             //Log.e("time_test","initialize:end");
             Intent i = new Intent();
             i.setAction("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
             context.sendBroadcast(i);
-
             return null;
         }
 

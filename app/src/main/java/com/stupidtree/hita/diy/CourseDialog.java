@@ -1,6 +1,6 @@
 package com.stupidtree.hita.diy;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -20,20 +19,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityCourse;
 import com.stupidtree.hita.activities.ActivityNotes;
 import com.stupidtree.hita.activities.ActivityTeacher;
 import com.stupidtree.hita.adapter.CourseNoteGridAdapter;
-import com.stupidtree.hita.core.Note;
-import com.stupidtree.hita.core.Subject;
-import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.timetable.Note;
+import com.stupidtree.hita.timetable.Subject;
+import com.stupidtree.hita.timetable.timetable.EventItem;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.FileOperator;
@@ -49,14 +45,12 @@ import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_COURSE;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_EXAM;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_COURSE;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_EXAM;
 
 public class CourseDialog extends AlertDialog {
     EventItem ei;
@@ -97,7 +91,6 @@ public class CourseDialog extends AlertDialog {
         classroom_detail_icon = dlgView.findViewById(R.id.classroom_detail_icon);
         date = dlgView.findViewById(R.id.tt_dlg_date);
         name = dlgView.findViewById(R.id.tt_dlg_name);
-        detail = dlgView.findViewById(R.id.dlg_bt_detail);
 
         noteText = dlgView.findViewById(R.id.text_note);
         courseProgress = dlgView.findViewById(R.id.course_course_in_subject);
@@ -109,7 +102,7 @@ public class CourseDialog extends AlertDialog {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 //System.out.println(rating);
-                allCurriculum.get(thisCurriculumIndex).getSubjectByCourse(ei).setRate(courseNumber, new Float(rating).doubleValue());
+                timeTableCore.getCurrentCurriculum().getSubjectByCourse(ei).setRate(courseNumber, new Float(rating).doubleValue());
             }
         });
     }
@@ -122,16 +115,17 @@ public class CourseDialog extends AlertDialog {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     void setInfos() {
         if (ei.hasPassed(now)) {
             ratingCard.setVisibility(View.VISIBLE);
         } else {
             ratingCard.setVisibility(View.GONE);
         }
-        value2.setText(TextUtils.isEmpty(ei.tag2) ? "无" : ei.tag2);
-        value3.setText(TextUtils.isEmpty(ei.tag3) ? "无" : ei.tag3);
+        value2.setText(TextUtils.isEmpty(ei.tag2) ? HContext.getString(R.string.none): ei.tag2);
+        value3.setText(TextUtils.isEmpty(ei.tag3) ?HContext.getString(R.string.none) : ei.tag3);
         value4.setText(ei.startTime.tellTime() + "-" + ei.endTime.tellTime());
-        value5.setText(TextUtils.isEmpty(ei.tag4) ? "无" : ei.tag4);
+        value5.setText(TextUtils.isEmpty(ei.tag4) ? HContext.getString(R.string.none) : ei.tag4);
         //dialog.setTitle(ei.mainName);
         name.setText(ei.mainName);
         notesCard.setOnClickListener(new View.OnClickListener() {
@@ -140,21 +134,9 @@ public class CourseDialog extends AlertDialog {
                 Intent i = new Intent(getContext(), ActivityNotes.class);
                 Bundle b = new Bundle();
                 b.putSerializable("event", ei);
-                i.putExtra("curriculum", allCurriculum.get(thisCurriculumIndex).name);
+                i.putExtra("curriculum",timeTableCore.getCurrentCurriculum().getName());
                 i.putExtras(b);
                 getContext().startActivity(i);
-            }
-        });
-        detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //ActivityOptionsCompat ops = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) a,card,"card");
-                Intent i = new Intent(getContext(), ActivityCourse.class);
-                Bundle b = new Bundle();
-                b.putSerializable("eventitem", ei);
-                i.putExtras(b);
-                getContext().startActivity(i);
-                //dialog.dismiss();
             }
         });
         more.setOnClickListener(new View.OnClickListener() {
@@ -181,7 +163,7 @@ public class CourseDialog extends AlertDialog {
             public void onClick(View v) {
                 final String[] names = ei.tag3.split("，");
                 if (names.length > 1) {
-                    AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle("选择教师").setItems(names, new DialogInterface.OnClickListener() {
+                    AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(HContext.getString(R.string.pick_teacher)).setItems(names, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent il = new Intent(getContext(), ActivityTeacher.class);
@@ -204,7 +186,7 @@ public class CourseDialog extends AlertDialog {
             classroom_detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String cr[] = ei.tag2.split("，\\[");
+                    final String[] cr = ei.tag2.split("，\\[");
                     final ArrayList<String> classRooms = new ArrayList<>(Arrays.asList(cr));
                     if (classRooms.size() > 1) {
                         ArrayList<String> toRemove = new ArrayList<>();
@@ -215,10 +197,10 @@ public class CourseDialog extends AlertDialog {
                             if (TextUtils.isEmpty(x)) toRemove.add(x);
                         }
                         classRooms.removeAll(toRemove);
-                        String classRoomItems[] = new String[classRooms.size()];
+                        String[] classRoomItems = new String[classRooms.size()];
                         for (int i = 0; i < classRoomItems.length; i++)
                             classRoomItems[i] = classRooms.get(i);
-                        AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle("选择教室").setItems(classRoomItems, new DialogInterface.OnClickListener() {
+                        AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(HContext.getString(R.string.pick_classroom)).setItems(classRoomItems, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 ActivityUtils.startLocationActivity_name(getContext(), classRooms.get(i));
@@ -249,8 +231,12 @@ public class CourseDialog extends AlertDialog {
                 }
             }
         });
-        final Calendar c = allCurriculum.get(thisCurriculumIndex).getDateAtWOT(ei.week, ei.DOW);
-        date.setText(c.get(Calendar.MONTH) + 1 + "月" + c.get(Calendar.DAY_OF_MONTH) + "日" + "(第" + ei.week + "周" + TextTools.words_time_DOW[ei.DOW - 1] + ")");
+        final Calendar c = timeTableCore.getCurrentCurriculum().getDateAtWOT(ei.week, ei.DOW);
+        date.setText(HContext.getResources().getStringArray(R.array.months_full)[c.get(Calendar.MONTH)] +
+                String.format(HContext.getString(R.string.date_day),c.get(Calendar.DAY_OF_MONTH)) +
+                "("+
+                String.format(HContext.getString(R.string.week),ei.week) +" "+
+                HContext.getResources().getStringArray(R.array.dow1)[ei.DOW - 1] + ")");
         detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,12 +258,12 @@ public class CourseDialog extends AlertDialog {
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getItemId() == R.id.opr_delete) {
                             android.app.AlertDialog ad = new android.app.AlertDialog.Builder(getContext()).
-                                    setNegativeButton("取消", null)
-                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    setNegativeButton(HContext.getString(R.string.button_cancel), null)
+                                    .setPositiveButton(HContext.getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface d, int which) {
-                                            if (mainTimeTable.deleteEvent(ei, ei.eventType == TIMETABLE_EVENT_TYPE_DEADLINE)) {
-                                                Toast.makeText(getContext(), "删除成功！", Toast.LENGTH_SHORT).show();
+                                            if (timeTableCore.deleteEvent(ei, ei.eventType == TIMETABLE_EVENT_TYPE_DEADLINE)) {
+                                                Toast.makeText(getContext(), HContext.getString(R.string.notif_delete_success), Toast.LENGTH_SHORT).show();
                                                 Intent i = new Intent();
                                                 i.putExtra("week", ei.week);
                                                 i.setAction("COM.STUPIDTREE.HITA.TIMETABLE_PAGE_REFRESH");
@@ -286,9 +272,9 @@ public class CourseDialog extends AlertDialog {
                                             }
                                         }
                                     }).create();
-                            ad.setTitle("确定删除吗？");
+                            ad.setTitle(HContext.getString(R.string.dialog_title_sure_delete));
                             if (ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
-                                ad.setMessage("删除课程后,可以通过导入课表或同步云端数据恢复初始课表");
+                                ad.setMessage(HContext.getString(R.string.dialog_message_sure_delete));
                             }
                             ad.show();
                         } else if (item.getItemId() == R.id.opr_subject) {
@@ -336,6 +322,7 @@ public class CourseDialog extends AlertDialog {
 
     class RefreshTask extends AsyncTask {
 
+        double rate = 0;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -345,7 +332,7 @@ public class CourseDialog extends AlertDialog {
         @Override
         protected Object doInBackground(Object[] objects) {
             syncNoteWithFile();
-            subject = allCurriculum.get(thisCurriculumIndex).getSubjectByCourse(ei);
+            subject = timeTableCore.getCurrentCurriculum().getSubjectByCourse(ei);
             Map<String, Integer> res = new HashMap<>();
             try {
                 List courses = subject.getCourses();
@@ -353,6 +340,7 @@ public class CourseDialog extends AlertDialog {
                 Collections.sort(courses);
                 int now = courses.indexOf(ei) + 1;
                 res.put("now", now);
+                rate = timeTableCore.getCurrentCurriculum().getSubjectByCourse(ei).getRate(courseNumber);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -367,18 +355,17 @@ public class CourseDialog extends AlertDialog {
                 Map<String, Integer> res = (Map<String, Integer>) o;
                 gridAdapter.notifyDataSetChanged();
                 courseNumber = res.get("now");
-                courseProgress.setText("为本科目的第" + courseNumber + "次课");
-                Double f = allCurriculum.get(thisCurriculumIndex).getSubjectByCourse(ei).getRate(courseNumber);
-                ratingBar.setRating(f.floatValue());
-                // allCurriculum.get(thisCurriculumIndex).getSubjectByCourse(ei).setRate(courseNumber,0.0);
+                courseProgress.setText(String.format(HContext.getString(R.string.dialog_this_course_p), courseNumber ));
+                ratingBar.setRating((float) rate);
+                // timeTableCore.getCurrentCurriculum().getSubjectByCourse(ei).setRate(courseNumber,0.0);
                 float all = (float) res.get("total");
                 int has = res.get("now");
                 float progress = (float) has / all;
                 courseProgressBar.setProgress((int) (progress * 100));
                 if (gridItems == null || gridItems.size() == 0) {
-                    noteText.setText("没有笔记，点击添加");
+                    noteText.setText(HContext.getString(R.string.dialog_no_notes));
                 } else {
-                    noteText.setText("这堂课共有" + gridItems.size() + "条笔记");
+                    noteText.setText(String.format(HContext.getString(R.string.dialog_notes_num),gridItems.size()));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -401,7 +388,7 @@ public class CourseDialog extends AlertDialog {
 
     public void syncNoteWithFile() {
         //if(gridItems==null) gridItems = new ArrayList<>();
-        List<Note> temp = FileOperator.loadNoteFromFile(Objects.requireNonNull(getContext().getExternalFilesDir(null)), allCurriculum.get(thisCurriculumIndex).name, ei.week + "-" + ei.DOW, ei.tag4);
+        List<Note> temp = FileOperator.loadNoteFromFile(Objects.requireNonNull(getContext().getExternalFilesDir(null)), timeTableCore.getCurrentCurriculum().getName(), ei.week + "-" + ei.DOW, ei.tag4);
         gridItems.clear();
         if (temp != null) {
             for (Note n : temp) {

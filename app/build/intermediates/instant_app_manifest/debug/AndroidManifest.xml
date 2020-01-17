@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stupidtree.hita"
     android:targetSandboxVersion="2"
-    android:versionCode="20191217"
-    android:versionName="12.17" >
+    android:versionCode="20200117"
+    android:versionName="1.17" >
 
     <uses-sdk
         android:minSdkVersion="23"
@@ -63,12 +63,6 @@
             android:label="@string/title_activity_search"
             android:theme="@style/ChatBotTheme"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="com.stupidtree.hita.activities.ActivityXL"
-            android:label="@string/title_activity_xl"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.stupidtree.hita.activities.ActivityYX_FDY" />
-        <activity android:name="com.stupidtree.hita.activities.ActivityYX_ToSchool" />
         <activity android:name="com.stupidtree.hita.activities.ActivityEmptyClassroomDetail" />
         <activity android:name="com.stupidtree.hita.activities.ActivityEmptyClassroom" />
         <activity android:name="com.stupidtree.hita.activities.ActivityPostDetail" />
@@ -86,16 +80,17 @@
             </intent-filter>
         </service>
 
-        <receiver android:name="com.stupidtree.hita.TimeLineWidget" >
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.stupidtree.hita.UPDATE_ALL" />
-            </intent-filter>
+        <!-- <receiver android:name=".TimeLineWidget"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> -->
+        <!-- <action android:name="com.stupidtree.hita.UPDATE_ALL" /> -->
+        <!-- </intent-filter> -->
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/time_line_widget_info" />
-        </receiver>
+
+        <!-- <meta-data -->
+        <!-- android:name="android.appwidget.provider" -->
+        <!-- android:resource="@xml/time_line_widget_info" /> -->
+        <!-- </receiver> -->
         <receiver android:name="com.stupidtree.hita.NotificationClickReceiver" />
 
         <activity android:name="com.stupidtree.hita.activities.ActivitySetting" />
@@ -107,20 +102,13 @@
             android:authorities="com.stupidtree.hita.BmobContentProvider" />
 
         <activity
-            android:name="com.stupidtree.hita.activities.ActivityRankBoard"
+            android:name="com.stupidtree.hita.activities.ActivityLeaderBoard"
             android:label="@string/title_activity_food"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityTeacher"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.stupidtree.hita.activities.ActivitySubjectManager"
-            android:theme="@style/AppTheme" />
         <activity android:name="com.stupidtree.hita.activities.ActivityDynamicTable" />
-        <activity
-            android:name="com.stupidtree.hita.activities.ActivityCourse"
-            android:label="@string/title_activity_couse"
-            android:theme="@style/AppTheme" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityJWTS"
             android:theme="@style/AppTheme" />
@@ -141,16 +129,19 @@
         <activity
             android:name="com.stupidtree.hita.activities.ActivityLoginJWTS"
             android:label="@string/title_activity_gfh"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityLoginUT"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.stupidtree.hita.activities.ActivityHITSZInfo"
+            android:name="com.stupidtree.hita.activities.ActivityNews"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityLogin"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityTimeTable"
             android:theme="@style/AppTheme" />
@@ -166,14 +157,13 @@
             android:label="@string/title_activity_notes"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.stupidtree.hita.activities.ActivityUniversity"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name="com.stupidtree.hita.activities.ActivityMain"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name="com.stupidtree.hita.activities.ActivityCampusLocations" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivitySchoolCalendar"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityCurriculumManager"
             android:label="@string/title_activity_import_data"

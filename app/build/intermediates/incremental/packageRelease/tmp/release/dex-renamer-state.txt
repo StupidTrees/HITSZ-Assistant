@@ -1,4 +1,4 @@
-#Tue Dec 17 16:02:09 CST 2019
+#Sun Jan 12 23:19:49 CST 2020
 base.0=C\:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\out
 path.1=classes2.dex
 renamed.1=classes2.dex

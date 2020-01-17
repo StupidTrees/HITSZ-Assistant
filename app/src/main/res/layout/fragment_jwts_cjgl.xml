@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".jwts.FragmentJWTS_cjgl" >
+    tools:context=".jw.FragmentJWTS_cjgl" >
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/cjgl_tabs"
         android:layout_width="match_parent"
         android:layout_height="@dimen/jwts_second_tab_height"
         android:background="#00000000"
+        android:visibility="gone"
         app:tabIndicatorColor="#00000000"
         app:tabIndicatorFullWidth="false"
         app:tabMode="scrollable"

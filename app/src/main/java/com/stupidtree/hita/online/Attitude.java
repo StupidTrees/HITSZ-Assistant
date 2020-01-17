@@ -71,12 +71,11 @@ public class Attitude extends BmobObject {
         this.down = down;
     }
 
-    @WorkerThread //耗时
+    @WorkerThread
     public boolean voted(HITAUser user){
         BmobQuery<HITAUser> bq = new BmobQuery<>();
         BmobQuery<HITAUser> bq2 = new BmobQuery<>();
         bq.addWhereRelatedTo("upUser",new BmobPointer(this));
-        //bq.addWhereEqualTo("objectId",user.getObjectId());
         List<HITAUser> uR = bq.findObjectsSync(HITAUser.class);
         Log.e("result_u", String.valueOf(uR));
 

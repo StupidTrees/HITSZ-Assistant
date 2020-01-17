@@ -1,15 +1,14 @@
 package com.stupidtree.hita.online;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.stupidtree.hita.core.Curriculum;
-import com.stupidtree.hita.core.timetable.Task;
+import com.stupidtree.hita.timetable.Curriculum;
+import com.stupidtree.hita.timetable.timetable.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ public class Bmob_User_Data extends BmobObject {
     String TasksText;
     HITAUser hitaUser;
     String timetableText;
-    public Bmob_User_Data(ArrayList<Curriculum> ccs,ArrayList<TimeTable_upload_helper> tth,ArrayList<Task> tts){
+    public Bmob_User_Data(List<Curriculum> ccs,ArrayList<TimeTable_upload_helper> tth,ArrayList<Task> tts){
 //        StringBuilder sb = new StringBuilder();
 //        for(int i=0;i<ccs.size();i++){
 //            String rex=(i==ccs.size()-1)?"":":::";
@@ -32,7 +31,7 @@ public class Bmob_User_Data extends BmobObject {
         JsonParser jp = new JsonParser();
         JsonObject jo = new JsonObject();
         for(Curriculum c:ccs){
-            jo.add(c.curriculumCode,jp.parse(c.toString()));
+            jo.add(c.getCurriculumCode(),jp.parse(c.toString()));
         }
         CurriculumsText = jo.toString();
 

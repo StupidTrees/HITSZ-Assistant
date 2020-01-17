@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityEmptyClassroom;
-import com.stupidtree.hita.core.TimeTable;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.util.ActivityUtils;
 
 import org.jsoup.Jsoup;
@@ -41,12 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.themeID;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
-import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class FragmentEmptyClassroomDialog extends BottomSheetDialogFragment {
     private String lhName;
@@ -59,7 +52,8 @@ public class FragmentEmptyClassroomDialog extends BottomSheetDialogFragment {
     refreshDetailTask pageTask;
     private FragmentEmptyClassroomDialog(){
 
-    };
+    }
+
     public static FragmentEmptyClassroomDialog getInstance(String lhName,String lhValue,int pageCourseNumber){
         Bundle b = new Bundle();
         b.putString("lhName",lhName);
@@ -145,7 +139,7 @@ public class FragmentEmptyClassroomDialog extends BottomSheetDialogFragment {
             detailViewHolder.item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ActivityUtils.startEmptyClassroomDetailActivity(getActivity(), String.valueOf(mBeans.get(i).get("name")),mainTimeTable.core.curriculumCode,lh,String.valueOf(mBeans.get(i).get("value")));
+                    ActivityUtils.startEmptyClassroomDetailActivity(getActivity(), String.valueOf(mBeans.get(i).get("name")),timeTableCore.getCurrentCurriculum().getCurriculumCode(),lh,String.valueOf(mBeans.get(i).get("value")));
                 }
             });
             if((mBeans.get(i).get("available")!=null&&(Boolean)mBeans.get(i).get("available"))){
@@ -200,9 +194,8 @@ public class FragmentEmptyClassroomDialog extends BottomSheetDialogFragment {
         protected Object doInBackground(Object[] objects) {
             try {
                 Document page = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kjscx/queryKjs_wdl")
-                        .timeout(5000)
-                        .data("pageXnxq",allCurriculum.get(thisCurriculumIndex).curriculumCode)
-                        .data("pageZc1", String.valueOf(thisWeekOfTerm)).data("pageZc2", String.valueOf(thisWeekOfTerm))
+                    //    .data("pageXnxq",timeTableCore.getCurrentCurriculum().curriculumCode)
+                        .data("pageZc1", String.valueOf(timeTableCore.getThisWeekOfTerm())).data("pageZc2", String.valueOf(timeTableCore.getThisWeekOfTerm()))
                         .data("pageXiaoqu","1")
                         .data("pageLhdm",lhValue)
                         .data("pageCddm","")
@@ -260,7 +253,7 @@ public class FragmentEmptyClassroomDialog extends BottomSheetDialogFragment {
                         }
                     }
                     if(!hasMatch) m.put("value",tds.get(0).text());
-                    int dow = TimeTable.getDOW(now);
+                    int dow = TimetableCore.getDOW(now);
                     int number = pageCourseNumber;
                     int index = (dow-1)*6+(number%2==0?number/2:number/2+1);
                     Log.e("Number", String.valueOf(number));

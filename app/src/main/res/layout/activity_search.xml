@@ -34,7 +34,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#00000000"
-                    android:hint="搜教室、老师..."
+                    android:hint="@string/search_hint"
                     android:singleLine="true"
                     android:textColor="?attr/text_color_primary"
                     android:textColorHint="?attr/text_color_secondary" />

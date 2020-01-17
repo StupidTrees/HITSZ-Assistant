@@ -11,7 +11,8 @@ import com.stupidtree.hita.BaseFragment;
 
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class CurriculuManagerPagerAdapter extends FragmentPagerAdapter {
     List<BaseFragment> mBeans;
@@ -28,7 +29,7 @@ public class CurriculuManagerPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        String n = allCurriculum.get(position).name;
+        String n = timeTableCore.getAllCurriculum().get(position).getName();
         if(n.indexOf("(")>0){
             return n.substring(0,n.indexOf("("));
         }

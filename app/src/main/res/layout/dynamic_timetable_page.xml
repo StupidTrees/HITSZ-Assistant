@@ -1,523 +1,477 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:fitsSystemWindows="true"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp"
+        android:visibility="visible">
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="24dp"
+            android:layout_height="28dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_grey"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/tt_monday"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_grey"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/tt_tuesday"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_grey"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/tt_wednesday"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_grey"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/tt_thursday"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_grey"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/tt_saturday"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_grey"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/tt_friday"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_grey"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/tt_sunday"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp" />
+        </FrameLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="4dp">
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:fitsSystemWindows="true"
-            android:orientation="horizontal"
-            android:paddingBottom="4dp"
-            android:visibility="visible">
+        <TextView
+            android:id="@+id/tt_tv_month"
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:alpha="0.9"
+            android:gravity="center"
+            android:text="12月"
+            android:textColor="?attr/text_color_primary"
+            android:textSize="8sp"
+            tools:ignore="HardcodedText" />
 
-            <TextView
-                android:id="@+id/tt_tv_month"
-                android:layout_width="24dp"
-                android:layout_height="match_parent"
-                android:alpha="0.9"
-                android:gravity="center"
-                android:text="12"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tt_tv_day1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.9"
+            android:gravity="center"
+            android:text="16"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="10sp"
+            tools:ignore="HardcodedText,SmallSp" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+        <TextView
+            android:id="@+id/tt_tv_day2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.9"
+            android:gravity="center"
+            android:text="17"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="10sp"
+            tools:ignore="HardcodedText,SmallSp" />
 
-                <ImageView
-                    android:id="@+id/dowb1"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:alpha="0.9"
-                    app:srcCompat="@drawable/round_grey" />
+        <TextView
+            android:id="@+id/tt_tv_day3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.9"
+            android:gravity="center"
+            android:text="18"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="10sp"
+            tools:ignore="HardcodedText,SmallSp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="一"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="12sp" />
-            </FrameLayout>
+        <TextView
+            android:id="@+id/tt_tv_day4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.9"
+            android:gravity="center"
+            android:text="19"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="10sp"
+            tools:ignore="HardcodedText,SmallSp" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+        <TextView
+            android:id="@+id/tt_tv_day5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.9"
+            android:gravity="center"
+            android:text="20"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="10sp"
+            tools:ignore="HardcodedText,SmallSp" />
 
-                <ImageView
-                    android:id="@+id/dowb2"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:alpha="0.9"
-                    app:srcCompat="@drawable/round_grey" />
+        <TextView
+            android:id="@+id/tt_tv_day6"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.9"
+            android:gravity="center"
+            android:text="21"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="10sp"
+            tools:ignore="HardcodedText,SmallSp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="二"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tt_tv_day7"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:alpha="0.9"
+            android:gravity="center"
+            android:text="22"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="10sp"
+            tools:ignore="HardcodedText,SmallSp" />
 
-            </FrameLayout>
+    </LinearLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+    <LinearLayout
+        android:id="@+id/wholeday_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-                <ImageView
-                    android:id="@+id/dowb3"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:alpha="0.9"
-                    app:srcCompat="@drawable/round_grey" />
+        <TextView
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:gravity="center"
+            android:minHeight="0dp"
+            android:paddingStart="6dp"
+            android:text="@string/tt_wholeday"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="8sp"
+            tools:ignore="RtlSymmetry,SmallSp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="三"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="12sp" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/dowb4"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:alpha="0.9"
-                    app:srcCompat="@drawable/round_grey" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="四"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="12sp" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/dowb5"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:alpha="0.9"
-                    app:srcCompat="@drawable/round_grey" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="五"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="12sp" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/dowb6"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:alpha="0.9"
-                    app:srcCompat="@drawable/round_grey" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="六"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="12sp" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/dowb7"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:alpha="0.9"
-                    app:srcCompat="@drawable/round_grey" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="日"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="12sp" />
-            </FrameLayout>
-        </LinearLayout>
-
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_gravity="center"
+            android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="24dp"
-                android:layout_height="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tt_wholeday_card_1"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:text="月"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="10sp" />
+                android:layout_margin="8dp"
+                android:minWidth="24dp"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardCornerRadius="12dp"
+                app:theme="@style/button_ripple_primary">
 
-            <TextView
-                android:id="@+id/tt_tv_day1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:alpha="0.9"
-                android:gravity="center"
-                android:text="16"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="10sp" />
+                <TextView
+                    android:id="@+id/tt_wholeday_text_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="1"
+                    android:textColor="@color/material_text_icon_white"
+                    tools:ignore="HardcodedText" />
+            </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
-            <TextView
-                android:id="@+id/tt_tv_day2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:alpha="0.9"
-                android:gravity="center"
-                android:text="17"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/tt_tv_day3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:alpha="0.9"
-                android:gravity="center"
-                android:text="18"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/tt_tv_day4"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:alpha="0.9"
-                android:gravity="center"
-                android:text="19"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/tt_tv_day5"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:alpha="0.9"
-                android:gravity="center"
-                android:text="20"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/tt_tv_day6"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:alpha="0.9"
-                android:gravity="center"
-                android:text="21"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/tt_tv_day7"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:alpha="0.9"
-                android:gravity="center"
-                android:text="22"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="10sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/wholeday_layout"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="24dp"
-                android:layout_height="match_parent"
-                android:alpha="0.5"
-                android:gravity="center"
-                android:minHeight="0dp"
-                android:paddingLeft="6dp"
-                android:text="全天"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="8sp" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tt_wholeday_card_2"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:layout_weight="1">
+                android:layout_margin="8dp"
+                android:minWidth="24dp"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardCornerRadius="12dp"
+                app:theme="@style/button_ripple_primary">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/tt_wholeday_card_1"
+                <TextView
+                    android:id="@+id/tt_wholeday_text_2"
                     android:layout_width="wrap_content"
-                    android:layout_height="24dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="8dp"
-                    android:minWidth="24dp"
-                    app:cardBackgroundColor="?attr/colorPrimary"
-                    app:cardCornerRadius="12dp"
-                    app:theme="@style/button_ripple_primary">
+                    android:text="1"
+                    android:textColor="@color/material_text_icon_white"
+                    tools:ignore="HardcodedText" />
+            </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/tt_wholeday_text_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="1"
-                        android:textColor="@color/material_text_icon_white" />
-                </androidx.cardview.widget.CardView>
-            </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tt_wholeday_card_3"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:layout_weight="1">
+                android:layout_margin="8dp"
+                android:minWidth="24dp"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardCornerRadius="12dp"
+                app:theme="@style/button_ripple_primary">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/tt_wholeday_card_2"
+                <TextView
+                    android:id="@+id/tt_wholeday_text_3"
                     android:layout_width="wrap_content"
-                    android:layout_height="24dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="8dp"
-                    android:minWidth="24dp"
-                    app:cardBackgroundColor="?attr/colorPrimary"
-                    app:cardCornerRadius="12dp"
-                    app:theme="@style/button_ripple_primary">
+                    android:text="1"
+                    android:textColor="@color/material_text_icon_white"
+                    tools:ignore="HardcodedText" />
+            </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/tt_wholeday_text_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="1"
-                        android:textColor="@color/material_text_icon_white" />
-                </androidx.cardview.widget.CardView>
-            </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tt_wholeday_card_4"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:layout_weight="1">
+                android:layout_margin="8dp"
+                android:minWidth="24dp"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardCornerRadius="12dp"
+                app:theme="@style/button_ripple_primary">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/tt_wholeday_card_3"
+                <TextView
+                    android:id="@+id/tt_wholeday_text_4"
                     android:layout_width="wrap_content"
-                    android:layout_height="24dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="8dp"
-                    android:minWidth="24dp"
-                    app:cardBackgroundColor="?attr/colorPrimary"
-                    app:cardCornerRadius="12dp"
-                    app:theme="@style/button_ripple_primary">
+                    android:text="1"
+                    android:textColor="@color/material_text_icon_white"
+                    tools:ignore="HardcodedText" />
+            </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/tt_wholeday_text_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="1"
-                        android:textColor="@color/material_text_icon_white" />
-                </androidx.cardview.widget.CardView>
-            </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tt_wholeday_card_5"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:layout_weight="1">
+                android:layout_margin="8dp"
+                android:minWidth="24dp"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardCornerRadius="12dp"
+                app:theme="@style/button_ripple_primary">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/tt_wholeday_card_4"
+                <TextView
+                    android:id="@+id/tt_wholeday_text_5"
                     android:layout_width="wrap_content"
-                    android:layout_height="24dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="8dp"
-                    android:minWidth="24dp"
-                    app:cardBackgroundColor="?attr/colorPrimary"
-                    app:cardCornerRadius="12dp"
-                    app:theme="@style/button_ripple_primary">
+                    android:text="1"
+                    android:textColor="@color/material_text_icon_white" />
+            </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/tt_wholeday_text_4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="1"
-                        android:textColor="@color/material_text_icon_white" />
-                </androidx.cardview.widget.CardView>
-            </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tt_wholeday_card_6"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:layout_weight="1">
+                android:layout_margin="8dp"
+                android:minWidth="24dp"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardCornerRadius="12dp"
+                app:theme="@style/button_ripple_primary">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/tt_wholeday_card_5"
+                <TextView
+                    android:id="@+id/tt_wholeday_text_6"
                     android:layout_width="wrap_content"
-                    android:layout_height="24dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="8dp"
-                    android:minWidth="24dp"
-                    app:cardBackgroundColor="?attr/colorPrimary"
-                    app:cardCornerRadius="12dp"
-                    app:theme="@style/button_ripple_primary">
+                    android:text="1"
+                    android:textColor="@color/material_text_icon_white" />
+            </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/tt_wholeday_text_5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="1"
-                        android:textColor="@color/material_text_icon_white" />
-                </androidx.cardview.widget.CardView>
-            </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tt_wholeday_card_7"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:layout_weight="1">
+                android:layout_margin="8dp"
+                android:minWidth="24dp"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardCornerRadius="12dp"
+                app:theme="@style/button_ripple_primary">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/tt_wholeday_card_6"
+                <TextView
+                    android:id="@+id/tt_wholeday_text_7"
                     android:layout_width="wrap_content"
-                    android:layout_height="24dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="8dp"
-                    android:minWidth="24dp"
-                    app:cardBackgroundColor="?attr/colorPrimary"
-                    app:cardCornerRadius="12dp"
-                    app:theme="@style/button_ripple_primary">
-
-                    <TextView
-                        android:id="@+id/tt_wholeday_text_6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="1"
-                        android:textColor="@color/material_text_icon_white" />
-                </androidx.cardview.widget.CardView>
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/tt_wholeday_card_7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="8dp"
-                    android:minWidth="24dp"
-                    app:cardBackgroundColor="?attr/colorPrimary"
-                    app:cardCornerRadius="12dp"
-                    app:theme="@style/button_ripple_primary">
-
-                    <TextView
-                        android:id="@+id/tt_wholeday_text_7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="1"
-                        android:textColor="@color/material_text_icon_white" />
-                </androidx.cardview.widget.CardView>
-            </FrameLayout>
-
-        </LinearLayout>
+                    android:text="1"
+                    android:textColor="@color/material_text_icon_white"
+                    tools:ignore="HardcodedText" />
+            </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/timetable_scroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
         android:layout_weight="1"
         android:overScrollMode="never">
 
@@ -538,7 +492,7 @@
             <com.stupidtree.hita.diy.TimeTableViewGroup
                 android:id="@+id/timetableview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"></com.stupidtree.hita.diy.TimeTableViewGroup>
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 

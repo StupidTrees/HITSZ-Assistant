@@ -1,20 +1,16 @@
 package com.stupidtree.hita.activities;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import androidx.core.content.ContextCompat;
+
 import androidx.cardview.widget.CardView;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,11 +25,10 @@ import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.Subject;
-import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.timetable.Subject;
+import com.stupidtree.hita.timetable.timetable.EventItem;
 import com.stupidtree.hita.adapter.SubjectCoursesListAdapter;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
-import com.stupidtree.hita.util.ActivityUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -41,10 +36,9 @@ import java.util.Collections;
 
 
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
 
 
@@ -59,7 +53,7 @@ public class ActivitySubject extends BaseActivity {
     ArcProgress arcProgress;
     net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout toolbarLayout;
     TextView name,point, attr, totalcourses, exam, school, xnxq, type, code, score_qz, score_qm, score_none;
-    CardView  card_scores, card_allcourses;
+    CardView   card_allcourses;
     View card_rate,card_color;
     LinearLayout qz_score_layout, qm_score_layout;
     InitProgressTask pageTask_progress;
@@ -123,17 +117,17 @@ public class ActivitySubject extends BaseActivity {
                 new ColorPickerDialog.Builder(ActivitySubject.this)
                         .attachAlphaSlideBar(false)
                         .attachBrightnessSlideBar(true)
-                        .setTitle("选择颜色")
-                        .setPositiveButton(getString(R.string.confirm),
+                        .setTitle(R.string.pick_color)
+                        .setPositiveButton(R.string.button_confirm,
                                 new ColorEnvelopeListener() {
                                     @Override
                                     public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
-                                        defaultSP.edit().putInt("color:"+subject.name,envelope.getColor()).apply();
+                                        defaultSP.edit().putInt("color:"+subject.getName(),envelope.getColor()).apply();
                                         colorSample.setColorFilter(envelope.getColor());
                                         setResult(RESULT_COLOR_CHANGED);
                                             }
                                 })
-                        .setNegativeButton("取消",
+                        .setNegativeButton(R.string.button_cancel,
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -154,7 +148,7 @@ public class ActivitySubject extends BaseActivity {
         //toolbarLayout.setTitle(subject.name);
         Toolbar toolbar = findViewById(R.id.toolbar);
         ratingText = findViewById(R.id.text_rate);
-        toolbar.setTitle(subject.name);
+        toolbar.setTitle(subject.getName());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -186,17 +180,17 @@ public class ActivitySubject extends BaseActivity {
     }
 
     void setInfos() {
-        name.setText(subject.name);
-        attr.setText(subject.compulsory);
-        point.setText(subject.credit);
-        school.setText(subject.school);
-        code.setText(subject.code);
-        xnxq.setText(subject.xnxq);
-        type.setText(subject.type);
-        colorSample.setColorFilter(defaultSP.getInt("color:"+subject.name,Color.YELLOW));
-        totalcourses.setText(subject.totalCourses);
-        exam.setText((subject.exam ? "是" : "否") + (subject.Default ? "(默认)" : ""));
-        if (subject.isMOOC) {
+        name.setText(subject.getName());
+        attr.setText(subject.getCompulsory());
+        point.setText(subject.getCredit());
+        school.setText(subject.getSchool());
+        code.setText(subject.getCode());
+        xnxq.setText(subject.getXnxq());
+        type.setText(subject.getType());
+        colorSample.setColorFilter(defaultSP.getInt("color:"+subject.getName(),Color.YELLOW));
+        totalcourses.setText(subject.getTotalCourses());
+        exam.setText((subject.isExam() ? "是" : "否") + (subject.isDefault() ? "(默认)" : ""));
+        if (subject.isMOOC()) {
             card_rate.setVisibility(View.GONE);
             card_color.setVisibility(View.GONE);
             arcProgress.setVisibility(View.GONE);
@@ -331,9 +325,9 @@ public class ActivitySubject extends BaseActivity {
         @Override
         protected Object doInBackground(Object[] objects) {
             if (!useCode) {
-                subject = allCurriculum.get(thisCurriculumIndex).getSubjectByName(subjectKey);
+                subject = timeTableCore.getCurrentCurriculum().getSubjectByName(subjectKey);
             } else {
-                subject = allCurriculum.get(thisCurriculumIndex).getSubjectByCourseCode(subjectKey);
+                subject = timeTableCore.getCurrentCurriculum().getSubjectByCourseCode(subjectKey);
             }
             return subject!=null;
         }
@@ -369,9 +363,9 @@ public class ActivitySubject extends BaseActivity {
         @Override
         protected Object doInBackground(Object[] objects) {
             if (!useCode) {
-                subject = allCurriculum.get(thisCurriculumIndex).getSubjectByName(subjectKey);
+                subject = timeTableCore.getCurrentCurriculum().getSubjectByName(subjectKey);
             } else {
-                subject = allCurriculum.get(thisCurriculumIndex).getSubjectByCourseCode(subjectKey);
+                subject = timeTableCore.getCurrentCurriculum().getSubjectByCourseCode(subjectKey);
             }
             return subject!=null;
         }

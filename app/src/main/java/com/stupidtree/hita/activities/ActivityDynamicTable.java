@@ -3,6 +3,7 @@ package com.stupidtree.hita.activities;
 import androidx.core.content.ContextCompat;
 
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -91,7 +92,7 @@ public class ActivityDynamicTable extends BaseActivity {
                             HContext.registerReceiver(timeWatcher.volumeChangeReciever,if2);
                         }
                             NotificationManager notificationManager =
-                                    (NotificationManager) HContext.getSystemService(HContext.NOTIFICATION_SERVICE);
+                                    (NotificationManager) HContext.getSystemService(NOTIFICATION_SERVICE);
 
                             if(!notificationManager.isNotificationPolicyAccessGranted()) {
                                 auto_mute.setChecked(false);

@@ -1,5 +1,6 @@
 package com.stupidtree.hita.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -38,9 +39,6 @@ import cn.bmob.v3.BmobQuery;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.loadDataFromCloud;
-import static com.stupidtree.hita.HITAApplication.saveDataToCloud;
 
 
 public class FragmentUserCenter_ut extends BaseFragment {
@@ -146,25 +144,30 @@ public class FragmentUserCenter_ut extends BaseFragment {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            if(CurrentUser!=null){
-                BmobQuery<LostAndFound> bq = new BmobQuery();
-                bq.addWhereEqualTo("author",CurrentUser.getObjectId());
-                List<LostAndFound> r = bq.findObjectsSync(LostAndFound.class);
-                if(r!=null&&r.size()>0) {
-                    lafListRes.clear();
-                    lafListRes.addAll(r);
+            try {
+                if(CurrentUser!=null){
+                    BmobQuery<LostAndFound> bq = new BmobQuery();
+                    bq.addWhereEqualTo("author",CurrentUser.getObjectId());
+                    List<LostAndFound> r = bq.findObjectsSync(LostAndFound.class);
+                    if(r!=null&&r.size()>0) {
+                        lafListRes.clear();
+                        lafListRes.addAll(r);
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return null;
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
 
             try {
                 lafListAdapter.notifyDataSetChanged();
-                punch_title.setText("累计签到"+CurrentUser.getPunchDays()+"天");
+                punch_title.setText(String.format(getString(R.string.user_center_you_have_punched),CurrentUser.getPunchDays()));
                 happy_days.setText(CurrentUser.getHappyDays()+"");
                 normal_days.setText(CurrentUser.getNormalDays()+"");
                 sad_days.setText(CurrentUser.getSadDays()+"");

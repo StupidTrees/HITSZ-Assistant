@@ -1,5 +1,6 @@
 package com.stupidtree.hita.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -25,11 +26,11 @@ import android.widget.TextView;
 
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.HITAApplication;
-import com.stupidtree.hita.core.timetable.HTime;
+import com.stupidtree.hita.timetable.timetable.HTime;
 import com.stupidtree.hita.diy.TimeTableViewGroup;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.EventItem;
 import com.stupidtree.hita.util.TimeTableNowLine;
 
 import java.util.ArrayList;
@@ -37,14 +38,9 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.isDataAvailable;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
-
-import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
 
 
@@ -65,9 +61,9 @@ public class FragmentTimeTablePage extends BaseFragment {
     static int CARD_HEIGHT = 160;//课程表卡片高度
 
     /*控件对象区*/
-    TextView tdays[] = new TextView[8]; //顶部日期文本
-    TextView tWholeDays[] = new TextView[7];
-    CardView tWholeDayCards[] = new CardView[7];
+    TextView[] tdays = new TextView[8]; //顶部日期文本
+    TextView[] tWholeDays = new TextView[7];
+    CardView[] tWholeDayCards = new CardView[7];
     LinearLayout classNumberLayout;
     LinearLayout wholedayLayout;
     refreshPageTask pageTask;
@@ -188,12 +184,13 @@ public class FragmentTimeTablePage extends BaseFragment {
         tWholeDayCards[6] = v.findViewById(R.id.tt_wholeday_card_7);
     }
 
+    @SuppressLint("SetTextI18n")
     private void refreshDateViews() {
 
         try {
             /*显示上方日期*/
-            tdays[0].setText((allCurriculum.get(thisCurriculumIndex).getFirstDateAtWOT(pageWeek).get(Calendar.MONTH) + 1) + "");
-            Calendar firstDateTemp = allCurriculum.get(thisCurriculumIndex).getFirstDateAtWOT(pageWeek);
+            tdays[0].setText(HContext.getResources().getStringArray(R.array.months)[timeTableCore.getCurrentCurriculum().getFirstDateAtWOT(pageWeek).get(Calendar.MONTH)]);
+            Calendar firstDateTemp = timeTableCore.getCurrentCurriculum().getFirstDateAtWOT(pageWeek);
             Calendar temp = Calendar.getInstance();
             for (int k = 1; k <= 7; k++) {
                 temp.setTime(firstDateTemp.getTime());
@@ -272,9 +269,9 @@ public class FragmentTimeTablePage extends BaseFragment {
         @Override
         protected List<Object> doInBackground(String... strings) {
             List<Object> res = new ArrayList<>();
-            if (mainTimeTable.core == null) return res;
+            if (timeTableCore.getCurrentCurriculum() == null) return res;
             for (int p = 1; p <= 7; p++) {
-                List<EventItem> oneDayEvent = mainTimeTable.getOneDayEvents(week, p);
+                List<EventItem> oneDayEvent = timeTableCore.getOneDayEvents(week, p);
                 List<Object> oneDay = new ArrayList<Object>();
                 List<Integer> usedIndex = new ArrayList<>();
                 for (int i = 0; i < oneDayEvent.size(); i++) {
@@ -308,7 +305,7 @@ public class FragmentTimeTablePage extends BaseFragment {
             super.onPostExecute(lists);
             try {
                 if (!hasInit) return;
-                if (!isDataAvailable()) return;
+                if (!timeTableCore.isDataAvailable()) return;
                 refreshDateViews();
                 if (wholeday) scrollView.post(new Runnable() {
                     @Override
@@ -334,7 +331,7 @@ public class FragmentTimeTablePage extends BaseFragment {
                             Log.e("add",o.toString());
                         }
                     }else if(o instanceof List){
-                        timeTableView.addBlock((List)o);
+                        timeTableView.addBlock(o);
                     }
                 }
                 for (int p=0;p<7;p++) {
@@ -348,7 +345,7 @@ public class FragmentTimeTablePage extends BaseFragment {
                 if (hasWholedayWholeWeek) wholedayLayout.setVisibility(View.VISIBLE);
                 else wholedayLayout.setVisibility(View.GONE);
 
-                if(pageWeek==thisWeekOfTerm&&drawNowLine&&new HTime(now).after(new HTime(start,0))){
+                if(pageWeek==timeTableCore.getThisWeekOfTerm()&&drawNowLine&&new HTime(now).after(new HTime(start,0))){
                     timeTableView.addView(new TimeTableNowLine(getContext(),getColorPrimary()));
                 }
 

@@ -75,7 +75,6 @@ public class ActivityLostAndFound extends BaseActivity implements FragmentLostAn
         initPager();
         fab = findViewById(R.id.fab_post);
         mToolbar = findViewById(R.id.toolbar);
-        mToolbar.setTitle("失物招领");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -100,7 +99,7 @@ public class ActivityLostAndFound extends BaseActivity implements FragmentLostAn
         fragments = new ArrayList<>();
         fragments.add(FragmentLostAndFound.newInstance("lost"));
         fragments.add(FragmentLostAndFound.newInstance("found"));
-        titles = new String[]{"寻物启事","失物招领"};
+        titles = getResources().getStringArray(R.array.laf_tabs);
         pager = findViewById(R.id.laf_pager);
         tabs = findViewById(R.id.laf_tabs);
         pager.setAdapter(new lafPagerAdapter(getSupportFragmentManager()));
@@ -115,7 +114,6 @@ public class ActivityLostAndFound extends BaseActivity implements FragmentLostAn
 
     @Override
     public void onFragmentCalledRefresh(int which) {
-        Log.e("刷新：", String.valueOf(which));
         fragments.get(which).Refresh();
     }
 

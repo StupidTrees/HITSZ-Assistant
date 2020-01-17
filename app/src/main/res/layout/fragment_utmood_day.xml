@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="校园心情指数"
+            android:text="@string/mood_title"
             android:textColor="?attr/text_color_secondary" />
 
         <androidx.cardview.widget.CardView
@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-black"
                     android:gravity="center"
-                    android:text="70.84"
+                    android:text=""
                     android:textColor="@color/material_text_icon_white"
                     android:textSize="24sp" />
 
@@ -69,7 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="心情不错"
+                    android:text=""
                     android:textColor="@color/material_text_icon_white"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -95,7 +95,7 @@
             <ProgressBar
                 android:id="@+id/first_progress"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="14dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="8dp"
@@ -108,7 +108,7 @@
                 android:id="@+id/first_percentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0%"
+                android:text=""
                 android:textColor="?attr/text_color_secondary" />
         </LinearLayout>
 
@@ -131,7 +131,7 @@
             <ProgressBar
                 android:id="@+id/second_progress"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="14dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="8dp"
@@ -145,7 +145,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0%"
-                android:textColor="?attr/text_color_secondary" />
+                android:textColor="?attr/text_color_secondary"
+                tools:ignore="HardcodedText" />
         </LinearLayout>
 
         <LinearLayout
@@ -174,14 +175,16 @@
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
                 android:progress="0"
-                android:progressDrawable="@drawable/style_progressbar_mood_happy" />
+                android:progressDrawable="@drawable/style_progressbar_mood_happy"
+                tools:ignore="InefficientWeight" />
 
             <TextView
                 android:id="@+id/third_percentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0%"
-                android:textColor="?attr/text_color_secondary" />
+                android:textColor="?attr/text_color_secondary"
+                tools:ignore="HardcodedText" />
         </LinearLayout>
 
     </LinearLayout></androidx.core.widget.NestedScrollView>

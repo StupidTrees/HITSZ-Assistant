@@ -6,7 +6,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 import androidx.cardview.widget.CardView;
 import androidx.appcompat.widget.Toolbar;
-import android.util.Log;
+
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -15,11 +15,11 @@ import android.widget.TextView;
 
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
+import com.stupidtree.hita.timetable.timetable.HTime;
 import com.stupidtree.hita.diy.PickTimePeriodDialog;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.diy.PickSingleTimeDialog;
+import com.stupidtree.hita.timetable.TimetableCore;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,11 +27,11 @@ import org.jsoup.select.Elements;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class ActivityEmptyClassroomDetail extends BaseActivity {
     Toolbar toolbar;
-    String lh,xnxq,cd,name;
+    String lh,cd,name;
     WebView webView;
     ImageView setTime;
     TextView setTime_txt,xnxq_txt,toolbar_title;
@@ -54,13 +54,11 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
         setContentView(R.layout.activity_empty_classroom_detail);
         webView = findViewById(R.id.webview);
         lh = getIntent().getStringExtra("lh");
-        xnxq = getIntent().getStringExtra("xnxq");
+       // xnxq = getIntent().getStringExtra("xnxq");
         cd = getIntent().getStringExtra("cd");
         name = getIntent().getStringExtra("name");
-        pageDow = TimeTable.getDOW(now);
-        pageWeek = thisWeekOfTerm;
-
-        Log.e("emptyclassroom_detail:","name="+name+"，code="+cd);
+        pageDow = TimetableCore.getDOW(now);
+        pageWeek = timeTableCore.getThisWeekOfTerm();
         initToolbar();
         initViews();
         // getResult();
@@ -137,8 +135,10 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
                         pageWeek = week;
                         setTime_txt.setText(week + "周" + TextTools.words_time_DOW[dow - 1]);
                     }
+                    Refresh();
                 }
             });
+            dialog.setInitialValue(pageWeek,pageDow,new HTime(0,0),new HTime(23,59));
             dialog.dateOnly();
         }
 
@@ -148,19 +148,6 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
         }
     }
 
-    void getResult() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("pageXnxq=").append(xnxq).append("&")
-                .append("pageZc1=").append("1").append("&")
-                .append("pageZc2=").append("1").append("&")
-                .append("pageXiaoqu=").append("1").append("&")
-                .append("pageLhdm=").append(lh).append("&")
-                .append("pageCddm=").append(cd);
-        webView.postUrl("http://jwts.hitsz.edu.cn:8080/kjscx/queryKjs_wdl",
-                sb.toString().getBytes()
-        );
-
-    }
 
     class getResultTask extends AsyncTask {
 
@@ -173,7 +160,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
                 txs[i].setTextColor(ContextCompat.getColor(HContext, R.color.material_secondary_text));
                 lamps[i].setCardBackgroundColor(ContextCompat.getColor(HContext, R.color.material_background_grey_300));
             }
-            xnxq_txt.setText("查询学期："+xnxq);
+            xnxq_txt.setText("查询学期为网页默认学期");
         }
 
         @Override
@@ -182,7 +169,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
             try {
                 Document page = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kjscx/queryKjs_wdl")
                         .timeout(5000)
-                        .data("pageXnxq", xnxq)
+                        //.data("pageXnxq", xnxq)
                         .data("pageZc1", pageWeek + "").data("pageZc2", pageWeek + "")
                         .data("pageXiaoqu", "1")
                         .data("pageLhdm", lh)

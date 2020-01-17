@@ -2,7 +2,7 @@
 <menu tools:showIn="navigation_view" xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/curriculum_opr_delete"
-        android:title="删除" />
-    <item android:title="详情"
+        android:title="@string/menu_delete" />
+    <item android:title="@string/menu_details"
         android:id="@+id/curriculum_opr_detail" />
 </menu>

@@ -61,7 +61,7 @@ public class ButtonLoading extends View {
 
     public ButtonLoading(Context context) {
         super(context);
-        this.initView(context, (AttributeSet)null);
+        this.initView(context, null);
     }
 
     public ButtonLoading(Context context, AttributeSet attrs) {
@@ -279,7 +279,7 @@ public class ButtonLoading extends View {
             this.onButtonLoadingListener.onStart();
         }
 
-        ValueAnimator valueAnimatorLoading = ValueAnimator.ofInt(new int[]{this.width, this.height});
+        ValueAnimator valueAnimatorLoading = ValueAnimator.ofInt(this.width, this.height);
         valueAnimatorLoading.setInterpolator(PathInterpolatorCompat.create(0.645F, 0.045F, 0.355F, 1.0F));
         valueAnimatorLoading.setDuration(225L);
         valueAnimatorLoading.addUpdateListener(new AnimatorUpdateListener() {
@@ -316,7 +316,7 @@ public class ButtonLoading extends View {
         this.bringToFront();
         final int[] countRepeat = new int[]{0};
         Interpolator pathInterpolatorCompat = PathInterpolatorCompat.create(0.455F, 0.03F, 0.515F, 0.955F);
-        this.valueAnimatorCircleMain = ValueAnimator.ofFloat(new float[]{1.0F, 0.6F});
+        this.valueAnimatorCircleMain = ValueAnimator.ofFloat(1.0F, 0.6F);
         this.valueAnimatorCircleMain.setRepeatCount(-1);
         this.valueAnimatorCircleMain.setRepeatMode(2);
         this.valueAnimatorCircleMain.setInterpolator(pathInterpolatorCompat);
@@ -345,7 +345,7 @@ public class ButtonLoading extends View {
 
             }
         });
-        this.valueAnimatorCircleSecond = ValueAnimator.ofFloat(new float[]{0.6F, 1.4F});
+        this.valueAnimatorCircleSecond = ValueAnimator.ofFloat(0.6F, 1.4F);
         this.valueAnimatorCircleSecond.setRepeatCount(-1);
         this.valueAnimatorCircleSecond.setRepeatMode(2);
         this.valueAnimatorCircleSecond.setStartDelay(525L);
@@ -389,7 +389,7 @@ public class ButtonLoading extends View {
         this.valueAnimatorCircleSecond.cancel();
         this.attribute.setStateShow(4);
         this.fractionAnimation1 = 0.0F;
-        ValueAnimator valueAnimatorFinish = ValueAnimator.ofInt(new int[]{this.height, this.width});
+        ValueAnimator valueAnimatorFinish = ValueAnimator.ofInt(this.height, this.width);
         valueAnimatorFinish.setInterpolator(PathInterpolatorCompat.create(0.645F, 0.045F, 0.355F, 1.0F));
         valueAnimatorFinish.setDuration(225L);
         valueAnimatorFinish.addUpdateListener(new AnimatorUpdateListener() {
@@ -423,8 +423,8 @@ public class ButtonLoading extends View {
     }
 
     public void getRootView(View v) {
-        while(((View)v).getParent() != null && ((View)v).getParent() instanceof ViewGroup) {
-            ViewGroup viewGroup = (ViewGroup)((View)v).getParent();
+        while(v.getParent() != null && v.getParent() instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) v.getParent();
             v = viewGroup;
             this.rootView = viewGroup;
         }

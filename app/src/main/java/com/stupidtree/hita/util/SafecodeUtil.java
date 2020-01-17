@@ -38,10 +38,10 @@ public class SafecodeUtil {
 
 
     ///结构元素
-    private static int sData[]={
-            0,0,0,
-            0,1,0,
-            0,1,1
+    private static int[] sData = {
+            0, 0, 0,
+            0, 1, 0,
+            0, 1, 1
     };
     /**
      * 图像的开运算： 先腐蚀再膨胀
@@ -206,7 +206,7 @@ public class SafecodeUtil {
         width = img.getWidth();
         height = img.getHeight();
         int area = width * height;
-        int gray[][] = new int[width][height];
+        int[][] gray = new int[width][height];
         int average = 0;// 灰度平均值
         int graysum = 0;
         int graymean = 0;
@@ -228,7 +228,7 @@ public class SafecodeUtil {
                 graysum += pixelGray;
             }
         }
-        graymean = (int) (graysum / area);// 整个图的灰度平均值
+        graymean = graysum / area;// 整个图的灰度平均值
         average = graymean;
         for (int i = 0; i < width; i++) // 计算整个图的二值化阈值
         {
@@ -242,9 +242,9 @@ public class SafecodeUtil {
                 }
             }
         }
-        int frontvalue = (int) (grayfrontmean / front);// 前景中心
-        int backvalue = (int) (graybackmean / back);// 背景中心
-        float G[] = new float[frontvalue - backvalue + 1];// 方差数组
+        int frontvalue = (grayfrontmean / front);// 前景中心
+        int backvalue = (graybackmean / back);// 背景中心
+        float[] G = new float[frontvalue - backvalue + 1];// 方差数组
         int s = 0;
         //  Log.i(TAG, "Front:" + front + "**Frontvalue:" + frontvalue + "**Backvalue:" + backvalue);
         for (int i1 = backvalue; i1 < frontvalue + 1; i1++)// 以前景中心和背景中心为区间采用大津法算法（OTSU算法）
@@ -264,8 +264,8 @@ public class SafecodeUtil {
                     }
                 }
             }
-            grayfrontmean = (int) (grayfrontmean / front);
-            graybackmean = (int) (graybackmean / back);
+            grayfrontmean = grayfrontmean / front;
+            graybackmean = graybackmean / back;
             G[s] = (((float) back / area) * (graybackmean - average)
                     * (graybackmean - average) + ((float) front / area)
                     * (grayfrontmean - average) * (grayfrontmean - average));
@@ -314,7 +314,7 @@ public class SafecodeUtil {
     public static Bitmap arrayToGreyImage(int[][] sourceArray){
         int width=sourceArray[0].length;
         int height=sourceArray.length;
-        int pix[] = new int[width*height];
+        int[] pix = new int[width * height];
         for(int j=0;j<height;j++){
             for(int i=0;i<width;i++){
                 int greyRGB=sourceArray[j][i];

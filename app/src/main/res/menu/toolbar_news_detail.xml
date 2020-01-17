@@ -6,7 +6,7 @@
     <item
         android:id="@+id/action_website"
         android:orderInCategory="100"
-        android:title="浏览器打开"
+        android:title="@string/menu_open_in_browser"
         app:showAsAction="never" />
 
 </menu>

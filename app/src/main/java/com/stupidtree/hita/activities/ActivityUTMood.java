@@ -177,7 +177,7 @@ public class ActivityUTMood extends BaseActivity
     }
     void initToolbar(){
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("HITSZ校园心情");
+        toolbar.setTitle(getString(R.string.label_activity_utmood));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

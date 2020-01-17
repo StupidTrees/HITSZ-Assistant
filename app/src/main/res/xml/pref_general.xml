@@ -2,92 +2,93 @@
 
     <PreferenceCategory
         android:layout_width="match_parent"
-        android:title="功能开关">
+        android:title="@string/settings_category_functions">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="app_events_enabled"
-            android:summary="开启后首页将展示事务"
+            android:summary="@string/settings_summary_mainthirdpage"
             android:textColor="?attr/text_color_primary"
             android:textColorHint="?attr/text_color_secondary"
-            android:title="首页第三屏" />
+            android:title="@string/settings_title_mainthirdpage" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="app_task_enabled"
-            android:summary="开启后方可使用学习助手"
+            android:summary="@string/settings_summary_task"
             android:textColor="?attr/text_color_primary"
             android:textColorHint="?attr/text_color_secondary"
-            android:title="任务模块(开发阶段)" />
-        </PreferenceCategory>
+            android:title="@string/settings_title_task" />
 
-    <PreferenceCategory android:title="自动登录设置">
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_category_auto_login">
         <SwitchPreference
             android:defaultValue="true"
             android:key="jwts_autologin"
-            android:summary="需要绑定学号并设置本地登录密码"
-            android:title="后台自动登录教务" />
+            android:summary="@string/settings_summary_autologin"
+            android:title="@string/settings_title_autologin" />
         <EditTextPreference
             android:inputType="textPassword"
             android:key="jwts_password"
-            android:summary="出于隐私安全，密码不会保存在云"
-            android:title="设置教务登录密码" />
+            android:summary="@string/settings_summary_jwpassword"
+            android:title="@string/settings_title_jwpassword" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="外观设置">
+    <PreferenceCategory android:title="@string/settings_category_appearance">
         <ListPreference
-            android:dialogTitle="设置大可莫得开启时机"
+            android:dialogTitle="@string/settings_summary_darkmode"
             android:entries="@array/preference_dark_mode"
             android:entryValues="@array/preference_dark_mode_values"
             android:key="dark_mode_mode"
-            android:title="深色模式选项"></ListPreference>
+            android:title="@string/settings_title_darkmode" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="课程表设置">
+    <PreferenceCategory android:title="@string/settings_category_timetable">
         <SwitchPreference
             android:defaultValue="true"
             android:key="timetable_colorful_mode"
-            android:summary="在课表和科目管理页面为不同科目着色"
-            android:title="启用科目颜色（多彩模式）" />
+            android:summary="@string/settings_summary_colormode"
+            android:title="@string/settings_title_colormode" />
     </PreferenceCategory>
     <PreferenceCategory
         android:layout_width="match_parent"
-        android:title="应用设置">
+        android:title="@string/settings_category_app">
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="autoCheckUpdate"
-            android:summary="建议开启"
+            android:summary="@string/settings_summary_auto_check_update"
             android:textColor="?attr/text_color_primary"
             android:textColorHint="?attr/text_color_secondary"
-            android:title="进入app自动检查更新" />
+            android:title="@string/settings_title_auto_check_update" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="autoDownloadInWifi"
-            android:summary="建议开启"
+            android:summary="@string/settings_summary_auto_download_wifi"
             android:textColor="?attr/text_color_primary"
             android:textColorHint="?attr/text_color_secondary"
-            android:title="Wifi自动下载更新" />
+            android:title="@string/settings_title_auto_download_wifi" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="notification"
-            android:summary="重启后生效"
+            android:summary="@string/setting_summary_always_on_notifi"
             android:textColor="?attr/text_color_primary"
             android:textColorHint="?attr/text_color_secondary"
-            android:title="常驻通知栏" />
+            android:title="@string/setting_title_always_on_notifi" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="希塔设置">
+    <PreferenceCategory android:title="@string/settings_category_hita">
         <SwitchPreference
             android:defaultValue="true"
             android:key="ChatBot_speakNow"
-            android:summary="speak now!"
+            android:summary="@string/settings_summary_auto_read"
             android:textColor="?attr/text_color_primary"
             android:textColorHint="?attr/text_color_secondary"
-            android:title="自动播放回复" />
+            android:title="@string/settings_title_auto_read" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="ChatBot_useKeyboard"
-            android:summary="建议使用语音"
+            android:summary="@string/settings_summary_use_keyboard"
             android:textColor="?attr/text_color_primary"
             android:textColorHint="?attr/text_color_secondary"
-            android:title="使用键盘输入" />
+            android:title="@string/settings_title_use_keyboard" />
     </PreferenceCategory>
 
 

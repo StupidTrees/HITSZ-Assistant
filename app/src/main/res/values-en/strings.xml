@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="app_name">HITSZ Assistant</string>
+    <string name="navigation_drawer_open">open navigation drawer</string>
+    <string name="navigation_drawer_close">close navigation drawer</string>
+    <string name="nav_header_title">HITSZ Assistant</string>
+    <string name="nav_header_subtitle">HITSZ Assistant</string>
+    <string name="nav_header_desc">navigation header</string>
+    <string name="app_notification_channel_id">hita_channel</string>
+    <string name="app_notification_channel_id_learning">"hita_learning_channel"</string>
+    <string name="app_id">5c4aa1d3</string>
+    <string name="example_explain">本示例为讯飞语音Android平台开发者提供语音听写、语法识别、语义理解和语音合成等代码样例，旨在让用户能够依据该示例快速开发出基于语音接口的应用程序。</string>
+    <string name="text_tts_source">科大讯飞作为中国最大的智能语音技术提供商，在智能语音技术领域有着长期的研究积累，并在中文语音合成、语音识别、口语评测等多项技术上拥有国际领先的成果。科大讯飞是我国唯一以语音技术为产业化方向的“国家863计划成果产业化基地”…</string>
+    <string name="text_tts_source_en">iFLYTEK is a national key software enterprise dedicated to the research of intelligent speech and language technologies, development of software and chip products, provision of speech information services, and integration of E-government systems. The intelligent speech technology of iFLYTEK, the core technology of the company, represents the top level in the world.</string>
+    <string name="text_isr_abnf_hint">\t上传内容为： \t#ABNF 1.0 gb2312; \tlanguage zh-CN; \tmode voice; \troot $main; \t$main = $place1 到$place2 ; \t$place1 = 北京 | 武汉 | 南京 | 天津 | 东京; \t$place2 = 上海 | 合肥;</string>
+    <string name="text_understand_hint">\t您可以说： \t今天的天气怎么样? \t北京到上海的火车? \t来首歌吧?  \t更多语义请登录： \thttp://aiui.xfyun.cn/  \t配置您的专属语义吧!</string>
+    <string name="text_begin">speaking…</string>
+    <string name="text_begin_recognizer">开始音频流识别</string>
+    <string name="text_begin_ise">开始音频流评测</string>
+    <string name="text_upload_contacts">上传联系人</string>
+    <string name="text_upload_userwords">上传用户词表</string>
+    <string name="text_upload_success">上传成功</string>
+    <string name="text_userword_empty">词表下载失败或内容为空</string>
+    <string name="text_download_success">下载成功</string>
+    <string name="pref_key_iat_show">iat_show</string>
+    <string name="pref_title_iat_show">show the GUI</string>
+    <string name="text_show_contacts">上传联系人/词表显示</string>
+    <string name="text_show_iat_result">听写结果显示</string>
+    <string name="pref_key_translate">translate</string>
+    <string name="pref_title_translate">wtf</string>
+    <string name="face_model_delete">人脸模型删除</string>
+    <string name="title_face_idf">wtf</string>
+    <string name="title_vocal_idf">声纹1:N检索示例</string>
+    <string name="tts_toast_format" formatted="false">缓冲进度为%d%%，播放进度为%d%%</string>
+    <string name="text_en_word">"[word]\apple\banana\orange"</string>
+    <string name="text_en_sentence">"The quick brown fox jumps over the lazy dog."</string>
+    <string name="text_cn_syllable">知，痴，是</string>
+    <string name="text_cn_word">磁铁，率领，脆弱，动手，古筝</string>
+    <string name="text_cn_sentence">一座座雪峰插入云霄，峰顶银光闪闪，大大小小的湖泊，像颗颗宝石镶嵌在彩带般的沟谷中。</string>
+    <string name="title_activity_settings">settings</string>
+    <string name="pref_header_general">general</string>
+    <string name="pref_title_social_recommendations">enable social recommendations</string>
+    <string name="pref_description_social_recommendations">recommendations for people to contact based on your message history</string>
+    <string name="pref_title_display_name">display name</string>
+    <string name="pref_default_display_name">john smith</string>
+    <string name="pref_title_add_friends_to_messages">add friends to messages</string>
+    <string name="pref_header_data_sync">data sync</string>
+    <string name="pref_title_sync_frequency">sync frequency</string>
+    <string name="pref_title_system_sync_settings">system sync settings</string>
+    <string name="pref_header_notifications">notifications</string>
+    <string name="pref_title_new_message_notifications">new message notifications</string>
+    <string name="pref_title_ringtone">ringtone</string>
+    <string name="pref_ringtone_silent">silent</string>
+    <string name="pref_title_vibrate">vibrate</string>
+    <string name="title_activity_main">mainactivity</string>
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_close">drawer close</string>
+    <string name="title_activity_test">test</string>
+    <string name="title_home">home</string>
+    <string name="title_dashboard">dashboard</string>
+    <string name="title_notifications">notifications</string>
+    <string name="title_activity_import_data">ImportDataActivity</string>
+    <string name="title_activity_loading">loadingactivity</string>
+    <string name="dummy_button">dummy button</string>
+    <string name="dummy_content">DUMMY\CONTENT</string>
+    <string name="hello_blank_fragment">hello blank fragment</string>
+    <string name="title_activity_user_center">UserCenterActivity</string>
+    <string name="large_text">"Material is the metaphor.\n\n" "A material metaphor is the unifying theory of a rationalized space and a system of motion." "The material is grounded in tactile reality, inspired by the study of paper and ink, yet " "technologically advanced and open to imagination and magic.\n" "Surfaces and edges of the material provide visual cues that are grounded in reality. The " "use of familiar tactile attributes helps users quickly understand affordances. Yet the " "flexibility of the material creates new affordances that supercede those in the physical " "world, without breaking the rules of physics.\n" "The fundamentals of light, surface, and movement are key to conveying how objects move, " "interact, and exist in space and in relation to each other. Realistic lighting shows " "seams, divides space, and indicates moving parts.\n\n" "Bold, graphic, intentional.\n\n" "The foundational elements of print based design typography, grids, space, scale, color, " "and use of imagery guide visual treatments. These elements do far more than please the " "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge " "imagery, large scale typography, and intentional white space create a bold and graphic " "interface that immerse the user in the experience.\n" "An emphasis on user actions makes core functionality immediately apparent and provides " "waypoints for the user.\n\n" "Motion provides meaning.\n\n" "Motion respects and reinforces the user as the prime mover. Primary user actions are " "inflection points that initiate motion, transforming the whole design.\n" "All action takes place in a single environment. Objects are presented to the user without " "breaking the continuity of experience even as they transform and reorganize.\n" "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. " "Feedback is subtle yet clear. Transitions are ef?cient yet coherent.\n\n" "3D world.\n\n" "The material environment is a 3D space, which means all objects have x, y, and z " "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the " "positive z-axis extending towards the viewer. Every sheet of material occupies a single " "position along the z-axis and has a standard 1dp thickness.\n" "On the web, the z-axis is used for layering and not for perspective. The 3D world is " "emulated by manipulating the y-axis.\n\n" "Light and shadow.\n\n" "Within the material environment, virtual lights illuminate the scene. Key lights create " "directional shadows, while ambient light creates soft shadows from all angles.\n" "Shadows in the material environment are cast by these two light sources. In Android " "development, shadows occur when light sources are blocked by sheets of material at " "various positions along the z-axis. On the web, shadows are depicted by manipulating the " "y-axis only. The following example shows the card with a height of 6dp.\n\n" "Resting elevation.\n\n" "All material objects, regardless of size, have a resting elevation, or default elevation " "that does not change. If an object changes elevation, it should return to its resting " "elevation as soon as possible.\n\n" "Component elevations.\n\n" "The resting elevation for a component type is consistent across apps (e.g., FAB elevation " "does not vary from 6dp in one app to 16dp in another app).\n" "Components may have different resting elevations across platforms, depending on the depth " "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n" "Responsive elevation and dynamic elevation offsets.\n\n" "Some component types have responsive elevation, meaning they change elevation in response " "to user input (e.g., normal, focused, and pressed) or system events. These elevation " "changes are consistently implemented using dynamic elevation offsets.\n" "Dynamic elevation offsets are the goal elevation that a component moves towards, relative " "to the component?s resting state. They ensure that elevation changes are consistent " "across actions and component types. For example, all components that lift on press have " "the same elevation change relative to their resting elevation.\n" "Once the input event is completed or cancelled, the component will return to its resting " "elevation.\n\n" "Avoiding elevation interference.\n\n" "Components with responsive elevations may encounter other components as they move between " "their resting elevations and dynamic elevation offsets. Because material cannot pass " "through other material, components avoid interfering with one another any number of ways, " "whether on a per component basis or using the entire app layout.\n" "On a component level, components can move or be removed before they cause interference. " "For example, a floating action button (FAB) can disappear or move off screen before a " "user picks up a card, or it can move if a snackbar appears.\n" "On the layout level, design your app layout to minimize opportunities for interference. " "For example, position the FAB to one side of stream of a cards so the FAB won?t interfere " "when a user tries to pick up one of cards.\n\n"</string>
+    <string name="action_settings">settings</string>
+    <string name="title_activity_get_from_hit">sign in</string>
+    <string name="prompt_email">email</string>
+    <string name="prompt_password">password (optional)</string>
+    <string name="action_sign_in">sign in or register</string>
+    <string name="action_sign_in_short">sign in</string>
+    <string name="error_invalid_email">this email address is invalid</string>
+    <string name="error_invalid_password">this password is too short</string>
+    <string name="error_incorrect_password">this password is incorrect</string>
+    <string name="error_field_required">this field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+    <string name="title_activity_scrolling">scrollingactivity</string>
+    <string name="title_activity_notes">ActivityNotes</string>
+    <string name="title_activity_subject">ActivitySubject</string>
+    <string name="title_activity_setting">settings</string>
+    <string name="title_activity_gfh">ActivityGFH</string>
+    <string name="title_activity_couse">ActivityCouse</string>
+    <string name="title_activity_teacher">ActivityTeacher</string>
+    <string name="title_activity_classroom">ActivityClassroom</string>
+    <string name="title_activity_food">ActivityFood</string>
+    <string name="no_result">Sorry, no relevant data was found</string>
+    <string name="skid_activty_2_text">Do one thing at a time, and do well.Keep on going never give up.
+        Whatever is worth doing is worth doing well.I can because i think i can.Jack of all trades and master of none.
+    Whatever is worth doing is worth doing well.Keep on going never give up.</string>
+    <string name="timeline_head_free_title">Free today</string>
+    <string name="timeline_head_goodnight_title">Midnight</string>
+    <string name="timeline_head_goodnight_subtitle">Nighty-night</string>
+    <string name="timeline_head_goodmorning_title">Morning</string>
+    <string name="timeline_head_lunch_title">Lunch time</string>
+    <string name="timeline_head_lunch_subtitle">Where to eat?</string>
+    <string name="timeline_head_dinner_title">Dinner time</string>
+    <string name="timeline_head_dinner_subtitle">Where to eat?</string>
+    <string name="timeline_head_normal_title">Currently free</string>
+    <string name="timeline_head_normal_subtitle">Free to arrange</string>
+    <string name="timeline_head_finish_title">All done</string>
+    <string name="timeline_head_finish_subtitle">Enjoy the day!</string>
+    <string name="timeline_head_gonow_subtitle"></string>
+    <string name="timeline_head_nulluser_title">Login</string>
+    <string name="timeline_head_nulluser_subtitle">Functions limited</string>
+    <string name="timeline_head_nulldata_title">No data</string>
+    <string name="timeline_head_nulldata_subtitle">Please import one schedule</string>
+    <string name="timeline_head_notthisterm_title">Holiday</string>
+    <string name="timeline_head_notthisterm_subtitle">This term has not begun!</string>
+    <string name="title_activity_user_profile">ActivityUserProfile</string>
+    <string name="shortcut_empty_classroom_short">Empty classroom</string>
+    <string name="shortcut_empty_classroom_long">Empty classroom enquiry</string>
+    <string name="shortcut_explore_short">Hita</string>
+    <string name="shortcut_explore_long">HITA</string>
+    <string name="shortcut_timetable_short">Timetable</string>
+    <string name="shortcut_timetable_long">Timetable</string>
+    <string name="shortcut_news_short">News</string>
+    <string name="shortcut_news_long">News</string>
+    <string name="title_activity_xl">ActivityXL</string>
+    <string name="title_activity_search">ActivitySearch</string>
+    <string name="update_dialog_mes1">New version</string>
+    <string name="update_dialog_mes2">Release time</string>
+    <string name="button_confirm">OK</string>
+    <string name="notif_importdatafirst">Please import at least one schedule first!</string>
+    <string name="guide_1p">Welcome to the HITSZ Assistant</string>
+    <string name="guide_1s">Here are the instructions</string>
+    <string name="guide_3p">click to open the drawer</string>
+    <string name="guide_4s">We\'ll guide you to login later</string>
+    <string name="guide_5s">more than a curriculum</string>
+    <string name="guide_6s">classroom, teachers.....</string>
+    <string name="guide_7p">Log in with HITSZ Assistant account</string>
+    <string name="guide_7s">Start the experience</string>
+    <string name="notif_installQQ">please install QQ first</string>
+    <string name="drawer_username_null">Log in</string>
+    <string name="drawer_signature_null">HITSZ Assistant Account</string>
+    <string name="drawer_signature_none">no signature</string>
+    <string name="main_drawer_menu_jwts">EA system</string>
+    <string name="main_drawer_menu_info">News</string>
+    <string name="main_drawer_menu_search">Search</string>
+    <string name="main_drawer_menu_darkmode">Dark Mode</string>
+    <string name="main_drawer_menu_settings">Settings</string>
+    <string name="main_drawer_menu_report">Feedback</string>
+    <string name="main_drawer_menu_about">About us</string>
+    <string name="main_drawer_menu_curriculums">Curriculums</string>
+    <string name="main_drawer_menu_studyassistant">Learning</string>
+    <string name="main_drawer_menu_hita">Hita</string>
+    <string name="punch_success_happy">done, happy every day!</string>
+    <string name="punch_success_sad">done, tomorrow will be better!</string>
+    <string name="load_news_failed">Load news failed</string>
+    <string name="load_lecture_failed">Load lectures failed</string>
+    <string name="load_annouce_failed">Load notification failed</string>
+    <string name="punch_failed">Failed to punch in!</string>
+    <string name="max_title_happy">happy</string>
+    <string name="max_title_normal">so-so</string>
+    <string name="max_title_sad">bad mood</string>
+    <string name="maintab_navi">Campus</string>
+    <string name="maintab_today">Today</string>
+    <string name="maintab_events">Events</string>
+    <string name="log_in">login</string>
+    <string name="navi_jw_title">Student services</string>
+    <string name="navi_jw_jw_p">EA system</string>
+    <string name="navi_jw_jw_s">bye-bye web page</string>
+    <string name="navi_jw_emptyclassroom_p">Empty classroom enquiry</string>
+    <string name="navi_jw_emptyclassroom_s">Looking for a place to study?</string>
+    <string name="navi_jw_xl_s">when can I go home?</string>
+    <string name="navi_hint_text">Long press the cards, you can drag to change the order</string>
+    <string name="navi_hint_button">OK</string>
+    <string name="navi_campus_title">Campus Life</string>
+    <string name="navi_campus_laf_p">Lost And Found</string>
+    <string name="navi_campus_vote_s">Table a state</string>
+    <string name="navi_campus_vote_p">Attitude Wall</string>
+    <string name="navi_campus_card_s">Should work</string>
+    <string name="navi_campus_card_p">Campus card</string>
+    <string name="navi_campus_billboard_s">rated by users</string>
+    <string name="navi_campus_billboard_p">Canteen list</string>
+    <string name="navi_mood_greet">Hi, how are you feeling today?</string>
+    <string name="navi_mood_title">Campus mood today</string>
+    <string name="navi_mood_point">points</string>
+    <string name="ade_namehint">event name…</string>
+    <string name="ade_tag2">tag2</string>
+    <string name="ade_tag3">tag3</string>
+    <string name="ade_pick_time">Pick date and time period</string>
+    <string name="ade_wholeday">Whole-day</string>
+    <string name="add_laf_title">Create %s</string>
+    <string name="add_laf_name_hint">title：%s</string>
+    <string name="add_laf_name_hint_lost">lost…</string>
+    <string name="add_laf_name_hint_found">found…</string>
+    <string name="add_laf_detail_hint">details</string>
+    <string name="add_laf_image">add image</string>
+    <string name="add_laf_anonymous">anonymous</string>
+    <string name="theme_name_red">Burning Red</string>
+    <string name="theme_name_brown">High-end brown</string>
+    <string name="theme_name_blue">HIT Blue</string>
+    <string name="theme_name_grey">google grey</string>
+    <string name="theme_name_android">android green</string>
+    <string name="theme_name_green">forgiveness green</string>
+    <string name="theme_name_deep_orange">orange</string>
+    <string name="theme_name_indigo">indigo</string>
+    <string name="theme_name_cyan">su-cheng Cyan</string>
+    <string name="theme_name_amber">amber</string>
+    <string name="usercenter_sync_autoupload_hint">This will happen frequently, which will increase power consumption, but will save data changes in time</string>
+    <string name="usercenter_sync_download">Synchronize cloud data</string>
+    <string name="usercenter_sync_download_hint">This clears the local data and sets the schedule as the official schedule</string>
+    <string name="usercenter_info_bind">Bind student id</string>
+    <string name="usercenter_info_nick">Nickname</string>
+    <string name="usercenter_info_signature">Signature</string>
+    <string name="usercenter_info_username">Username</string>
+    <string name="usercenter_info_school">School</string>
+    <string name="usercenter_info_realname">Real name</string>
+    <string name="day">days</string>
+    <string name="usercenter_ut_laf_title">Posted lost and found</string>
+    <string name="ut_card_title">Shenzhen UT campus card</string>
+    <string name="ut_card_balance">Balance</string>
+    <string name="ut_card_lost">Lost state</string>
+    <string name="ut_card_freeze">Freeze state</string>
+    <string name="ut_card_check">Check state</string>
+    <string name="mood_title">Campus mood index</string>
+    <string name="signup_username">password</string>
+    <string name="signup_password">password</string>
+    <string name="signup_confirm_password">confirm password</string>
+    <string name="signup_nick">nickname</string>
+    <string name="login_username">username</string>
+    <string name="grkb_import_xnxq">Semester</string>
+    <string name="grkb_upload_teacher_hint">If your current semester\'s teacher information is not complete, please turn on this function before importing, which will consume some cache and increase processing time, but will help us save the teacher information on the educational administration system to the cloud teacher library</string>
+    <string name="grkb_attention_hint">If there is a parsing error, please ensure that the network is available before importing the class schedule, and the app will access the patch on the server to fix the wrong class schedule. However, please be sure to check the official curriculum schedule after importing</string>
+    <string name="grkb_upload_teacher">Help us collect teachers\' information</string>
+    <string name="cjgl_subject_name">subject name</string>
+    <string name="cjgl_subject_type">type</string>
+    <string name="cjgl_subject_credit">credit</string>
+    <string name="cjgl_subject_total_score">total</string>
+    <string name="bind_stun_stunum">student number</string>
+    <string name="bind_stun_password">password of HITSZ unified identity</string>
+    <string name="add_task_title">New Task</string>
+    <string name="add_task_everyday">everyday-task</string>
+    <string name="add_task_limitation">task limitation</string>
+    <string name="hitsz">HITSZ</string>
+    <string name="password">password</string>
+    <string name="login">login</string>
+    <string name="hita_account">HITSZ Assistant account</string>
+    <string name="app_slogan">only for HITters</string>
+    <string name="location_laf_title">Lost and found at this location</string>
+    <string name="add_attitude_name">title</string>
+    <string name="add_attitude_title">create a topic</string>
+    <string name="ade_arrangement">Schedule</string>
+    <string name="ade_course">Course</string>
+    <string name="ade_ddl">Deadline</string>
+    <string name="ade_exam">Exam</string>
+    <string name="ade_inputhint">enter content…</string>
+    <string name="ade_pick_location">Pick location</string>
+    <string name="ade_pick_subject">Pick subject</string>
+    <string name="ade_title">New Event</string>
+    <string name="add_laf_contact_hint">contact details</string>
+    <string name="add_laf_location">don\'t select location</string>
+    <string name="add_task_name_hint">task name…</string>
+    <string name="bind_stun_title">Bind student number of HITSZ</string>
+    <string name="bmob_common_action_cancel" tools:ignore="ButtonCase">cancel</string>
+    <string name="bmob_common_action_continue">continue</string>
+    <string name="bmob_common_action_info_exist">downloading…</string>
+    <string name="bmob_common_action_pause">pause</string>
+    <string name="bmob_common_download_failed">download failed</string>
+    <string name="bmob_common_download_finish">download completed, click to install</string>
+    <string name="bmob_common_download_notification_prefix">downloading: </string>
+    <string name="bmob_common_info_interrupt">download failed, please check your Internet connection</string>
+    <string name="bmob_common_network_break_alert">please check your Internet connection, then try again</string>
+    <string name="bmob_common_patch_finish">update completed, click to install</string>
+    <string name="bmob_common_pause_notification_prefix">paused: </string>
+    <string name="bmob_common_silent_download_finish">a new version is ready, click to install</string>
+    <string name="bmob_common_start_download_notification">downloading app…</string>
+    <string name="bmob_common_start_patch_notification">updating installation package</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_post">Post</string>
+    <string name="cjgl_subject_exam">exam</string>
+    <string name="cjgl_subject_final_score">final</string>
+    <string name="cjgl_xnxq">Semester</string>
+    <string name="grkb_attention">Attention</string>
+    <string name="guide_2p">This is the top bar on the home page</string>
+    <string name="guide_2s">You can personalize theme in Settings</string>
+    <string name="guide_3s">which contains all entries</string>
+    <string name="guide_4p">Click here to enter the personal center</string>
+    <string name="guide_5p">Click here to enter the timetable</string>
+    <string name="guide_6p">Search icon is here</string>
+    <string name="login_jwts_tysfrzdl">Unified identity authentication login</string>
+    <string name="login_password">password</string>
+    <string name="main_drawer_category_other">others</string>
+    <string name="main_drawer_menu_theme">Theme</string>
+    <string name="main_drawer_menu_ut">UT Network</string>
+    <string name="navi_campus_laf_s">lost something?</string>
+    <string name="navi_jw_xl_p">School Calendar</string>
+    <string name="punch_success_normal">done</string>
+    <string name="add_attitude_image">add image</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="theme_name_pink">Lover pink</string>
+    <string name="theme_name_purple">Gay purple</string>
+    <string name="timeline_head_free_subtitle">Enjoy now!</string>
+    <string name="update_dialog_title">Available updates</string>
+    <string name="usercenter_sync_autoupload">Automatically upload data to the server</string>
+    <string name="username">Username</string>
+    <string name="ut_card_state">Card state</string>
+    <string name="timetable_tab_title">Week %d</string>
+    <string name="logout_message">After logout, all local data will be cleared</string>
+    <string name="tt_monday">Mon</string>
+    <string name="tt_tuesday">Tue</string>
+    <string name="tt_wednesday">Wed</string>
+    <string name="tt_thursday">Thu</string>
+    <string name="tt_friday">Fri</string>
+    <string name="tt_saturday">Sat</string>
+    <string name="tt_sunday">Sun</string>
+    <string name="tt_wholeday">Whole</string>
+    <string name="user_center_you_have_punched">You checked in for a total of %d days</string>
+    <string name="date_day">% d</string>
+    <string name="week">Week %d</string>
+    <string name="navi_semister_not_begun">Semester has not started</string>
+    <string name="navi_semister_no_data">No semester data</string>
+    <string name="add_laf_no_location">No location</string>
+    <string name="navi_settings_title">Set navigation page content</string>
+    <string name="ade_no_suitable_allocation">No suitable allocation time found!</string>
+    <string name="ade_set_time_first">Please set date first!</string>
+    <string name="pick_location">Pick location</string>
+    <string name="ade_teacher_name">Teacher name…</string>
+    <string name="ade_noti_set_time">Please set time for the event first!</string>
+    <string name="ade_noti_exam_name">Input the name of the exam!</string>
+    <string name="ade_noti_set_subject">Please specify the subject first！</string>
+    <string name="ade_noti_set_subject_course">Please specify the subject first！</string>
+    <string name="ade_noti_too_long">Too long!</string>
+    <string name="ade_set_time_period">Pick date and time period</string>
+    <string name="ade_set_time_date">Pick date and time</string>
+    <string name="ade_set_date">Pick date</string>
+    <string-array name="user_center_tabs">
+        <item> Campus </item>
+        <item> Profile </item>
+        <item> Sync </item>
+    </string-array>
+    <string-array name="months">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sept</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </string-array>
+
+    <string-array name="months_full">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+    <string-array name="dow1">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+    <string-array name="dow2">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+    <string-array name="laf_tabs">
+        <item>Lost</item>
+        <item>Found</item>
+    </string-array>
+    <string-array name="navi_setting_items">
+        <item>Campus news</item>
+        <item>Campus life</item>
+        <item>Campus mood</item>
+        <item>Student service</item>
+        <item>Campus card（displayed after connecting to UTSZ network）</item>
+    </string-array>
+
+    <string name="ade_exam_name">Exam name…</string>
+    <string name="ade_noti_event_name">Input the name of the event!</string>
+    <string name="ade_noti_time_ircorrect">Please enter the correct time</string>
+    <string name="ade_pick_task">Pick task</string>
+    <string name="add_laf_noti_title">Please enter the title</string>
+    <string name="label_activity_attitude">HITSZ Attitude Wall</string>
+    <string name="label_activity_tasks">Tasks</string>
+    <string name="days">%d days</string>
+    <string name="task_card_title_tasknum">There are %d to-do tasks</string>
+    <string name="task_card_title_notask">No ongoing tasks</string>
+    <string name="task_card_title_ddlnum">%d DDL in total</string>
+    <string name="task_card_title_noddl">No DDL now</string>
+    <string name="exam_card_cd">Exam countdown %s%s%s%s</string>
+    <string name="exam_card_noexam">No exam</string>
+    <string name="wholeday">whole day</string>
+    <string name="found">FOUND</string>
+    <string name="lost">LOST</string>
+    <string name="dialog_pick_course_title">Set class time</string>
+    <string name="dialog_pick_course_to">to</string>
+    <string name="dialog_pick_course_label">What weeks will this course take?</string>
+    <string name="period">class %d</string>
+    <string name="today">today</string>
+    <string name="tomorrow">tomorrow</string>
+    <string name="tda_tomorrow">day after tomorrow</string>
+    <string name="pick_single_time_label1">week</string>
+    <string name="pick_single_time_label2">:</string>
+    <string name="pick_single_time_label3"> </string>
+    <string name="main_drawer_category_function">functions</string>
+    <string name="menu_timeable_from_zero">Show all day</string>
+    <string name="menu_timeable_draw_line">Draw the current timeline</string>
+    <string name="menu_timeable_color">Enable colors</string>
+    <string name="menu_timeable_random_allocate">Randomly assign colors</string>
+    <string name="menu_timeable_use_theme">All assigned as theme colors</string>
+    <string name="dialog_title_random_allocate">Randomly generate colors for each subject?</string>
+    <string name="dialog_title_set_to_theme">Apply theme colors to all subjects?</string>
+    <string name="dialog_title_set_total_weeks">Set the total number of weeks</string>
+    <string name="dialog_title_curriculum_detail">Schedule details</string>
+    <string name="dialog_message_curriculum_detail">Schedule name：%s\nCode：%s</string>
+    <string name="attention">Attention</string>
+    <string name="dialog_message_delete_curriculum">Deleting a schedule will delete all events, subjects, and tasks associated with it. Are you sure?</string>
+    <string name="curriculum_manager_satrtat">starts: </string>
+    <string name="curriculum_manager_total">total %d weeks</string>
+    <string name="curriculum_manager_enable_color">Enable colorful subjects</string>
+    <string name="curriculum_manager_randomly_allocate_color">Randomly assign colors</string>
+    <string name="curriculum_manager_set_theme_color">Apply theme color to all</string>
+    <string name="menu_timeable_curriculum">Curriculum Manager</string>
+    <string name="snack_semester_notstarted">This semester has not started yet</string>
+    <string name="dialog_tag1">Tag1</string>
+    <string name="dialog_tag2">Tag2</string>
+    <string name="dialog_time">Time</string>
+    <string name="dialog_date">Date</string>
+    <string name="dialog_teacher">Teacher</string>
+    <string name="dialog_classroom">Classroom</string>
+    <string name="dialog_period">Period</string>
+    <string name="dialog_this_course_s">This course</string>
+    <string name="dialog_this_course_p">is the #%d class of the subject</string>
+    <string name="dialog_course_rate_p">Self-evaluation</string>
+    <string name="dialog_course_rate_s">How do I feel about this class?</string>
+    <string name="dialog_course_notes">Class notes</string>
+    <string name="notif_delete_success">Successfully deleted!</string>
+    <string name="dialog_title_sure_delete">Confirm to delete?</string>
+    <string name="dialog_message_sure_delete">After deleting a course, you can restore the original schedule by importing the schedule or syncing the cloud data</string>
+    <string name="none">None</string>
+    <string name="pick_teacher">Choose teacher</string>
+    <string name="pick_classroom">Choose classroom</string>
+    <string name="dialog_no_notes">No notes, click to add</string>
+    <string name="dialog_notes_num">%d local notes for this class found</string>
+    <string name="menu_import_curriculum">Import timetables from the EA system</string>
+    <string name="menu_logout_jw">Log out from EA</string>
+    <string name="menu_open_in_browser">Open in browser</string>
+    <string name="menu_all_subjects">All subjects</string>
+    <string name="menu_search_teacher_website">Search for teacher\'s website</string>
+    <string name="menu_logout_ut">Log out from UT network</string>
+    <string name="menu_logout">Log out</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_show_subject">View subject</string>
+    <string name="menu_details">Details</string>
+    <string name="settings_category_functions">Function switches</string>
+    <string name="settings_summary_mainthirdpage">decide whether show \'events\' on main page</string>
+    <string name="settings_title_mainthirdpage">Third page on main page</string>
+    <string name="settings_summary_task">Learning assistant will be available only if task module is enabled</string>
+    <string name="settings_title_task">Task section</string>
+    <string name="settings_summary_autologin">Require current account binding to student number, and a correctly set password</string>
+    <string name="settings_title_autologin">Automatically Login to EA system in background</string>
+    <string name="settings_title_jwpassword">Set password of the EA system</string>
+    <string name="settings_summary_jwpassword">For your privacy, the password won\'t be uploaded to the cloud</string>
+    <string name="settings_category_appearance">Appearance</string>
+    <string name="settings_title_darkmode">Dark Mode options</string>
+    <string name="settings_summary_darkmode">wow awesome</string>
+    <string name="settings_category_timetable">Timetable options</string>
+    <string name="settings_summary_colormode">Tint all subjects with different color</string>
+    <string name="settings_title_colormode">Colorful Mode</string>
+    <string name="settings_category_app">App options</string>
+    <string name="settings_summary_auto_check_update">Recommended</string>
+    <string name="settings_title_auto_check_update">Auto check for updates</string>
+    <string name="settings_summary_auto_download_wifi">Recommended</string>
+    <string name="settings_title_auto_download_wifi">Auto download upgrades in Wi-Fi</string>
+    <string name="setting_summary_always_on_notifi">Take effect after a restart</string>
+    <string name="setting_title_always_on_notifi">Resident on Notice Bar</string>
+    <string name="settings_category_hita">Hita options</string>
+    <string name="settings_title_auto_read">Auto read out the responses</string>
+    <string name="settings_summary_auto_read">speak now!</string>
+    <string name="settings_summary_use_keyboard">whatever</string>
+    <string name="settings_title_use_keyboard">Input using keyboard</string>
+    <string name="notif_effect_after_restart">Take effect after a restart</string>
+    <string name="settings_not_set_yet">Unspecified</string>
+    <string name="settings_already_set">Specified</string>
+    <string name="settings_noti_loginfirst">Please login and bind your student id</string>
+    <string name="settings_noti_bindfirst">Please bing your student id first</string>
+    <string name="settings_noti_bound_to">Bound to student id:%s</string>
+    <string name="settings_darkmode_auto_with_time">Auto adjust according to time</string>
+    <string name="settings_darkmode_mannually">Manual switch</string>
+    <string name="settings_darkmode_follow_system">Follow system</string>
+    <string name="settings_category_auto_login">Auto-login options</string>
+    <string name="label_activity_settings">Settings</string>
+    <string name="label_activity_utmood">HITSZ Campus Mood</string>
+    <string name="mood_0">Sorrowful</string>
+    <string name="mood_1">yingyingying</string>
+    <string name="mood_2">Bad mood</string>
+    <string name="mood_3">Upset</string>
+    <string name="mood_4">So-so</string>
+    <string name="mood_5">Nice</string>
+    <string name="mood_6">Great</string>
+    <string name="mood_7">Lol</string>
+    <string name="mood_8">Lmao</string>
+    <string name="label_activity_empty_classroom">Empty classroom</string>
+    <string name="subject_compulsory">compulsory</string>
+    <string name="subject_credit">credit</string>
+    <string name="subject_total">total</string>
+    <string name="subject_exam">exam</string>
+    <string name="subject_title_info">Subject info</string>
+    <string name="subject_code">Subject id</string>
+    <string name="subject_xnxq">Semester</string>
+    <string name="subject_type">Subject type</string>
+    <string name="subject_school">School</string>
+    <string name="subject_title_all_courses">All courses</string>
+    <string name="subject_progress_text">Progress</string>
+    <string name="subject_self_rate">Self-rated</string>
+    <string name="subject_title_scores">Grade</string>
+    <string name="subject_score_none">No grade information yet, try to log in to the EA system to sync</string>
+    <string name="subject_color">Subject color</string>
+    <string name="search_hint">Classroom, teachers…</string>
+    <string name="pick_color">Pick color</string>
+    <string name="check_for_update">Check for update</string>
+    <string name="checking_for_update">Checking for update…</string>
+    <string name="start_download">Download</string>
+    <string name="install">Install</string>
+    <string name="pause">Pause</string>
+    <string name="continue_download">Continue</string>
+    <string name="update_version">Version: </string>
+    <string name="update_size">File size: </string>
+    <string name="update_release_time">Release date: </string>
+    <string name="update_log">Change log: </string>
+    <string name="version">Current version: </string>
+    <string name="label_activity_about_hita">About</string>
+    <string name="new_version_available">A new version is available</string>
+    <string name="already_up_to_date">Already the latest version!</string>
+    <string name="update_available">New version available</string>
+    <string name="check_for_update_failed">Check for upgrades failed！</string>
+    <string name="delete_installation_package">Delete APK</string>
+    <string name="timelinr_goodmorning_subtitle">%d lessons today</string>
+    <string name="timeline_gonow_subtitle">Start in %d minutes</string>
+    <string name="timeline_counting_middle">before</string>
+    <string name="timeline_counting_free">No more events</string>
+    <string name="unknown_location">Unknown location</string>
+    <string-array name="leaderboard_tabs">
+        <item>Cafeteria ranking</item>
+    </string-array>
+    <string-array name="curriculum_tabs">
+        <item>Subjects</item>
+        <item>Teachers</item>
+    </string-array>
+    <string-array name="news_tabs">
+        <item>Announcement</item>
+        <item>Lectures</item>
+        <item>Campus Highlights</item>
+        <item>Campus News</item>
+        <item>Comprehensive News</item>
+    </string-array>
+    <string name="timeline_head_ongoing_subtitle">Ongoing</string>
+    <string name="progress">progress</string>
+    <string name="bind">Bind</string>
+    <string name="signup">Sign up</string>
+    <string name="set_signature">Set signature</string>
+    <string name="notif_signature_updated">Signature updated</string>
+    <string name="notif_signature_update_failed">Signature update failed</string>
+    <string name="notif_set_nick">Set nickname</string>
+    <string name="notif_nick_updated">Nickname changed successfully</string>
+    <string name="notif_nick_update_failed">Change nickname failed</string>
+    <string name="notif_bind_studentnumber_success">Successfully bound to this student id</string>
+    <string name="notif_bind_studentnumber_already">This student id has been bound with another account</string>
+    <string name="user_info_updated">User information updated</string>
+    <string name="dialog_message_bind_failed">Binding failed!</string>
+    <string name="button_try_again">Try again</string>
+    <string name="notif_migrate_data_failed">Migrating data failed</string>
+    <string name="dialog_title_already_bound_to">This student number is already bound to %s(%s)</string>
+    <string name="dialog_item_migrate_data">Migrate the account data to this account</string>
+    <string name="login_success_syncing">Login successfully, user data is being synchronized…</string>
+    <string name="username_or_password_wrong">wrong user name or password</string>
+    <string name="login_failed">Login failed</string>
+    <string name="enter_username">please enter user name</string>
+    <string name="enter_password">please enter password</string>
+    <string name="sync_success">Successfully synced the data of this account!</string>
+    <string name="sync_error">Error syncing user data!</string>
+    <string name="uploaded_success">Uploaded successfully!</string>
+    <string name="no_data_on_cloud">No data in the cloud!</string>
+    <string name="curriculum_updated">Curriculum information updated</string>
+    <string name="enter_name">enter name…</string>
+</resources>

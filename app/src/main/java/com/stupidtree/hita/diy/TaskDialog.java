@@ -12,20 +12,19 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.timetable.EventItem;
-import com.stupidtree.hita.core.timetable.Task;
+import com.stupidtree.hita.timetable.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.fragments.FragmentTimeLine;
 import com.stupidtree.hita.hita.TextTools;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
 public class TaskDialog extends AlertDialog {
@@ -84,8 +83,7 @@ public class TaskDialog extends AlertDialog {
             ddlLayout.setVisibility(View.GONE);
             startLayout.setVisibility(View.GONE);
         }
-        new refreshListTask().executeOnExecutor(HITAApplication.TPE);;
-
+        new refreshListTask().executeOnExecutor(HITAApplication.TPE);
 
 
     }
@@ -117,7 +115,7 @@ public class TaskDialog extends AlertDialog {
             holder.itemLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                       FragmentTimeLine.showEventDialog((Activity) context,ei,null,null);
+                       FragmentTimeLine.showEventDialog(context,ei,null,null);
                     }
                 });
 
@@ -154,7 +152,7 @@ public class TaskDialog extends AlertDialog {
                 for(String x:task.getEvent_map().keySet()){
                     String uuid = x.split(":::")[0];
                     int week = Integer.parseInt(x.split(":::")[1]);
-                    listRes.add(mainTimeTable.getEventItemHolderWithUUID(uuid).getEventAtWeek(week));
+                    listRes.add(timeTableCore.getEventItemHolderWithUUID(uuid).getEventAtWeek(week));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

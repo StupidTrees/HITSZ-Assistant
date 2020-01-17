@@ -61,26 +61,26 @@ public class FragmentUserCenter_Info extends BaseFragment {
                 View lv = getLayoutInflater().inflate(R.layout.dialog_usercenter_setinfo, null);
                 final EditText et = lv.findViewById(R.id.setinfo_text);
                 et.setText(signature.getText());
-                new AlertDialog.Builder(getContext()).setTitle("设置个性签名")
+                new AlertDialog.Builder(getContext()).setTitle(R.string.set_signature)
                         .setView(lv)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 CurrentUser.setSignature(et.getText().toString());
                                 CurrentUser.update(new UpdateListener() {
                                     @Override
                                     public void done(BmobException e) {
                                         if (e == null) {
-                                            Toast.makeText(HContext, "更改签名成功", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(HContext, R.string.notif_signature_updated, Toast.LENGTH_SHORT).show();
                                             signature.setText(CurrentUser.getSignature());
                                         } else {
-                                            Toast.makeText(HContext, "更改签名失败", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(HContext, R.string.notif_signature_update_failed, Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
                                 });
                             }
                         })
-                        .setNegativeButton("取消", null)
+                        .setNegativeButton(getString(R.string.button_cancel), null)
                         .show();
             }
         });
@@ -91,26 +91,26 @@ public class FragmentUserCenter_Info extends BaseFragment {
                 View lv = getLayoutInflater().inflate(R.layout.dialog_usercenter_setinfo, null);
                 final EditText et = lv.findViewById(R.id.setinfo_text);
                 et.setText(nick.getText());
-                new AlertDialog.Builder(getContext()).setTitle("设置昵称")
+                new AlertDialog.Builder(getContext()).setTitle(R.string.notif_set_nick)
                         .setView(lv)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 CurrentUser.setNick(et.getText().toString());
                                 CurrentUser.update(new UpdateListener() {
                                     @Override
                                     public void done(BmobException e) {
                                         if (e == null) {
-                                            Toast.makeText(HContext, "更改昵称成功", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(HContext, R.string.notif_nick_updated, Toast.LENGTH_SHORT).show();
                                             nick.setText(CurrentUser.getNick());
                                         } else {
-                                            Toast.makeText(HContext, "更改昵称失败", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(HContext, R.string.notif_nick_update_failed, Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
                                 });
                             }
                         })
-                        .setNegativeButton("取消", null)
+                        .setNegativeButton(getString(R.string.button_cancel), null)
                         .show();
             }
         });
@@ -129,17 +129,17 @@ public class FragmentUserCenter_Info extends BaseFragment {
                             public void done(BmobException e) {
                                 fbs.dismiss();
                                 if (e == null) {
-                                    Toast.makeText(HContext, "绑定学号成功", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(HContext, R.string.notif_bind_studentnumber_success, Toast.LENGTH_SHORT).show();
                                     studentnumber.setText(CurrentUser.getStudentnumber());
                                     school.setText(CurrentUser.getSchool());
                                     realname.setText(CurrentUser.getRealname());
-                                    defaultSP.edit().putString(CurrentUser.getStudentnumber()+".password",password).apply();;
+                                    defaultSP.edit().putString(CurrentUser.getStudentnumber()+".password",password).apply();
 
                                 } else {
                                     studentnumber.setText(showText(CurrentUser.getStudentnumber()));
                                     CurrentUser.setStudentnumber(oldStuNumBackUp);
                                     if (e.getErrorCode() == 401)
-                                        Toast.makeText(HContext, "该学号已与其他账号绑定！", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(HContext, R.string.notif_bind_studentnumber_already, Toast.LENGTH_SHORT).show();
                                     else
                                         Toast.makeText(HContext, e.toString(), Toast.LENGTH_SHORT).show();
                                 }
@@ -181,7 +181,7 @@ public class FragmentUserCenter_Info extends BaseFragment {
     }
 
     String showText(String raw) {
-        if (raw == null || raw.isEmpty()) return "未设置";
+        if (raw == null || raw.isEmpty()) return getString(R.string.settings_not_set_yet);
         else return raw;
     }
 

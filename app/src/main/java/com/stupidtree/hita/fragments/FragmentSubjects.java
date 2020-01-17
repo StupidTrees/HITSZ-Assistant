@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,14 +17,15 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivitySubject;
 import com.stupidtree.hita.adapter.SubjectsListAdapter;
-import com.stupidtree.hita.core.Curriculum;
-import com.stupidtree.hita.core.Subject;
+import com.stupidtree.hita.timetable.Curriculum;
+import com.stupidtree.hita.timetable.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.DATA_STATE_HEALTHY;
-import static com.stupidtree.hita.HITAApplication.getDataState;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class FragmentSubjects extends BaseFragment {
 
@@ -64,7 +64,7 @@ public class FragmentSubjects extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_subjets, container, false);
-        if (getDataState() == DATA_STATE_HEALTHY) initSubjects(v);
+        if (timeTableCore.isDataAvailable()) initSubjects(v);
         return v;
     }
 
@@ -72,17 +72,18 @@ public class FragmentSubjects extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (getDataState() == DATA_STATE_HEALTHY) Refresh(firstResume);
+        if (timeTableCore.isDataAvailable()) Refresh(firstResume);
         if(firstResume) firstResume = false;
     }
 
     private void initSubjects(View v) {
-        listRes = new ArrayList<Object>();
+        listRes = new ArrayList<>();
         subjectsList = v.findViewById(R.id.usercenter_subjects_list);
         subjectsAdapter = new SubjectsListAdapter(this, listRes, 2);
         GridLayoutManager glm = new GridLayoutManager(getContext(), 2);
         subjectsList.setLayoutManager(glm);
         subjectsList.setAdapter(subjectsAdapter);
+        subjectsAdapter.setColorfulMode(defaultSP.getBoolean("timetable_colorful_mode",true));
         subjectsAdapter.setmOnItemClickListener(new SubjectsListAdapter.OnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -90,13 +91,14 @@ public class FragmentSubjects extends BaseFragment {
 //                    ActivityOptionsCompat op = ActivityOptionsCompat.makeSceneTransitionAnimation(FragmentSubjects.this.getActivity()
 //                    ,view,"card");
                     Intent i = new Intent(FragmentSubjects.this.getActivity(), ActivitySubject.class);
-                    i.putExtra("subject", ((Subject) subjectsAdapter.getList().get(position)).name);
+                    i.putExtra("subject", ((Subject) subjectsAdapter.getList().get(position)).getName());
                     FragmentSubjects.this.getActivity().startActivity(i);
                 }
 
             }
         });
     }
+
 
     @Override
     protected void stopTasks() {
@@ -111,7 +113,7 @@ public class FragmentSubjects extends BaseFragment {
     public void Refresh(boolean anim){
         if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new refreshListTask(anim);
-        pageTask.executeOnExecutor(HITAApplication.TPE);;
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
     public interface OnFragmentInteractionListener {
@@ -122,7 +124,7 @@ public class FragmentSubjects extends BaseFragment {
 
     class refreshListTask extends AsyncTask {
         boolean anim;
-
+        boolean color;
         public refreshListTask(boolean anim) {
             this.anim = anim;
         }
@@ -130,14 +132,15 @@ public class FragmentSubjects extends BaseFragment {
         @Override
         protected Object doInBackground(Object[] objects) {
             listRes.clear();
+            color = defaultSP.getBoolean("timetable_colorful_mode",true);
             List<Subject> all = Curriculum.getSubjects(curriculumCode);
-            //mainTimeTable.getAllEvents();
+            //timeTableCore.getAllEvents();
             List<Subject> exam = new ArrayList<>();
             List<Subject> other = new ArrayList<>();
             List<Subject> mooc = new ArrayList<>();
             for (Subject s : all) {
-                if (s.exam) exam.add(s);
-                else if (s.isMOOC) mooc.add(s);
+                if (s.isExam()) exam.add(s);
+                else if (s.isMOOC()) mooc.add(s);
                 else other.add(s);
             }
 
@@ -147,13 +150,13 @@ public class FragmentSubjects extends BaseFragment {
             listRes.addAll(other);
             listRes.add("MOOC");
             listRes.addAll(mooc);
-            listRes.add((Integer)1);
             return null;
         }
 
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            subjectsAdapter.setColorfulMode(color);
             subjectsAdapter.notifyDataSetChanged();
             if(anim)subjectsList.scheduleLayoutAnimation();
         }

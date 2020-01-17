@@ -32,19 +32,19 @@ public final class R {
     public static final class drawable {
         private drawable() {}
 
-        public static final int divider = 0x7f080097;
+        public static final int divider = 0x7f080098;
     }
     public static final class id {
         private id() {}
 
-        public static final int left = 0x7f0901f0;
-        public static final int none = 0x7f090250;
-        public static final int right = 0x7f0902dd;
+        public static final int left = 0x7f0901de;
+        public static final int none = 0x7f09023c;
+        public static final int right = 0x7f0902c3;
     }
     public static final class string {
         private string() {}
 
-        public static final int app_name = 0x7f0f0020;
+        public static final int app_name = 0x7f0f004f;
     }
     public static final class style {
         private style() {}

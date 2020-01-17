@@ -57,6 +57,11 @@ public class TextTools {
         }
         return false;
     }
+    public static boolean containsNumber(String s){
+        return s.contains("1")||s.contains("2")||s.contains("3")||s.contains("4")||s.contains("5")||s.contains("6")||
+                s.contains("7")||s.contains("8")||s.contains("9")||s.contains("0");
+    }
+
     public static boolean mContains(String x, int id) {
         String[] bases = HContext.getResources().getStringArray(id);
         if (bases == null) return false;
@@ -72,7 +77,7 @@ public class TextTools {
         return false;
     }
     public static boolean mEquals(String x, int id) {
-        String bases[] = HContext.getResources().getStringArray(id);
+        String[] bases = HContext.getResources().getStringArray(id);
         for (String i : bases) {
             if (x.equals(i)) return true;
         }
@@ -91,7 +96,7 @@ public class TextTools {
         }
         return false;
     }
-    public int getCount(String x[], String key) {
+    public int getCount(String[] x, String key) {
         int result = 0;
         for (String i : x) {
             if (i.equals(key)) result++;
@@ -99,7 +104,7 @@ public class TextTools {
         return result;
     }
 
-    public int getCount(String x[], String[] key) {
+    public int getCount(String[] x, String[] key) {
         int result = 0;
         for (String i : x) {
             if (getCount(key, i) >= 1) result++;
@@ -180,8 +185,7 @@ public class TextTools {
         if (text.contains("有") && text.indexOf("有") < text.indexOf("否")) return true;
         if (text.contains("存在") && text.indexOf("有") < text.indexOf("吗")) return true;
         if (text.contains("存在") && text.indexOf("有") < text.indexOf("不")) return true;
-        if (text.contains("存在") && text.indexOf("有") < text.indexOf("否")) return true;
-        return false;
+        return text.contains("存在") && text.indexOf("有") < text.indexOf("否");
     }
     public static int getCount_contains(List<Term> x, String key, boolean isName) {
         int result = 0;
@@ -396,6 +400,9 @@ public class TextTools {
         return d[sourceLen][targetLen];
     }
 
+    public static boolean equals(String a,String b,String ignore){
+        return a.replaceAll(ignore,"").equals(b.replaceAll(ignore,""));
+    }
 
 
 }

@@ -12,10 +12,9 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.timetable.EventItem;
-import com.stupidtree.hita.core.timetable.HTime;
-import com.stupidtree.hita.fragments.FragmentTimeTablePage;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.HTime;
 import com.stupidtree.hita.util.TimeTableNowLine;
 
 
@@ -23,13 +22,11 @@ import java.util.List;
 
 import tyrantgit.explosionfield.ExplosionField;
 
-import static com.stupidtree.hita.HITAApplication.isThisTerm;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_COURSE;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_REMIND;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_COURSE;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_REMIND;
 import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
 
 public class TimeTableViewGroup extends ViewGroup {
@@ -59,7 +56,7 @@ public class TimeTableViewGroup extends ViewGroup {
         this.sectionHeight = blockHeight;
         this.startTime = startTime;
         this.colorfulMode = colorfulMode;
-        if(isThisTerm&&week==thisWeekOfTerm){
+        if(timeTableCore.isThisTerm()&&week==timeTableCore.getThisWeekOfTerm()){
             View v = new View(getContext());
             v.setBackgroundColor(todayBakgroundColor);
            // v.setAlpha(0.3f);
@@ -126,14 +123,14 @@ public class TimeTableViewGroup extends ViewGroup {
                 block.layout(left, top, right, bottom);
             }else if(child instanceof TimeTableNowLine){
                 View nowL = child;
-                int left = sectionWidth* (TimeTable.getDOW(now)-1);
+                int left = sectionWidth* (TimetableCore.getDOW(now)-1);
                 int right = (left + sectionWidth);
                 float startTimeFromBeginning = startTime.getDuration(new HTime(now));
                 int top = (int) ((startTimeFromBeginning / 60f) * sectionHeight);
                 nowL.layout(0, top,width,top+4);
             }else if(child != null){
                 View today = child;
-                int left = sectionWidth* (TimeTable.getDOW(now)-1);
+                int left = sectionWidth* (TimetableCore.getDOW(now)-1);
                 int right = (left + sectionWidth);
                 today.layout(left, 0, right,height);
             }
@@ -153,7 +150,7 @@ public class TimeTableViewGroup extends ViewGroup {
     public void addBlock(Object o){
         if(o instanceof EventItem){
 
-            TimeTableBlockView timeTableBlockView = new TimeTableBlockView(getContext(),(EventItem) o,colorfulMode);
+            TimeTableBlockView timeTableBlockView = new TimeTableBlockView(getContext(), o,colorfulMode);
             timeTableBlockView.setOnCardClickListener(new TimeTableBlockView.OnCardClickListener() {
                 @Override
                 public void OnClick(View v, EventItem ei) {
@@ -175,7 +172,7 @@ public class TimeTableViewGroup extends ViewGroup {
                                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                mainTimeTable.deleteEvent(ei, ei.eventType == TIMETABLE_EVENT_TYPE_DEADLINE);
+                                                timeTableCore.deleteEvent(ei, ei.eventType == TIMETABLE_EVENT_TYPE_DEADLINE);
                                                 ExplosionField ef = ExplosionField.attach2Window(activityContext);
                                                 ef.explode(v);
                                                 v.setVisibility(View.GONE);
@@ -199,7 +196,7 @@ public class TimeTableViewGroup extends ViewGroup {
             });
             addView(timeTableBlockView);
         }else if(o instanceof List){
-            TimeTableBlockView timeTableBlockView = new TimeTableBlockView(getContext(),(List<EventItem>) o,colorfulMode);
+            TimeTableBlockView timeTableBlockView = new TimeTableBlockView(getContext(), o,colorfulMode);
             timeTableBlockView.setOnDuplicateCardClickListener(new TimeTableBlockView.OnDuplicateCardClickListener() {
                 @Override
                 public void OnDuplicateClick(View v, final List<EventItem> list) {

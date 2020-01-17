@@ -10,17 +10,19 @@ import android.view.WindowManager;
 
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.adapter.MainPagerAdapter;
+import com.stupidtree.hita.adapter.NormalPagerAdapter;
 import com.stupidtree.hita.fragments.FragmentLogin;
 import com.stupidtree.hita.fragments.FragmentSignup;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
+
 public class ActivityLogin extends BaseActivity {
 
     ViewPager pager;
-    MainPagerAdapter pagerAdapter;
+    NormalPagerAdapter pagerAdapter;
     List<Fragment> fragments;
     TabLayout tabs;
 
@@ -60,7 +62,8 @@ public class ActivityLogin extends BaseActivity {
         fragments = new ArrayList<>();
         fragments.add(new FragmentSignup());
         fragments.add(new FragmentLogin());
-        pagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), fragments, new String[]{"注册", "登录"});
+        pagerAdapter = new NormalPagerAdapter(getSupportFragmentManager(), fragments,
+                new String[]{HContext.getString(R.string.sign_up),HContext.getString(R.string.log_in)});
         pager.setAdapter(pagerAdapter);
 
     }

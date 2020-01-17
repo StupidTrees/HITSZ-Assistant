@@ -2,13 +2,11 @@ package com.stupidtree.hita.hita;
 
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.Subject;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.timetable.EventItem;
-import com.stupidtree.hita.core.timetable.Task;
+import com.stupidtree.hita.timetable.Subject;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.online.Teacher;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,11 +49,11 @@ public class ChatBotMessageItem {
             m.put("type","event");
             int icon = R.drawable.ic_chatbot_course;
             switch(ei.eventType){
-                case TimeTable.TIMETABLE_EVENT_TYPE_COURSE:icon = R.drawable.ic_chatbot_course ;break;
-                case TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT:icon = R.drawable.ic_chatbot_arrangement;break;
-                case TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE:icon = R.drawable.ic_chatbot_deadline;break;
-                case TimeTable.TIMETABLE_EVENT_TYPE_REMIND:icon = R.drawable.ic_chatbot_remind;break;
-                case TimeTable.TIMETABLE_EVENT_TYPE_EXAM:icon = R.drawable.ic_chatbot_exam;break;
+                case TimetableCore.TIMETABLE_EVENT_TYPE_COURSE:icon = R.drawable.ic_chatbot_course ;break;
+                case TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT:icon = R.drawable.ic_chatbot_arrangement;break;
+                case TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE:icon = R.drawable.ic_chatbot_deadline;break;
+                case TimetableCore.TIMETABLE_EVENT_TYPE_REMIND:icon = R.drawable.ic_chatbot_remind;break;
+                case TimetableCore.TIMETABLE_EVENT_TYPE_EXAM:icon = R.drawable.ic_chatbot_exam;break;
             }
             m.put("icon",icon);
             list.add(m);
@@ -93,7 +91,7 @@ public class ChatBotMessageItem {
         listRes = subjectList;
         for(Subject t :subjectList){
             HashMap m = new HashMap();
-            m.put("title", t.name);
+            m.put("title", t.getName());
             m.put("type","subject");
             int icon = R.drawable.ic_menu_subject;
             m.put("icon",icon);

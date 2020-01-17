@@ -6,8 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,21 +17,10 @@ import android.widget.Toast;
 
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.Curriculum;
-import com.stupidtree.hita.core.Subject;
 
-import java.util.List;
-
-import cn.bmob.v3.BmobBatch;
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-
-import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.loadDataFromCloud;
-import static com.stupidtree.hita.HITAApplication.saveDataToCloud;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 
 public class FragmentUserCenter_sync extends BaseFragment {
@@ -64,7 +52,7 @@ public class FragmentUserCenter_sync extends BaseFragment {
                 AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle("警告").setMessage("同步数据将清除所有本地数据").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       loadDataFromCloud();
+                       timeTableCore. loadDataFromCloud();
                     }
                 }).setNegativeButton("取消",null).create();
                ad.show();
@@ -113,7 +101,7 @@ public class FragmentUserCenter_sync extends BaseFragment {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            return saveDataToCloud(true);
+            return timeTableCore.saveDataToCloud(true);
         }
 
         @Override

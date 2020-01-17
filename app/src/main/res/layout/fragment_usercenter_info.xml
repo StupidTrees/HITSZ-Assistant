@@ -31,9 +31,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|start"
-                android:text="绑定学号"
+                android:text="@string/usercenter_info_bind"
                 android:textColor="?attr/text_color_primary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/text_studentnumber"
@@ -41,16 +42,16 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|right"
-                android:text="180110324"
                 android:textColor="?attr/text_color_primary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
 
             <ImageView
                 android:id="@+id/imageView21"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:tint="?attr/colorPrimary"
                 app:srcCompat="@drawable/ic_bind" />
         </LinearLayout>
@@ -64,16 +65,18 @@
             android:foreground="?attr/selectableItemBackground"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingRight="16dp"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|start"
-                android:text="昵称"
+                android:text="@string/usercenter_info_nick"
                 android:textColor="?attr/text_color_primary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/text_nick"
@@ -81,16 +84,17 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|right"
-                android:text="StupidTree"
+                android:text=""
                 android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
 
             <ImageView
                 android:id="@+id/imageView7"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:tint="?attr/colorPrimary"
                 app:srcCompat="@drawable/bt_edit" />
         </LinearLayout>
@@ -104,16 +108,18 @@
             android:foreground="?attr/selectableItemBackground"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingRight="16dp"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|start"
-                android:text="个性签名"
+                android:text="@string/usercenter_info_signature"
                 android:textColor="?attr/text_color_primary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/text_signature"
@@ -121,16 +127,17 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|right"
-                android:text="哈哈哈"
+                android:text=""
                 android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
 
             <ImageView
                 android:id="@+id/imageView14"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:tint="?attr/colorPrimary"
                 app:srcCompat="@drawable/bt_edit" />
         </LinearLayout>
@@ -147,7 +154,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|start"
-                android:text="账号"
+                android:text="@string/usercenter_info_username"
                 android:textColor="?attr/text_color_secondary"
                 android:textSize="16sp" />
 
@@ -157,9 +164,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|right"
-                android:text="15159128923"
+                android:text=""
                 android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
         </LinearLayout>
 
         <LinearLayout
@@ -176,9 +184,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|start"
-                android:text="学院"
+                android:text="@string/usercenter_info_school"
                 android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/text_school"
@@ -186,9 +195,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|right"
-                android:text="格兰芬多"
+                android:text=""
                 android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
         </LinearLayout>
 
         <LinearLayout
@@ -205,9 +215,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|start"
-                android:text="姓名"
+                android:text="@string/usercenter_info_realname"
                 android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="NestedWeights" />
 
             <TextView
                 android:id="@+id/text_realname"
@@ -215,9 +226,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|right"
-                android:text="杨涵丞"
+                android:text=""
                 android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
         </LinearLayout>
     </LinearLayout>
 

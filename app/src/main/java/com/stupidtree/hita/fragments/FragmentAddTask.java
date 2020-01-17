@@ -30,16 +30,16 @@ import android.widget.Toast;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.timetable.HTime;
-import com.stupidtree.hita.core.timetable.Task;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.timetable.HTime;
+import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.diy.PickSingleTimeDialog;
 import com.stupidtree.hita.hita.TextTools;
 
 import java.util.Calendar;
 
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 @SuppressLint("ValidFragment")
 public class FragmentAddTask extends BottomSheetDialogFragment {
@@ -224,19 +224,19 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                     Toast.makeText(getContext(),"请输入任务名称！",Toast.LENGTH_SHORT).show();
                     return;
                 }else{
-                    Task t = new Task(mainTimeTable.core.curriculumCode,name.getText().toString());
+                    Task t = new Task(timeTableCore.getCurrentCurriculum().getCurriculumCode(),name.getText().toString());
                     if(adt_switch.isChecked()){
-                        String ddlUUID = mainTimeTable.addEvent(tW,tDOW, TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE,
+                        String ddlUUID = timeTableCore.addEvent(tW,tDOW, TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE,
                                 "DDL:"+name.getText().toString(),"任务截至","Deadline",t.getUuid(),tT,tT,false);
-                      //  mainTimeTable.addTask(name.getText().toString(),fW,fDOW,tW,tDOW,fT,tT,"DDL:"+name.getText().toString());
+                      //  timeTableCore.addTask(name.getText().toString(),fW,fDOW,tW,tDOW,fT,tT,"DDL:"+name.getText().toString());
                         t.arrangeTime(fW,fDOW,tW,tDOW,fT,tT,ddlUUID+":::"+tW);
                     }
-                    //else  mainTimeTable.addTask(name.getText().toString());
+                    //else  timeTableCore.addTask(name.getText().toString());
                     if(adt_switch2.isChecked()){
                         t.setLength(adt_lengthpicker.getValue());
                     }
                     t.setEvery_day(adt_switch3.isChecked());
-                    mainTimeTable.addTask(t);
+                    timeTableCore.addTask(t);
                     dismiss();
                     Intent mes = new Intent("COM.STUPIDTREE.HITA.TASK_REFRESH");
                     Intent mes2 = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");

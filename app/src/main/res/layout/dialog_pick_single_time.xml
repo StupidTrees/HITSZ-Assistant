@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center"
@@ -21,28 +22,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:fontFamily="sans-serif-black"
-
-                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
                 android:paddingTop="16dp"
-                android:paddingRight="8dp"
+                android:paddingEnd="8dp"
                 android:paddingBottom="16dp"
                 android:text="5月9日（今天）"
                 android:textColor="?attr/text_color_primary"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/dialog_title_time"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
 
                 android:fontFamily="sans-serif-black"
                 android:paddingTop="16dp"
-                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:text="12:30"
                 android:textColor="?attr/text_color_primary"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
 
             <ImageView
                 android:id="@+id/done"
@@ -55,7 +57,8 @@
                 android:tint="?attr/colorControlNormal"
                 android:tintMode="src_in"
                 app:theme="@style/button_ripple_primary"
-                app:srcCompat="@drawable/bt_done" />
+                app:srcCompat="@drawable/bt_done"
+                android:focusable="true" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,7 +73,7 @@
                 android:id="@+id/ade_weekpicker_week"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1.2"
                 app:cyclic="false"
                 app:divider="@color/transparent_none"
@@ -85,9 +88,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="4dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="center"
-                android:text="周"
+                android:text="@string/pick_single_time_label1"
                 android:textColor="@color/material_secondary_text"
                 android:textSize="16sp" />
 
@@ -95,7 +98,7 @@
                 android:id="@+id/ade_weekpicker_dow"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="24dp"
+                android:layout_marginEnd="24dp"
                 android:layout_weight="1.0"
                 app:cyclic="false"
                 app:divider="@color/transparent_none"
@@ -109,7 +112,7 @@
                 android:id="@+id/hour"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1.2"
                 app:cyclic="false"
                 app:divider="@color/transparent_none"
@@ -124,9 +127,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="4dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="center"
-                android:text="时"
+                android:text="@string/pick_single_time_label2"
                 android:textColor="@color/material_secondary_text"
                 android:textSize="16sp" />
 
@@ -134,7 +137,7 @@
                 android:id="@+id/minute"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1.2"
                 app:cyclic="false"
                 app:divider="@color/transparent_none"
@@ -151,7 +154,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="4dp"
                 android:gravity="center"
-                android:text="分"
+                android:text="@string/pick_single_time_label3"
                 android:textColor="@color/material_secondary_text"
                 android:textSize="16sp" />
 

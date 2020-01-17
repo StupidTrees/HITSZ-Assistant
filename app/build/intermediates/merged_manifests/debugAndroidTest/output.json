@@ -1,1 +1,1 @@
-[{"outputType":{"type":"MERGED_MANIFESTS"},"apkData":{"type":"MAIN","splits":[],"versionCode":20191217,"versionName":"12.17","enabled":true,"outputFile":"app-debug-androidTest.apk","fullName":"debugAndroidTest","baseName":"debug-androidTest"},"path":"AndroidManifest.xml","properties":{}}]
+[{"outputType":{"type":"MERGED_MANIFESTS"},"apkData":{"type":"MAIN","splits":[],"versionCode":20200117,"versionName":"1.17","enabled":true,"outputFile":"app-debug-androidTest.apk","fullName":"debugAndroidTest","baseName":"debug-androidTest"},"path":"AndroidManifest.xml","properties":{}}]

@@ -11,6 +11,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
@@ -62,7 +63,6 @@
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp"
             android:gravity="center"
-            android:text="荔园一食堂"
             android:textColor="@color/material_text_icon_white"
             android:textSize="12sp" />
     </FrameLayout>
@@ -75,24 +75,25 @@
         android:layout_marginTop="8dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="RtlHardcoded">
 
         <TextView
             android:id="@+id/canteen_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
-            android:layout_marginLeft="16dp"
-            android:text="4.8/5"
+            android:layout_marginStart="16dp"
             android:textColor="?attr/text_color_primary"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            tools:ignore="RtlHardcoded,SmallSp" />
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center|left"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="16dp"
             android:tint="?attr/colorPrimary"
             app:srcCompat="@drawable/ic_star" />
     </LinearLayout>

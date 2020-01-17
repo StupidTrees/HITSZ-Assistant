@@ -19,13 +19,14 @@
             android:layout_weight="1"
 
             android:fontFamily="sans-serif-black"
-            android:paddingLeft="16dp"
+            android:paddingStart="16dp"
             android:paddingTop="16dp"
-            android:paddingRight="8dp"
+            android:paddingEnd="8dp"
             android:paddingBottom="16dp"
             android:text="设置地点"
             android:textColor="?attr/text_color_primary"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
 
         <ImageView
             android:id="@+id/done"
@@ -38,7 +39,8 @@
             android:tint="?attr/colorControlNormal"
             android:tintMode="src_in"
             app:srcCompat="@drawable/bt_done"
-            app:theme="@style/button_ripple_primary" />
+            app:theme="@style/button_ripple_primary"
+            android:focusable="true" />
 
     </LinearLayout>
 
@@ -53,11 +55,11 @@
 
         <EditText
             android:id="@+id/searchview"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#00000000"
-            android:hint="输入名称..."
+            android:hint="@string/enter_name"
             android:singleLine="true"
             android:textColor="?attr/text_color_primary"
             android:textColorHint="?attr/text_color_secondary"
@@ -69,7 +71,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:progressTint="?attr/colorPrimary"
             android:progressTintMode="src_in" />
     </LinearLayout>

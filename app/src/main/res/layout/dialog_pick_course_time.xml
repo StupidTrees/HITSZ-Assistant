@@ -1,131 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/dialog_title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-
-                android:fontFamily="sans-serif-black"
-                android:paddingLeft="16dp"
-                android:paddingTop="16dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="16dp"
-                android:text="设置课程时间"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="20sp" />
-
-            <ImageView
-                android:id="@+id/done"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:alpha="0.6"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:tint="?attr/colorControlNormal"
-                android:tintMode="src_in"
-                app:srcCompat="@drawable/bt_done"
-                app:theme="@style/button_ripple_primary" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp">
-
-            <com.cncoderx.wheelview.Wheel3DView
-                android:id="@+id/pickdow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:cyclic="false"
-                app:divider="?attr/background_icon_color_bottom"
-                app:selectedColor="?attr/colorPrimary"
-                app:toward="right"
-                app:unselectedColor="?attr/background_icon_color_second"
-                app:visibleItems="4" />
-
-            <com.cncoderx.wheelview.Wheel3DView
-                android:id="@+id/pickfromt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:cyclic="false"
-                app:divider="?attr/background_icon_color_bottom"
-                app:selectedColor="?attr/colorPrimary"
-                app:toward="right"
-                app:unselectedColor="?attr/background_icon_color_second"
-                app:visibleItems="4" />
-
-            <TextView
-                android:id="@+id/textView41"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="到" />
-
-            <com.cncoderx.wheelview.Wheel3DView
-                android:id="@+id/picktot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:cyclic="false"
-                app:divider="?attr/background_icon_color_bottom"
-                app:selectedColor="?attr/colorPrimary"
-                app:toward="right"
-                app:unselectedColor="?attr/background_icon_color_second"
-                app:visibleItems="4" />
-
-            <!--&lt;!&ndash;<Spinner&ndash;&gt;-->
-            <!--&lt;!&ndash;android:id="@+id/ade_weekpicker_dow"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_marginLeft="8dp">&ndash;&gt;-->
-
-            <!--</Spinner>-->
-        </LinearLayout>
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
 
         <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+
+            android:fontFamily="sans-serif-black"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="16dp"
+            android:text="@string/dialog_pick_course_title"
+            android:textColor="?attr/text_color_primary"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
-            android:text="选择上课周数：" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/weekList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:overScrollMode="never">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
+            android:alpha="0.6"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="16dp"
+            android:tint="?attr/colorControlNormal"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/bt_done"
+            app:theme="@style/button_ripple_primary"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
+
+        <com.cncoderx.wheelview.Wheel3DView
+            android:id="@+id/pickdow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cyclic="false"
+            app:divider="?attr/background_icon_color_bottom"
+            app:selectedColor="?attr/colorPrimary"
+            app:toward="right"
+            app:unselectedColor="?attr/background_icon_color_second"
+            app:visibleItems="4" />
+
+        <com.cncoderx.wheelview.Wheel3DView
+            android:id="@+id/pickfromt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cyclic="false"
+            app:divider="?attr/background_icon_color_bottom"
+            app:selectedColor="?attr/colorPrimary"
+            app:toward="right"
+            app:unselectedColor="?attr/background_icon_color_second"
+            app:visibleItems="4" />
+
+        <TextView
+            android:id="@+id/textView41"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/dialog_pick_course_to" />
+
+        <com.cncoderx.wheelview.Wheel3DView
+            android:id="@+id/picktot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:cyclic="false"
+            app:divider="?attr/background_icon_color_bottom"
+            app:selectedColor="?attr/colorPrimary"
+            app:toward="right"
+            app:unselectedColor="?attr/background_icon_color_second"
+            app:visibleItems="4" />
+
+        <!--&lt;!&ndash;<Spinner&ndash;&gt;-->
+        <!--&lt;!&ndash;android:id="@+id/ade_weekpicker_dow"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_marginLeft="8dp">&ndash;&gt;-->
+
+        <!--</Spinner>-->
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/dialog_pick_course_label"
+        tools:ignore="RtlHardcoded" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/weekList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:overScrollMode="never">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
 </LinearLayout>
+

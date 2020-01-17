@@ -2,15 +2,11 @@ package com.stupidtree.hita.online;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.google.gson.Gson;
-import com.stupidtree.hita.core.timetable.HTime;
+import com.stupidtree.hita.timetable.timetable.HTime;
 
-import java.util.ArrayList;
 import java.util.Objects;
-
-import cn.bmob.v3.BmobObject;
 
 public class TimeTable_upload_helper{
     private int dow;

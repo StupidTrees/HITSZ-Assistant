@@ -11,10 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.Subject;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.timetable.EventItem;
-import com.stupidtree.hita.core.timetable.Task;
+import com.stupidtree.hita.timetable.Subject;
+import com.stupidtree.hita.timetable.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.diy.TaskDialog;
 import com.stupidtree.hita.online.Teacher;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -23,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
-import static com.stupidtree.hita.hita.TextTools.words_time_DOW;
 
 
 public class ChatBotItemsAdapter extends RecyclerView.Adapter<ChatBotItemsAdapter.mHolder> {
@@ -69,7 +67,7 @@ public class ChatBotItemsAdapter extends RecyclerView.Adapter<ChatBotItemsAdapte
                     }else if(type.equals("teacher")){
                         ActivityUtils.startTeacherActivity(mContext, (Teacher) mListRes.get(i));
                     }else if(type.equals("subject")){
-                        ActivityUtils.startSubjectActivity_name(mContext,((Subject)mListRes.get(i)).name);
+                        ActivityUtils.startSubjectActivity_name(mContext,((Subject)mListRes.get(i)).getName());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

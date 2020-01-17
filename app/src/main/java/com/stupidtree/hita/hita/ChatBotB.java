@@ -85,7 +85,7 @@ public class ChatBotB {
                         ChatMessage cm = new ChatMessage();
                         List<String> arr = new ArrayList();
                         for(Term t: ToAnalysis.parse(text)) arr.add(t.getName());
-                        cm.setQueryArray((ArrayList<String>) arr);
+                        cm.setQueryArray(arr);
                         cm.setQueryText(text);
                         cm.setAnswer(re.toString());
                         cm.save(new SaveListener<String>() {

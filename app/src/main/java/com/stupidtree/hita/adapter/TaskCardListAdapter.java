@@ -1,8 +1,7 @@
 package com.stupidtree.hita.adapter;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -19,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -28,18 +26,16 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.activities.ActivityTasks;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.timetable.EventItem;
-import com.stupidtree.hita.core.timetable.Task;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.fragments.FragmentAddEvent;
 import com.stupidtree.hita.fragments.FragmentAddTask;
 
 import com.stupidtree.hita.hita.TextTools;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,11 +44,9 @@ import tyrantgit.explosionfield.ExplosionField;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.isDataAvailable;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.integerToString;
-import static com.stupidtree.hita.fragments.FragmentNavi.ORDER_NAME;
 import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
 
 public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapter.BaseHolder> {
@@ -172,9 +166,9 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             vht.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (isDataAvailable())
+                    if (timeTableCore.isDataAvailable())
                         new FragmentAddTask().show(mContext.getSupportFragmentManager(), "fat");
-                    else Snackbar.make(view, "请先导入课表！", Snackbar.LENGTH_SHORT).show();
+                    else Snackbar.make(view, mContext.getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
                 }
             });
             vht.listAdapter.setmOnFinishClickListener(new TaskListAdapterMini.OnFinishClickListener() {
@@ -202,9 +196,9 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             vht.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (isDataAvailable())
+                    if (timeTableCore.isDataAvailable())
                         new FragmentAddEvent().showFor(mContext.getSupportFragmentManager(), 1);
-                    else Snackbar.make(view, "请先导入课表！", Snackbar.LENGTH_SHORT).show();
+                    else Snackbar.make(view, mContext.getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
                 }
             });
 
@@ -213,9 +207,9 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             vht.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (isDataAvailable())
+                    if (timeTableCore.isDataAvailable())
                         new FragmentAddEvent().showFor(mContext.getSupportFragmentManager(), 2);
-                    else Snackbar.make(view, "请先导入课表！", Snackbar.LENGTH_SHORT).show();
+                    else Snackbar.make(view, mContext.getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
                 }
             });
             new RefreshExamTask(vht).executeOnExecutor(TPE);
@@ -310,7 +304,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
         @Override
         protected Object doInBackground(Object[] objects) {
             vht.listRes.clear();
-            vht.listRes.addAll(mainTimeTable.getUnfinishedTasks());
+            vht.listRes.addAll(timeTableCore.getUnfinishedTasks());
             //Log.e("tasks", String.valueOf(vht.listRes));
             return null;
         }
@@ -321,12 +315,12 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             if(vht.listRes.size()>0){
                 vht.empty.setVisibility(View.GONE);
                 vht.list.setVisibility(View.VISIBLE);
-                vht.title.setText("共有" + vht.listRes.size() + "个待办任务");
+                vht.title.setText(String.format(mContext.getString(R.string.task_card_title_tasknum),vht.listRes.size()));
                 vht.listAdapter.notifyDataSetChanged();
             }else{
                 vht.empty.setVisibility(View.VISIBLE);
                 vht.list.setVisibility(View.GONE);
-                vht.title.setText("没有正在进行的任务");
+                vht.title.setText(mContext.getString(R.string.task_card_title_notask));
             }
 
         }
@@ -342,12 +336,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
         @Override
         protected Object doInBackground(Object[] objects) {
             vht.listRes.clear();
-            //Calendar c = Calendar.getInstance();
-            //c.setTimeInMillis(now.getTimeInMillis());
-            //c.add(Calendar.DATE,7);
-            List<EventItem> result = mainTimeTable.getUnfinishedEvent(now, TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE);
-
-
+            List<EventItem> result = timeTableCore.getUnfinishedEvent(now, TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE);
             if (result != null && result.size() > 0) vht.listRes.addAll(result);
             Collections.sort(vht.listRes);
             //Log.e("tasks", String.valueOf(vht.listRes));
@@ -360,12 +349,12 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             if(vht.listRes.size()>0){
                 vht.empty.setVisibility(View.GONE);
                 vht.list.setVisibility(View.VISIBLE);
-                vht.title.setText("共有" + vht.listRes.size() + "个DDL");
+                vht.title.setText(String.format(mContext.getString(R.string.task_card_title_ddlnum),vht.listRes.size()));
                 vht.listAdapter.notifyDataSetChanged();
             }else{
                 vht.empty.setVisibility(View.VISIBLE);
                 vht.list.setVisibility(View.GONE);
-                vht.title.setText("现在没有DDL");
+                vht.title.setText(mContext.getString(R.string.task_card_title_noddl));
             }
         }
     }
@@ -380,14 +369,9 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
         @Override
         protected Object doInBackground(Object[] objects) {
             vht.listRes.clear();
-            //Calendar c = Calendar.getInstance();
-            //c.setTimeInMillis(now.getTimeInMillis());
-            //c.add(Calendar.DATE,7);
-            List<EventItem> result = mainTimeTable.getUnfinishedEvent(now, TimeTable.TIMETABLE_EVENT_TYPE_EXAM);
-
+            List<EventItem> result = timeTableCore.getUnfinishedEvent(now, TimetableCore.TIMETABLE_EVENT_TYPE_EXAM);
             if (result != null && result.size() > 0) vht.listRes.addAll(result);
             Collections.sort(vht.listRes);
-            //Log.e("tasks", String.valueOf(vht.listRes));
             return null;
         }
 
@@ -398,32 +382,31 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             if(vht.listRes.size()>0){
                 vht.empty.setVisibility(View.GONE);
                 vht.list.setVisibility(View.VISIBLE);
-                long minutes = vht.listRes.get(0).getInWhatTimeWillItHappen(mainTimeTable.core, now);
-                Log.e("minutes", String.valueOf(minutes));
+                long minutes = vht.listRes.get(0).getInWhatTimeWillItHappen(timeTableCore.getCurrentCurriculum(), now);
                 int weeks = (int) (minutes / 10080);
                 minutes %= 10080;
                 int days = (int) (minutes / 1440);
                 minutes %= 1440;
                 int hours = (int) (minutes / 60);
                 minutes %= 60;
-                String weekS = weeks > 0 ? weeks + "周" : "";
-                String dayS = days > 0 ? days + "天" : "";
+                String weekS = weeks > 0 ? String.format(mContext.getString(R.string.week),weeks) : "";
+                String dayS = days > 0 ? String.format(mContext.getString(R.string.days),days) : "";
                 String hourS, minuteS;
                 if (!TextUtils.isEmpty(weekS)) {
                     hourS = minuteS = "";
                 } else if (!TextUtils.isEmpty(dayS)) {
                     minuteS = "";
-                    hourS = hours > 0 ? hours + "时" : "";
+                    hourS = hours > 0 ? hours + "h" : "";
                 } else {
-                    hourS = hours > 0 ? hours + "时" : "";
-                    minuteS = minutes > 0 ? minutes + "分" : "";
+                    hourS = hours > 0 ? hours + "h" : "";
+                    minuteS = minutes > 0 ? minutes + "min" : "";
                 }
-                vht.title.setText("考试倒计时"+weekS + dayS + hourS + minuteS);
+                vht.title.setText(String.format(mContext.getString(R.string.exam_card_cd),weekS, dayS,hourS,minuteS));
                 vht.listAdapter.notifyDataSetChanged();
             }else{
                 vht.empty.setVisibility(View.VISIBLE);
                 vht.list.setVisibility(View.GONE);
-                vht.title.setText("没有考试");
+                vht.title.setText(mContext.getString(R.string.exam_card_noexam));
             }
 
 
@@ -445,16 +428,19 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             return new xHolder(mInflater.inflate(R.layout.dynamic_task_card_ddl_item, parent, false));
         }
 
+
+
+        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull xHolder holder, final int position) {
             EventItem ddl = mBeans.get(position);
-            holder.time_date.setText(ddl.week + "周" + TextTools.words_time_DOW[ddl.DOW - 1]);
-            if(ddl.isWholeDay) holder.time_time.setText("全天");
+            holder.time_date.setText(String.format(mContext.getString(R.string.week),ddl.week) + mContext.getResources().getStringArray(R.array.dow1)[ddl.DOW - 1]);
+            if(ddl.isWholeDay) holder.time_time.setText(mContext.getString(R.string.wholeday));
             else holder.time_time.setText(ddl.startTime.tellTime());
             holder.title.setText(ddl.mainName);
             now.setTimeInMillis(System.currentTimeMillis());
 
-            long minutes = ddl.getInWhatTimeWillItHappen(mainTimeTable.core, now);
+            long minutes = ddl.getInWhatTimeWillItHappen(timeTableCore.getCurrentCurriculum(), now);
             Log.e("minutes", String.valueOf(minutes));
             int weeks = (int) (minutes / 10080);
             minutes %= 10080;
@@ -462,17 +448,17 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             minutes %= 1440;
             int hours = (int) (minutes / 60);
             minutes %= 60;
-            String weekS = weeks > 0 ? weeks + "周" : "";
-            String dayS = days > 0 ? days + "天" : "";
+            String weekS = weeks > 0 ? String.format(mContext.getString(R.string.week),weeks) : "";
+            String dayS = days > 0 ? String.format(mContext.getString(R.string.days),days) : "";
             String hourS, minuteS;
             if (!TextUtils.isEmpty(weekS)) {
                 hourS = minuteS = "";
             } else if (!TextUtils.isEmpty(dayS)) {
                 minuteS = "";
-                hourS = hours > 0 ? hours + "时" : "";
+                hourS = hours > 0 ? hours + "h" : "";
             } else {
-                hourS = hours > 0 ? hours + "时" : "";
-                minuteS = minutes > 0 ? minutes + "分" : "";
+                hourS = hours > 0 ? hours + "h" : "";
+                minuteS = minutes > 0 ? minutes + "min" : "";
             }
 
             holder.remain.setText(weekS + dayS + hourS + minuteS);
@@ -520,6 +506,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             return new yHolder(mInflater.inflate(R.layout.dynamic_task_card_exam_item, parent, false));
         }
 
+
         @Override
         public void onBindViewHolder(@NonNull yHolder holder, final int position) {
             EventItem ddl = mBeans.get(position);
@@ -527,25 +514,24 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             holder.title.setText(ddl.mainName);
             now.setTimeInMillis(System.currentTimeMillis());
 
-            long minutes = ddl.getInWhatTimeWillItHappen(mainTimeTable.core, now);
-            Log.e("minutes", String.valueOf(minutes));
+            long minutes = ddl.getInWhatTimeWillItHappen(timeTableCore.getCurrentCurriculum(), now);
             int weeks = (int) (minutes / 10080);
             minutes %= 10080;
             int days = (int) (minutes / 1440);
             minutes %= 1440;
             int hours = (int) (minutes / 60);
             minutes %= 60;
-            String weekS = weeks > 0 ? weeks + "周" : "";
-            String dayS = days > 0 ? days + "天" : "";
+            String weekS = weeks > 0 ? String.format(mContext.getString(R.string.week),weeks) : "";
+            String dayS = days > 0 ? String.format(mContext.getString(R.string.days),days) : "";
             String hourS, minuteS;
             if (!TextUtils.isEmpty(weekS)) {
                 hourS = minuteS = "";
             } else if (!TextUtils.isEmpty(dayS)) {
                 minuteS = "";
-                hourS = hours > 0 ? hours + "时" : "";
+                hourS = hours > 0 ? hours + "h" : "";
             } else {
-                hourS = hours > 0 ? hours + "时" : "";
-                minuteS = minutes > 0 ? minutes + "分" : "";
+                hourS = hours > 0 ? hours + "h" : "";
+                minuteS = minutes > 0 ? minutes + "min" : "";
             }
 
             holder.remain.setText(weekS + dayS + hourS + minuteS);
@@ -593,21 +579,20 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            if (mainTimeTable.deleteTask(listRes.get(position))) {
+            if (timeTableCore.deleteTask(listRes.get(position))) {
                 listRes.remove(position);
                 return true;
             } else return false;
         }
-
         void refreshTitle(){
             if(vht.listRes.size()>0){
                 vht.empty.setVisibility(View.GONE);
                 vht.list.setVisibility(View.VISIBLE);
-                vht.title.setText("共有" + vht.listRes.size() + "个待办任务");
+                vht.title.setText(String.format(mContext.getString(R.string.task_card_title_tasknum),vht.listRes.size()));
             }else{
                 vht.empty.setVisibility(View.VISIBLE);
                 vht.list.setVisibility(View.GONE);
-                vht.title.setText("没有正在进行的任务");
+                vht.title.setText(mContext.getString(R.string.task_card_title_notask));
             }
         }
 
@@ -628,7 +613,6 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             // if(ftl!=null&&ftl.hasInit) ftl.Refresh(FragmentTimeLine.TL_REFRESH_FROM_UNHIDE);
         }
     }
-
     class finishTask extends AsyncTask {
         int position;
         List<Task> listRes;
@@ -648,11 +632,11 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             if(vht.listRes.size()>0){
                 vht.empty.setVisibility(View.GONE);
                 vht.list.setVisibility(View.VISIBLE);
-                vht.title.setText("共有" + vht.listRes.size() + "个待办任务");
+                vht.title.setText(String.format(mContext.getString(R.string.task_card_title_tasknum),vht.listRes.size()));
             }else{
                 vht.empty.setVisibility(View.VISIBLE);
                 vht.list.setVisibility(View.GONE);
-                vht.title.setText("没有正在进行的任务");
+                vht.title.setText(mContext.getString(R.string.task_card_title_notask));
             }
         }
 
@@ -661,7 +645,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             if(listRes.get(position).isHas_length()&&listRes.get(position).getProgress()<100){
                 return "dialog";
             }else{
-                if (mainTimeTable.setFinishTask(listRes.get(position),true)) {
+                if (timeTableCore.setFinishTask(listRes.get(position),true)) {
                     listRes.remove(position);
                     return true;
                 } else return false;
@@ -695,4 +679,6 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
 
         }
     }
+
+
 }

@@ -29,7 +29,7 @@ public class ActivitySetting extends BaseActivity {
 
     void initToolbar(){
         mToolbar = findViewById(R.id.toolbar);
-        mToolbar.setTitle("设置");
+        mToolbar.setTitle(getString(R.string.label_activity_settings));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用

@@ -13,7 +13,8 @@
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="?attr/background_color_second"
     app:cardCornerRadius="16dp"
-    app:cardElevation="@dimen/navi_page_card_elevation">
+    app:cardElevation="@dimen/navi_page_card_elevation"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,15 +29,9 @@
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:fontFamily="sans-serif-black"
-            android:text="教务功能"
+            android:text="@string/navi_jw_title"
             android:textColor="?attr/text_color_primary"
             android:textSize="18sp" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,15 +44,16 @@
                 android:id="@+id/jwts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="24dp"
                 android:clickable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:orientation="horizontal"
                 android:paddingTop="8dp"
-                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
                 android:paddingBottom="8dp"
-                android:visibility="visible">
+                android:visibility="visible"
+                android:focusable="true">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -77,7 +73,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="告别网页"
+                        android:text="@string/navi_jw_jw_s"
                         android:textColor="?attr/text_color_secondary"
                         android:textSize="12sp" />
 
@@ -87,7 +83,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|top"
                         android:layout_marginTop="4dp"
-                        android:text="掌上教务"
+                        android:text="@string/navi_jw_jw_p"
                         android:textColor="?attr/text_color_primary"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -98,15 +94,16 @@
                 android:id="@+id/empty_classroom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="24dp"
                 android:clickable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:orientation="horizontal"
                 android:paddingTop="8dp"
-                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
                 android:paddingBottom="8dp"
-                android:visibility="visible">
+                android:visibility="visible"
+                android:focusable="true">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -120,13 +117,13 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="找地方学习"
+                        android:text="@string/navi_jw_emptyclassroom_s"
                         android:textColor="?attr/text_color_secondary"
                         android:textSize="12sp" />
 
@@ -135,7 +132,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|top"
                         android:layout_marginTop="4dp"
-                        android:text="空教室查询"
+                        android:text="@string/navi_jw_emptyclassroom_p"
                         android:textColor="?attr/text_color_primary"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -146,15 +143,16 @@
                 android:id="@+id/xl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="24dp"
                 android:clickable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:orientation="horizontal"
                 android:paddingTop="8dp"
-                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
                 android:paddingBottom="8dp"
-                android:visibility="visible">
+                android:visibility="visible"
+                android:focusable="true">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -168,13 +166,13 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="何时放假"
+                        android:text="@string/navi_jw_xl_s"
                         android:textColor="?attr/text_color_secondary"
                         android:textSize="12sp" />
 
@@ -183,7 +181,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|top"
                         android:layout_marginTop="4dp"
-                        android:text="校历"
+                        android:text="@string/navi_jw_xl_p"
                         android:textColor="?attr/text_color_primary"
                         android:textSize="16sp" />
                 </LinearLayout>

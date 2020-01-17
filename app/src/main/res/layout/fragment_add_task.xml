@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
@@ -21,13 +22,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-black"
-                android:text="添加待办"
+                android:text="@string/add_task_title"
                 android:textColor="@color/material_secondary_text"
                 android:textSize="18sp" />
 
@@ -50,14 +51,15 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/adt_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/transparent_none"
-                    android:hint="输入任务名..."
+                    android:hint="@string/add_task_name_hint"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    tools:ignore="NestedWeights" />
 
             </LinearLayout>
 
@@ -67,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
-                android:text="每日任务"
+                android:text="@string/add_task_everyday"
                 android:visibility="gone" />
 
             <Switch
@@ -77,7 +79,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_weight="1"
-                android:text="任务期限"
+                android:text="@string/add_task_limitation"
                 android:textColor="?attr/text_color_primary"
                 android:visibility="gone" />
 
@@ -92,7 +94,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
                     android:scaleType="fitCenter"
                     app:srcCompat="@drawable/ic_addevent_date" />
 
@@ -104,22 +106,23 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
                         android:layout_weight="1"
                         android:orientation="horizontal"
-                        android:paddingRight="16dp">
+                        android:paddingEnd="16dp">
 
                         <TextView
                             android:id="@+id/adt_fdate_show"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
+                            android:layout_marginStart="4dp"
                             android:layout_weight="1"
                             android:text="设置开始日期"
                             android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            tools:ignore="NestedWeights" />
 
                         <ImageView
                             android:id="@+id/adt_pick_fdate"
@@ -270,7 +273,7 @@
                         <NumberPicker
                             android:id="@+id/adt_length_picker"
                             android:layout_width="wrap_content"
-                            android:layout_height="80dp"></NumberPicker>
+                            android:layout_height="80dp" />
 
                         <TextView
                             android:layout_width="wrap_content"

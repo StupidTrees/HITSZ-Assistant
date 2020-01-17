@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
-INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
-INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
-INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-209:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-209:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-209:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-209:12
 MERGED from [net.opacapp:multiline-collapsingtoolbar:27.1.1] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\e9dbb72c0f4edcbec3bfee03ce97bb58\AndroidManifest.xml:2:1-11:12
 MERGED from [com.google.android.material:material:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\68d881f58a1fefe712b9bba171779a36\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.preference:preference:1.1.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3eb0a1f76a48f25a2a61848295967183\AndroidManifest.xml:17:1-24:12
@@ -68,22 +68,22 @@ MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\23211\.gradle
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\1dc41837949dc8b9da9710b05ed739d2\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\cee44eb5f9072bc10c72b3b7568bc0f4\AndroidManifest.xml:17:1-22:12
 MERGED from [com.github.asyl.animation:arcanimator:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\fb82675e4d69f1c7170e4ab50a1acb43\AndroidManifest.xml:2:1-14:12
-INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
-INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
-INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-209:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-209:12
+INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-209:12
 	package
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:4:5-34
 		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
 		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-209:12
 		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
 	xmlns:tools
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:3:5-51
 	android:versionCode
 		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-206:12
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:1-209:12
 		INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:2:11-69
@@ -194,7 +194,7 @@ ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:38:5-71
 	android:name
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:38:22-68
 application
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:40:5-204:19
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:40:5-207:19
 MERGED from [com.google.android.material:material:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\68d881f58a1fefe712b9bba171779a36\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.0.0] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\68d881f58a1fefe712b9bba171779a36\AndroidManifest.xml:22:5-20
 MERGED from [com.yuyh.imgsel:library:2.0.6] C:\Users\23211\.gradle\caches\transforms-2\files-2.1\3fdb3bdc453e8b9bec8284fb23823ee0\AndroidManifest.xml:11:5-32:19
@@ -440,137 +440,143 @@ ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:132:9-135:55
 	android:name
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:133:13-60
 activity#com.stupidtree.hita.activities.ActivityLoginJWTS
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:136:9-139:47
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:136:9-140:47
 	android:label
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:138:13-55
+	android:windowSoftInputMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:139:13-52
 	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:139:13-44
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:140:13-44
 	android:name
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:137:13-57
 activity#com.stupidtree.hita.activities.ActivityLoginUT
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:140:9-142:47
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:141:9-144:47
+	android:windowSoftInputMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:143:13-52
 	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:142:13-44
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:144:13-44
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:141:13-55
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:142:13-55
 activity#com.stupidtree.hita.activities.ActivityHITSZInfo
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:143:9-145:47
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:145:9-147:47
 	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:145:13-44
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:147:13-44
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:144:13-57
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:146:13-57
 activity#com.stupidtree.hita.activities.ActivityLogin
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:146:9-148:47
-	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:148:13-44
-	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:147:13-53
-activity#com.stupidtree.hita.activities.ActivityTimeTable
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:149:9-151:47
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:148:9-151:47
+	android:windowSoftInputMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:150:13-52
 	android:theme
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:151:13-44
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:150:13-57
-activity#com.stupidtree.hita.activities.ActivitySubject
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:152:9-155:47
-	android:label
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:154:13-59
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:149:13-53
+activity#com.stupidtree.hita.activities.ActivityTimeTable
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:152:9-154:47
 	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:155:13-44
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:154:13-44
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:153:13-55
-activity#com.stupidtree.hita.activities.ActivityPhotoDetail
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:156:9-158:47
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:153:13-57
+activity#com.stupidtree.hita.activities.ActivitySubject
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:155:9-158:47
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:157:13-59
 	android:theme
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:158:13-44
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:157:13-59
-activity#com.stupidtree.hita.activities.ActivityNotes
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:159:9-162:47
-	android:label
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:161:13-57
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:156:13-55
+activity#com.stupidtree.hita.activities.ActivityPhotoDetail
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:159:9-161:47
 	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:162:13-44
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:161:13-44
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:160:13-53
-activity#com.stupidtree.hita.activities.ActivityUniversity
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:163:9-165:47
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:160:13-59
+activity#com.stupidtree.hita.activities.ActivityNotes
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:162:9-165:47
+	android:label
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:164:13-57
 	android:theme
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:165:13-44
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:164:13-58
-activity#com.stupidtree.hita.activities.ActivityMain
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:166:9-170:55
-	android:launchMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:163:13-53
+activity#com.stupidtree.hita.activities.ActivityUniversity
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:166:9-168:47
+	android:theme
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:168:13-44
+	android:name
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:167:13-58
+activity#com.stupidtree.hita.activities.ActivityMain
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:169:9-173:55
+	android:launchMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:171:13-44
 	android:windowSoftInputMode
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:173:13-52
+	android:theme
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:172:13-44
+	android:name
 		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:170:13-52
-	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:169:13-44
-	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:167:13-52
 activity#com.stupidtree.hita.activities.ActivityCampusLocations
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:171:9-72
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:174:9-72
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:171:19-69
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:174:19-69
 activity#com.stupidtree.hita.activities.ActivityCurriculumManager
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:172:9-175:47
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:175:9-178:47
 	android:label
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:174:13-63
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:177:13-63
 	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:175:13-44
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:178:13-44
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:173:13-65
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:176:13-65
 activity#com.stupidtree.hita.activities.ActivitySplash
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:176:9-188:20
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:179:9-191:20
 	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:178:13-47
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:181:13-47
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:177:13-54
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:180:13-54
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:179:13-183:29
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:182:13-186:29
 action#android.intent.action.MAIN
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:180:17-69
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:183:17-69
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:180:25-66
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:183:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:182:17-77
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:185:17-77
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:182:27-74
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:185:27-74
 meta-data#android.app.shortcuts
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:185:13-187:53
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:188:13-190:53
 	android:resource
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:187:17-50
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:190:17-50
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:186:17-53
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:189:17-53
 activity#com.stupidtree.hita.activities.ActivityUserCenter
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:189:9-192:47
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:192:9-195:47
 	android:label
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:191:13-63
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:194:13-63
 	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:192:13-44
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:195:13-44
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:190:13-58
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:193:13-58
 activity#com.stupidtree.hita.activities.ActivityChatbot
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:193:9-196:67
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:196:9-199:67
 	android:windowSoftInputMode
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:196:13-64
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:199:13-64
 	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:195:13-48
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:198:13-48
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:194:13-55
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:197:13-55
 activity#com.stupidtree.hita.activities.ActivityExplore
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:197:9-199:47
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:200:9-202:47
 	android:theme
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:199:13-44
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:202:13-44
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:198:13-55
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:201:13-55
 meta-data#com.amap.api.v2.apikey
-ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:201:9-203:64
+ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:204:9-206:64
 	android:value
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:203:13-61
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:206:13-61
 	android:name
-		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:202:13-50
+		ADDED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml:205:13-50
 uses-sdk
 INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\projects\hita\HITA_V\app\src\main\AndroidManifest.xml

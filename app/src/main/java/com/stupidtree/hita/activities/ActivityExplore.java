@@ -351,8 +351,8 @@ public class ActivityExplore extends BaseActivity implements AMap.OnMapClickList
         mBottomLayout = findViewById(R.id.head_layout);
         //mHeadLayout= (FrameLayout)findViewById(R.id.mainFram);
         mBottomLayout.setVisibility(View.GONE);
-        mRotueTimeDes = (TextView) findViewById(R.id.firstline);
-        mRouteDetailDes = (TextView) findViewById(R.id.secondline);
+        mRotueTimeDes = findViewById(R.id.firstline);
+        mRouteDetailDes = findViewById(R.id.secondline);
 
 
     }

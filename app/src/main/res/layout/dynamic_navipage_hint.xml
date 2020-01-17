@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,7 +15,8 @@
     android:orientation="vertical"
     app:cardBackgroundColor="?attr/background_color_second"
     app:cardCornerRadius="16dp"
-    app:cardElevation="@dimen/navi_page_card_elevation">
+    app:cardElevation="@dimen/navi_page_card_elevation"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +32,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:id="@+id/imageView34"
@@ -38,18 +41,20 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:tint="@color/material_text_icon_white"
-                app:srcCompat="@drawable/ic_hint" />
+                app:srcCompat="@drawable/ic_hint"
+/>
 
             <TextView
                 android:id="@+id/title"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="长按卡片可以拖动调整次序哦"
+                android:text="@string/navi_hint_text"
                 android:textColor="@color/material_background_white"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:ignore="NestedWeights" />
         </LinearLayout>
 
         <Button
@@ -59,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="知道啦"
+            android:text="@string/navi_hint_button"
             android:textColor="@color/material_text_icon_white" />
 
     </LinearLayout>

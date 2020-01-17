@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:overScrollMode="never"
-    tools:context=".jwts.FragmentJWTS_cjgl_grcj">
+    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+    tools:context=".jw.FragmentJWTS_cjgl_grcj">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -15,209 +21,138 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:cardBackgroundColor="?attr/background_color_second"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
+                android:fontFamily="sans-serif-black"
+                android:text="@string/cjgl_xnxq"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="24sp" />
+
+            <Spinner
+                android:id="@+id/xnxq_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:padding="16dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:text="@string/cjgl_subject_name"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp"
+                tools:ignore="RtlHardcoded" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.6"
+                android:gravity="center|left"
+                android:singleLine="false"
+                android:text="@string/cjgl_subject_type"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp"
+                tools:ignore="RtlHardcoded" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.6"
+                android:gravity="center|left"
+                android:singleLine="false"
+                android:text="@string/cjgl_subject_exam"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp"
+                tools:ignore="RtlHardcoded" />
+
+            <TextView
+                android:id="@+id/cjxx_point"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="16dp"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:layout_weight="1.6"
+                android:gravity="center|left"
+                android:singleLine="false"
+                android:text="@string/cjgl_subject_credit"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp"
+                tools:ignore="RtlHardcoded" />
 
-                <TextView
-                    android:id="@+id/textView11"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="sans-serif-black"
-                    android:text="期中成绩"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="18sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:clickable="true">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center|left"
-                        android:text="课程名称"
-                        android:textColor="?attr/text_color_secondary" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1.5"
-                        android:gravity="center|left"
-                        android:singleLine="false"
-                        android:text="性质"
-                        android:textColor="?attr/text_color_secondary" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1.5"
-                        android:gravity="center|left"
-                        android:singleLine="false"
-                        android:text="学分"
-                        android:textColor="?attr/text_color_secondary" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1.5"
-                        android:gravity="center|left"
-                        android:singleLine="false"
-                        android:text="成绩"
-                        android:textColor="?attr/text_color_secondary" />
-
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ProgressBar
-                        android:id="@+id/qzcj_loading"
-                        style="?android:attr/progressBarStyle"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/qzcj_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:nestedScrollingEnabled="false" />
-
-                </FrameLayout>
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:cardBackgroundColor="?attr/background_color_second"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp">
-
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="16dp"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:layout_weight="1.6"
+                android:gravity="center|left"
+                android:singleLine="false"
+                android:text="@string/cjgl_subject_total_score"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp"
+                tools:ignore="RtlHardcoded" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-black"
-                    android:text="期末成绩"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="18sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1.6"
+                android:gravity="center|left"
+                android:singleLine="false"
+                android:text="@string/cjgl_subject_final_score"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="12sp"
+                tools:ignore="RtlHardcoded" />
 
-                <Spinner
-                    android:id="@+id/qmcj_xnxq_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="8dp" />
+        </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:clickable="true">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center|left"
-                        android:text="课程名称"
-                        android:textColor="?attr/text_color_secondary" />
+            <ProgressBar
+                android:id="@+id/qmcj_loading"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center" />
 
-                    <TextView
-                        android:id="@+id/性质"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1.5"
-                        android:gravity="center|left"
-                        android:singleLine="false"
-                        android:text="性质"
-                        android:textColor="?attr/text_color_secondary" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/qmcj_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:nestedScrollingEnabled="false" />
 
-                    <TextView
-                        android:id="@+id/学分"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1.5"
-                        android:gravity="center|left"
-                        android:singleLine="false"
-                        android:text="学分"
-                        android:textColor="?attr/text_color_secondary" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1.5"
-                        android:gravity="center|left"
-                        android:singleLine="false"
-                        android:text="排名"
-                        android:textColor="?attr/text_color_secondary" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1.5"
-                        android:gravity="center|left"
-                        android:singleLine="false"
-                        android:text="成绩"
-                        android:textColor="?attr/text_color_secondary" />
-
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ProgressBar
-                        android:id="@+id/qmcj_loading"
-                        style="?android:attr/progressBarStyle"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/qmcj_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false" />
-
-                </FrameLayout>
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

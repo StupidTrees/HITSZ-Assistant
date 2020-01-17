@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.timetable.EventItem;
 
 import java.util.List;
 
@@ -55,9 +55,9 @@ public class TimeLineWholedayAdapter extends RecyclerView.Adapter<TimeLineWholed
         tlwdViewHolder.name.setText(mBeans.get(i).mainName);
         int iconId = R.drawable.ic_timeline_deadline;
         switch (mBeans.get(i).eventType){
-            case TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE: iconId = R.drawable.ic_timeline_deadline; break;
-            case TimeTable.TIMETABLE_EVENT_TYPE_REMIND: iconId = R.drawable.ic_timeline_remind; break;
-            case TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT:iconId = R.drawable.ic_timeline_wholeday_arrange;break;
+            case TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE: iconId = R.drawable.ic_timeline_deadline; break;
+            case TimetableCore.TIMETABLE_EVENT_TYPE_REMIND: iconId = R.drawable.ic_timeline_remind; break;
+            case TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT:iconId = R.drawable.ic_timeline_wholeday_arrange;break;
         }
         tlwdViewHolder.icon.setImageResource(iconId);
         if(onItemClickListener!=null){

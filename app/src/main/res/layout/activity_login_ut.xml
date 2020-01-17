@@ -197,12 +197,6 @@
                     android:textColor="?attr/text_color_secondary"
                     android:textSize="14sp" />
 
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_margin="16dp"
-                    app:srcCompat="@drawable/login_wifi" />
 
             </LinearLayout>
 

@@ -29,7 +29,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-black"
-                    android:text="深圳大学城校园卡"
+                    android:text="@string/ut_card_title"
                     android:textColor="@color/material_text_icon_white"
                     android:textSize="24sp" />
 
@@ -39,11 +39,12 @@
                     android:layout_height="wrap_content"
                     android:text="UNIVERSITY TOWN OF SHENZHEN"
                     android:textColor="@color/material_text_icon_white"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    tools:ignore="HardcodedText" />
 
                 <Space
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1" />
 
                 <TextView
@@ -54,7 +55,8 @@
                     android:fontFamily="sans-serif-black"
                     android:gravity="right"
                     android:textColor="@color/material_text_icon_white"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    tools:ignore="RtlHardcoded" />
 
                 <TextView
                     android:id="@+id/number"
@@ -63,7 +65,8 @@
                     android:layout_marginTop="4dp"
                     android:gravity="right"
                     android:textColor="@color/material_text_icon_white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:ignore="RtlHardcoded" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -79,13 +82,13 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center"
-                android:layout_marginRight="24dp"
+                android:layout_marginEnd="24dp"
                 android:tint="?attr/colorControlNormal"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_rmb" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -93,7 +96,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="余额"
+                    android:text="@string/ut_card_balance"
                     android:textSize="12sp" />
 
                 <TextView
@@ -118,7 +121,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center"
-                android:layout_marginRight="24dp"
+                android:layout_marginEnd="24dp"
                 android:tint="?attr/colorControlNormal"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_card" />
@@ -132,7 +135,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginRight="24dp"
+                    android:layout_marginEnd="24dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -144,7 +147,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="挂失状态"
+                            android:text="@string/ut_card_lost"
                             android:textSize="12sp" />
 
                         <TextView
@@ -164,7 +167,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="冻结状态"
+                            android:text="@string/ut_card_freeze"
                             android:textSize="12sp" />
 
                         <TextView
@@ -181,8 +184,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:layout_marginRight="24dp"
-                    android:orientation="horizontal">
+                    android:layout_marginEnd="24dp"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -193,7 +197,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="卡状态"
+                            android:text="@string/ut_card_state"
                             android:textSize="12sp" />
 
                         <TextView
@@ -213,7 +217,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="检查状态"
+                            android:text="@string/ut_card_check"
                             android:textSize="12sp" />
 
                         <TextView

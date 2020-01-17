@@ -16,13 +16,14 @@ import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.diy.TaskDialog;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.timetable.Task;
+import com.stupidtree.hita.timetable.timetable.Task;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
+
 import static com.stupidtree.hita.HITAApplication.now;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskViewHolder> {
     public static final int TYPE_FREE = -11;
@@ -129,8 +130,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.TaskVi
         if(t.isFinished()) return TYPE_DONE;
         if(!t.has_deadline) return TYPE_FREE;
         else{
-            Calendar from = mainTimeTable.core.getDateAt(t.fW,t.fDOW,t.sTime);
-            Calendar to = mainTimeTable.core.getDateAt(t.tW,t.tDOW,t.eTime);
+            Calendar from = timeTableCore.getCurrentCurriculum().getDateAt(t.fW,t.fDOW,t.sTime);
+            Calendar to = timeTableCore.getCurrentCurriculum().getDateAt(t.tW,t.tDOW,t.eTime);
             if(from.before(now)&&to.after(now)) return TYPE_ARRANGED_ONGOING;
             else if(from.after(now)) return TYPE_ARRANGED_NOT_YET;
             else if(to.before(now)) return TYPE_DONE;

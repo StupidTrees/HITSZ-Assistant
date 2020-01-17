@@ -4,11 +4,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +16,9 @@ import android.widget.Toast;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.Curriculum;
-import com.stupidtree.hita.core.Subject;
-import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.timetable.Curriculum;
+import com.stupidtree.hita.timetable.Subject;
+import com.stupidtree.hita.timetable.timetable.EventItem;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.util.ActivityUtils;
 
@@ -30,9 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.isDataAvailable;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 
 public class FragmentTeachers extends BaseFragment {
@@ -103,7 +99,7 @@ public class FragmentTeachers extends BaseFragment {
     public void Refresh(boolean anim) {
         if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask =  new refreshListTask(anim);
-        pageTask.executeOnExecutor(HITAApplication.TPE);;
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
     public interface OnFragmentInteractionListener {
@@ -127,15 +123,16 @@ public class FragmentTeachers extends BaseFragment {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            if (!isDataAvailable()) return false;
+            if (!timeTableCore.isDataAvailable()) return false;
             List<Subject> sl = Curriculum.getSubjects(curriculumCode);
             for (Subject s : sl) {
                 EventItem ei = s.getFirstCourse();
                 if (ei == null) continue;
-                for (String name : ei.tag3.split("，")) {
+                if(TextUtils.isEmpty(ei.getTag3())) continue;
+                for (String name : ei.getTag3().split("，")) {
                     Map m = new HashMap();
                     m.put("name", name);
-                    m.put("subject", s.name);
+                    m.put("subject", s.getName());
                     listRes.add(m);
                 }
             }

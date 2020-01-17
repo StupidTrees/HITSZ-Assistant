@@ -133,7 +133,8 @@ public class FragmentUTMoodDay extends BaseFragment {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(sdf.parse(date).getTime());
-            title.setText(c.get(Calendar.YEAR)+"年"+(c.get(Calendar.MONTH)+1)+"月"+c.get(Calendar.DAY_OF_MONTH)+"日");
+            title.setText(c.get(Calendar.YEAR)+" "+ getResources().getStringArray(R.array.months_full)[c.get(Calendar.MONTH)]+
+                    String.format(getString(R.string.date_day),c.get(Calendar.DAY_OF_MONTH)));
             int happy = info.get("happy").getAsInt();
             int normal = info.get("normal").getAsInt();
             int sad = info.get("sad").getAsInt();
@@ -188,15 +189,15 @@ public class FragmentUTMoodDay extends BaseFragment {
     }
 
     private String getScoreComment(float score){
-        if(score<60) return "哀鸿遍野";
-        else if(score<70) return "嘤嘤嘤";
-        else if(score<73) return "心情糟糕";
-        else if(score<75) return "烦闷";
-        else if(score<78) return "一般";
-        else if(score<83) return "不错";
-        else if(score<85) return "很棒";
-        else if(score<90) return "棒极了";
-        else return "高兴疯了";
+        if(score<60) return getString(R.string.mood_0);
+        else if(score<70) return getString(R.string.mood_1);
+        else if(score<73) return getString(R.string.mood_2);
+        else if(score<75) return getString(R.string.mood_3);
+        else if(score<78) return getString(R.string.mood_4);
+        else if(score<83) return getString(R.string.mood_5);
+        else if(score<85) return getString(R.string.mood_6);
+        else if(score<90) return getString(R.string.mood_7);
+        else return getString(R.string.mood_8);
 
     }
 

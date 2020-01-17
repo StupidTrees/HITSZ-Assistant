@@ -17,7 +17,7 @@ public class UserCenterPagerAdapter extends FragmentPagerAdapter {
     List<String> titles;
 
     public UserCenterPagerAdapter(FragmentManager fm, List<BaseFragment> pagers, List<String> titles) {
-        super(fm);
+        super(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mBeans = pagers;
         this.titles = titles;
     }

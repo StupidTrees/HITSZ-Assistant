@@ -1,5 +1,6 @@
 package com.stupidtree.hita.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,14 +13,15 @@ import android.widget.TextView;
 
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.EventItem;
 
 import java.util.Calendar;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class SubjectCoursesListAdapter extends RecyclerView.Adapter<SubjectCoursesListAdapter.CoursesViewHolder> {
 
@@ -47,11 +49,15 @@ public class SubjectCoursesListAdapter extends RecyclerView.Adapter<SubjectCours
         return new CoursesViewHolder(v);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull CoursesViewHolder coursesViewHolder, final int i) {
-        coursesViewHolder.week.setText("第"+mBeans.get(i).week+"周"+ TextTools.words_time_DOW[mBeans.get(i).DOW-1]);
-        Calendar c = allCurriculum.get(thisCurriculumIndex).getDateAtWOT(mBeans.get(i).week,mBeans.get(i).DOW);
-        coursesViewHolder.date.setText(c.get(Calendar.MONTH)+1+"月"+c.get(Calendar.DAY_OF_MONTH)+"日");
+        coursesViewHolder.week.setText(String.format(HContext.getString(R.string.week),mBeans.get(i).week)
+                + HContext.getResources().getStringArray(R.array.dow2)[mBeans.get(i).DOW-1]);
+        Calendar c = timeTableCore.getCurrentCurriculum().getDateAtWOT(mBeans.get(i).week,mBeans.get(i).DOW);
+        coursesViewHolder.date.setText(
+                HContext.getResources().getStringArray(R.array.months)[c.get(Calendar.MONTH)]
+                        +" "+String.format(HContext.getString(R.string.date_day),c.get(Calendar.DAY_OF_MONTH)));
         if(mBeans.get(i).hasPassed(now)) coursesViewHolder.mark.setVisibility(View.VISIBLE);
         else coursesViewHolder.mark.setVisibility(View.INVISIBLE);
         if(mOnItemClickListener!=null){

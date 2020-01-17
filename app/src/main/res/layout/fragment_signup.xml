@@ -33,7 +33,7 @@
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="设置登录账号"
+                    android:hint="@string/signup_username"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -51,7 +51,7 @@
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="密码"
+                    android:hint="@string/signup_password"
                     android:inputType="textPassword"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -70,7 +70,7 @@
                     android:id="@+id/password_confirm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="确认密码"
+                    android:hint="@string/signup_confirm_password"
                     android:inputType="textPassword"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -89,7 +89,7 @@
                     android:id="@+id/nickname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="昵称"
+                    android:hint="@string/signup_nick"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -106,9 +106,10 @@
                 app:BL_circleColorSecond="?attr/colorPrimaryDark"
                 app:BL_enable="true"
                 app:BL_stateShow="normal"
-                app:BL_text="注册"
+                app:BL_text="@string/signup"
                 app:BL_textColor="#FFFFFF"
-                app:BL_textSize="14sp" />
+                app:BL_textSize="14sp"
+                android:focusable="true" />
 
         </LinearLayout>
 

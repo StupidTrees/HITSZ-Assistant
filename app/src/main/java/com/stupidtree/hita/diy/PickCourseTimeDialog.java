@@ -1,11 +1,11 @@
 package com.stupidtree.hita.diy;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,35 +21,29 @@ import com.cncoderx.wheelview.Wheel3DView;
 import com.cncoderx.wheelview.WheelView;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.timetable.HTime;
-import com.stupidtree.hita.hita.TextTools;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.themeID;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
-import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
 public class PickCourseTimeDialog extends AlertDialog{
 
-    int dow,begin,end;
+    private int dow,begin,end;
     BaseActivity context;
-    boolean timeSet = false;
-    ImageView done;
-    onDialogConformListener mOnDialogConformListener;
-    Wheel3DView pickDow, pickFromT, pickToT;
-    List<Boolean> weeks;
-    RecyclerView list;
-    pickWeekListAdapter listAdapter;
-    boolean hasInit = false;
+    private boolean timeSet = false;
+    private ImageView done;
+    private onDialogConformListener mOnDialogConformListener;
+    private Wheel3DView pickDow, pickFromT, pickToT;
+    private List<Boolean> weeks;
+    private RecyclerView list;
+    private pickWeekListAdapter listAdapter;
+    private boolean hasInit = false;
     public interface onDialogConformListener{
         void onClick(List<Integer> weeks,int dow,int begin,int last);
     }
@@ -69,7 +63,7 @@ public class PickCourseTimeDialog extends AlertDialog{
             int max = weeks.get(0);
             for(int i:weeks) if(i>max) max = i;
             this.weeks.clear();
-            int realMax = mainTimeTable.core.totalWeeks>max?mainTimeTable.core.totalWeeks:max;
+            int realMax = timeTableCore.getCurrentCurriculum().getTotalWeeks()>max?timeTableCore.getCurrentCurriculum().getTotalWeeks():max;
             for(int i = 1;i<=realMax;i++){
                 this.weeks.add(weeks.contains(i));
             }
@@ -100,11 +94,12 @@ public class PickCourseTimeDialog extends AlertDialog{
         pickDow = view.findViewById(R.id.pickdow);
         pickFromT = view.findViewById(R.id.pickfromt);
         pickToT = view.findViewById(R.id.picktot);
-        pickDow.setEntries(new String[]{"星期一","星期二","星期三","星期四","星期五","星期六","星期日"});
+        pickDow.setEntries(context.getResources().getStringArray(R.array.dow1));
         pickDow.setCyclic(false);
         String[] times = new String[12];
+        String periodTemp = context.getString(R.string.period);
         for (int i = 0; i < 12; i++) {
-            times[i] = "第" + (i + 1) + "节";
+            times[i] = String.format(periodTemp,i+1);
         }
         pickFromT.setEntries(times);
         pickToT.setEntries(times);
@@ -147,7 +142,7 @@ public class PickCourseTimeDialog extends AlertDialog{
     void initList(View v){
         list = v.findViewById(R.id.weekList);
         weeks = new ArrayList<>();
-        for(int i=0;i<mainTimeTable.core.totalWeeks+1;i++) weeks.add(false);
+        for(int i=0;i<timeTableCore.getCurrentCurriculum().getTotalWeeks()+1;i++) weeks.add(false);
         listAdapter = new pickWeekListAdapter();
         list.setAdapter(listAdapter);
         list.setLayoutManager(new GridLayoutManager(getContext(),5));
@@ -176,6 +171,7 @@ public class PickCourseTimeDialog extends AlertDialog{
             return new mViewHolder(v);
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull final mViewHolder holder, final int position) {
             holder.text.setText((position+1)+"");

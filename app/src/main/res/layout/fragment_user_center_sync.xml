@@ -22,7 +22,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="24dp"
             android:layout_marginRight="16dp"
-            android:text="自动保存数据到服务器"
+            android:text="@string/usercenter_sync_autoupload"
             android:textSize="16sp" />
 
         <TextView
@@ -33,7 +33,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="8dp"
             android:gravity="center|start"
-            android:text="自动保存将频繁进行，这会消耗性能及流量，但可以及时保存数据变更"
+            android:text="@string/usercenter_sync_autoupload_hint"
             android:textColor="?attr/text_color_secondary"
             android:textSize="16sp" />
 
@@ -45,24 +45,26 @@
             android:layout_marginTop="8dp"
             android:layout_marginRight="16dp"
             android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center|left"
-                android:text="下载云端数据到本地"
+                android:text="@string/usercenter_sync_download"
                 android:textColor="?attr/text_color_primary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
 
             <ImageView
                 android:id="@+id/imageView6"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:src="@drawable/ic_cloud_download"
                 android:tint="?attr/colorPrimary" />
 
@@ -75,7 +77,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:gravity="center|start"
-            android:text="这将清除本地数据，并置课表为教务课表"
+            android:text="@string/usercenter_sync_download_hint"
             android:textColor="?attr/text_color_secondary"
             android:textSize="16sp" />
 

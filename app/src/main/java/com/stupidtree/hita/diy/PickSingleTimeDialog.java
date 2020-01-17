@@ -1,5 +1,6 @@
 package com.stupidtree.hita.diy;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -13,39 +14,38 @@ import com.cncoderx.wheelview.OnWheelChangedListener;
 import com.cncoderx.wheelview.Wheel3DView;
 import com.cncoderx.wheelview.WheelView;
 import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.core.timetable.HTime;
+import com.stupidtree.hita.timetable.timetable.HTime;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.themeID;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
-import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
 public class PickSingleTimeDialog extends AlertDialog{
-    String plusTag;
-    int week,dow,hour,minute;
+    private String plusTag;
+    private int week,dow,hour,minute;
     BaseActivity context;
-    TextView dialogTitle,dialogTitleTime;
-    boolean timeSet = false;
-    ImageView done;
-    onDialogConformListener mOnDialogConformListener;
-    Wheel3DView picker_week ;
-    Wheel3DView picker_dow;
-    Wheel3DView picker_hour,picker_minute;
-    CalendarView calendarView ;
-    mCalendarDateChangeListener calendarDateChangeListener ;
-    mWheelChangedListener weekWheelListener;
-    mWheelChangedListener dowWheelListener ;
-    boolean hasInit = false;
-    int init_week,init_dow;
-    HTime init_time;
+    private TextView dialogTitle,dialogTitleTime;
+    private boolean timeSet = false;
+    private ImageView done;
+    private onDialogConformListener mOnDialogConformListener;
+    private Wheel3DView picker_week ;
+    private Wheel3DView picker_dow;
+    private Wheel3DView picker_hour,picker_minute;
+    private CalendarView calendarView ;
+    private mCalendarDateChangeListener calendarDateChangeListener ;
+    private mWheelChangedListener weekWheelListener;
+    private mWheelChangedListener dowWheelListener ;
+    private boolean hasInit = false;
+    private int init_week,init_dow;
+    private HTime init_time;
     public interface onDialogConformListener{
         void onClick(int week,int dow,int hour,int minute,boolean timeSet);
     }
@@ -87,16 +87,16 @@ public class PickSingleTimeDialog extends AlertDialog{
         calendarDateChangeListener = new mCalendarDateChangeListener();
         weekWheelListener = new mWheelChangedListener();
         dowWheelListener = new mWheelChangedListener();
+        calendarView.setMinDate(timeTableCore.getCurrentCurriculum().getFirstDateAtWOT(1).getTimeInMillis());
         //calendarView.setMinDate(now.getTimeInMillis());
-        calendarView.setMaxDate(allCurriculum.get(thisCurriculumIndex).getFirstDateAtWOT(3000).getTimeInMillis());
+        calendarView.setMaxDate(timeTableCore.getCurrentCurriculum().getFirstDateAtWOT(3000).getTimeInMillis());
 
         List weekTexts = new ArrayList();
-        List<String> dowTexts = new ArrayList();
+        List<String> dowTexts = Arrays.asList(context.getResources().getStringArray(R.array.dow2));
         List<String> hourTexts = new ArrayList<>();
         List<String> minuteTexts = new ArrayList<>();
-        for(int i=0;i<7;i++) dowTexts.add(TextTools.words_time_DOW[i+7]);
-        for(int i=1;i<=allCurriculum.get(thisCurriculumIndex).totalWeeks;i++){
-            if(i==thisWeekOfTerm) weekTexts.add(i<10?"0"+i+"·":i+""+"·");
+        for(int i=1;i<=timeTableCore.getCurrentCurriculum().getTotalWeeks();i++){
+            if(i==timeTableCore.getThisWeekOfTerm()) weekTexts.add(i<10?"0"+i+"·":i+""+"·");
             else weekTexts.add(i<10?"0"+i:i+"");
         }
         for(int i=0;i<24;i++) if(i<10)hourTexts.add("0"+i+"");else hourTexts.add(i+"");
@@ -109,6 +109,7 @@ public class PickSingleTimeDialog extends AlertDialog{
         picker_dow.setOnWheelChangedListener(dowWheelListener);
         picker_week.setOnWheelChangedListener(weekWheelListener);
         picker_hour.setOnWheelChangedListener(new OnWheelChangedListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(WheelView view, int oldIndex, int newIndex) {
                 hour = newIndex;
@@ -116,6 +117,7 @@ public class PickSingleTimeDialog extends AlertDialog{
             }
         });
         picker_minute.setOnWheelChangedListener(new OnWheelChangedListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(WheelView view, int oldIndex, int newIndex) {
                 minute = newIndex;
@@ -143,10 +145,10 @@ public class PickSingleTimeDialog extends AlertDialog{
         }else{
             int tempDOW = now.get(Calendar.DAY_OF_WEEK);
             picker_dow.setCurrentIndex(tempDOW==1?6:tempDOW-2);
-            picker_week.setCurrentIndex(thisWeekOfTerm-1);
+            picker_week.setCurrentIndex(timeTableCore.getThisWeekOfTerm()-1);
             picker_hour.setCurrentIndex(now.get(Calendar.HOUR_OF_DAY));
             picker_minute.setCurrentIndex(now.get(Calendar.MINUTE));
-            calendarView.setDate(now.getTimeInMillis());
+            if(timeTableCore.isThisTerm())calendarView.setDate(now.getTimeInMillis());
         }
         week = picker_week.getCurrentIndex()+1;
         dow = picker_dow.getCurrentIndex()+1;
@@ -160,6 +162,7 @@ public class PickSingleTimeDialog extends AlertDialog{
 
         boolean fromWheel = false;
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void onSelectedDayChange( CalendarView view, int year, int month, int dayOfMonth) {
             Calendar c = Calendar.getInstance();
@@ -172,24 +175,24 @@ public class PickSingleTimeDialog extends AlertDialog{
             if(c.get(Calendar.YEAR)==now.get(Calendar.YEAR)&&
                     c.get(Calendar.MONTH)==now.get(Calendar.MONTH)
                     &&c.get(Calendar.DATE)==now.get(Calendar.DATE)
-            ) plusTag="（今天）";
+            ) plusTag="("+context.getString(R.string.today)+")";
             else if(tempD2.get(Calendar.YEAR)==now.get(Calendar.YEAR)&&
                     tempD2.get(Calendar.MONTH)==now.get(Calendar.MONTH)
                     &&tempD2.get(Calendar.DATE)==now.get(Calendar.DATE)
-            ) plusTag="（明天）";
+            ) plusTag="("+context.getString(R.string.tomorrow)+")";
             else if(tempD3.get(Calendar.YEAR)==now.get(Calendar.YEAR)&&
                     tempD3.get(Calendar.MONTH)==now.get(Calendar.MONTH)
                     &&tempD3.get(Calendar.DATE)==now.get(Calendar.DATE)
-            ) plusTag="（后天）";
+            )  plusTag="("+context.getString(R.string.tda_tomorrow)+")";
             else plusTag="";
-            dialogTitle.setText(c.get(Calendar.MONTH)+1+"月"+c.get(Calendar.DAY_OF_MONTH)+"日"+plusTag);
-            week = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(c);
+            dialogTitle.setText(context.getResources().getStringArray(R.array.months)[c.get(Calendar.MONTH)] +String.format(context.getString(R.string.date_day),c.get(Calendar.DAY_OF_MONTH))+plusTag);
+            week = timeTableCore.getCurrentCurriculum().getWeekOfTerm(c);
             dow = tempDOW==1?7:tempDOW-1;
             if(!fromWheel){
                 weekWheelListener.fromCalender = true;
                 dowWheelListener.fromCalender = true;
                 picker_dow.setCurrentIndex(tempDOW==1?6:tempDOW-2);
-                picker_week.setCurrentIndex(allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(c)-1);
+                picker_week.setCurrentIndex(timeTableCore.getCurrentCurriculum().getWeekOfTerm(c)-1);
             }else{
                 fromWheel=false;
             }
@@ -199,9 +202,10 @@ public class PickSingleTimeDialog extends AlertDialog{
     class mWheelChangedListener implements OnWheelChangedListener{
 
         boolean fromCalender = false;
+        @SuppressLint("SetTextI18n")
         @Override
         public void onChanged(WheelView view, int oldIndex, int newIndex) {
-            Calendar tempD = allCurriculum.get(thisCurriculumIndex).getDateAtWOT(picker_week.getCurrentIndex()+1,picker_dow.getCurrentIndex()+1);
+            Calendar tempD = timeTableCore.getCurrentCurriculum().getDateAtWOT(picker_week.getCurrentIndex()+1,picker_dow.getCurrentIndex()+1);
             Calendar tempD2 = (Calendar) tempD.clone();
             tempD2.add(Calendar.DATE,-1);
             Calendar tempD3 = (Calendar) tempD.clone();
@@ -209,20 +213,20 @@ public class PickSingleTimeDialog extends AlertDialog{
             if(tempD.get(Calendar.YEAR)==now.get(Calendar.YEAR)&&
                     tempD.get(Calendar.MONTH)==now.get(Calendar.MONTH)
                     &&tempD.get(Calendar.DATE)==now.get(Calendar.DATE)
-            ) plusTag="（今天）";
+            ) plusTag="("+context.getString(R.string.today)+")";
             else if(tempD2.get(Calendar.YEAR)==now.get(Calendar.YEAR)&&
                     tempD2.get(Calendar.MONTH)==now.get(Calendar.MONTH)
                     &&tempD2.get(Calendar.DATE)==now.get(Calendar.DATE)
-            ) plusTag="（明天）";
+            ) plusTag="("+context.getString(R.string.tomorrow)+")";
             else if(tempD3.get(Calendar.YEAR)==now.get(Calendar.YEAR)&&
                     tempD3.get(Calendar.MONTH)==now.get(Calendar.MONTH)
                     &&tempD3.get(Calendar.DATE)==now.get(Calendar.DATE)
-            ) plusTag="（后天）";
+            )  plusTag="("+context.getString(R.string.tda_tomorrow)+")";
             else plusTag="";
             int tempDOW = tempD.get(Calendar.DAY_OF_WEEK);
             week = picker_week.getCurrentIndex()+1;
             dow = tempDOW==1?7:tempDOW-1;
-            dialogTitle.setText(tempD.get(Calendar.MONTH)+1+"月"+tempD.get(Calendar.DAY_OF_MONTH)+"日"+plusTag);
+            dialogTitle.setText(context.getResources().getStringArray(R.array.months)[tempD.get(Calendar.MONTH)] +String.format(context.getString(R.string.date_day),tempD.get(Calendar.DAY_OF_MONTH))+plusTag);
             if(!fromCalender){
                calendarDateChangeListener.fromWheel = true;
                calendarView.setDate(tempD.getTimeInMillis());

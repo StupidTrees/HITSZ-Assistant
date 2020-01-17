@@ -214,7 +214,7 @@ public class FragmentAddAttitude extends BottomSheetDialogFragment {
             }
         });
 
-        title.setHint("输入话题名称");
+        title.setHint(getString(R.string.add_attitude_name));
         add.setVisibility(View.VISIBLE);
         image.setVisibility(View.GONE);
     }

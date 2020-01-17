@@ -183,11 +183,11 @@ public class AMapUtil {
 		
 		public static String getBusPathTitle(BusPath busPath) {
 			if (busPath == null) {
-				return String.valueOf("");
+				return "";
 			}
 			List<BusStep> busSetps = busPath.getSteps();
 			if (busSetps == null) {
-				return String.valueOf("");
+				return "";
 			}
 			StringBuffer sb = new StringBuffer();
 			for (BusStep busStep : busSetps) {
@@ -219,7 +219,7 @@ public class AMapUtil {
 
 		public static String getBusPathDes(BusPath busPath) {
 			if (busPath == null) {
-				return String.valueOf("");
+				return "";
 			}
 			long second = busPath.getDuration();
 			String time = getFriendlyTime((int) second);
@@ -227,12 +227,12 @@ public class AMapUtil {
 			String subDis = getFriendlyLength((int) subDistance);
 			float walkDistance = busPath.getWalkDistance();
 			String walkDis = getFriendlyLength((int) walkDistance);
-			return String.valueOf(time + " | " + subDis + " | 步行" + walkDis);
+			return time + " | " + subDis + " | 步行" + walkDis;
 		}
 		
 		public static String getSimpleBusLineName(String busLineName) {
 			if (busLineName == null) {
-				return String.valueOf("");
+				return "";
 			}
 			return busLineName.replaceAll("\\(.*?\\)", "");
 		}

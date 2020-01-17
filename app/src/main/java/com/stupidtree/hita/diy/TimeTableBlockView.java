@@ -5,18 +5,16 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.EventLog;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.timetable.EventItem;
 import com.stupidtree.hita.util.ColorBox;
 
 import java.util.List;
@@ -65,9 +63,9 @@ public class TimeTableBlockView extends FrameLayout {
         this.block = obj;
         if(block instanceof EventItem){
             final EventItem ei = (EventItem) block;
-            if(ei.eventType==TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE){
+            if(ei.eventType== TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE){
                 inflate(context, R.layout.dynamic_timetable_deadline_card, this);
-            }else if(ei.eventType==TimeTable.TIMETABLE_EVENT_TYPE_REMIND){
+            }else if(ei.eventType==TimetableCore.TIMETABLE_EVENT_TYPE_REMIND){
                 inflate(context,R.layout.dynamic_timetable_remind_card,this);
             }else{
                 inflate(context, R.layout.dynamic_timetable_course_card, this);
@@ -78,12 +76,12 @@ public class TimeTableBlockView extends FrameLayout {
             subtitle = findViewById(R.id.subtitle);
             icon = findViewById(R.id.icon);
 
-            if(colorful&&(ei.eventType==TimeTable.TIMETABLE_EVENT_TYPE_COURSE||
-                    ei.eventType==TimeTable.TIMETABLE_EVENT_TYPE_EXAM)
+            if(colorful&&(ei.eventType==TimetableCore.TIMETABLE_EVENT_TYPE_COURSE||
+                    ei.eventType==TimetableCore.TIMETABLE_EVENT_TYPE_EXAM)
                     ){
                 card.getBackground().mutate().setAlpha(180);
                 String query;
-                if(ei.eventType==TimeTable.TIMETABLE_EVENT_TYPE_EXAM&&ei.mainName.endsWith("考试")) query = ei.mainName.substring(0,ei.mainName.length()-2);
+                if(ei.eventType==TimetableCore.TIMETABLE_EVENT_TYPE_EXAM&&ei.mainName.endsWith("考试")) query = ei.mainName.substring(0,ei.mainName.length()-2);
                 else query = ei.mainName;
                 int getC = defaultSP.getInt("color:"+query,-1);
                 if(getC ==-1){

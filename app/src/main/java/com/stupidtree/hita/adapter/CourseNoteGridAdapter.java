@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.Note;
+import com.stupidtree.hita.timetable.Note;
 
 import java.util.ArrayList;
 

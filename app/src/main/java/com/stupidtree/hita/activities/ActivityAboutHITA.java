@@ -1,5 +1,10 @@
 package com.stupidtree.hita.activities;
 
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -8,9 +13,12 @@ import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,9 +27,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.diy.ButtonLoading;
 import com.stupidtree.hita.util.UpdateManager;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.download.DownloadTask;
+import com.tencent.bugly.beta.upgrade.UpgradeListener;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -34,7 +45,7 @@ import cn.bmob.v3.listener.FindListener;
 
 
 public class ActivityAboutHITA extends BaseActivity {
-Button checkUpDate;
+ButtonLoading checkUpDate;
 Toolbar tb;
 TextView version;
 ImageView update_image;
@@ -42,13 +53,12 @@ ImageView update_image;
 TextView update_title,update_message,update_version,update_time,update_size;
 Button update_start,update_delete;
 ProgressBar update_progress;
-NestedScrollView updateArea;
+LinearLayout updateArea;
 WebView webView;
 
 Handler handler;
 Runnable runnable;
-
-boolean imageLoaded = false;
+BroadcastReceiver receiver;
 
     @Override
     protected void stopTasks() {
@@ -57,16 +67,15 @@ boolean imageLoaded = false;
 
     //mReciever reciever;
     //IntentFilter intentFilter;
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true,true,false);
+        setWindowParams(true,false,false);
         setContentView(R.layout.activity_about_hita);
-        //reciever = new mReciever();
         initToolbar();
         initViews();
         PackageInfo packageInfo = null;
-
         try {
             packageInfo = getPackageManager()
                     .getPackageInfo(getPackageName(), 0);
@@ -76,9 +85,8 @@ boolean imageLoaded = false;
         //获取APP版本versionName
         String versionName = packageInfo.versionName;
         //获取APP版本versionCode
-
-        version.setText("版本："+versionName);
-
+        version.setText(getString(R.string.version)+versionName);
+        initReceiver();
        // intentFilter = new IntentFilter();
         //intentFilter.addAction("android.intent.updatebroadcast");
 
@@ -94,9 +102,28 @@ boolean imageLoaded = false;
             }
         };
     }
+
+
+    void initReceiver(){
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                checkUpDate.setProgress(false);
+                if(intent.getAction().equals("com.stupidtree.hita.upgrade_failed"))  Toast.makeText(ActivityAboutHITA.this, R.string.check_for_update_failed, Toast.LENGTH_SHORT).show();
+                else if(intent.getAction().equals("com.stupidtree.hita.upgrade_success")) Toast.makeText(ActivityAboutHITA.this, R.string.update_available, Toast.LENGTH_SHORT).show();
+                else if(intent.getAction().equals("com.stupidtree.hita.upgrade_no_version"))Toast.makeText(ActivityAboutHITA.this, R.string.already_up_to_date,Toast.LENGTH_SHORT).show();
+
+            }
+        };
+        IntentFilter iF = new IntentFilter();
+        iF.addAction("com.stupidtree.hita.upgrade_failed");
+        iF.addAction("com.stupidtree.hita.upgrade_success");
+        iF.addAction("com.stupidtree.hita.upgrade_no_version");
+        registerReceiver(receiver,iF);
+    }
     void initToolbar(){
         tb = findViewById(R.id.toolbar);
-        tb.setTitle("关于");
+        tb.setTitle(getString(R.string.label_activity_about_hita));
         setSupportActionBar(tb);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -112,6 +139,7 @@ boolean imageLoaded = false;
     }
     void initViews(){
         webView = findViewById(R.id.webview);
+        webView.setBackgroundColor(0);
         checkUpDate = findViewById(R.id.update_check);
         update_image = findViewById(R.id.update_image);
         version = findViewById(R.id.version);
@@ -127,17 +155,29 @@ boolean imageLoaded = false;
         update_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DownloadTask task = Beta.startDownload();
+                Beta.startDownload();
 //                updateBtn(task);
             }
         });
-        checkUpDate.setOnClickListener(new View.OnClickListener() {
+        checkUpDate.setOnButtonLoadingListener(new ButtonLoading.OnButtonLoadingListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(ActivityAboutHITA.this,"检查更新...",Toast.LENGTH_SHORT).show();
+            public void onClick() {
+                checkUpDate.setProgress(true);
+               // Toast.makeText(ActivityAboutHITA.this, getString(R.string.checking_for_update),Toast.LENGTH_SHORT).show();
                 UpdateManager.checkUpdate(ActivityAboutHITA.this);
             }
+
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
         });
+
         update_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,17 +234,11 @@ boolean imageLoaded = false;
         handler.post(runnable);
     }
 
+    @SuppressLint("SetTextI18n")
     void refreshViews(){
+
         if(Beta.getUpgradeInfo()!=null){
-            //Beta.getUpgradeInfo().
-            Log.e("!!!",Beta.getUpgradeInfo().imageUrl+",,,");
-
             Glide.with(this).load(Beta.getUpgradeInfo().imageUrl).into(update_image);
-//            if(!imageLoaded&&Beta.getUpgradeInfo().imageUrl!=null&&(!Beta.getUpgradeInfo().imageUrl.isEmpty())){
-//
-//                imageLoaded = true;
-//            }
-
             String btState = "";
             String btProgress;
             if(Beta.getStrategyTask().getStatus()==DownloadTask.DOWNLOADING||Beta.getStrategyTask().getStatus()==DownloadTask.PAUSED){
@@ -216,31 +250,32 @@ boolean imageLoaded = false;
                 btProgress = "";
             }
             updateArea.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.GONE);
             checkUpDate.setVisibility(View.GONE);
             update_title.setText(Beta.getUpgradeInfo().title);
 
-            update_version.setText("版本："+ Beta.getUpgradeInfo().versionName);
-            update_size.setText("文件大小："+ new DecimalFormat(".##").format((float)Beta.getUpgradeInfo().fileSize/(1024*1024))+"MB");
-            update_time.setText("发布时间："+new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss").format(Beta.getUpgradeInfo().publishTime));
-            update_message.setText("更新日志："+Beta.getUpgradeInfo().newFeature);
+            update_version.setText(getString(R.string.update_version)+ Beta.getUpgradeInfo().versionName);
+            update_size.setText(getString(R.string.update_size)+ new DecimalFormat(".##").format((float)Beta.getUpgradeInfo().fileSize/(1024*1024))+"MB");
+            update_time.setText(getString(R.string.update_release_time)+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Beta.getUpgradeInfo().publishTime));
+            update_message.setText(getString(R.string.update_log)+Beta.getUpgradeInfo().newFeature);
 
             switch (Beta.getStrategyTask().getStatus()) {
                 case DownloadTask.INIT:
                 case DownloadTask.DELETED:
                 case DownloadTask.FAILED: {
-                    btState = "开始下载";
+                    btState = getString(R.string.start_download);
                 }
                 break;
                 case DownloadTask.COMPLETE: {
-                    btState = "安装";
+                    btState = getString(R.string.install);
                 }
                 break;
                 case DownloadTask.DOWNLOADING: {
-                  btState = "暂停";
+                  btState = getString(R.string.pause);
                 }
                 break;
                 case DownloadTask.PAUSED: {
-                    btState = "继续下载";
+                    btState = getString(R.string.continue_download);
                 }
                 break;
             }
@@ -253,33 +288,11 @@ boolean imageLoaded = false;
 
         }else{
             updateArea.setVisibility(View.GONE);
+            webView.setVisibility(View.VISIBLE);
             checkUpDate.setVisibility(View.VISIBLE);
         }
 
 
     }
-
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        localBroadcastManager.registerReceiver(reciever,intentFilter);
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        localBroadcastManager.unregisterReceiver(reciever);
-//    }
-//
-//
-//    class mReciever extends BroadcastReceiver{
-//
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            Log.e("!,","recieved");
-//            refreshViews(intent.getFloatExtra("downloadprogress",0));
-//        }
-//    }
 
 }

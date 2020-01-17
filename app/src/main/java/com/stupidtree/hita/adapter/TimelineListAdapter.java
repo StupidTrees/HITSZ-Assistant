@@ -1,5 +1,6 @@
 package com.stupidtree.hita.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -10,16 +11,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
-import com.alorma.timeline.TimelineView;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.timetable.EventItem;
-import com.stupidtree.hita.core.timetable.HTime;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.HTime;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -49,14 +48,6 @@ public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapte
     public interface OnNaviClickListener{
         void onNaviClick(View view,int position,int type,String terminal);
     }
-//
-//    public OnNaviClickListener getmOnNaviClickListener() {
-//        return mOnNaviClickListener;
-//    }
-
-//    public void setmOnNaviClickListener(OnNaviClickListener mOnNaviClickListener) {
-//        this.mOnNaviClickListener = mOnNaviClickListener;
-//    }
 
     public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener){
         this.mOnItemClickLitener = mOnItemClickLitener;
@@ -78,23 +69,23 @@ public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapte
     public timelineHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int type) {
         View v = null;
         switch (type) {
-            case TimeTable.TIMETABLE_EVENT_TYPE_COURSE:
-            case TimeTable.TIMETABLE_EVENT_TYPE_EXAM:
+            case TimetableCore.TIMETABLE_EVENT_TYPE_COURSE:
+            case TimetableCore.TIMETABLE_EVENT_TYPE_EXAM:
                 v = mInflater.inflate(R.layout.dynamic_timeline_card_important, viewGroup, false);
                 break;
-            case TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT:
+            case TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT:
                 v = mInflater.inflate(R.layout.dynamic_timeline_card_arrangement, viewGroup, false);
                 break;
-            case TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC:
+            case TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC:
                 v = mInflater.inflate(R.layout.dynamic_timeline_card_dynamic, viewGroup, false);
                 break;
             case TIMELINE_EVENT_TYPE_PASSED:
                 v = mInflater.inflate(R.layout.dynamic_timeline_card_passed, viewGroup, false);
                 break;
-            case TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE:
+            case TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE:
                 v = mInflater.inflate(R.layout.dynamic_timeline_card_deadline, viewGroup, false);
                 break;
-            case TimeTable.TIMETABLE_EVENT_TYPE_REMIND:
+            case TimetableCore.TIMETABLE_EVENT_TYPE_REMIND:
                 v = mInflater.inflate(R.layout.dynamic_timeline_card_deadline, viewGroup, false);
                 break;
         }
@@ -110,6 +101,7 @@ public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapte
         return type;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final timelineHolder timelineHolder, final int position) {
        // Log.e("onBind",""+position);
@@ -123,14 +115,14 @@ public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapte
             //timelineHolder.timelineView.initLine(TimelineView.getTimeLineViewType(position,mBeans.size()));
             //timelineHolder.timelineView.setVisibility(View.GONE);
             timelineHolder.tv_name.setText(mBeans.get(position).mainName);
-            if(timelineHolder.type==TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE||timelineHolder.type==TimeTable.TIMETABLE_EVENT_TYPE_REMIND){
+            if(timelineHolder.type==TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE||timelineHolder.type==TimetableCore.TIMETABLE_EVENT_TYPE_REMIND){
                 if(timelineHolder.tv_time!=null)timelineHolder.tv_time.setText(mBeans.get(position).startTime.tellTime());
             }else{
                 if(timelineHolder.tv_time!=null)timelineHolder.tv_time.setText(mBeans.get(position).startTime.tellTime()+"-"+mBeans.get(position).endTime.tellTime());
             }
             if(timelineHolder.tv_duration!=null){
                 int duration = mBeans.get(position).startTime.getDuration(mBeans.get(position).endTime);
-                if (duration >= 60)  timelineHolder.tv_duration.setText(duration / 60 + "小时"+(duration%60==0?"":duration%60+"分钟"));
+                if (duration >= 60)  timelineHolder.tv_duration.setText(duration / 60 + "h "+(duration%60==0?"":duration%60+"min"));
                 else  timelineHolder.tv_duration.setText(duration + "min");
             }
             if(timelineHolder.progressBar!=null) {
@@ -143,7 +135,7 @@ public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapte
                 }
             }
             if(timelineHolder.tv_place!=null){
-                String result = TextUtils.isEmpty(mBeans.get(position).tag2)?"未知地点":mBeans.get(position).tag2;
+                String result = TextUtils.isEmpty(mBeans.get(position).tag2)?mContext.getString(R.string.unknown_location):mBeans.get(position).tag2;
                 timelineHolder.tv_place.setText(result);
             }
 //            if(mOnNaviClickListener!=null&&timelineHolder.naviButton!=null){

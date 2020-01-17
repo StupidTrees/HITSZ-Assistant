@@ -21,8 +21,8 @@
             android:minHeight="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
             app:theme="?attr/toolbarStyle"
-            app:title="空教室查询"
-            app:titleTextColor="?attr/text_color_primary"></androidx.appcompat.widget.Toolbar>
+            app:title="@string/label_activity_empty_classroom"
+            app:titleTextColor="?attr/text_color_primary" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -19,6 +19,7 @@ import com.stupidtree.hita.online.Attitude;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
@@ -59,9 +60,9 @@ public class ActivityAttitude extends BaseActivity implements FragmentAddAttitud
     void initToolbar(){
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("HITSZ态度墙");
+        toolbar.setTitle(getString(R.string.label_activity_attitude));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

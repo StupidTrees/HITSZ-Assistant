@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.AsyncTask;
@@ -25,13 +24,11 @@ import android.os.Bundle;
 import androidx.cardview.widget.CardView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -39,20 +36,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
-import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityMain;
-import com.stupidtree.hita.activities.ActivityRankBoard;
-import com.stupidtree.hita.adapter.HITSZInfoPagerAdapter;
+import com.stupidtree.hita.activities.ActivityLeaderBoard;
 
 import com.stupidtree.hita.adapter.NaviPageAdapter;
-import com.stupidtree.hita.core.TimeTable;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.online.BannerItem;
 
 import com.stupidtree.hita.online.HITAUser;
-import com.stupidtree.hita.online.Infos;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZHolderCreator;
@@ -73,9 +66,8 @@ import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.isDataAvailable;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_BOARD_JW;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_CARD;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_HINT;
@@ -136,14 +128,14 @@ public class FragmentNavi extends BaseFragment {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals("COM.STUPIDTREE.HITA.JWTS_AUTO_LOGIN_DONE")) {
-                    Log.e("接受到广播：", "登录教务完成");
-                    int addIndex_jw_fun = listRes.indexOf(defaultSP.getInt("navi_page_order_before_jwts", TYPE_BOARD_JW))+1;
-                    if(PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("navi_enabled_jw_sync",true))listAdapter.addItem(TYPE_JWTS_FUN,addIndex_jw_fun);
-                } else if (intent.getAction().equals("COM.STUPIDTREE.HITA.JWTS_LOGIN_FAIL")) {
-                    Log.e("接受到广播：", "登录教务失效");
-                    listAdapter.removeItems(new int[]{TYPE_JWTS_FUN});
-                }
+//                if (intent.getAction().equals("COM.STUPIDTREE.HITA.JWTS_AUTO_LOGIN_DONE")) {
+//                    Log.e("接受到广播：", "登录教务完成");
+//                    int addIndex_jw_fun = listRes.indexOf(defaultSP.getInt("navi_page_order_before_jwts", TYPE_BOARD_JW))+1;
+//                    if(PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("navi_enabled_jw_sync",true))listAdapter.addItem(TYPE_JWTS_FUN,addIndex_jw_fun);
+//                } else if (intent.getAction().equals("COM.STUPIDTREE.HITA.JWTS_LOGIN_FAIL")) {
+//                    Log.e("接受到广播：", "登录教务失效");
+//                    listAdapter.removeItems(new int[]{TYPE_JWTS_FUN});
+//                }
 
                 if (intent.getAction().equals("COM.STUPIDTREE.HITA.UT_AUTO_LOGIN_DONE")) {
                     Log.e("接受到广播：", "登录大学城完成");
@@ -175,7 +167,7 @@ public class FragmentNavi extends BaseFragment {
         title = v.findViewById(R.id.navi_title);
         subtitle = v.findViewById(R.id.navi_subtitle);
         refreshLayout = v.findViewById(R.id.refresh);
-        refreshLayout.setColorSchemeColors(new int[]{((BaseActivity)getActivity()).getColorPrimary(),((BaseActivity)getActivity()).getColorPrimaryDark()});
+        refreshLayout.setColorSchemeColors(((BaseActivity)getActivity()).getColorPrimary(),((BaseActivity)getActivity()).getColorPrimaryDark());
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -187,14 +179,14 @@ public class FragmentNavi extends BaseFragment {
             public void onClick(View view) {
                 final List<Integer> order = strToIntegerList(defaultSP.getString(ORDER_NAME,"[]"));
                 SharedPreferences sp =  PreferenceManager.getDefaultSharedPreferences(HContext);
-                String[] x = new String[]{"校区新闻","校园生活","校园心情","教务功能","教务同步窗(教务连接后显示)","校园卡管理（连接大学城内网后显示）"};
-                final String[] preferenceIds = new String[]{"navi_enabled_news","navi_enabled_life","navi_enabled_mood","navi_enabled_jw","navi_enabled_jw_sync","navi_enabled_card"};
-                final Integer[] preferenceTyps = new Integer[]{TYPE_NEWS,TYPE_HITA,TYPE_MOOD,TYPE_BOARD_JW,TYPE_JWTS_FUN,TYPE_CARD};
-                boolean[] y = new boolean[6];
-                for(int i=0;i<6;i++) y[i] = sp.getBoolean(preferenceIds[i],true);
+                String[] x = getResources().getStringArray(R.array.navi_setting_items);
+                final String[] preferenceIds = new String[]{"navi_enabled_news","navi_enabled_life","navi_enabled_mood","navi_enabled_jw","navi_enabled_card"};
+                final Integer[] preferenceTyps = new Integer[]{TYPE_NEWS,TYPE_HITA,TYPE_MOOD,TYPE_BOARD_JW,TYPE_CARD};
+                boolean[] y = new boolean[5];
+                for(int i=0;i<5;i++) y[i] = sp.getBoolean(preferenceIds[i],true);
                 final SharedPreferences.Editor edt = sp.edit();
                 final boolean[] changed = {false};
-                AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle("设置导航页内容").setMultiChoiceItems(x, y,new DialogInterface.OnMultiChoiceClickListener() {
+                AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.navi_settings_title)).setMultiChoiceItems(x, y,new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
                         changed[0] = true;
@@ -202,7 +194,7 @@ public class FragmentNavi extends BaseFragment {
                         if(b&&!order.contains(preferenceTyps[i])) order.add(preferenceTyps[i]);
                         listAdapter.saveOrders(order);
                     }
-                }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                }).setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Refresh(true,false);
@@ -225,7 +217,7 @@ public class FragmentNavi extends BaseFragment {
 //        fragments.add(new FragmentNewsLecture());
 //        fragments.add(new FragmentNewsBulletin());
 //        fragments.add(new FragmentNewsIPNews());
-//        pagerAdapter = new HITSZInfoPagerAdapter(getFragmentManager(), fragments);
+//        pagerAdapter = new NewsPagerAdapter(getFragmentManager(), fragments);
 //        pager.setAdapter(pagerAdapter);
 //        tab.setTabIndicatorFullWidth(false);
 //        tab.setupWithViewPager(pager);
@@ -305,13 +297,17 @@ public class FragmentNavi extends BaseFragment {
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onResume() {
         super.onResume();
-        title.setText((now.get(Calendar.MONTH)+1)+"月"+now.get(Calendar.DAY_OF_MONTH)+"日");
-        if(isDataAvailable()){
-            subtitle.setText("第"+mainTimeTable.core.getWeekOfTerm(now)+"周 "+ TextTools.words_time_DOW[TimeTable.getDOW(now)-1]);
-        }else subtitle.setText("无学期数据");
+        title.setText(getResources().getStringArray(R.array.months_full)[now.get(Calendar.MONTH)]+String.format(getString(R.string.date_day),now.get(Calendar.DAY_OF_MONTH)));
+        if(timeTableCore.isDataAvailable()){
+            if(timeTableCore.isThisTerm())subtitle.setText(String.format(getString(R.string.week),timeTableCore.getCurrentCurriculum().getWeekOfTerm(now))+" "+
+                    getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(now)-1]);
+            else subtitle.setText(getString(R.string.navi_semister_not_begun)+" "+ getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(now)-1]);
+
+        }else subtitle.setText(getString(R.string.navi_semister_no_data));
         Refresh(false,false);
         //banner.start();
         //refreshBanner();
@@ -372,7 +368,7 @@ public class FragmentNavi extends BaseFragment {
                 if (action.get("intent").getAsString().equals("jwts")) {
                     ActivityUtils.startJWTSActivity(getActivity());
                 } else if (action.get("intent").getAsString().equals("rankboard")) {
-                    Intent i = new Intent(getActivity(), ActivityRankBoard.class);
+                    Intent i = new Intent(getActivity(), ActivityLeaderBoard.class);
                     startActivity(i);
                 }
             } else if (action.has("url")) {

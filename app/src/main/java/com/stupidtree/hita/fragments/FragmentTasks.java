@@ -1,16 +1,11 @@
 package com.stupidtree.hita.fragments;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -20,50 +15,21 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.SparseArray;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
-import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityMain;
-import com.stupidtree.hita.adapter.NaviPageAdapter;
 import com.stupidtree.hita.adapter.TaskCardListAdapter;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.TimeTableGenerator;
-import com.stupidtree.hita.core.timetable.EventItem;
-import com.stupidtree.hita.core.timetable.HTime;
-import com.stupidtree.hita.core.timetable.Task;
-import com.stupidtree.hita.adapter.TaskListAdapter;
-import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.util.RefreshBroadcastReceiver;
 
-import org.apache.http.util.TextUtils;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
-import java.util.Queue;
 
-import tyrantgit.explosionfield.ExplosionField;
-
-import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.isDataAvailable;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
-import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_CARD;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_HINT;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_HITA;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_JWTS_FUN;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.strToIntegerList;
 
 public class FragmentTasks extends BaseFragment implements RefreshBroadcastReceiver.ActionListener {
@@ -88,6 +54,8 @@ public class FragmentTasks extends BaseFragment implements RefreshBroadcastRecei
         refreshBroadcastReceiver.setListener(this);
         IntentFilter iF = new IntentFilter();
         iF.addAction("COM.STUPIDTREE.HITA.TASK_REFRESH");
+        iF.addAction("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
+        iF.addAction("COM.STUPIDTREE.HITA.TIMETABLE_PAGE_REFRESH");
         localBroadcastManager.registerReceiver(refreshBroadcastReceiver, iF);
     }
 
@@ -132,6 +100,7 @@ public class FragmentTasks extends BaseFragment implements RefreshBroadcastRecei
 
     @Override
     public void receive(Context context, Intent intent) {
+        Log.e("fragmentTask_recieve",intent.getAction());
         Refresh();
     }
 

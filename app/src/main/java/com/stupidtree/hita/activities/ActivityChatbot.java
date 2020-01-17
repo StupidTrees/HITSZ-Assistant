@@ -3,7 +3,6 @@ package com.stupidtree.hita.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +15,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.core.app.ActivityCompat;
@@ -33,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -51,16 +48,16 @@ import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
-import com.stupidtree.hita.core.Subject;
+import com.stupidtree.hita.timetable.Subject;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.hita.ChatBotA;
 import com.stupidtree.hita.hita.ChatBotB;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.timetable.EventItem;
-import com.stupidtree.hita.core.timetable.HTime;
+import com.stupidtree.hita.timetable.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.HTime;
 import com.stupidtree.hita.adapter.ChatBotListAdapter;
-import com.stupidtree.hita.core.timetable.Task;
+import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.hita.ChatBotMessageItem;
 import com.stupidtree.hita.online.ChatMessage;
 import com.stupidtree.hita.online.Infos;
@@ -93,6 +90,7 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import jaygoo.widget.wlv.WaveLineView;
 
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.hita.TextTools.BEFORE;
 import static com.stupidtree.hita.hita.TextTools.NEXT;
 import static com.stupidtree.hita.hita.TextTools.THIS;
@@ -102,20 +100,13 @@ import static com.stupidtree.hita.hita.TextTools.T_BEFORE;
 import static com.stupidtree.hita.hita.TextTools.T_NEXT;
 import static com.stupidtree.hita.HITAApplication.ChatBotListRes;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.isDataAvailable;
-import static com.stupidtree.hita.HITAApplication.isThisTerm;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
-
-import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_COURSE;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_EXAM;
-import static com.stupidtree.hita.core.TimeTable.TIMETABLE_EVENT_TYPE_REMIND;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_COURSE;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_EXAM;
+import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_REMIND;
 
 public class ActivityChatbot extends BaseActivity implements View.OnClickListener {
     protected BottomSheetDialog dialog;
@@ -193,7 +184,12 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         initIFlyParams();
         initChatBotInfo();
         //onClick(rootLayout);
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ToAnalysis.parse("abc");
+            }
+        }).start();
     }
 
     void initChatBotInfo() {
@@ -667,86 +663,86 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     }
 
     private List<EventItem> propcessSerchEvents(JsonObject values) {
-        int fromW = (int) values.get("fW").getAsInt();
-        int toW = (int) values.get("tW").getAsInt();
-        int fromDOW = (int) values.get("fDOW").getAsInt();
-        int toDOW = (int) values.get("tDOW").getAsInt();
+        int fromW = values.get("fW").getAsInt();
+        int toW = values.get("tW").getAsInt();
+        int fromDOW = values.get("fDOW").getAsInt();
+        int toDOW = values.get("tDOW").getAsInt();
         HTime fromT = new HTime(values.get("fH").getAsInt(), values.get("fM").getAsInt());
         HTime toT = new HTime(values.get("tH").getAsInt(), values.get("tM").getAsInt());
-        int tag = (int) values.get("tag").getAsInt();
-        int num = (int) values.get("num").getAsInt();
+        int tag = values.get("tag").getAsInt();
+        int num = values.get("num").getAsInt();
         int thisDOW = now.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : now.get(Calendar.DAY_OF_WEEK) - 1;
-        if (fromW == BEFORE) fromW = thisWeekOfTerm - 1 <= 0 ? 1 : thisWeekOfTerm - 1;
-        if (fromW == THIS) fromW = isThisTerm ? thisWeekOfTerm : 1;
+        if (fromW == BEFORE) fromW = timeTableCore.getThisWeekOfTerm() - 1 <= 0 ? 1 : timeTableCore.getThisWeekOfTerm() - 1;
+        if (fromW == THIS) fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
         if (fromW == NEXT)
-            fromW = isThisTerm ? ((thisWeekOfTerm + 1 > allCurriculum.get(thisCurriculumIndex).totalWeeks) ? allCurriculum.get(thisCurriculumIndex).totalWeeks : thisWeekOfTerm + 1) : 2;
-        if (toW == BEFORE) toW = thisWeekOfTerm - 1 <= 0 ? 1 : thisWeekOfTerm - 1;
-        if (toW == THIS) toW = isThisTerm ? thisWeekOfTerm : 1;
+            fromW = timeTableCore.isThisTerm() ? ((timeTableCore.getThisWeekOfTerm() + 1 > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : timeTableCore.getThisWeekOfTerm() + 1) : 2;
+        if (toW == BEFORE) toW = timeTableCore.getThisWeekOfTerm() - 1 <= 0 ? 1 : timeTableCore.getThisWeekOfTerm() - 1;
+        if (toW == THIS) toW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
         if (toW == NEXT)
-            toW = isThisTerm ? ((thisWeekOfTerm + 1 > allCurriculum.get(thisCurriculumIndex).totalWeeks) ? allCurriculum.get(thisCurriculumIndex).totalWeeks : thisWeekOfTerm + 1) : 2;
+            toW = timeTableCore.isThisTerm() ? ((timeTableCore.getThisWeekOfTerm() + 1 > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : timeTableCore.getThisWeekOfTerm() + 1) : 2;
 
         if (fromW == -1) {
             if (fromDOW == BEFORE) {
                 if (thisDOW < 2) {
-                    fromW = thisWeekOfTerm - 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
                     fromDOW = 7;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW - 1;
                 }
             } else if (fromDOW == T_BEFORE) {
                 if (thisDOW < 3) {
-                    fromW = thisWeekOfTerm - 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
                     if (thisDOW == 2) fromDOW = 7;
                     else if (thisDOW == 1) fromDOW = 6;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW - 2;
                 }
             } else if (fromDOW == TT_BEFORE) {
                 if (thisDOW < 4) {
-                    fromW = thisWeekOfTerm - 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
                     if (thisDOW == 3) fromDOW = 7;
                     else if (thisDOW == 2) fromDOW = 6;
                     else if (thisDOW == 1) fromDOW = 5;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW - 3;
                 }
             } else if (fromDOW == THIS) {
-                fromW = thisWeekOfTerm;
+                fromW = timeTableCore.getThisWeekOfTerm();
                 fromDOW = thisDOW;
             } else if (fromDOW == NEXT) {
                 if (thisDOW == 7) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 1;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW + 1;
                 }
             } else if (fromDOW == T_NEXT) {
                 if (thisDOW == 6) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 1;
                 } else if (thisDOW == 7) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 2;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW + 2;
                 }
             } else if (fromDOW == TT_NEXT) {
                 if (thisDOW == 5) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 1;
                 } else if (thisDOW == 6) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 2;
                 } else if (thisDOW == 7) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 3;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW + 3;
                 }
             }
@@ -754,65 +750,65 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         if (toW == -1) {
             if (toDOW == BEFORE) {
                 if (thisDOW < 2) {
-                    toW = thisWeekOfTerm - 1;
+                    toW = timeTableCore.getThisWeekOfTerm() - 1;
                     toDOW = 7;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW - 1;
                 }
             } else if (toDOW == T_BEFORE) {
                 if (thisDOW < 3) {
-                    toW = thisWeekOfTerm - 1;
+                    toW = timeTableCore.getThisWeekOfTerm() - 1;
                     if (thisDOW == 2) toDOW = 7;
                     else if (thisDOW == 1) toDOW = 6;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW - 2;
                 }
             } else if (toDOW == TT_BEFORE) {
                 if (thisDOW < 4) {
-                    toW = thisWeekOfTerm - 1;
+                    toW = timeTableCore.getThisWeekOfTerm() - 1;
                     if (thisDOW == 3) toDOW = 7;
                     else if (thisDOW == 2) toDOW = 6;
                     else if (thisDOW == 1) toDOW = 5;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW - 3;
                 }
             } else if (toDOW == THIS) {
-                toW = thisWeekOfTerm;
+                toW = timeTableCore.getThisWeekOfTerm();
                 toDOW = thisDOW;
             } else if (toDOW == NEXT) {
                 if (thisDOW == 7) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 1;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW + 1;
                 }
             } else if (toDOW == T_NEXT) {
                 if (thisDOW == 6) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 1;
                 } else if (thisDOW == 7) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 2;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW + 2;
                 }
             } else if (toDOW == TT_NEXT) {
                 if (thisDOW == 5) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 1;
                 } else if (thisDOW == 6) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 2;
                 } else if (thisDOW == 7) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 3;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW + 3;
                 }
             }
@@ -830,8 +826,8 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
             }
         }
         if (fromW == -1 || toW == -1) {
-            if (fromW == toW) toW = fromW = isThisTerm ? thisWeekOfTerm : 1;
-            else if (fromW == -1) fromW = isThisTerm ? thisWeekOfTerm : toW;
+            if (fromW == toW) toW = fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
+            else if (fromW == -1) fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : toW;
             else if (toW == -1) toW = fromW;
         }
         if (fromT.hour == -1) {
@@ -842,29 +838,29 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
             toT.hour = 23;
             toT.minute = 59;
         }
-        if (toW > allCurriculum.get(thisCurriculumIndex).totalWeeks)
-            toW = allCurriculum.get(thisCurriculumIndex).totalWeeks;
-        toW = (toW > allCurriculum.get(thisCurriculumIndex).totalWeeks) ? allCurriculum.get(thisCurriculumIndex).totalWeeks : toW;
+        if (toW > timeTableCore.getCurrentCurriculum().getTotalWeeks())
+            toW = timeTableCore.getCurrentCurriculum().getTotalWeeks();
+        toW = (toW > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : toW;
         System.out.println("放入查询函数的是：fW=" + fromW + ",fDOW=" + fromDOW + ",fT=" + fromT.tellTime() + ",tW=" + toW + ",tDOW=" + toDOW + ",tT=" + toT.tellTime());
         List<EventItem> result = null;
         switch (tag) {
             case ChatBotA.FUN_SEARCH_EVENT_ALL:
-                result = mainTimeTable.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT);
+                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_COURSE:
-                result = mainTimeTable.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_COURSE);
+                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_COURSE);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
-                result = mainTimeTable.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_ARRANGEMENT);
+                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_ARRANGEMENT);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_EXAM:
-                result = mainTimeTable.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_EXAM);
+                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_EXAM);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_REMIND:
-                result = mainTimeTable.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_REMIND);
+                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_REMIND);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_DDL:
-                result = mainTimeTable.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_DEADLINE);
+                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_DEADLINE);
                 break;
         }
         if (num != -1 && result != null && result.size() > 0) {
@@ -880,84 +876,84 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
 
     private EventItem propcessAddRemind(JsonObject values) {
         String name = values.get("name").getAsString();
-        int fromW = (int) values.get("fW").getAsInt();
-        int toW = (int) values.get("tW").getAsInt();
-        int fromDOW = (int) values.get("fDOW").getAsInt();
-        int toDOW = (int) values.get("tDOW").getAsInt();
+        int fromW = values.get("fW").getAsInt();
+        int toW = values.get("tW").getAsInt();
+        int fromDOW = values.get("fDOW").getAsInt();
+        int toDOW = values.get("tDOW").getAsInt();
         HTime fromT = new HTime(values.get("fH").getAsInt(), values.get("fM").getAsInt());
         HTime toT = new HTime(values.get("tH").getAsInt(), values.get("tM").getAsInt());
         int thisDOW = now.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : now.get(Calendar.DAY_OF_WEEK) - 1;
-        if (fromW == BEFORE) fromW = thisWeekOfTerm - 1 <= 0 ? 1 : thisWeekOfTerm - 1;
-        if (fromW == THIS) fromW = isThisTerm ? thisWeekOfTerm : 1;
+        if (fromW == BEFORE) fromW = timeTableCore.getThisWeekOfTerm() - 1 <= 0 ? 1 : timeTableCore.getThisWeekOfTerm() - 1;
+        if (fromW == THIS) fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
         if (fromW == NEXT)
-            fromW = isThisTerm ? ((thisWeekOfTerm + 1 > allCurriculum.get(thisCurriculumIndex).totalWeeks) ? allCurriculum.get(thisCurriculumIndex).totalWeeks : thisWeekOfTerm + 1) : 2;
-        if (toW == BEFORE) toW = thisWeekOfTerm - 1 <= 0 ? 1 : thisWeekOfTerm - 1;
-        if (toW == THIS) toW = isThisTerm ? thisWeekOfTerm : 1;
+            fromW = timeTableCore.isThisTerm() ? ((timeTableCore.getThisWeekOfTerm() + 1 > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : timeTableCore.getThisWeekOfTerm() + 1) : 2;
+        if (toW == BEFORE) toW = timeTableCore.getThisWeekOfTerm() - 1 <= 0 ? 1 : timeTableCore.getThisWeekOfTerm() - 1;
+        if (toW == THIS) toW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
         if (toW == NEXT)
-            toW = isThisTerm ? ((thisWeekOfTerm + 1 > allCurriculum.get(thisCurriculumIndex).totalWeeks) ? allCurriculum.get(thisCurriculumIndex).totalWeeks : thisWeekOfTerm + 1) : 2;
+            toW = timeTableCore.isThisTerm() ? ((timeTableCore.getThisWeekOfTerm() + 1 > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : timeTableCore.getThisWeekOfTerm() + 1) : 2;
 
         if (fromW == -1) {
             if (fromDOW == BEFORE) {
                 if (thisDOW < 2) {
-                    fromW = thisWeekOfTerm - 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
                     fromDOW = 7;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW - 1;
                 }
             } else if (fromDOW == T_BEFORE) {
                 if (thisDOW < 3) {
-                    fromW = thisWeekOfTerm - 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
                     if (thisDOW == 2) fromDOW = 7;
                     else if (thisDOW == 1) fromDOW = 6;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW - 2;
                 }
             } else if (fromDOW == TT_BEFORE) {
                 if (thisDOW < 4) {
-                    fromW = thisWeekOfTerm - 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
                     if (thisDOW == 3) fromDOW = 7;
                     else if (thisDOW == 2) fromDOW = 6;
                     else if (thisDOW == 1) fromDOW = 5;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW - 3;
                 }
             } else if (fromDOW == THIS) {
-                fromW = thisWeekOfTerm;
+                fromW = timeTableCore.getThisWeekOfTerm();
                 fromDOW = thisDOW;
             } else if (fromDOW == NEXT) {
                 if (thisDOW == 7) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 1;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW + 1;
                 }
             } else if (fromDOW == T_NEXT) {
                 if (thisDOW == 6) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 1;
                 } else if (thisDOW == 7) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 2;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW + 2;
                 }
             } else if (fromDOW == TT_NEXT) {
                 if (thisDOW == 5) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 1;
                 } else if (thisDOW == 6) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 2;
                 } else if (thisDOW == 7) {
-                    fromW = thisWeekOfTerm + 1;
+                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
                     fromDOW = 3;
                 } else {
-                    fromW = thisWeekOfTerm;
+                    fromW = timeTableCore.getThisWeekOfTerm();
                     fromDOW = thisDOW + 3;
                 }
             }
@@ -965,65 +961,65 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         if (toW == -1) {
             if (toDOW == BEFORE) {
                 if (thisDOW < 2) {
-                    toW = thisWeekOfTerm - 1;
+                    toW = timeTableCore.getThisWeekOfTerm() - 1;
                     toDOW = 7;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW - 1;
                 }
             } else if (toDOW == T_BEFORE) {
                 if (thisDOW < 3) {
-                    toW = thisWeekOfTerm - 1;
+                    toW = timeTableCore.getThisWeekOfTerm() - 1;
                     if (thisDOW == 2) toDOW = 7;
                     else if (thisDOW == 1) toDOW = 6;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW - 2;
                 }
             } else if (toDOW == TT_BEFORE) {
                 if (thisDOW < 4) {
-                    toW = thisWeekOfTerm - 1;
+                    toW = timeTableCore.getThisWeekOfTerm() - 1;
                     if (thisDOW == 3) toDOW = 7;
                     else if (thisDOW == 2) toDOW = 6;
                     else if (thisDOW == 1) toDOW = 5;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW - 3;
                 }
             } else if (toDOW == THIS) {
-                toW = thisWeekOfTerm;
+                toW = timeTableCore.getThisWeekOfTerm();
                 toDOW = thisDOW;
             } else if (toDOW == NEXT) {
                 if (thisDOW == 7) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 1;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW + 1;
                 }
             } else if (toDOW == T_NEXT) {
                 if (thisDOW == 6) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 1;
                 } else if (thisDOW == 7) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 2;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW + 2;
                 }
             } else if (toDOW == TT_NEXT) {
                 if (thisDOW == 5) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 1;
                 } else if (thisDOW == 6) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 2;
                 } else if (thisDOW == 7) {
-                    toW = thisWeekOfTerm + 1;
+                    toW = timeTableCore.getThisWeekOfTerm() + 1;
                     toDOW = 3;
                 } else {
-                    toW = thisWeekOfTerm;
+                    toW = timeTableCore.getThisWeekOfTerm();
                     toDOW = thisDOW + 3;
                 }
             }
@@ -1041,8 +1037,8 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
             }
         }
         if (fromW == -1 || toW == -1) {
-            if (fromW == toW) toW = fromW = isThisTerm ? thisWeekOfTerm : 1;
-            else if (fromW == -1) fromW = isThisTerm ? thisWeekOfTerm : toW;
+            if (fromW == toW) toW = fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
+            else if (fromW == -1) fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : toW;
             else if (toW == -1) toW = fromW;
         }
         boolean wholeday = false;
@@ -1052,11 +1048,11 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         if (toT.hour == -1) {
             wholeday = true;
         }
-        if (toW > allCurriculum.get(thisCurriculumIndex).totalWeeks)
-            toW = allCurriculum.get(thisCurriculumIndex).totalWeeks;
-        toW = (toW > allCurriculum.get(thisCurriculumIndex).totalWeeks) ? allCurriculum.get(thisCurriculumIndex).totalWeeks : toW;
+        if (toW > timeTableCore.getCurrentCurriculum().getTotalWeeks())
+            toW = timeTableCore.getCurrentCurriculum().getTotalWeeks();
+        toW = (toW > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : toW;
         System.out.println("解析出的待添加DDL为：name=" + name + "fW=" + fromW + ",fDOW=" + fromDOW + ",fT=" + fromT.tellTime() + ",tW=" + toW + ",tDOW=" + toDOW + ",tT=" + toT.tellTime());
-        return new EventItem(null, mainTimeTable.core.curriculumCode, TIMETABLE_EVENT_TYPE_REMIND, name, "提醒", "无注释", "无注释", fromT, fromT, fromW, fromDOW, wholeday);
+        return new EventItem(null, timeTableCore.getCurrentCurriculum().getCurriculumCode(), TIMETABLE_EVENT_TYPE_REMIND, name, "提醒", "无注释", "无注释", fromT, fromT, fromW, fromDOW, wholeday);
     }
 
 
@@ -1119,12 +1115,12 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                     return jo;
                 } else {
                     if (defaultSP.getBoolean("ChatBot_useTulin", true)) {
-                        JsonObject jo = chatbotB.InteractTulin(message);
+                        JsonObject jo = ChatBotB.InteractTulin(message);
                         if (jo.get("message_show").toString().contains("请求次数"))
-                            return chatbotB.InteractQ(message);
+                            return ChatBotB.InteractQ(message);
                         else return jo;
                     } else {
-                        return chatbotB.InteractQ(message);
+                        return ChatBotB.InteractQ(message);
                     }
                 }
 
@@ -1174,9 +1170,9 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                 if (msg.get("function").getAsString().equals("search_event_ww")) {
                     List<EventItem> courseList;
                     final int tag = msg.get("tag").getAsInt();
-                    if (!isDataAvailable()) {
+                    if (!timeTableCore.isDataAvailable()) {
                         textOnShow = "请先导入数据或选择当前日程表！";
-                    } else if (!isThisTerm) {
+                    } else if (!timeTableCore.isThisTerm()) {
                         textOnShow = "别急着问啊，这学期还没开始";
                     } else {
                         courseList = propcessSerchEvents(msg);
@@ -1251,16 +1247,16 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                 } else if (msg.get("function").getAsString().equals("search_event_nextone")) {
 
                     final int tag = msg.get("tag").getAsInt();
-                    if (!isDataAvailable()) {
+                    if (!timeTableCore.isDataAvailable()) {
                         textOnShow = "请先导入数据或选择当前日程表！";
-                    } else if (!isThisTerm) {
+                    } else if (!timeTableCore.isThisTerm()) {
                         textOnShow = "别急着问啊，这学期还没开始";
                     } else {
                         EventItem nextevent = null;
                         Calendar c = Calendar.getInstance();
                         c.set(Calendar.HOUR_OF_DAY, 23);
                         c.set(Calendar.MINUTE, 59);
-                        List<EventItem> tempList = mainTimeTable.getEventFrom(now, c, -1);
+                        List<EventItem> tempList = timeTableCore.getEventFrom(now, c, -1);
                         if (tempList == null || tempList.size() == 0) nextevent = null;
                         else {
                             Log.e("!!", tempList.toString());
@@ -1352,7 +1348,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                         textOnShow = "给我个提醒的名字鸭";
                         textToRead = "给我个提醒的名字鸭";
                     } else {
-                        mainTimeTable.addEvent(ei);
+                        timeTableCore.addEvent(ei);
                         List<EventItem> add = new ArrayList<>();
                         add.add(ei);
                         messagge.setCourseList(add);
@@ -1360,7 +1356,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                         textToRead = "好的，提醒你" + ei.mainName;
                     }
                 } else if (msg.get("function").getAsString().equals("search_task")) {
-                    List<Task> tl = mainTimeTable.getUnfinishedTasks();
+                    List<Task> tl = timeTableCore.getUnfinishedTasks();
                     messagge.setTaskList(tl);
                     if (tl.size() > 0) {
                         textOnShow = "还有如下" + tl.size() + "个待办任务";
@@ -1378,7 +1374,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                 } else if (msg.get("function").getAsString().equals("intent_canteen")) {
                     textOnShow = "好的，发现校内服务";
                     textToRead = "好的，发现校内服务";
-                    Intent i = new Intent(ActivityChatbot.this, ActivityRankBoard.class);
+                    Intent i = new Intent(ActivityChatbot.this, ActivityLeaderBoard.class);
                     startActivity(i);
                 } else if (msg.get("function").getAsString().equals("intent_jwts")) {
                     textOnShow = "好的，进入教务系统";
@@ -1392,7 +1388,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                 } else if (msg.get("function").getAsString().equals("intent_infos")) {
                     textOnShow = "好的，进入信息窗口";
                     textToRead = "好的，进入信息窗口";
-                    Intent i = new Intent(ActivityChatbot.this, ActivityHITSZInfo.class);
+                    Intent i = new Intent(ActivityChatbot.this, ActivityNews.class);
                     startActivity(i);
                 } else if (msg.get("function").getAsString().equals("search_location")) {
                     textOnShow = "好的，进入校内地点页";
@@ -1411,25 +1407,25 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                    String desc = "课";
                    if(type!=null){
                        if(type.equals("exam")){
-                           result = mainTimeTable.core.getSubjects_Exam();
+                           result = timeTableCore.getCurrentCurriculum().getSubjects_Exam();
                            //Log.e("exam---", String.valueOf(result));
                            desc = "考试课";
                        }else if(type.equals("mooc")){
-                           result = mainTimeTable.core.getSubjects_Mooc();
+                           result = timeTableCore.getCurrentCurriculum().getSubjects_Mooc();
                            desc = "慕课";
                        }else if(type.equals("no_exam")){
-                           result = mainTimeTable.core.getSubjects_No_Exam();
+                           result = timeTableCore.getCurrentCurriculum().getSubjects_No_Exam();
                            desc = "考查课";
                        }else if(type.equals("comp")){
-                           result = mainTimeTable.core.getSubjects_Comp();
+                           result = timeTableCore.getCurrentCurriculum().getSubjects_Comp();
                            desc = "必修课";
                        }else if(type.equals("alt")){
-                           result = mainTimeTable.core.getSubjects_Alt();
+                           result = timeTableCore.getCurrentCurriculum().getSubjects_Alt();
                            desc = "选秀课";
                        }else if(type.equals("wtv")){
-                           result = mainTimeTable.core.getSubjects_WTV();
+                           result = timeTableCore.getCurrentCurriculum().getSubjects_WTV();
                            desc = "任选课";
-                       }else result = mainTimeTable.core.getSubjects();
+                       }else result = timeTableCore.getCurrentCurriculum().getSubjects();
                    }
                     if(result!=null&&result.size()>0){
                         messagge.setSubjectList(result);

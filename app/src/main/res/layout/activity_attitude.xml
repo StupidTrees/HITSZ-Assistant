@@ -46,6 +46,8 @@
         android:layout_margin="16dp"
         android:clickable="true"
         app:layout_behavior="com.stupidtree.hita.diy.mBottomHideBehavior"
-        app:srcCompat="@drawable/bt_edit" />
+        app:srcCompat="@drawable/bt_edit"
+        android:focusable="true"
+        tools:ignore="RtlHardcoded" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

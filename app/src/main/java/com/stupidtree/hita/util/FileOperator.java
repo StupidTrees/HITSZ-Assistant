@@ -1,7 +1,6 @@
 package com.stupidtree.hita.util;
 
 import android.app.Activity;
-import android.app.Notification;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,10 +11,11 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.material.tabs.TabLayout;
-import com.stupidtree.hita.core.Curriculum;
-import com.stupidtree.hita.core.CurriculumHelper;
-import com.stupidtree.hita.core.Note;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.stupidtree.hita.timetable.Curriculum;
+import com.stupidtree.hita.timetable.CurriculumCreator;
+import com.stupidtree.hita.timetable.Note;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -24,7 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,7 +34,6 @@ import java.util.Map;
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import jxl.Cell;
 import jxl.Sheet;
@@ -169,198 +167,31 @@ public class FileOperator {
         return true;
     }
 
-    public static HashMap<String, String> loadUserInfosFromFile(File path) {
 
-        HashMap<String, String> il = null;
-        File file = new File(path.toString() + "/UserInfo.dat");
-        if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            return null;
+
+
+    public static CurriculumCreator loadCurriculumHelper(String curriculumCode, String name, int sY, int sM, int sD, List<Map<String,String>> data){
+        CurriculumCreator cl = new CurriculumCreator(curriculumCode, sY, sM, sD, name);
+        cl.setCurriculumText( new Gson().toJson(data));
+        for (Map<String, String> map : data) {
+            cl.CoursesGeneraor(Integer.parseInt(map.get("dow")), map.get("name"), map.get("teacher"), map.get("classroom"),Integer.parseInt(map.get("begin")), Integer.parseInt(map.get("last")), map.get("weeks").split(","));
         }
-        FileInputStream in;
+        return cl;
+    }
+
+    public static CurriculumCreator loadCurriculumHelperFromCurriculumText(Curriculum ci_bmob) {
+        CurriculumCreator cl = new CurriculumCreator(ci_bmob.getCurriculumCode(), ci_bmob.getStart_year(), ci_bmob.getStart_month(), ci_bmob.getStart_day(), ci_bmob.getName());
         try {
-            in = new FileInputStream(file);
-            ObjectInputStream objIn = new ObjectInputStream(in);
-            il = (HashMap<String, String>) objIn.readObject();
-            objIn.close();
-            System.out.println("read object success!");
-        } catch (IOException e) {
-            System.out.println("read object failed");
+             List<Map<String,String>> data = new Gson().fromJson(ci_bmob.getCurriculumText(),List.class);
+            for (Map<String, String> map : data) {
+                cl.CoursesGeneraor(Integer.parseInt(map.get("dow")), map.get("name"), map.get("teacher"), map.get("classroom"),Integer.parseInt(map.get("begin")), Integer.parseInt(map.get("last")), map.get("weeks").split(","));
+            }
+        } catch (JsonSyntaxException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        return il;
-
-    }
-
-
-    public static boolean wipeCurriculumFile(File path) {
-        File file = new File(path.toString() + "/Curriculum.dat");
-        if (!file.exists()) {
-            return false;
-        } else {
-            file.delete();
-            return true;
-        }
-    }
-
-
-    public static CurriculumHelper loadCurriculumHelperFromExcel(File location, int sY, int sM, int sD) {
-        CurriculumHelper cl = null;
-        if (!location.exists()) {
-            location.getParentFile().mkdirs();
-            return null;
-        }
-        StringBuilder curriculumText = new StringBuilder();
-        Map<String, List<List<String>>> m = analyzeXls(location.toString());
-        for (Map.Entry<String, List<List<String>>> table : m.entrySet()) {
-            cl = new CurriculumHelper("from_excel_" + table.getValue().get(0).get(0), sY, sM, sD, table.getValue().get(0).get(0));
-            for (int i = 2; i <= 7; i++) {
-                List<String> row = table.getValue().get(i);
-                int begin = 1;
-                switch (i) {
-                    case 2:
-                        begin = 1;
-                        break;
-                    case 3:
-                        begin = 3;
-                        break;
-                    case 4:
-                        begin = 5;
-                        break;
-                    case 5:
-                        begin = 7;
-                        break;
-                    case 6:
-                        begin = 9;
-                        break;
-                    case 7:
-                        begin = 11;
-                        break;
-                }
-                for (int j = 2; j <= 8; j++) {
-//                    if (row.get(j).equals("")) {
-//                        continue;
-//                    }
-                    String text;
-                    text = row.get(j);
-                    List<Map<String, String>> courseList = analyseTableText(text);
-                    curriculumText.append(text).append("#");
-                    for (Map<String, String> map : courseList) {
-                        if (map.get("teacher").equals("null")) {
-                            cl.ExamGeneraor(j - 1, map.get("name"), map.get("time"), map.get("classroom"), begin, 2, map.get("week").split("-"));
-                        } else {
-                            cl.CoursesGeneraor(j - 1, map.get("name"), map.get("teacher"), map.get("classroom"), begin, 2, map.get("weeks").split("-"));
-                        }
-                    }
-                }
-
-            }
-        }
-        cl.curriculumText = curriculumText.toString();
         return cl;
-    }
-
-
-    public static CurriculumHelper loadCurriculumHelperFromCloud(String curriculumCode, Map<String, Object> m, int sY, int sM, int sD) {
-        CurriculumHelper cl = null;
-        StringBuilder curriculumText = new StringBuilder();
-        String name = (String) m.get("name");
-        List<List<String>> table = (List<List<String>>) m.get("table");
-        cl = new CurriculumHelper(curriculumCode, sY, sM, sD, name);
-        for (int i = 2; i < table.size() + 2; i++) {
-            List<String> row = table.get(i - 2);
-            int begin = 1;
-            switch (i) {
-                case 2:
-                    begin = 1;
-                    break;
-                case 3:
-                    begin = 3;
-                    break;
-                case 4:
-                    begin = 5;
-                    break;
-                case 5:
-                    begin = 7;
-                    break;
-                case 6:
-                    begin = 9;
-                    break;
-                case 7:
-                    begin = 11;
-                    break;
-            }
-            for (int j = 2; j < row.size() + 2; j++) {
-                if (row.get(j - 2).equals("")) {
-                    continue;
-                }
-                String text = null;
-                text = row.get(j - 2);
-                List<Map<String, String>> courseList = analyseTableText(text);
-                curriculumText.append(text).append("#");
-                for (Map<String, String> map : courseList) {
-                    if (map.get("teacher").equals("null")) {
-                        cl.ExamGeneraor(j - 1, map.get("name"), map.get("time"), map.get("classroom"), begin, 2, map.get("week").split("-"));
-                    } else {
-                        cl.CoursesGeneraor(j - 1, map.get("name"), map.get("teacher"), map.get("classroom"), begin, 2, map.get("weeks").split("-"));
-                    }
-                }
-            }
-
-        }
-        cl.curriculumText = curriculumText.toString();
-        return cl;
-    }
-
-    public static CurriculumHelper loadCurriculumHelperFromCurriculumText(Curriculum ci_bmob) {
-        CurriculumHelper cl;
-        String name = ci_bmob.name;
-        String[] tableText = ci_bmob.curriculumText.split("#", -1);
-        cl = new CurriculumHelper(ci_bmob.curriculumCode, ci_bmob.start_year, ci_bmob.start_month, ci_bmob.start_day, name);
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 7; j++) {
-                int begin = 2 * i + 1;
-                String text = tableText[i * 7 + j];
-                List<Map<String, String>> courseList = analyseTableText(text);
-                for (Map<String, String> map : courseList) {
-                    //Log.e("block",map.toString());
-                    if (map.get("teacher").equals("null")) {
-                        cl.ExamGeneraor(j + 1, map.get("name"), map.get("time"), map.get("classroom"), begin, 2, map.get("week").split("-"));
-                    } else {
-                        cl.CoursesGeneraor(j + 1, map.get("name"), map.get("teacher"), map.get("classroom"), begin, 2, map.get("weeks").split("-"));
-                    }
-                }
-
-            }
-        }
-        cl.curriculumText = ci_bmob.curriculumText;
-        cl.object_id = ci_bmob.getObjectId();
-        return cl;
-    }
-
-    public static List<String> loadNotePhotosFromFile(File location, String curriculumName, String dateName, String number) {
-        File file = new File(location.toString() + "/notes/" + curriculumName + "/" + dateName + "/" + number + "/");
-        if (!file.exists()) {
-            if (file.getParentFile().exists()) {
-                file.mkdir();
-            } else {
-                file.mkdirs();
-            }
-        }
-        List<String> result = new ArrayList<>();
-        // 得到该路径文件夹下所有的文件
-        List<File> files = new ArrayList<File>(Arrays.asList(file.listFiles()));
-        // 将所有的文件存入ArrayList中,并过滤所有图片格式的文件
-        for (int i = 0; i < files.size(); i++) {
-            File x = files.get(i);
-            if (checkIsImageFile(x.getPath())) {
-                result.add(x.getPath());
-            }
-        }
-        // 返回得到的图片列表
-        return result;
     }
 
 
@@ -656,14 +487,14 @@ public class FileOperator {
                     }
 
 
-                    String timeMap = new String();
+                    String timeMap = "";
 
                     List<Integer> weeks = analyseTimeText(timeText);
                     for (int i = 0; i < weeks.size(); i++) {
                         if (i != weeks.size() - 1) {
-                            timeMap = timeMap + String.valueOf(weeks.get(i)) + "-";
+                            timeMap = timeMap + weeks.get(i) + "-";
                         } else {
-                            timeMap = timeMap + String.valueOf(weeks.get(i));
+                            timeMap = timeMap + weeks.get(i);
                         }
 
                     }
@@ -671,6 +502,7 @@ public class FileOperator {
                     m.put("teacher", teacher);
                     m.put("classroom", classroom);
                     m.put("weeks", timeMap);
+
                     result.add(m);
                 }
             }
@@ -822,14 +654,10 @@ public class FileOperator {
     private static boolean checkIsImageFile(String fName) {
         boolean isImageFile = false;
         // 获取扩展名
-        String FileEnd = fName.substring(fName.lastIndexOf(".") + 1,
-                fName.length()).toLowerCase();
-        if (FileEnd.equals("jpg") || FileEnd.equals("png") || FileEnd.equals("gif")
-                || FileEnd.equals("jpeg") || FileEnd.equals("bmp")) {
-            isImageFile = true;
-        } else {
-            isImageFile = false;
-        }
+        String FileEnd = fName.substring(fName.lastIndexOf(".") + 1
+        ).toLowerCase();
+        isImageFile = FileEnd.equals("jpg") || FileEnd.equals("png") || FileEnd.equals("gif")
+                || FileEnd.equals("jpeg") || FileEnd.equals("bmp");
         return isImageFile;
     }
 

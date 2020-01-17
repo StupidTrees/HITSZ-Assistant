@@ -35,7 +35,6 @@
                 android:gravity="center|start"
                 android:maxEms="10"
                 android:singleLine="false"
-                android:text="还有13个DDL"
                 android:textColor="?attr/text_color_primary"
                 android:textSize="18sp" />
 

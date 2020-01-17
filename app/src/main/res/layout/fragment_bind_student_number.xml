@@ -6,97 +6,59 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/background_color_bottom"
+    android:background="@drawable/bottom_sheet_radius_background"
     android:orientation="vertical">
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/logincard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <ProgressBar
-            android:id="@+id/loadingview"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_gravity="center"
-            android:max="100" />
-
-        <LinearLayout
-            android:id="@+id/logincard"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/bind_stun_title"
+            android:textColor="?attr/text_color_primary"
+            android:textSize="24sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="sans-serif-black"
-                android:text="绑定哈工大深圳学号"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="24sp" />
+        <TextView
+            android:id="@+id/current_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="绑定账号：StupidTree（15159128923）"
+            android:textColor="?attr/text_color_secondary"
+            tools:ignore="HardcodedText" />
 
-            <TextView
-                android:id="@+id/current_user_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:text="绑定账号：StupidTree（15159128923）"
-                android:textColor="?attr/text_color_secondary" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent_none"
+            android:hint="@string/bind_stun_stunum"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:singleLine="true" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent_none"
+            android:hint="@string/bind_stun_password"
+            android:inputType="textPassword"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:singleLine="true" />
 
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="学号"
-                    android:singleLine="true" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="教务密码"
-                    android:inputType="textPassword"
-                    android:singleLine="true" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="2">
-
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/safecode"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="验证码"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/safecode_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_gravity="bottom|center"
-                    android:layout_weight="5"
-                    app:srcCompat="@drawable/bt_chatbot_voice_wave" />
-            </LinearLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:clickable="false">
 
             <com.stupidtree.hita.diy.ButtonLoading
                 android:id="@+id/login"
@@ -110,59 +72,10 @@
                 app:BL_circleColorSecond="?attr/colorPrimaryDark"
                 app:BL_enable="true"
                 app:BL_stateShow="normal"
-                app:BL_text="绑定"
+                app:BL_text="@string/bind"
                 app:BL_textColor="#FFFFFF"
                 app:BL_textSize="14sp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/loadingerror"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/colorAccent"
-            android:gravity="center"
-            android:text="加载失败！"
-            android:textColor="@color/material_background_white"
-            android:textSize="30sp"
-            android:visibility="invisible" />
-
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:text="若加载不成功，请注意："
-            android:textColor="?attr/text_color_primary"
-            android:textSize="16dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="6dp"
-            android:gravity="center|start"
-            android:paddingLeft="16dp"
-            android:text="使用校园网wifi（HITSZ）进入本页面"
-            android:textColor="?attr/text_color_secondary"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/imageView10"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_margin="16dp"
-            app:srcCompat="@drawable/login_wifi" />
+        </FrameLayout>
 
     </LinearLayout>
 

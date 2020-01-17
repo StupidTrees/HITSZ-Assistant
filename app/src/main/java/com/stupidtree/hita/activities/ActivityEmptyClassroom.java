@@ -1,25 +1,19 @@
 package com.stupidtree.hita.activities;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AlertDialog;
+
 import android.os.Bundle;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -28,30 +22,18 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.fragments.FragmentEmptyClassroomDialog;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.util.ActivityUtils;
+import com.stupidtree.hita.timetable.TimetableCore;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import static com.stupidtree.hita.HITAApplication.CurrentUser;
-import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.isDataAvailable;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
-import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class ActivityEmptyClassroom extends BaseActivity {
     Toolbar toolbar;
@@ -77,56 +59,56 @@ public class ActivityEmptyClassroom extends BaseActivity {
         setWindowParams(true,true,false);
         setContentView(R.layout.activity_empty_classroom);
         initToolbar();
-        if(CurrentUser==null){
-            AlertDialog ad = new AlertDialog.Builder(this).setMessage("登录HITSZ助手账号后同步课表").setTitle("请登录").setPositiveButton("前往登录", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent i = new Intent(ActivityEmptyClassroom.this,ActivityLogin.class);
-                    startActivity(i);
-                    finish();
-                }
-            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            }).create();
-            ad.show();
-        }else if(!isDataAvailable()){
-            AlertDialog ad = new AlertDialog.Builder(this).setMessage("需要当前学期的课表代码进行空教室查询，请导入课表后使用！").setTitle("没有课表数据").setPositiveButton("前往教务系统", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    ActivityUtils.startJWTSActivity(ActivityEmptyClassroom.this);
-                    finish();
-                }
-            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            }).create();
-            ad.show();
-        }else if(thisWeekOfTerm<0) {
-            AlertDialog ad = new AlertDialog.Builder(this).setMessage("当前选择的学期尚未开始，请切换为已开始学期进行查询！").setTitle("学期未开始").setPositiveButton("前往课表管理", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent i = new Intent(ActivityEmptyClassroom.this,ActivityCurriculumManager.class);
-                    startActivity(i);
-                    finish();
-                }
-            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            }).create();
-            ad.show();
-
-        }else{
-            initList();
-            Refresh();
-        }
-
+//        if(CurrentUser==null){
+//            AlertDialog ad = new AlertDialog.Builder(this).setMessage("登录HITSZ助手账号后同步课表").setTitle("请登录").setPositiveButton("前往登录", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    Intent i = new Intent(ActivityEmptyClassroom.this,ActivityLogin.class);
+//                    startActivity(i);
+//                    finish();
+//                }
+//            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    finish();
+//                }
+//            }).create();
+//            ad.show();
+//        }else if(!isDataAvailable()){
+//            AlertDialog ad = new AlertDialog.Builder(this).setMessage("需要当前学期的课表代码进行空教室查询，请导入课表后使用！").setTitle("没有课表数据").setPositiveButton("前往教务系统", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    ActivityUtils.startJWTSActivity(ActivityEmptyClassroom.this);
+//                    finish();
+//                }
+//            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    finish();
+//                }
+//            }).create();
+//            ad.show();
+//        }else if(thisWeekOfTerm<0) {
+//            AlertDialog ad = new AlertDialog.Builder(this).setMessage("当前选择的学期尚未开始，请切换为已开始学期进行查询！").setTitle("学期未开始").setPositiveButton("前往课表管理", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    Intent i = new Intent(ActivityEmptyClassroom.this,ActivityCurriculumManager.class);
+//                    startActivity(i);
+//                    finish();
+//                }
+//            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    finish();
+//                }
+//            }).create();
+//            ad.show();
+//
+//        }else{
+//
+//        }
+        initList();
+        Refresh();
     }
 
     void initToolbar(){
@@ -172,12 +154,12 @@ public class ActivityEmptyClassroom extends BaseActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             invalid.setVisibility(View.GONE);
-            pageXnxq_Text.setText(mainTimeTable.core.curriculumCode);
-            pageCourseNumber = TimeTable.getNumberAtTime(now);
+            pageXnxq_Text.setText(timeTableCore.getCurrentCurriculum().getCurriculumCode());
+            pageCourseNumber = TimetableCore.getNumberAtTime(now);
             String nowNumber;
             if(pageCourseNumber<0)nowNumber = "课间/课后";
             else nowNumber = "第"+pageCourseNumber+"节课";
-            pageTime_Text.setText("第"+thisWeekOfTerm+"周 "+ TextTools.words_time_DOW[TimeTable.getDOW(now)-1]+" "+nowNumber);
+            pageTime_Text.setText("第"+timeTableCore.getThisWeekOfTerm()+"周 "+ TextTools.words_time_DOW[TimetableCore.getDOW(now)-1]+" "+nowNumber);
             now.setTimeInMillis(System.currentTimeMillis());
             refresh.setRefreshing(true);
         }
@@ -186,12 +168,13 @@ public class ActivityEmptyClassroom extends BaseActivity {
         protected Object doInBackground(Object[] objects) {
             try {
                 Document page = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kjscx/queryKjs_wdl")
-                        .timeout(5000)
-                        .data("pageXnxq",allCurriculum.get(thisCurriculumIndex).curriculumCode)
+                        //.data("pageXnxq",timeTableCore.getCurrentCurriculum().curriculumCode)
                         .data("pageZc1","1").data("pageZc2","1")
                         .data("pageXiaoqu","1")
                         .data("pageLhdm","")
                         .data("pageCddm","")
+                        .ignoreContentType(true)
+                        .ignoreHttpErrors(true)
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
                         .post();
                 Element lhs = page.getElementById("pageLhdm");

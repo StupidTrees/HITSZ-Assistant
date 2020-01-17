@@ -1738,8 +1738,6 @@ drawable line
 drawable line_drawable
 drawable location_marker
 drawable location_radius_background
-drawable login_vpn
-drawable login_wifi
 drawable logo_svg
 drawable meeting
 drawable mtrl_snackbar_background
@@ -1864,7 +1862,6 @@ id action_db_build
 id action_divider
 id action_draw_now_line
 id action_image
-id action_import_from_excel
 id action_import_from_jwts
 id action_logout
 id action_menu_divider
@@ -1953,7 +1950,6 @@ id bt_add
 id bt_course_subject
 id bt_note
 id bt_timetable
-id bt_vpn
 id btnAlbumSelected
 id btnConfirm
 id btn_send
@@ -2006,11 +2002,12 @@ id chronometer
 id circle_progress
 id cjgl_pager
 id cjgl_tabs
+id cjxx_final_score
 id cjxx_info
 id cjxx_name
 id cjxx_point
-id cjxx_rank
-id cjxx_score
+id cjxx_total_score
+id cjxx_type
 id classroom_card
 id classroom_detail_icon
 id classroom_list
@@ -2203,8 +2200,6 @@ id icon_group
 id ifRoom
 id image
 id imageView
-id imageView10
-id imageView11
 id imageView12
 id imageView13
 id imageView14
@@ -2224,7 +2219,6 @@ id imageView26
 id imageView27
 id imageView28
 id imageView29
-id imageView3
 id imageView30
 id imageView31
 id imageView32
@@ -2508,12 +2502,9 @@ id pyjh_xn
 id pyjh_xq
 id qmcj_list
 id qmcj_loading
-id qmcj_xnxq_spinner
 id qq
 id qq_list
 id query
-id qzcj_list
-id qzcj_loading
 id radio
 id radioButton1
 id radioButton10
@@ -2551,8 +2542,6 @@ id route_list
 id rvImageList
 id sad
 id sad_text
-id safecode
-id safecode_img
 id sat
 id save_image_matrix
 id save_non_transition_alpha
@@ -2616,7 +2605,6 @@ id society_swiperefresh
 id software
 id spacer
 id spinner
-id spinner_grkb
 id spinner_xsxk_bx
 id spinner_xsxk_type
 id spinner_xsxk_xnxq
@@ -2702,13 +2690,8 @@ id textSpacerNoButtons
 id textSpacerNoTitle
 id textStart
 id textView
-id textView10
-id textView11
 id textView12
-id textView13
 id textView14
-id textView15
-id textView16
 id textView17
 id textView18
 id textView19
@@ -2853,7 +2836,6 @@ id tue
 id tvFolderName
 id tvImageNum
 id tvTitle
-id tv_age
 id tx_1
 id tx_2
 id tx_3
@@ -2935,6 +2917,7 @@ id write_data
 id xflb
 id xklb_choose
 id xl
+id xnxq_picker
 id xsxk_blank
 id xsxk_content
 id xsxk_item
@@ -2959,8 +2942,6 @@ id zxjxjh_point
 id zxjxjh_totalcourses
 id zxjxjh_xn
 id zxjxjh_xq
-id 学分
-id 性质
 integer abc_config_activityDefaultDur
 integer abc_config_activityShortDur
 integer app_bar_elevation_anim_duration
@@ -3167,6 +3148,8 @@ layout dynamic_usercenter_info_item
 layout dynamic_walk_segment_item_bus
 layout dynamic_xl_month
 layout dynamic_xl_month_week
+layout dynamic_xnxq_spinner_dropdown_item
+layout dynamic_xnxq_spinner_item
 layout dynamic_yx_gts_item
 layout dynamic_yx_gts_route_item
 layout expand_button
@@ -3256,7 +3239,6 @@ layout preference_widget_switch_compat
 layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
-layout style_timetable_horizonalitem
 layout support_simple_spinner_dropdown_item
 layout util_preference_toolbar
 layout widget_time_line

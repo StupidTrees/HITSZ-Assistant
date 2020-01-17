@@ -5,11 +5,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import android.util.SparseArray;
+import android.util.StringBuilderPrinter;
 
+import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.FragmentTimeTablePage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.stupidtree.hita.HITAApplication.HContext;
 
 public class TimeTablePagerAdapter extends FragmentPagerAdapter {
     int pageCount = 0;
@@ -31,7 +35,10 @@ public class TimeTablePagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return "第"+(position+1)+"周";
+        String title = String.format(HContext.getString(R.string.timetable_tab_title),position+1);
+
+        return title;
+
     }
 
     public void setCount(int count){

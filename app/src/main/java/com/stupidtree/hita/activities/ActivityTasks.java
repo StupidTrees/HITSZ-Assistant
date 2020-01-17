@@ -1,51 +1,35 @@
 package com.stupidtree.hita.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.TaskListAdapter;
-import com.stupidtree.hita.core.timetable.Task;
+import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.fragments.FragmentAddTask;
-import com.stupidtree.hita.util.RefreshBroadcastReceiver;
-
-import org.apache.http.util.TextUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import tyrantgit.explosionfield.ExplosionField;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.isDataAvailable;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class ActivityTasks extends BaseActivity implements
 FragmentAddTask.AddTaskDoneListener{
@@ -76,8 +60,8 @@ FragmentAddTask.AddTaskDoneListener{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isDataAvailable()) showAddTaskDialog();
-                else Snackbar.make(v, "请先导入课表！", Snackbar.LENGTH_SHORT).show();
+                if (timeTableCore.isDataAvailable()) showAddTaskDialog();
+                else Snackbar.make(v, getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
             }
         });
         hasInit = true;
@@ -86,7 +70,7 @@ FragmentAddTask.AddTaskDoneListener{
 
     void initToolbar(){
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("任务管理");
+        toolbar.setTitle(getString(R.string.label_activity_tasks));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,12 +148,12 @@ FragmentAddTask.AddTaskDoneListener{
 //                    if(pointer.get(Calendar.YEAR)== now.get(Calendar.YEAR)&&pointer.get(Calendar.DAY_OF_YEAR)==now.get(Calendar.DAY_OF_YEAR)) start = now;
 //                    else start = null;
 //
-//                    int week = mainTimeTable.core.getWeekOfTerm(pointer);
-//                    if(week>mainTimeTable.core.totalWeeks) break;;
-//                    int dow =  TimeTable.getDOW(pointer);
+//                    int week = timeTableCore.getCurrentCurriculum().getWeekOfTerm(pointer);
+//                    if(week>timeTableCore.getCurrentCurriculum().totalWeeks) break;;
+//                    int dow =  TimetableCore.getDOW(pointer);
 //                    SparseArray<HTime> tp = TimeTableGenerator.autoAdd_getTime(start,week,dow,50);
 //                    if(tp==null) continue;
-//                    String uuid = mainTimeTable.addEvent(week,dow,TimeTable.TIMETABLE_EVENT_TYPE_ARRANGEMENT,"处理任务"+t.name,"","",t.getUuid(),tp.get(0),tp.get(1),false);
+//                    String uuid = timeTableCore.addEvent(week,dow,TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT,"处理任务"+t.name,"","",t.getUuid(),tp.get(0),tp.get(1),false);
 //                    t.putEventMap(uuid+":::"+week,false);
 //                    leftTime-=tp.get(0).getDuration(tp.get(1));
 //                    pointer.add(Calendar.DATE,1);
@@ -185,7 +169,7 @@ FragmentAddTask.AddTaskDoneListener{
     }
 
     void refreshText() {
-        if (!isDataAvailable()) {
+        if (!timeTableCore.isDataAvailable()) {
             none.setVisibility(View.VISIBLE);
             return;
         }
@@ -231,15 +215,15 @@ FragmentAddTask.AddTaskDoneListener{
            // listRes_done.clear();
             listRes_now.clear();
             listRes_notyet.clear();
-           // listRes_done.addAll(mainTimeTable.getfinishedTasks());
-            List<Task> tasks = mainTimeTable.getUnfinishedTasks();
+           // listRes_done.addAll(timeTableCore.getfinishedTasks());
+            List<Task> tasks = timeTableCore.getUnfinishedTasks();
 
             for (Task t : tasks) {
                 if (TaskListAdapter.getTaskState(t) == TaskListAdapter.TYPE_FREE || TaskListAdapter.getTaskState(t) == TaskListAdapter.TYPE_ARRANGED_ONGOING)
                     listRes_now.add(t);
                 else listRes_notyet.add(t);
             }
-            listRes_now.addAll(mainTimeTable.getfinishedTasks());
+            listRes_now.addAll(timeTableCore.getfinishedTasks());
             return null;
         }
 
@@ -273,7 +257,7 @@ FragmentAddTask.AddTaskDoneListener{
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            if (mainTimeTable.deleteTask(listRes.get(position))) {
+            if (timeTableCore.deleteTask(listRes.get(position))) {
                 listRes.remove(position);
                 return true;
             } else return false;
@@ -316,7 +300,7 @@ FragmentAddTask.AddTaskDoneListener{
             if (t.isHas_length() && t.getProgress() < 100) {
                 return "dialog";
             } else {
-                return  mainTimeTable.setFinishTask(t,finished) ;
+                return  timeTableCore.setFinishTask(t,finished) ;
             }
         }
 

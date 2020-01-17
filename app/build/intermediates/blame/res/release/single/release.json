@@ -60,12 +60,12 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-mdpi-v4\\abc_list_focused_holo.9.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_fragment_news.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\fragment_news.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_abc_scrubber_control_off_mtrl_alpha.png.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxhdpi-v4\\abc_scrubber_control_off_mtrl_alpha.png"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_fragment_news.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\fragment_news.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\color_switch_thumb_material_dark.xml.flat",
@@ -132,12 +132,12 @@
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dynamic_jwts_ksxx_item.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout-sw600dp-v13_mtrl_layout_snackbar.xml.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\68d881f58a1fefe712b9bba171779a36\\res\\layout-sw600dp-v13\\mtrl_layout_snackbar.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_timeline_deadline.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\ic_timeline_deadline.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout-sw600dp-v13_mtrl_layout_snackbar.xml.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\68d881f58a1fefe712b9bba171779a36\\res\\layout-sw600dp-v13\\mtrl_layout_snackbar.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_dynamic_canteen_item.xml.flat",
@@ -240,12 +240,12 @@
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\ic_yx_signup.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_abc_spinner_mtrl_am_alpha.9.png.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxhdpi-v4\\abc_spinner_mtrl_am_alpha.9.png"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_menu_theme.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\ic_menu_theme.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_abc_spinner_mtrl_am_alpha.9.png.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxhdpi-v4\\abc_spinner_mtrl_am_alpha.9.png"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_bt_addevent_cancel.xml.flat",
@@ -256,40 +256,40 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxhdpi-v4\\abc_text_select_handle_middle_mtrl_dark.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\color_abc_primary_text_material_dark.xml.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\color\\abc_primary_text_material_dark.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_abc_scrubber_control_to_pressed_mtrl_000.png.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxhdpi-v4\\abc_scrubber_control_to_pressed_mtrl_000.png"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\color_abc_primary_text_material_dark.xml.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\color\\abc_primary_text_material_dark.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxxhdpi-v4_abc_btn_radio_to_on_mtrl_000.png.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxxhdpi-v4\\abc_btn_radio_to_on_mtrl_000.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4_notification_bg_low_normal.9.png.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\4082c5a69c53a62dd52b1fadf1592f6e\\res\\drawable-mdpi-v4\\notification_bg_low_normal.9.png"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_activity_post_detail.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\activity_post_detail.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-v21_preference_list_divider_material.xml.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\3eb0a1f76a48f25a2a61848295967183\\res\\drawable-v21\\preference_list_divider_material.xml"
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4_notification_bg_low_normal.9.png.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\4082c5a69c53a62dd52b1fadf1592f6e\\res\\drawable-mdpi-v4\\notification_bg_low_normal.9.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_local_phone.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\ic_local_phone.xml"
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_dialog_background_radius.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\dialog_background_radius.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_fragment_signup.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\fragment_signup.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_dialog_background_radius.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\dialog_background_radius.xml"
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_local_phone.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\ic_local_phone.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-v21_preference_list_divider_material.xml.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\3eb0a1f76a48f25a2a61848295967183\\res\\drawable-v21\\preference_list_divider_material.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_fragment_jwts_pyfa_pyjhcx.xml.flat",
@@ -320,20 +320,20 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-mdpi-v4\\abc_menu_hardkey_panel_mtrl_mult.9.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_abc_ic_star_black_16dp.png.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxhdpi-v4\\abc_ic_star_black_16dp.png"
-    },
-    {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\menu_toolbar_ut.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\menu\\toolbar_ut.xml"
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-hdpi-v4_abc_text_select_handle_right_mtrl_dark.png.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-hdpi-v4\\abc_text_select_handle_right_mtrl_dark.png"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_abc_cab_background_top_material.xml.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable\\abc_cab_background_top_material.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-hdpi-v4_abc_text_select_handle_right_mtrl_dark.png.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-hdpi-v4\\abc_text_select_handle_right_mtrl_dark.png"
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\menu_toolbar_ut.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\menu\\toolbar_ut.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_abc_ic_star_black_16dp.png.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxhdpi-v4\\abc_ic_star_black_16dp.png"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\color_mtrl_btn_text_color_selector.xml.flat",
@@ -344,20 +344,20 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxhdpi-v4\\abc_textfield_default_mtrl_alpha.9.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_abc_seekbar_track_material.xml.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable\\abc_seekbar_track_material.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4_abc_ic_star_half_black_16dp.png.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xhdpi-v4\\abc_ic_star_half_black_16dp.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_ic_folder_selected.png.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\3fdb3bdc453e8b9bec8284fb23823ee0\\res\\drawable-xxhdpi-v4\\ic_folder_selected.png"
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_abc_seekbar_track_material.xml.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable\\abc_seekbar_track_material.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_abc_activity_chooser_view_list_item.xml.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\layout\\abc_activity_chooser_view_list_item.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_ic_folder_selected.png.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\3fdb3bdc453e8b9bec8284fb23823ee0\\res\\drawable-xxhdpi-v4\\ic_folder_selected.png"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_abc_tooltip.xml.flat",
@@ -432,16 +432,16 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\68d881f58a1fefe712b9bba171779a36\\res\\drawable-xxhdpi-v4\\design_ic_visibility_off.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_mtrl_layout_snackbar_include.xml.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\68d881f58a1fefe712b9bba171779a36\\res\\layout\\mtrl_layout_snackbar_include.xml"
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_abc_ic_commit_search_api_mtrl_alpha.png.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxhdpi-v4\\abc_ic_commit_search_api_mtrl_alpha.png"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4_abc_switch_track_mtrl_alpha.9.png.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xhdpi-v4\\abc_switch_track_mtrl_alpha.9.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_abc_ic_commit_search_api_mtrl_alpha.png.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxhdpi-v4\\abc_ic_commit_search_api_mtrl_alpha.png"
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_mtrl_layout_snackbar_include.xml.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\68d881f58a1fefe712b9bba171779a36\\res\\layout\\mtrl_layout_snackbar_include.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_timeline_head_nulldata.xml.flat",
@@ -492,12 +492,12 @@
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\res_select_chat_bot_edittext_on.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xxhdpi_ic_launcher_foreground.png.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_foreground.png"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_abc_btn_radio_to_on_mtrl_000.png.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xxhdpi-v4\\abc_btn_radio_to_on_mtrl_000.png"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\mipmap-xxhdpi_ic_launcher_foreground.png.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_foreground.png"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4_abc_cab_background_top_mtrl_alpha.9.png.flat",
@@ -544,12 +544,12 @@
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\ic_delete.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_preference_information_material.xml.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\3eb0a1f76a48f25a2a61848295967183\\res\\layout\\preference_information_material.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-ldrtl-mdpi-v17_abc_spinner_mtrl_am_alpha.9.png.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-ldrtl-mdpi-v17\\abc_spinner_mtrl_am_alpha.9.png"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_preference_information_material.xml.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\3eb0a1f76a48f25a2a61848295967183\\res\\layout\\preference_information_material.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout-v21_notification_action_tombstone.xml.flat",
@@ -560,12 +560,12 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\3fdb3bdc453e8b9bec8284fb23823ee0\\res\\drawable-xxxhdpi-v4\\ic_uncheck.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_dialog_timetable_deadline.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dialog_timetable_deadline.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_preference_dropdown_material.xml.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\3eb0a1f76a48f25a2a61848295967183\\res\\layout\\preference_dropdown_material.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_dialog_timetable_deadline.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dialog_timetable_deadline.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_bug_report.xml.flat",
@@ -580,12 +580,12 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-hdpi-v4\\abc_text_select_handle_right_mtrl_light.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_splash.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\splash.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_dynamic_timetable_left_time.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dynamic_timetable_left_time.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_splash.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\splash.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\color_abc_primary_text_disable_only_material_light.xml.flat",
@@ -636,12 +636,12 @@
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dialog_emptyclassroom_detail.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_dynamic_location_info.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dynamic_location_info.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4_abc_ic_star_half_black_36dp.png.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-xhdpi-v4\\abc_ic_star_half_black_36dp.png"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_dynamic_location_info.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dynamic_location_info.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_dir8.png.flat",
@@ -676,16 +676,16 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable\\abc_ratingbar_small_material.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_location_radius_background.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\location_radius_background.xml"
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_right.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\right.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_dynamic_task_card_ddl.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dynamic_task_card_ddl.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_right.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\right.xml"
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_location_radius_background.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\location_radius_background.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4_notification_bg_low_pressed.9.png.flat",
@@ -736,24 +736,24 @@
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\res_select_add_event_ddl_off.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_util_preference_toolbar.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\util_preference_toolbar.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_mood_happy.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\ic_mood_happy.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_util_preference_toolbar.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\util_preference_toolbar.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_abc_btn_radio_material.xml.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable\\abc_btn_radio_material.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_empty.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\ic_empty.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_now_circle.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\ic_now_circle.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_ic_empty.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\ic_empty.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxhdpi-v4_abc_list_longpressed_holo.9.png.flat",
@@ -824,12 +824,12 @@
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dynamic_dormitory_item.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4_abc_ic_menu_paste_mtrl_am_alpha.png.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-mdpi-v4\\abc_ic_menu_paste_mtrl_am_alpha.png"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_fab_vpn.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\fab_vpn.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4_abc_ic_menu_paste_mtrl_am_alpha.png.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-mdpi-v4\\abc_ic_menu_paste_mtrl_am_alpha.png"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_select_dialog_multichoice_material.xml.flat",
@@ -862,10 +862,6 @@
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_activity_attitude.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\activity_attitude.xml"
-    },
-    {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_login_wifi.webp.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\login_wifi.webp"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-xxxhdpi-v4_abc_ic_menu_selectall_mtrl_alpha.png.flat",
@@ -1086,6 +1082,10 @@
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_dialog_timetable_remind.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dialog_timetable_remind.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_dynamic_xnxq_spinner_dropdown_item.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dynamic_xnxq_spinner_dropdown_item.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable-hdpi_timetable_card_background.xml.flat",
@@ -1640,10 +1640,6 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\drawable-mdpi-v4\\abc_btn_switch_to_on_mtrl_00001.9.png"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_style_timetable_horizonalitem.xml.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\style_timetable_horizonalitem.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\color_abc_search_url_text.xml.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\color\\abc_search_url_text.xml"
     },
@@ -1834,10 +1830,6 @@
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\anim_recycler_layout_animation_slide_from_right.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\anim\\recycler_layout_animation_slide_from_right.xml"
-    },
-    {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_login_vpn.webp.flat",
-        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\login_vpn.webp"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_preference_information.xml.flat",
@@ -2798,6 +2790,10 @@
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\drawable_round_grey.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable\\round_grey.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_dynamic_xnxq_spinner_item.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dynamic_xnxq_spinner_item.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\release\\layout_mtrl_layout_snackbar.xml.flat",

@@ -16,7 +16,8 @@
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:scaleType="centerCrop"
         android:visibility="visible"
-        app:srcCompat="?attr/drawer_header_background" />
+        app:srcCompat="?attr/drawer_header_background"
+        android:focusable="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="48dp"
             android:layout_marginBottom="16dp"
             android:clickable="false"
@@ -70,10 +71,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_margin="2dp"
-                    android:layout_marginRight="24dp"
+                    android:layout_marginEnd="24dp"
                     android:fontFamily="sans-serif-black"
                     android:singleLine="true"
-                    android:text="杨涵丞"
                     android:textColor="@color/material_text_icon_white"
                     android:textSize="18sp" />
 
@@ -83,10 +83,9 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"
                     android:layout_margin="2dp"
-                    android:layout_marginRight="24dp"
+                    android:layout_marginEnd="24dp"
                     android:alpha="0.8"
                     android:singleLine="true"
-                    android:text="杨涵丞"
                     android:textColor="@color/material_text_icon_white"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -98,7 +97,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/drawer_radius_bg"
             android:gravity="center|top"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -118,7 +118,8 @@
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     app:cardBackgroundColor="#00000000"
                     app:cardCornerRadius="24dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:focusable="true">
 
                     <ImageView
                         android:id="@+id/imageView4"
@@ -133,7 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="课表管理"
+                    android:text="@string/main_drawer_menu_curriculums"
                     android:textColor="?attr/text_color_secondary"
                     android:textSize="12sp" />
 
@@ -157,7 +158,8 @@
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     app:cardBackgroundColor="#00000000"
                     app:cardCornerRadius="24dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:focusable="true">
 
                     <ImageView
                         android:layout_width="24dp"
@@ -171,7 +173,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="学习助手"
+                    android:text="@string/main_drawer_menu_studyassistant"
                     android:textColor="?attr/text_color_secondary"
                     android:textSize="12sp" />
 
@@ -195,7 +197,8 @@
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     app:cardBackgroundColor="#00000000"
                     app:cardCornerRadius="24dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    android:focusable="true">
 
                     <ImageView
                         android:layout_width="24dp"
@@ -210,7 +213,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="希塔"
+                    android:text="@string/main_drawer_menu_hita"
                     android:textColor="?attr/text_color_secondary"
                     android:textSize="12sp" />
 
@@ -248,7 +251,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="主题"
+                    android:text="@string/main_drawer_menu_theme"
                     android:textColor="?attr/text_color_secondary"
                     android:textSize="12sp" />
 
@@ -271,6 +274,7 @@
         android:padding="16dp"
         android:tint="@color/material_text_icon_white"
         app:srcCompat="@drawable/ic_settings"
-        app:theme="@style/button_ripple_white" />
+        app:theme="@style/button_ripple_white"
+        tools:ignore="RtlHardcoded" />
 
 </FrameLayout>

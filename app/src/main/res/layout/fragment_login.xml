@@ -21,61 +21,49 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/usernameLayout"
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:minHeight="56dp"
-                android:textColorHint="?attr/text_color_secondary">
+                android:background="@color/transparent_none"
+                android:hint="@string/login_username"
+                android:padding="16dp"
+                android:singleLine="true"
+                android:textColor="?attr/text_color_primary" />
 
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="账号"
-                    android:singleLine="true"
-                    android:textColor="?attr/text_color_primary" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/passwordLayout"
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_weight="1"
-                android:minHeight="56dp"
-                android:textColorHint="?attr/text_color_secondary">
+                android:background="@color/transparent_none"
+                android:hint="@string/login_password"
+                android:inputType="textPassword"
+                android:padding="16dp"
+                android:singleLine="true"
+                android:textColor="?attr/text_color_primary" />
 
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="密码"
-                    android:inputType="textPassword"
-                    android:singleLine="true"
-                    android:textColor="?attr/text_color_primary" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.stupidtree.hita.diy.ButtonLoading
-                android:id="@+id/login"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:clickable="true"
-                android:foregroundGravity="center"
-                app:BL_backgroundColor="#80ffffff"
-                app:BL_circleColor="?attr/colorPrimary"
-                app:BL_circleColorSecond="?attr/colorPrimaryDark"
-                app:BL_enable="true"
-                app:BL_stateShow="normal"
-                app:BL_text="登录"
-                app:BL_textColor="#FFFFFF"
-                app:BL_textSize="14sp" />
+                android:layout_height="80dp">
+
+                <com.stupidtree.hita.diy.ButtonLoading
+                    android:id="@+id/login"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:clickable="true"
+                    android:foregroundGravity="center"
+                    app:BL_backgroundColor="#80ffffff"
+                    app:BL_circleColor="?attr/colorPrimary"
+                    app:BL_circleColorSecond="?attr/colorPrimaryDark"
+                    app:BL_enable="true"
+                    app:BL_stateShow="normal"
+                    app:BL_text="@string/login"
+                    app:BL_textColor="#FFFFFF"
+                    app:BL_textSize="14sp"
+                    android:focusable="true" />
+            </FrameLayout>
 
         </LinearLayout>
 

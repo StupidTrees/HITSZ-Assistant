@@ -84,7 +84,7 @@
             android:authorities="com.stupidtree.hita.BmobContentProvider" />
 
         <activity
-            android:name=".activities.ActivityRankBoard"
+            android:name=".activities.ActivityLeaderBoard"
             android:label="@string/title_activity_food"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -120,7 +120,7 @@
             android:label="@string/title_activity_gfh"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.ActivityHITSZInfo"
+            android:name=".activities.ActivityNews"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityLogin"

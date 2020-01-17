@@ -3,6 +3,7 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,7 +13,8 @@
     android:orientation="vertical"
     app:cardBackgroundColor="?attr/background_color_second"
     app:cardCornerRadius="16dp"
-    app:cardElevation="0dp">
+    app:cardElevation="0dp"
+    android:focusable="true">
 
     <LinearLayout
         android:id="@+id/mood_vote"
@@ -29,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-black"
-            android:text="Hi, 今天心情如何？"
+            android:text="@string/navi_mood_greet"
             android:textColor="?attr/text_color_primary"
             android:textSize="18sp" />
 
@@ -108,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-black"
-            android:text="今日校园心情"
+            android:text="@string/navi_mood_title"
             android:textColor="?attr/text_color_primary"
             android:textSize="18sp" />
 
@@ -146,7 +148,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -156,9 +158,8 @@
                         android:id="@+id/score"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
                         android:gravity="bottom"
-                        android:text="100.0"
                         android:textColor="?attr/text_color_primary"
                         android:textSize="26sp" />
 
@@ -166,9 +167,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|center"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4dp"
                         android:layout_marginBottom="2.5dp"
-                        android:text="分"
+                        android:text="@string/navi_mood_point"
                         android:textColor="?attr/text_color_secondary"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -177,7 +178,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="8dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -185,16 +186,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|right"
-                        android:text="73%"
                         android:textColor="?attr/text_color_secondary"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="RtlHardcoded" />
 
                     <TextView
                         android:id="@+id/mood_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|center"
-                        android:text="心情愉悦"
                         android:textColor="?attr/text_color_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -206,7 +206,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:orientation="vertical">
 
         </LinearLayout>

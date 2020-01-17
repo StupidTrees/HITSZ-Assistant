@@ -6,37 +6,30 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Build;
 
-import androidx.cardview.widget.CardView;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.preference.PreferenceManager;
 
-import android.os.IBinder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.stupidtree.hita.activities.ActivityLogin;
 import com.stupidtree.hita.activities.ActivityLoginJWTS;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.activities.ActivityUserCenter;
-import com.stupidtree.hita.core.TimeTable;
-import com.stupidtree.hita.core.TimeTableGenerator;
-import com.stupidtree.hita.core.timetable.EventItem;
-import com.stupidtree.hita.core.timetable.HTime;
-import com.stupidtree.hita.core.timetable.Task;
+import com.stupidtree.hita.timetable.TimeTableGenerator;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.HTime;
+import com.stupidtree.hita.timetable.timetable.Task;
 
-import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -125,7 +118,7 @@ public class TimeWatcher {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (nowEvent != null && nowEvent.eventType == TimeTable.TIMETABLE_EVENT_TYPE_COURSE) {
+            if (nowEvent != null && nowEvent.eventType == TimetableCore.TIMETABLE_EVENT_TYPE_COURSE) {
                 //Log.e("volume_change","cccc");
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
@@ -141,15 +134,15 @@ public class TimeWatcher {
 
     public void refreshProgress(boolean fromOther, boolean refreshTask) {
         try {
-            thisWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
+            timeTableCore.setThisWeekOfTerm(timeTableCore.getCurrentCurriculum().getWeekOfTerm(now));
         } catch (Exception e) {
-            thisWeekOfTerm = -1;
+            timeTableCore.setThisWeekOfTerm(-1);
         }
-        if (defaultSP.getBoolean("dtt_preview", false) && isDataAvailable()) {
+        if (defaultSP.getBoolean("dtt_preview", false) && timeTableCore.isDataAvailable()) {
             TimeTableGenerator.Dynamic_PreviewPlan(now);
-        } else if (isDataAvailable()) {
-            mainTimeTable.clearTask(":::");
-            // mainTimeTable.clearEvent(TimeTable.TIMETABLE_EVENT_TYPE_DYNAMIC);
+        } else if (timeTableCore.isDataAvailable()) {
+            timeTableCore.clearTask(":::");
+            // timeTableCore.clearEvent(TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC);
         }
         refreshTodaysEvents();
         refreshNowAndNextEvent();
@@ -171,7 +164,7 @@ public class TimeWatcher {
     public int getTodayCourseNum() {
         int result = 0;
         for (EventItem ei : todaysEvents) {
-            if (ei.eventType == TimeTable.TIMETABLE_EVENT_TYPE_COURSE) {
+            if (ei.eventType == TimetableCore.TIMETABLE_EVENT_TYPE_COURSE) {
                 result++;
             }
         }
@@ -179,38 +172,37 @@ public class TimeWatcher {
     }
 
     private void updateTaskProgress() {
-        if (!isDataAvailable()) return;
-        List<EventItem> events = mainTimeTable.getAllEvents();
+        if (!timeTableCore.isDataAvailable()) return;
+        List<EventItem> events = timeTableCore.getAllEvents();
         for (EventItem ei : events) {
             if (!ei.hasPassed(now) || TextUtils.isEmpty(ei.tag4) || ei.tag4 != null && ei.tag4.equals("null"))
                 continue;
-            Task t = mainTimeTable.getTaskWithUUID(ei.tag4);
+            Task t = timeTableCore.getTaskWithUUID(ei.tag4);
             if (t != null) {
                 if (t.getEvent_map().get(ei.getUuid() + ":::" + ei.week) != null && !t.getEvent_map().get(ei.getUuid() + ":::" + ei.week)) {
                     t.putEventMap(ei.getUuid() + ":::" + ei.week, true);
                     float newProgress = (float) (100 * ((float) t.getProgress() / 100.0 * t.getLength() + ei.getDuration()) / t.getLength());
                     t.updateProgress((int) newProgress);
-                    if (newProgress >= 100f) mainTimeTable.setFinishTask(t,true);
+                    if (newProgress >= 100f) timeTableCore.setFinishTask(t,true);
                 }
             }
         }
-        List<Task> taks = mainTimeTable.getUnfinishedTasks();
+        List<Task> taks = timeTableCore.getUnfinishedTasks();
         for (Task t : taks) {
             if (!t.has_deadline) continue;
-            Calendar end = mainTimeTable.core.getDateAt(t.tW, t.tDOW, t.eTime);
-            if (end.before(now)) mainTimeTable.setFinishTask(t,true);
+            Calendar end = timeTableCore.getCurrentCurriculum().getDateAt(t.tW, t.tDOW, t.eTime);
+            if (end.before(now)) timeTableCore.setFinishTask(t,true);
         }
 
     }
 
     private void refreshTodaysEvents() {
-        if (!isDataAvailable()) return;
+        if (!timeTableCore.isDataAvailable()) return;
         int DOW = now.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : now.get(Calendar.DAY_OF_WEEK) - 1;
         todaysEvents.clear();
-        thisWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
-        if (thisWeekOfTerm < 0) isThisTerm = false;
-        else isThisTerm = true;
-        todaysEvents.addAll(mainTimeTable.getOneDayEvents(thisWeekOfTerm, DOW));
+        timeTableCore.setThisWeekOfTerm(timeTableCore.getCurrentCurriculum().getWeekOfTerm(now));
+        timeTableCore.setThisTerm(timeTableCore.getThisWeekOfTerm()>=0);
+        todaysEvents.addAll(timeTableCore.getOneDayEvents(timeTableCore.getThisWeekOfTerm(), DOW));
         Collections.sort(todaysEvents);
     }
 
@@ -222,8 +214,8 @@ public class TimeWatcher {
             for (int i = todaysEvents.size() - 1; i >= 0; i--) {
                 EventItem ei = todaysEvents.get(i);
                 if (ei.hasCross(nowTime) && (!ei.isWholeDay)
-                        && ei.eventType != TimeTable.TIMETABLE_EVENT_TYPE_DEADLINE
-                        && ei.eventType != TimeTable.TIMETABLE_EVENT_TYPE_REMIND
+                        && ei.eventType != TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE
+                        && ei.eventType != TimetableCore.TIMETABLE_EVENT_TYPE_REMIND
                 ) {
                     nowEvent = ei;
                     changed_now = true;
@@ -248,7 +240,7 @@ public class TimeWatcher {
                 nowProgress = ((float) new HTime(now).getDuration(nowEvent.startTime)) / ((float) nowEvent.endTime.getDuration(nowEvent.startTime));
                 if (autoMute) {
                     String x = defaultSP.getString("mute_course", null);
-                    if (nowEvent.eventType == TimeTable.TIMETABLE_EVENT_TYPE_COURSE && (x == null || !nowEvent.equalsEvent(x))) {
+                    if (nowEvent.eventType == TimetableCore.TIMETABLE_EVENT_TYPE_COURSE && (x == null || !nowEvent.equalsEvent(x))) {
                         startMute();
                         defaultSP.edit().putString("mute_course", nowEvent.getEventsIdStr()).apply();
                         sendNotification("已开启静音", "HITSZ学习助手");
@@ -256,7 +248,7 @@ public class TimeWatcher {
                 }
 
             }
-            if (nextEvent != null && nextEvent.eventType == TimeTable.TIMETABLE_EVENT_TYPE_COURSE) {
+            if (nextEvent != null && nextEvent.eventType == TimetableCore.TIMETABLE_EVENT_TYPE_COURSE) {
                 if (autoMute) {
                     String x = defaultSP.getString("mute_course", null);
                     if (x == null || !nextEvent.equalsEvent(x)) {
@@ -271,14 +263,14 @@ public class TimeWatcher {
 
             }
 
-            if ((nowEvent == null && !next_on) || (nowEvent != null && nowEvent.eventType != TimeTable.TIMETABLE_EVENT_TYPE_COURSE)) {
+            if ((nowEvent == null && !next_on) || (nowEvent != null && nowEvent.eventType != TimetableCore.TIMETABLE_EVENT_TYPE_COURSE)) {
                 if (autoMute && defaultSP.getBoolean("auto_mute_after", true)) {
                     String mute = defaultSP.getString("mute_course", null);
                     //  Log.e("mute",mute);
                     if (mute != null) {
                         boolean has = false;
                         for (EventItem ei : todaysEvents) {
-                            if (ei.eventType != TimeTable.TIMETABLE_EVENT_TYPE_COURSE) continue;
+                            if (ei.eventType != TimetableCore.TIMETABLE_EVENT_TYPE_COURSE) continue;
                             if (ei.getEventsIdStr().equals(mute)) {
                                 has = true;
                                 if (ei.endTime.before(nowTime)) {
@@ -327,12 +319,12 @@ public class TimeWatcher {
         String title;
         String content;
         int IntentTerminal = 0;
-        if (CurrentUser == null || !isDataAvailable()) {
+        if (CurrentUser == null || !timeTableCore.isDataAvailable()) {
             title = "欢迎使用HITSZ助手";
             content = "请登录导入课表后使用";
             if (CurrentUser == null) IntentTerminal = 1;
             else if (TextUtils.isEmpty(CurrentUser.getStudentnumber())) IntentTerminal = 2;
-            else if (!isDataAvailable()) IntentTerminal = 3;
+            else if (!timeTableCore.isDataAvailable()) IntentTerminal = 3;
         } else if (todaysEvents.size() == 0) {
             title = "今日空闲";
             content = "自由发挥";

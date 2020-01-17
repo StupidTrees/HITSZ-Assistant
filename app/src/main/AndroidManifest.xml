@@ -58,12 +58,6 @@
             android:label="@string/title_activity_search"
             android:theme="@style/ChatBotTheme"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activities.ActivityXL"
-            android:label="@string/title_activity_xl"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.ActivityYX_FDY" />
-        <activity android:name=".activities.ActivityYX_ToSchool" />
         <activity android:name=".activities.ActivityEmptyClassroomDetail" />
         <activity android:name=".activities.ActivityEmptyClassroom" />
         <activity android:name=".activities.ActivityPostDetail" />
@@ -81,16 +75,16 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".TimeLineWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.stupidtree.hita.UPDATE_ALL" />
-            </intent-filter>
+        <!--<receiver android:name=".TimeLineWidget">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
+                <!--<action android:name="com.stupidtree.hita.UPDATE_ALL" />-->
+            <!--</intent-filter>-->
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/time_line_widget_info" />
-        </receiver>
+            <!--<meta-data-->
+                <!--android:name="android.appwidget.provider"-->
+                <!--android:resource="@xml/time_line_widget_info" />-->
+        <!--</receiver>-->
         <receiver android:name=".NotificationClickReceiver" />
 
         <activity android:name=".activities.ActivitySetting" />
@@ -102,20 +96,13 @@
             android:authorities="com.stupidtree.hita.BmobContentProvider" />
 
         <activity
-            android:name=".activities.ActivityRankBoard"
+            android:name=".activities.ActivityLeaderBoard"
             android:label="@string/title_activity_food"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.ActivityTeacher"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.ActivitySubjectManager"
-            android:theme="@style/AppTheme" />
         <activity android:name=".activities.ActivityDynamicTable" />
-        <activity
-            android:name=".activities.ActivityCourse"
-            android:label="@string/title_activity_couse"
-            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityJWTS"
             android:theme="@style/AppTheme" />
@@ -136,15 +123,18 @@
         <activity
             android:name=".activities.ActivityLoginJWTS"
             android:label="@string/title_activity_gfh"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityLoginUT"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.ActivityHITSZInfo"
+            android:name=".activities.ActivityNews"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityLogin"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityTimeTable"
@@ -161,14 +151,14 @@
             android:label="@string/title_activity_notes"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.ActivityUniversity"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".activities.ActivityMain"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activities.ActivityCampusLocations" />
+
+        <activity
+            android:name=".activities.ActivitySchoolCalendar"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityCurriculumManager"
             android:label="@string/title_activity_import_data"

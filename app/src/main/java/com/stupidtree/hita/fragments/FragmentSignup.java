@@ -25,7 +25,7 @@ import cn.bmob.v3.listener.SaveListener;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
-import static com.stupidtree.hita.HITAApplication.clearData;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class FragmentSignup extends BaseFragment {
     
@@ -88,7 +88,7 @@ public class FragmentSignup extends BaseFragment {
                                     @Override
                                     public void done(HITAUser hitaUser, BmobException e) {
                                         CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
-                                        clearData();
+                                        timeTableCore.clearData();
                                         getActivity().finish();
                                     }
                                 });

@@ -38,7 +38,7 @@ import com.stupidtree.hita.online.Teacher;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.login_jwts;
+import static com.stupidtree.hita.HITAApplication.jwCore;
 import static com.stupidtree.hita.HITAApplication.login_ut;
 import static com.stupidtree.hita.HITAApplication.ut_username;
 
@@ -158,7 +158,7 @@ public class ActivityUtils {
     }
     public static void startJWTSActivity(final Context from){
         Intent k;
-        if(login_jwts){
+        if(jwCore.hasLogin()){
             k = new Intent(HContext, ActivityJWTS.class);
             from.startActivity(k);
         } else{
@@ -189,7 +189,7 @@ public class ActivityUtils {
     }
     public static void startJWTSActivity_forPage(final Context from,int page){
         Intent k;
-        if(login_jwts){
+        if(jwCore.hasLogin()){
             k = new Intent(HContext, ActivityJWTS.class);
             k.putExtra("terminal",page+"");
             from.startActivity(k);

@@ -80,6 +80,7 @@
         android:layout_marginRight="96dp"
         android:layout_marginBottom="@dimen/material_fab_margin"
         android:clickable="true"
+        app:layout_behavior=".diy.mBottomHideBehavior"
         android:tint="@color/material_text_icon_white"
         app:srcCompat="@drawable/ic_return" />
 
@@ -89,6 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/material_fab_margin"
+        app:layout_behavior=".diy.mBottomHideBehavior"
         android:clickable="true"
         android:tint="@color/material_text_icon_white"
         app:srcCompat="@drawable/fab_add" />

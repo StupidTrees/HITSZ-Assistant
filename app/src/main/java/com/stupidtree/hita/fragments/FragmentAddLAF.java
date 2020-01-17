@@ -44,16 +44,16 @@ import static android.app.Activity.RESULT_OK;
 import static com.stupidtree.hita.HITAApplication.HContext;
 
 public class FragmentAddLAF extends BottomSheetDialogFragment {
-    ImageView image,clear_location,clear_image;
-    String URI;
-    TextView pickLocation,dialog_title,add;
+    private ImageView image,clear_location,clear_image;
+    private String URI;
+    private TextView pickLocation,dialog_title,add;
     EditText title;
-    Button cancel,post;
-    EditText content,contact;
-    LostAndFound p;
+    private Button cancel,post;
+    private EditText content,contact;
+    private LostAndFound p;
     int type;
-    AttachedActivity mAttachedActivity;
-    Switch  anonymous;
+    private AttachedActivity mAttachedActivity;
+    private Switch  anonymous;
 
     public static final int LOST = 144;
     public static final int FOUND = 239;
@@ -135,7 +135,7 @@ public class FragmentAddLAF extends BottomSheetDialogFragment {
         pickLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PickInfoDialog(getContext(), "选择地点", PickInfoDialog.LOCATION_ALL, new PickInfoDialog.OnPickListener() {
+                new PickInfoDialog(getContext(), getString(R.string.pick_location), PickInfoDialog.LOCATION_ALL, new PickInfoDialog.OnPickListener() {
                     @Override
                     public void OnPick(String title, Object obj) {
                         if(obj instanceof Location){
@@ -157,7 +157,7 @@ public class FragmentAddLAF extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 if(TextUtils.isEmpty(title.getText())){
-                    Toast.makeText(getContext(),"请输入标题！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),getString(R.string.add_laf_noti_title),Toast.LENGTH_SHORT).show();
                     return;
                 }
                 p.setAuthor(BmobUser.getCurrentUser(HITAUser.class));
@@ -204,7 +204,7 @@ public class FragmentAddLAF extends BottomSheetDialogFragment {
         clear_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickLocation.setText("不设置地点");
+                pickLocation.setText(getString(R.string.add_laf_no_location));
                 p.setLocation(null);
                 clear_location.setVisibility(View.GONE);
             }
@@ -255,8 +255,8 @@ public class FragmentAddLAF extends BottomSheetDialogFragment {
             }
         });
 
-        title.setHint("输入标题："+(type==FOUND?"找到…":"丢失…"));
-        dialog_title.setText("发布"+(type==FOUND?"失物招领":"寻物启事"));
+        title.setHint(String.format(getString(R.string.add_laf_name_hint),(type==FOUND?getString(R.string.add_laf_name_hint_found):getString(R.string.add_laf_name_hint_lost))));
+        dialog_title.setText(String.format(getString(R.string.add_laf_title),(type==FOUND?getString(R.string.found):getString(R.string.lost))));
         add.setVisibility(View.VISIBLE);
         image.setVisibility(View.GONE);
     }

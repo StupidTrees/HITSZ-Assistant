@@ -37,7 +37,7 @@
                     android:id="@+id/mainTabs"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:layout_marginRight="32dp"
+                    android:layout_marginEnd="32dp"
                     app:tabRippleColor="?attr/colorPrimary"
                     app:tabSelectedTextColor="@color/main_tabs_selected_color"
                     app:tabTextAppearance="@style/MainTabsTextTheme"
@@ -70,7 +70,9 @@
             app:fab_shadowRadius="16dp"
             app:fab_showShadow="true"
             app:layout_behavior=".diy.mBottomHideBehavior"
-            app:srcCompat="@drawable/bt_timeline_toolbar_timetable" />
+            app:srcCompat="@drawable/bt_timeline_toolbar_timetable"
+            android:focusable="true"
+            tools:ignore="RtlHardcoded" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

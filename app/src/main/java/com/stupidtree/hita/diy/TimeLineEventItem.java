@@ -1,6 +1,6 @@
 package com.stupidtree.hita.diy;
 
-import com.stupidtree.hita.core.timetable.EventItem;
+import com.stupidtree.hita.timetable.timetable.EventItem;
 
 public class TimeLineEventItem implements Comparable{
     public EventItem event = null;

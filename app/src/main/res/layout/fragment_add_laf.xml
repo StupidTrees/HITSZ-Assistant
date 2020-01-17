@@ -27,10 +27,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-black"
             android:gravity="center|start"
-            android:text="发布"
+            android:text="@string/add_laf_title"
             android:textColor="?attr/text_color_primary"
             android:textSize="22sp" />
     </LinearLayout>
@@ -48,18 +48,20 @@
             android:layout_gravity="center"
             android:tint="?attr/colorControlNormal"
             android:tintMode="src_in"
-            app:srcCompat="@drawable/ic_subtitles" />
+            app:srcCompat="@drawable/ic_subtitles"
+            tools:ignore="ContentDescription" />
 
         <EditText
             android:id="@+id/edit_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:background="@color/transparent_none"
             android:ems="10"
-            android:hint="输入标题"
+            android:hint="@string/add_laf_name_hint"
             android:textColorHint="?attr/text_color_secondary"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:importantForAutofill="no" />
     </LinearLayout>
 
     <LinearLayout
@@ -82,9 +84,9 @@
             android:id="@+id/edit_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:background="@color/transparent_none"
-            android:hint="输入详细内容"
+            android:hint="@string/add_laf_detail_hint"
             android:inputType="textPersonName"
             android:singleLine="false"
             android:textColorHint="?attr/text_color_secondary"
@@ -109,9 +111,9 @@
             app:srcCompat="@drawable/ic_image" />
 
         <FrameLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1">
 
             <TextView
@@ -122,9 +124,10 @@
                 android:clickable="true"
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center|start"
-                android:text="添加图片"
+                android:text="@string/add_laf_image"
                 android:textColor="?attr/colorControlNormal"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:focusable="true" />
 
             <ImageView
                 android:id="@+id/laf_image"
@@ -162,7 +165,8 @@
         android:layout_marginBottom="4dp"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:focusable="true">
 
         <ImageView
             android:layout_width="16dp"
@@ -174,13 +178,13 @@
 
         <EditText
             android:id="@+id/edit_contact"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:background="@color/transparent_none"
             android:ems="10"
-            android:hint="设置联系方式"
+            android:hint="@string/add_laf_contact_hint"
             android:inputType="textPersonName"
             android:textColorHint="?attr/text_color_secondary"
             android:textSize="16sp" />
@@ -196,7 +200,8 @@
         android:layout_marginBottom="4dp"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:focusable="true">
 
         <ImageView
             android:layout_width="16dp"
@@ -208,16 +213,17 @@
 
         <TextView
             android:id="@+id/location_text"
-            android:layout_width="308dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center|start"
-            android:text="不设置地点"
+            android:text="@string/add_laf_location"
             android:textColor="?attr/text_color_secondary"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:focusable="true" />
 
         <ImageView
             android:id="@+id/location_clear"
@@ -256,9 +262,9 @@
             android:id="@+id/anonymous"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:gravity="center|start"
-            android:text="匿名发布"
+            android:text="@string/add_laf_anonymous"
             android:textColor="?attr/text_color_secondary"
             android:textSize="16sp" />
     </LinearLayout>
@@ -275,7 +281,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="取消"
+            android:text="@string/button_cancel"
             android:textSize="16sp" />
 
         <Button
@@ -284,7 +290,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="发布"
+            android:text="@string/button_post"
             android:textSize="16sp" />
     </LinearLayout>
 

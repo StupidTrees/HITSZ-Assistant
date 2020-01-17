@@ -13,143 +13,250 @@
         android:background="#00000000"
         app:elevation="0dp">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-            app:toolbarId="@+id/toolbar">
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="?attr/background_color_second"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="12dp"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="260dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                app:cardBackgroundColor="?attr/background_color_second"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp">
+                android:layout_height="wrap_content"
+                android:background="@drawable/gradient_bg"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageView22"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/gradient_bg" />
+                    android:id="@+id/cm_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:tint="@color/material_text_icon_white"
+                    app:srcCompat="@drawable/ic_spring"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/cm_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:fontFamily="sans-serif-black"
+                    android:maxLines="2"
+                    android:text="2019春季学期"
+                    android:textColor="@color/material_text_icon_white"
+                    android:textSize="18sp"
+                    tools:ignore="HardcodedText" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/cm_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:padding="16dp"
+                    app:srcCompat="@drawable/ic_more"
+                    app:theme="@style/button_ripple_white" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="?attr/background_color_second"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/set_start_date"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/start_date_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/cm_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="16dp"
-                            android:layout_weight="1"
-                            android:fontFamily="sans-serif-black"
-                            android:maxLines="2"
-                            android:text="2019春季学期"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="24sp" />
-
-                        <ImageView
-                            android:id="@+id/cm_more"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:padding="16dp"
-                            app:srcCompat="@drawable/ic_more"
-                            app:theme="@style/button_ripple_white" />
-                    </LinearLayout>
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center|start"
+                        android:text="开始于：2019-6-24"
+                        android:textColor="?attr/text_color_secondary"
+                        android:textSize="16sp"
+                        tools:ignore="HardcodedText" />
 
                     <ImageView
-                        android:id="@+id/cm_image"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center|right"
+                        android:layout_marginStart="4dp"
+                        android:alpha="0.6"
+                        android:tint="?attr/colorControlNormal"
+                        android:tintMode="src_in"
+                        app:srcCompat="@drawable/bt_edit"
+                        app:theme="@style/button_ripple_primary"
+                        tools:ignore="RtlHardcoded" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/set_total_weeks"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <TextView
+                        android:id="@+id/total_weeks_text"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:padding="8dp"
-                        android:tint="@color/material_text_icon_white"
-                        app:srcCompat="@drawable/ic_spring" />
+                        android:gravity="center|end"
+                        android:text="共15周"
+                        android:textColor="?attr/text_color_secondary"
+                        android:textSize="16sp"
+                        tools:ignore="HardcodedText" />
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center|right"
+                        android:layout_marginStart="4dp"
+                        android:alpha="0.6"
+                        android:tint="?attr/colorControlNormal"
+                        android:tintMode="src_in"
+                        app:srcCompat="@drawable/bt_edit"
+                        app:theme="@style/button_ripple_primary"
+                        tools:ignore="RtlHardcoded" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="?attr/background_color_second"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Switch
+                    android:id="@+id/enable_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="16dp"
+                    android:layout_weight="1"
+                    android:text="@string/curriculum_manager_enable_color"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="16sp" />
+
+                <net.cachapa.expandablelayout.ExpandableLayout
+                    android:id="@+id/expandable"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:el_expanded="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginBottom="16dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="8dp"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:id="@+id/imageView23"
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_gravity="center"
-                            android:tint="@color/material_text_icon_white"
-                            app:srcCompat="@drawable/import_startdate" />
-
                         <TextView
-                            android:id="@+id/cm_from"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:text="2019-6-24"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="16sp" />
-
-                        <Space
+                            android:id="@+id/reset_colors"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <ImageView
-                            android:id="@+id/imageView24"
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
                             android:layout_gravity="center"
-                            android:tint="@color/material_text_icon_white"
-                            app:srcCompat="@drawable/import_ttweek" />
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:padding="16dp"
+                            android:text="@string/curriculum_manager_randomly_allocate_color"
+                            android:textColor="?attr/text_color_secondary" />
 
                         <TextView
-                            android:id="@+id/cm_totalweek"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/reset_colors_to_theme"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:text="2019-6-24"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="16sp" />
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:gravity="center"
+                            android:padding="16dp"
+                            android:text="@string/curriculum_manager_set_theme_color"
+                            android:textColor="?attr/text_color_secondary" />
 
                     </LinearLayout>
 
-                </LinearLayout>
+                </net.cachapa.expandablelayout.ExpandableLayout>
 
-            </androidx.cardview.widget.CardView>
+            </LinearLayout>
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/subjects_tablayout"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
+            app:layout_scrollFlags="enterAlwaysCollapsed|exitUntilCollapsed"
             app:tabGravity="fill"
+            app:tabIndicator="@color/transparent_none"
             app:tabMode="scrollable"
-            app:tabSelectedTextColor="?attr/colorPrimary"
-            app:tabTextAppearance="@style/MainTabsTextTheme_normal"
+            app:tabSelectedTextColor="?attr/text_color_primary"
+            app:tabTextAppearance="@style/MainTabsTextTheme"
             app:tabTextColor="?attr/text_color_secondary"
             app:theme="@style/button_ripple_primary" />
 

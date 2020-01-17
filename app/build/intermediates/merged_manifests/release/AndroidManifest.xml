@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stupidtree.hita"
-    android:versionCode="20191217"
-    android:versionName="12.17" >
+    android:versionCode="20200114"
+    android:versionName="新教务适配1.13" >
 
     <uses-sdk
         android:minSdkVersion="23"
@@ -139,16 +139,19 @@
         <activity
             android:name="com.stupidtree.hita.activities.ActivityLoginJWTS"
             android:label="@string/title_activity_gfh"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityLoginUT"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityHITSZInfo"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityLogin"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityTimeTable"
             android:theme="@style/AppTheme" />

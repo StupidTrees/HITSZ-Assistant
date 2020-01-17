@@ -1,28 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu tools:showIn="navigation_view" xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:title="功能"
+<item android:title="@string/main_drawer_category_function"
     >
     <menu>
-    <!--<item android:title="个人中心" android:id="@+id/drawer_nav_user" android:icon="@drawable/ic_menu_user" />-->
-    <!--<item android:title="课表管理" android:id="@+id/drawer_nav_datamanage" android:icon="@drawable/ic_menu_timetable" />-->
-    <!--<item android:title="动态时间表" android:id="@+id/drawer_nav_dynamictimetable" android:icon="@drawable/ic_dynamic"/>-->
-    <!--<item android:title="主题" android:id="@+id/drawer_nav_theme" android:icon="@drawable/ic_menu_theme"/>-->
-        <item android:title="教务系统" android:id="@+id/drawer_nav_jwts" android:icon="@drawable/ic_menu_jwts"/>
-        <item android:title="大学城内部网" android:id="@+id/drawer_nav_ut" android:icon="@drawable/ic_card"/>
+        <item android:title="@string/main_drawer_menu_jwts" android:id="@+id/drawer_nav_jwts" android:icon="@drawable/ic_menu_jwts"/>
+        <item android:title="@string/main_drawer_menu_ut" android:id="@+id/drawer_nav_ut" android:icon="@drawable/ic_card"/>
 
-        <item android:title="信息窗口" android:id="@+id/drawer_nav_info" android:icon="@drawable/ic_menu_bulletin"/>
-        <item android:title="搜索" android:id="@+id/drawer_nav_search" android:icon="@drawable/ic_search"/>
+        <item android:title="@string/main_drawer_menu_info" android:id="@+id/drawer_nav_info" android:icon="@drawable/ic_menu_bulletin"/>
+        <item android:title="@string/main_drawer_menu_search" android:id="@+id/drawer_nav_search" android:icon="@drawable/ic_search"/>
       </menu>
 </item>
 
-    <item android:title="其他">
+    <item android:title="@string/main_drawer_category_other">
         <menu>
             <item  android:id="@+id/drawer_nav_darkmode" android:icon="@drawable/ic_moon"
                 android:actionLayout="@layout/action_switch_darkmode"
-                android:title="深色模式" />
-            <item android:title="设置" android:id="@+id/drawer_nav_settings" android:icon="@drawable/ic_menu_manage"/>
-         <item android:title="意见反馈" android:id="@+id/drawer_nav_report" android:icon="@drawable/ic_bug_report" />
-            <item android:title="关于" android:id="@+id/drawer_nav_about" android:icon="@drawable/ic_info_black_24dp" />
+                android:title="@string/main_drawer_menu_darkmode" />
+            <item android:title="@string/main_drawer_menu_settings" android:id="@+id/drawer_nav_settings" android:icon="@drawable/ic_menu_manage"/>
+         <item android:title="@string/main_drawer_menu_report" android:id="@+id/drawer_nav_report" android:icon="@drawable/ic_bug_report" />
+            <item android:title="@string/main_drawer_menu_about" android:id="@+id/drawer_nav_about" android:icon="@drawable/ic_info_black_24dp" />
 
         </menu>
     </item>

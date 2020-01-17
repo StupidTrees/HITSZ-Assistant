@@ -109,7 +109,7 @@ public class ActivityTeacher extends BaseActivity {
                                     if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED)
                                         pageTask.cancel(true);
                                     pageTask = new LoadTeacherPageTask();
-                                    pageTask.executeOnExecutor(HITAApplication.TPE);;
+                                    pageTask.executeOnExecutor(HITAApplication.TPE);
                                 }
                             })
 
@@ -141,7 +141,7 @@ public class ActivityTeacher extends BaseActivity {
                 if (menuItem.getItemId() == R.id.action_website) {
                     if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
                     pageTask = new LoadTeacherPageTask();
-                    pageTask.executeOnExecutor(HITAApplication.TPE);;
+                    pageTask.executeOnExecutor(HITAApplication.TPE);
                     return true;
                 }
                 return false;

@@ -103,7 +103,7 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
                     offset+=10;
                     if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED)pageTask.cancel(true);
                     pageTask = new LoadTask(true);
-                    pageTask.executeOnExecutor(HITAApplication.TPE);;
+                    pageTask.executeOnExecutor(HITAApplication.TPE);
                 }
             }
         });
@@ -123,7 +123,7 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
                 first = true;
                 if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED)pageTask.cancel(true);
                 pageTask = new LoadTask(true);
-                pageTask.executeOnExecutor(HITAApplication.TPE);;
+                pageTask.executeOnExecutor(HITAApplication.TPE);
             }
         });
     }
@@ -137,7 +137,7 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
     public void Refresh() {
         if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED)pageTask.cancel(true);
         pageTask = new LoadTask(false);
-        pageTask.executeOnExecutor(HITAApplication.TPE);;
+        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
     class LoadTask extends AsyncTask{

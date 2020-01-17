@@ -7,9 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
@@ -101,7 +99,8 @@
                 app:cardCornerRadius="28dp"
                 app:cardElevation="8dp"
                 app:layout_anchor="@+id/demo_card"
-                app:layout_anchorGravity="end|bottom" />
+                app:layout_anchorGravity="end|bottom"
+                tools:ignore="RtlHardcoded" />
 
         </androidx.cardview.widget.CardView>
 
@@ -115,7 +114,7 @@
 
             <RadioGroup
                 android:id="@+id/radioGroup"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="16dp"
                 android:orientation="horizontal"
@@ -128,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="浓烈红"
+                    android:text="@string/theme_name_red"
                     android:textSize="18sp" />
 
                 <RadioButton
@@ -137,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="Lover粉"
+                    android:text="@string/theme_name_pink"
                     android:textSize="18sp" />
 
                 <RadioButton
@@ -146,7 +145,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="高端棕"
+                    android:text="@string/theme_name_brown"
                     android:textSize="18sp" />
 
                 <RadioButton
@@ -155,7 +154,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="哈工蓝"
+                    android:text="@string/theme_name_blue"
                     android:textSize="18sp" />
 
                 <RadioButton
@@ -164,7 +163,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="谷歌灰"
+                    android:text="@string/theme_name_grey"
                     android:textSize="18sp" />
 
                 <RadioButton
@@ -173,7 +172,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="安卓绿"
+                    android:text="@string/theme_name_android"
                     android:textSize="18sp" />
 
                 <RadioButton
@@ -182,7 +181,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="直男紫"
+                    android:text="@string/theme_name_purple"
                     android:textSize="18sp" />
 
                 <RadioButton
@@ -191,7 +190,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="原谅绿"
+                    android:text="@string/theme_name_green"
                     android:textSize="18sp" />
 
                 <RadioButton
@@ -200,7 +199,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="百香橙橙"
+                    android:text="@string/theme_name_deep_orange"
                     android:textSize="18sp" />
 
                 <RadioButton
@@ -209,7 +208,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="Indigo"
+                    android:text="@string/theme_name_indigo"
                     android:textSize="18sp" />
 
                 <RadioButton
@@ -218,19 +217,19 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-                    android:text="蛇精青"
+                    android:text="@string/theme_name_cyan"
                     android:textSize="18sp" />
 
                 <RadioButton
                     android:id="@+id/radioButton12"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginRight="24dp"
+                    android:layout_marginEnd="24dp"
                     android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:text="琥珀"
+                    android:text="@string/theme_name_amber"
                     android:textSize="18sp" />
 
             </RadioGroup>
@@ -243,10 +242,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|top"
-        android:layout_marginRight="32dp"
+        android:layout_marginEnd="32dp"
         android:clickable="true"
         app:layout_anchor="@+id/linearLayout"
         app:layout_anchorGravity="end|top"
-        app:srcCompat="@drawable/fab_done" />
+        app:srcCompat="@drawable/fab_done"
+        tools:ignore="RtlHardcoded"
+        android:focusable="true" />
 
 </FrameLayout>

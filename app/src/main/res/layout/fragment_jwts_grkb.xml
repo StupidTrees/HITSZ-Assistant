@@ -1,158 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    tools:context=".jwts.FragmentJWTS_grkb">
-
+    >
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif-black"
-            android:text="选择导入课表："
-            android:textColor="?attr/text_color_primary"
-            android:textSize="24sp" />
+            android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/spinner_grkb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="8dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="24dp"
+                android:fontFamily="sans-serif-black"
+                android:text="@string/grkb_import_xnxq"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="24sp" />
 
-        <androidx.cardview.widget.CardView
+            <Spinner
+                android:id="@+id/xnxq_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:padding="16dp" />
+
+        </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:cardBackgroundColor="?attr/background_color_second"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="?attr/background_color_second"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp">
+            android:layout_margin="16dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="16dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="4dp"
-                        android:foregroundTintMode="src_in"
-                        android:src="@drawable/ic_dlg_tt_teacher"
-                        android:tint="?attr/colorPrimary" />
-
-                    <Switch
-                        android:id="@+id/switch_teacher"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="4dp"
-                        android:checked="false"
-                        android:text="帮助完善教师数据库"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/textView17"
+                <Switch
+                    android:id="@+id/switch_teacher"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="如果教师信息不全，请开启后导入，这将耗费一些缓存和处理时间，但会帮助我们将教务系统上的教师信息保存到云教师库"
-                    android:textColor="?attr/text_color_secondary" />
+                    android:checked="false"
+                    android:text="@string/grkb_upload_teacher"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="18sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:lineSpacingMultiplier="1.5"
+                android:text="@string/grkb_upload_teacher_hint"
+                android:textColor="?attr/text_color_secondary" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="?attr/background_color_second"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="?attr/background_color_second"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp">
+            android:layout_margin="16dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="16dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="8dp"
-                        android:foregroundTintMode="src_in"
-                        android:src="@drawable/ic_priority_high"
-                        android:tint="?attr/colorPrimary" />
-
-                    <TextView
-                        android:id="@+id/textView31"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="请注意"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/textView31"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="如果出现解析错误，请保持网络畅通导入课表，app将访问云端补丁修复错误课表。但无论如何导入后请务必核对官方课表"
-                    android:textColor="?attr/text_color_secondary"
-                    android:visibility="visible" />
+                    android:layout_weight="1"
+                    android:text="@string/grkb_attention"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:lineSpacingMultiplier="1.5"
+                android:text="@string/grkb_attention_hint"
+                android:textColor="?attr/text_color_secondary"
+                android:visibility="visible" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
 
                 <com.stupidtree.hita.diy.ButtonLoading
                     android:id="@+id/button_import_grkb"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="bottom"
-                    android:layout_marginTop="8dp"
                     android:foregroundGravity="center"
-                    app:BL_backgroundColor="#80ffffff"
-                    app:BL_circleColor="?attr/colorAccent"
-                    app:BL_circleColorSecond="?attr/colorAccent"
+                    app:BL_backgroundColor="@color/transparent_none"
+                    app:BL_circleColor="?attr/colorPrimary"
+                    app:BL_circleColorSecond="?attr/colorFade"
                     app:BL_enable="true"
                     app:BL_stateShow="normal"
                     app:BL_text="导入"
                     app:BL_textColor="#FFFFFF"
-                    app:BL_textSize="14sp" />
+                    app:BL_textSize="18sp" />
+            </FrameLayout>
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 
     </LinearLayout>

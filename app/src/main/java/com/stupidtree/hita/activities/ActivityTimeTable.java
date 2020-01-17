@@ -6,16 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
@@ -29,10 +25,8 @@ import android.widget.LinearLayout;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.adapter.SubjectsListAdapter;
 import com.stupidtree.hita.adapter.TimeTablePagerAdapter;
-import com.stupidtree.hita.core.Subject;
-import com.stupidtree.hita.fragments.FragmentAddCourse;
+import com.stupidtree.hita.timetable.Subject;
 import com.stupidtree.hita.fragments.FragmentAddEvent;
 import com.stupidtree.hita.fragments.FragmentTimeTablePage;
 import com.stupidtree.hita.util.ColorBox;
@@ -42,19 +36,10 @@ import java.util.Calendar;
 
 
 
-import static com.stupidtree.hita.HITAApplication.DATA_STATE_HEALTHY;
-import static com.stupidtree.hita.HITAApplication.DATA_STATE_NONE_CURRICULUM;
-import static com.stupidtree.hita.HITAApplication.DATA_STATE_NULL;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.allCurriculum;
-import static com.stupidtree.hita.HITAApplication.correctData;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.getDataState;
-import static com.stupidtree.hita.HITAApplication.isThisTerm;
-import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
-import static com.stupidtree.hita.HITAApplication.thisWeekOfTerm;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.HITAApplication.timeWatcher;
 
 public class ActivityTimeTable extends BaseActivity implements FragmentTimeTablePage.OnFragmentInteractionListener,FragmentAddEvent.OnFragmentInteractionListener {
@@ -79,7 +64,6 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
     FloatingActionButton fab,fab_add;
     TabLayout tabs;
     RefreshTask pageTask;
-    FragmentAddCourse fragmentAddCourse;
 
 
 
@@ -90,21 +74,12 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
         //toolbar_title = findViewById(R.id.toolbar_title);
         mAppBarLayout = findViewById(R.id.app_bar);
         invalidLayout = findViewById(R.id.tt_invalidview);
-//        invalidJump = findViewById(R.id.tt_invalid_jump);
-//
-//        invalidJump.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i = new Intent(ActivityTimeTable.this, ActivityCurriculumManager.class);
-//                ActivityTimeTable.this.startActivity(i);
-//            }
-//        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    if (pageWeekOfTerm != thisWeekOfTerm && isThisTerm) {
-                        pageWeekOfTerm = thisWeekOfTerm;
-                        viewPager.setCurrentItem(thisWeekOfTerm-1);
+                    if (pageWeekOfTerm != timeTableCore.getThisWeekOfTerm() && timeTableCore.isThisTerm()) {
+                        pageWeekOfTerm = timeTableCore.getThisWeekOfTerm();
+                        viewPager.setCurrentItem(timeTableCore.getThisWeekOfTerm()-1);
                     }
             }
         });
@@ -122,8 +97,8 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
         tabs = findViewById(R.id.timetable_tabs);
        // tabs.setTabTextColors(Color.parseColor("#55000000"),getColorPrimary());
         tabs.setTabIndicatorFullWidth(false);
-        if (getDataState() == DATA_STATE_HEALTHY)
-            pagerAdapter = new TimeTablePagerAdapter(getSupportFragmentManager(), allCurriculum.get(thisCurriculumIndex).totalWeeks);
+        if (timeTableCore.isDataAvailable())
+            pagerAdapter = new TimeTablePagerAdapter(getSupportFragmentManager(), timeTableCore.getCurrentCurriculum().getTotalWeeks());
         else pagerAdapter = new TimeTablePagerAdapter(getSupportFragmentManager(), 0);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -136,10 +111,10 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
             public void onPageSelected(int i) {
                 pageWeekOfTerm = i + 1;
                 //toolbar_title.setText("第" + pageWeekOfTerm + "周");
-                if (pageWeekOfTerm == thisWeekOfTerm) {
+                if (pageWeekOfTerm == timeTableCore.getThisWeekOfTerm()) {
                     fab.hide();
                     //toolbar_title.setTextColor(ContextCompat.getColor(ActivityTimeTable.this, R.color.theme1_colorPrimaryDark));
-                } else if(isThisTerm){
+                } else if(timeTableCore.isThisTerm()){
                     fab.show();
                     //toolbar_title.setTextColor(ContextCompat.getColor(ActivityTimeTable.this, R.color.material_primary_text));
             }
@@ -184,10 +159,13 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 //                        //reFreshViewPager();
 //                        pagerAdapter.notifyAllFragments();
 //                        break;
-
+                    case R.id.action_curriculum_manager:
+                        Intent i = new Intent(ActivityTimeTable.this,ActivityCurriculumManager.class);
+                        startActivity(i);
+                        break;
                     case R.id.action_whole_day:
                         menuItem.setChecked(isChecked);
-                        PreferenceManager.getDefaultSharedPreferences(ActivityTimeTable.this).edit().putBoolean("timetable_wholeday",isChecked).apply();
+                        defaultSP.edit().putBoolean("timetable_wholeday",isChecked).apply();
                         //Toast.makeText(ActivityTimeTable.this,"重新进入本页面生效",Toast.LENGTH_SHORT).show();
                         pagerAdapter.notifyAllFragments();
                         // Refresh(FROM_INIT);
@@ -208,21 +186,21 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
                         // Refresh(FROM_INIT);
                         break;
                     case R.id.action_reset_color:
-                        AlertDialog ad = new AlertDialog.Builder(ActivityTimeTable.this).setTitle("是否随机生成各科目颜色？")
-                                .setNegativeButton("取消",null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        AlertDialog ad = new AlertDialog.Builder(ActivityTimeTable.this).setTitle(getString(R.string.dialog_title_random_allocate))
+                                .setNegativeButton(getString(R.string.button_cancel),null).setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        new resetColorTask().executeOnExecutor(TPE);;
+                                        new resetColorTask().executeOnExecutor(TPE);
                                     }
                                 }).create();
                         ad.show();
                         break;
                     case R.id.action_reset_color_to_theme:
-                        AlertDialog ad2 = new AlertDialog.Builder(ActivityTimeTable.this).setTitle("是否将各科目颜色设置为主题色？")
-                                .setNegativeButton("取消",null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        AlertDialog ad2 = new AlertDialog.Builder(ActivityTimeTable.this).setTitle(getString(R.string.dialog_title_set_to_theme))
+                                .setNegativeButton(getString(R.string.button_cancel),null).setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        new resetColorToThemeTask().executeOnExecutor(HITAApplication.TPE);;
+                                        new resetColorToThemeTask().executeOnExecutor(HITAApplication.TPE);
                                     }
                                 }).create();
                         ad2.show();
@@ -271,7 +249,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
         @Override
         protected String doInBackground(String... strings) {
 
-            if (thisWeekOfTerm > 0) pageWeekOfTerm = thisWeekOfTerm;
+            if (timeTableCore.getThisWeekOfTerm() > 0) pageWeekOfTerm = timeTableCore.getThisWeekOfTerm();
             return null;
         }
 
@@ -283,9 +261,8 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
             super.onPostExecute(s);
             initToolBarAndDrawer();
             hasInit = true;
-            if(!isThisTerm) fab.hide();
+            if(!timeTableCore.isThisTerm()) fab.hide();
             Refresh(FROM_INIT);
-            Guide();
         }
     }
 
@@ -305,21 +282,20 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 
         @Override
         protected Integer doInBackground(String... strings) {
-            if (!hasInit || getDataState() == DATA_STATE_NULL) return -1;
-            if (getDataState() == DATA_STATE_NONE_CURRICULUM) {
-                thisWeekOfTerm = -1;
-                return DATA_STATE_NONE_CURRICULUM;
+            if (!hasInit) return -1;
+            if (!timeTableCore.isDataAvailable()) {
+                timeTableCore.setThisWeekOfTerm(-1);
+                return -2;
             }
             /*刷新必备代码--刷新数据*/
             now.setTimeInMillis(System.currentTimeMillis());
-            correctData();
-            isThisTerm = allCurriculum.get(thisCurriculumIndex).Within(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DAY_OF_MONTH));
+            timeTableCore.setThisTerm(timeTableCore.getCurrentCurriculum().Within(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DAY_OF_MONTH)));
             if (from == FROM_INIT || from == FROM_SPINNER_Curriculum) {
                 try {
-                    thisWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
-                    pageWeekOfTerm = isThisTerm ? thisWeekOfTerm : 1;
+                   timeTableCore.setThisWeekOfTerm(timeTableCore.getCurrentCurriculum().getWeekOfTerm(now));
+                    pageWeekOfTerm = timeTableCore.isThisTerm()? timeTableCore.getThisWeekOfTerm() : 1;
                 } catch (Exception e) {
-                    thisWeekOfTerm = -1;
+                   timeTableCore.setThisWeekOfTerm( -1);
                     pageWeekOfTerm = 1;
                 }
             }
@@ -339,19 +315,19 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
         @Override
         protected void onPostExecute(Integer i) {
             if (i == -1) return;
-            if (i == DATA_STATE_NONE_CURRICULUM) {
+            if (i == -2) {
                 invalidLayout.setVisibility(View.VISIBLE);
                 viewPager.setVisibility(View.GONE);
-                thisWeekOfTerm = -1;
+                timeTableCore.setThisWeekOfTerm(-1);
                 return;
             } else {
                 invalidLayout.setVisibility(View.GONE);
                 viewPager.setVisibility(View.VISIBLE);
             }
-            if (pageWeekOfTerm == thisWeekOfTerm) {
+            if (pageWeekOfTerm == timeTableCore.getThisWeekOfTerm()) {
                 fab.hide();
                 //toolbar_title.setTextColor(ContextCompat.getColor(ActivityTimeTable.this, R.color.theme1_colorPrimaryDark));
-            } else if(isThisTerm){
+            } else if(timeTableCore.isThisTerm()){
                 fab.show();
                 //toolbar_title.setTextColor(ContextCompat.getColor(ActivityTimeTable.this, R.color.material_primary_text));
             }
@@ -370,22 +346,17 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragmentAddCourse = FragmentAddCourse.newInstance();
-        fragmentAddCourse.setCancelable(false);
-//        requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS);//申请动画
-//        Transition explode = TransitionInflater.from(ActivityTimeTable.this).inflateTransition(android.R.transition.slide_left);
-//        getWindow().setEnterTransition(explode);
         setWindowParams(true,true,false);
         setContentView(R.layout.activity_time_table);
         initAllViews();
-        if (allCurriculum.size() <= 0) {
+        if (!timeTableCore.isDataAvailable()) {
             pageWeekOfTerm = 1;
         } else {
-            pageWeekOfTerm = allCurriculum.get(thisCurriculumIndex).getWeekOfTerm(now);
+            pageWeekOfTerm = timeTableCore.getCurrentCurriculum().getWeekOfTerm(now);
             if (pageWeekOfTerm < 0) {
-                Snackbar.make(fab,"这个学期还没有开始哟",Snackbar.LENGTH_LONG).show();
+                Snackbar.make(fab.getRootView(),getString(R.string.snack_semester_notstarted),Snackbar.LENGTH_SHORT).show();
                 //Toast.makeText(this, , Toast.LENGTH_SHORT).show();
-                isThisTerm = false;
+                timeTableCore.setThisTerm(false);
                 pageWeekOfTerm = 1;
 
             }
@@ -397,14 +368,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 
     }
 
-    private void Guide(){
-        if(defaultSP.getBoolean("timetable_first_open_20190916",true)){
-            //TapTarget.forToolbarMenuItem()
-            TapTargetView.showFor(this,TapTarget.forToolbarOverflow(mToolbar,"课程表现在支持分科目着色啦","如果觉得不好看，可以点这里选择关闭或重新生成，也可以到科目页面自定义哟~").outerCircleColor(R.color.blue_primary).descriptionTextColor(R.color.material_text_icon_white).cancelable(false)
-            );
-            defaultSP.edit().putBoolean("timetable_first_open_20190916",false).apply();
-        }
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -434,8 +398,8 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            for(Subject s:mainTimeTable.core.getSubjects()){
-                defaultSP.edit().putInt("color:"+s.name, ColorBox.getRandomColor_Material()).commit();
+            for(Subject s:timeTableCore.getCurrentCurriculum().getSubjects()){
+                defaultSP.edit().putInt("color:"+s.getName(), ColorBox.getRandomColor_Material()).commit();
             }
             return null;
         }
@@ -450,8 +414,8 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            for(Subject s:mainTimeTable.core.getSubjects()){
-                defaultSP.edit().putInt("color:"+s.name, getColorPrimary()).commit();
+            for(Subject s:timeTableCore.getCurrentCurriculum().getSubjects()){
+                defaultSP.edit().putInt("color:"+s.getName(), getColorPrimary()).commit();
             }
             return null;
         }
