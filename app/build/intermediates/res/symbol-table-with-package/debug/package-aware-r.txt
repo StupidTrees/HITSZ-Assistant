@@ -2712,8 +2712,6 @@ id textView4
 id textView40
 id textView41
 id textView7
-id textView8
-id textView9
 id text_input_password_toggle
 id text_nick
 id text_note
@@ -3428,6 +3426,7 @@ string fab_transformation_scrim_behavior
 string fab_transformation_sheet_behavior
 string face_model_delete
 string found
+string give_me_that_permission
 string grkb_attention
 string grkb_attention_hint
 string grkb_import_xnxq
@@ -3456,6 +3455,7 @@ string install
 string label_activity_about_hita
 string label_activity_attitude
 string label_activity_empty_classroom
+string label_activity_learning_assistant
 string label_activity_settings
 string label_activity_tasks
 string label_activity_utmood
@@ -3522,6 +3522,12 @@ string mood_7
 string mood_8
 string mood_title
 string mtrl_chip_close_icon_content_description
+string mute_assistant
+string mute_assistant_tag1
+string mute_assistant_tag2
+string mute_assistant_tag3
+string mute_assistant_tag4
+string mute_assistant_tag5
 string nav_header_desc
 string nav_header_subtitle
 string nav_header_title
@@ -3606,6 +3612,11 @@ string pref_title_system_sync_settings
 string pref_title_translate
 string pref_title_vibrate
 string preference_copied
+string preview_assistant_tag1
+string preview_assistant_tag2
+string preview_assistant_tag3
+string preview_assistant_tag4
+string preview_assistant_tag5
 string progress
 string prompt_email
 string prompt_password

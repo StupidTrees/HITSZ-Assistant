@@ -600,4 +600,17 @@
     <string name="no_data_on_cloud">No data in the cloud!</string>
     <string name="curriculum_updated">Curriculum information updated</string>
     <string name="enter_name">enter name…</string>
+    <string name="give_me_that_permission">Please grant HITSZ Assistant relevant permissions</string>
+    <string name="mute_assistant">Mute Assistant</string>
+    <string name="mute_assistant_tag1"> </string>
+    <string name="mute_assistant_tag2">before class enable mute</string>
+    <string name="mute_assistant_tag3">Automatically turn off mute mode after class</string>
+    <string name="mute_assistant_tag4">Forced mute</string>
+    <string name="mute_assistant_tag5">Listen for volume adjustment events during class, forcing to zero. Fight malicious apps to a certain extent</string>
+    <string name="preview_assistant_tag1">Generate preview tasks automatically</string>
+    <string name="preview_assistant_tag2">Spend</string>
+    <string name="preview_assistant_tag3">minutes each day for preview</string>
+    <string name="preview_assistant_tag4">Schedule exam only</string>
+    <string name="preview_assistant_tag5">The APP will integrate subject information and user preferences, arrange tasks such as review and review for important subjects, and automatically assign and process events for tasks to help your learning life.</string>
+    <string name="label_activity_learning_assistant">Learning Assistant</string>
 </resources>

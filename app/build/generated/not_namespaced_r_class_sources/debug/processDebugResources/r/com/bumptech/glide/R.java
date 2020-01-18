@@ -118,9 +118,9 @@ public final class R {
         public static final int tag_transition_group = 0x7f090348;
         public static final int text = 0x7f09035c;
         public static final int text2 = 0x7f09035d;
-        public static final int time = 0x7f090395;
-        public static final int title = 0x7f0903aa;
-        public static final int top = 0x7f0903c0;
+        public static final int time = 0x7f090393;
+        public static final int title = 0x7f0903a8;
+        public static final int top = 0x7f0903be;
     }
     public static final class integer {
         private integer() {}
@@ -140,7 +140,7 @@ public final class R {
     public static final class string {
         private string() {}
 
-        public static final int status_bar_notification_info_overflow = 0x7f0f01aa;
+        public static final int status_bar_notification_info_overflow = 0x7f0f01b7;
     }
     public static final class style {
         private style() {}

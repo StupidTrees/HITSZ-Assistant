@@ -683,6 +683,19 @@
     <string name="no_data_on_cloud">云端没有数据！</string>
     <string name="curriculum_updated">已更新课表参数</string>
     <string name="enter_name">输入名称...</string>
+    <string name="give_me_that_permission">请授予HITSZ助手相关权限</string>
+    <string name="mute_assistant">上课静音助手</string>
+    <string name="mute_assistant_tag1">上课前</string>
+    <string name="mute_assistant_tag2">分钟开启静音</string>
+    <string name="mute_assistant_tag3">下课时自动关闭静音模式</string>
+    <string name="mute_assistant_tag4">强制静音</string>
+    <string name="mute_assistant_tag5">上课时监听音量调节事件，强制归零。 一定程度上抗击恶意APP</string>
+    <string name="preview_assistant_tag1">自动生成预习任务</string>
+    <string name="preview_assistant_tag2">每天花</string>
+    <string name="preview_assistant_tag3">分钟预习</string>
+    <string name="preview_assistant_tag4">仅安排考试课</string>
+    <string name="preview_assistant_tag5">APP将综合科目信息与用户喜好，为重要性强的科目安排预习复习等任务，也会为任务自动分配处理事件，帮助你的学习生活么么哒</string>
+    <string name="label_activity_learning_assistant">学习助手</string>
     <string-array name="curriculum_tabs">
         <item>科目</item>
         <item>教师</item>

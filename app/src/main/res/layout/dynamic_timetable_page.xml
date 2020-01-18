@@ -107,7 +107,7 @@
                 android:background="@drawable/round_grey"
                 android:fontFamily="sans-serif-black"
                 android:gravity="center"
-                android:text="@string/tt_saturday"
+                android:text="@string/tt_friday"
                 android:textColor="?attr/text_color_primary"
                 android:textSize="12sp" />
         </FrameLayout>
@@ -125,7 +125,7 @@
                 android:background="@drawable/round_grey"
                 android:fontFamily="sans-serif-black"
                 android:gravity="center"
-                android:text="@string/tt_friday"
+                android:text="@string/tt_saturday"
                 android:textColor="?attr/text_color_primary"
                 android:textSize="12sp" />
         </FrameLayout>

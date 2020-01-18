@@ -12,30 +12,30 @@ public final class R {
     public static final class string {
         private string() {}
 
-        public static final int strNetworkTipsCancelBtn = 0x7f0f01ab;
-        public static final int strNetworkTipsConfirmBtn = 0x7f0f01ac;
-        public static final int strNetworkTipsMessage = 0x7f0f01ad;
-        public static final int strNetworkTipsTitle = 0x7f0f01ae;
-        public static final int strNotificationClickToContinue = 0x7f0f01af;
-        public static final int strNotificationClickToInstall = 0x7f0f01b0;
-        public static final int strNotificationClickToRetry = 0x7f0f01b1;
-        public static final int strNotificationClickToView = 0x7f0f01b2;
-        public static final int strNotificationDownloadError = 0x7f0f01b3;
-        public static final int strNotificationDownloadSucc = 0x7f0f01b4;
-        public static final int strNotificationDownloading = 0x7f0f01b5;
-        public static final int strNotificationHaveNewVersion = 0x7f0f01b6;
-        public static final int strToastCheckUpgradeError = 0x7f0f01b7;
-        public static final int strToastCheckingUpgrade = 0x7f0f01b8;
-        public static final int strToastYourAreTheLatestVersion = 0x7f0f01b9;
-        public static final int strUpgradeDialogCancelBtn = 0x7f0f01ba;
-        public static final int strUpgradeDialogContinueBtn = 0x7f0f01bb;
-        public static final int strUpgradeDialogFeatureLabel = 0x7f0f01bc;
-        public static final int strUpgradeDialogFileSizeLabel = 0x7f0f01bd;
-        public static final int strUpgradeDialogInstallBtn = 0x7f0f01be;
-        public static final int strUpgradeDialogRetryBtn = 0x7f0f01bf;
-        public static final int strUpgradeDialogUpdateTimeLabel = 0x7f0f01c0;
-        public static final int strUpgradeDialogUpgradeBtn = 0x7f0f01c1;
-        public static final int strUpgradeDialogVersionLabel = 0x7f0f01c2;
+        public static final int strNetworkTipsCancelBtn = 0x7f0f01b8;
+        public static final int strNetworkTipsConfirmBtn = 0x7f0f01b9;
+        public static final int strNetworkTipsMessage = 0x7f0f01ba;
+        public static final int strNetworkTipsTitle = 0x7f0f01bb;
+        public static final int strNotificationClickToContinue = 0x7f0f01bc;
+        public static final int strNotificationClickToInstall = 0x7f0f01bd;
+        public static final int strNotificationClickToRetry = 0x7f0f01be;
+        public static final int strNotificationClickToView = 0x7f0f01bf;
+        public static final int strNotificationDownloadError = 0x7f0f01c0;
+        public static final int strNotificationDownloadSucc = 0x7f0f01c1;
+        public static final int strNotificationDownloading = 0x7f0f01c2;
+        public static final int strNotificationHaveNewVersion = 0x7f0f01c3;
+        public static final int strToastCheckUpgradeError = 0x7f0f01c4;
+        public static final int strToastCheckingUpgrade = 0x7f0f01c5;
+        public static final int strToastYourAreTheLatestVersion = 0x7f0f01c6;
+        public static final int strUpgradeDialogCancelBtn = 0x7f0f01c7;
+        public static final int strUpgradeDialogContinueBtn = 0x7f0f01c8;
+        public static final int strUpgradeDialogFeatureLabel = 0x7f0f01c9;
+        public static final int strUpgradeDialogFileSizeLabel = 0x7f0f01ca;
+        public static final int strUpgradeDialogInstallBtn = 0x7f0f01cb;
+        public static final int strUpgradeDialogRetryBtn = 0x7f0f01cc;
+        public static final int strUpgradeDialogUpdateTimeLabel = 0x7f0f01cd;
+        public static final int strUpgradeDialogUpgradeBtn = 0x7f0f01ce;
+        public static final int strUpgradeDialogVersionLabel = 0x7f0f01cf;
     }
     public static final class xml {
         private xml() {}

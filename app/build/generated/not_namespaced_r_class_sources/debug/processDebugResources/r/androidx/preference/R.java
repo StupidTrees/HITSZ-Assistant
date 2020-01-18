@@ -885,16 +885,16 @@ public final class R {
         public static final int text2 = 0x7f09035d;
         public static final int textSpacerNoButtons = 0x7f09035f;
         public static final int textSpacerNoTitle = 0x7f090360;
-        public static final int time = 0x7f090395;
-        public static final int title = 0x7f0903aa;
-        public static final int titleDividerNoCustom = 0x7f0903ab;
-        public static final int title_template = 0x7f0903ad;
-        public static final int top = 0x7f0903c0;
-        public static final int topPanel = 0x7f0903c1;
-        public static final int unchecked = 0x7f0903fb;
-        public static final int uniform = 0x7f0903fc;
-        public static final int up = 0x7f0903fe;
-        public static final int wrap_content = 0x7f09043d;
+        public static final int time = 0x7f090393;
+        public static final int title = 0x7f0903a8;
+        public static final int titleDividerNoCustom = 0x7f0903a9;
+        public static final int title_template = 0x7f0903ab;
+        public static final int top = 0x7f0903be;
+        public static final int topPanel = 0x7f0903bf;
+        public static final int unchecked = 0x7f0903f9;
+        public static final int uniform = 0x7f0903fa;
+        public static final int up = 0x7f0903fc;
+        public static final int wrap_content = 0x7f09043b;
     }
     public static final class integer {
         private integer() {}
@@ -1009,13 +1009,13 @@ public final class R {
         public static final int abc_toolbar_collapse_description = 0x7f0f001a;
         public static final int copy = 0x7f0f007b;
         public static final int expand_button_title = 0x7f0f00b3;
-        public static final int not_set = 0x7f0f0137;
-        public static final int preference_copied = 0x7f0f0169;
-        public static final int search_menu_title = 0x7f0f0173;
-        public static final int status_bar_notification_info_overflow = 0x7f0f01aa;
-        public static final int summary_collapsed_preference_list = 0x7f0f01d2;
-        public static final int v7_preference_off = 0x7f0f0256;
-        public static final int v7_preference_on = 0x7f0f0257;
+        public static final int not_set = 0x7f0f013f;
+        public static final int preference_copied = 0x7f0f0171;
+        public static final int search_menu_title = 0x7f0f0180;
+        public static final int status_bar_notification_info_overflow = 0x7f0f01b7;
+        public static final int summary_collapsed_preference_list = 0x7f0f01df;
+        public static final int v7_preference_off = 0x7f0f0263;
+        public static final int v7_preference_on = 0x7f0f0264;
     }
     public static final class style {
         private style() {}

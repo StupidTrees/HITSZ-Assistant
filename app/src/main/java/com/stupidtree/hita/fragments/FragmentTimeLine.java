@@ -102,9 +102,7 @@ public class FragmentTimeLine extends BaseFragment implements
     private CardView head_card;
     private TextView head_title, head_subtitle;
     private ImageView head_image, head_counting_image;
-    //public FragmentTasks ftsk;
-    private boolean switchToCountingAvailable = false;
-    private headCardClickListener headCardClickListener;
+    private static headCardClickListener headCardClickListener;
     private RefreshBroadcastReceiver refreshReciever;
     private LocalBroadcastManager localBroadcastManager;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -342,7 +340,6 @@ public class FragmentTimeLine extends BaseFragment implements
             subtitltToSet = HContext.getString(R.string.timeline_head_nulldata_subtitle);
             switchHeadView(head_image, R.drawable.ic_timeline_head_nulldata);
             headCardClickListener.setMode(FragmentTimeLine.headCardClickListener.JWTS);
-            switchToCountingAvailable = false;
         } else if (!timeTableCore.isThisTerm()) {
             titleToSet = HContext.getString(R.string.timeline_head_notthisterm_title);
             subtitltToSet = HContext.getString(R.string.timeline_head_notthisterm_subtitle);
@@ -410,7 +407,6 @@ public class FragmentTimeLine extends BaseFragment implements
                     subtitltToSet = HContext.getString(R.string.timeline_head_finish_subtitle);
                 }
                 headCardClickListener.setMode(FragmentTimeLine.headCardClickListener.SHOW_NEXT);
-                switchToCountingAvailable = true;
             }
         }
         if (nextEvent != null) {

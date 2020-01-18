@@ -773,21 +773,21 @@ public final class R {
         public static final int text2 = 0x7f09035d;
         public static final int textSpacerNoButtons = 0x7f09035f;
         public static final int textSpacerNoTitle = 0x7f090360;
-        public static final int time = 0x7f090395;
-        public static final int title = 0x7f0903aa;
-        public static final int titleDividerNoCustom = 0x7f0903ab;
-        public static final int title_template = 0x7f0903ad;
-        public static final int top = 0x7f0903c0;
-        public static final int topPanel = 0x7f0903c1;
-        public static final int tvFolderName = 0x7f0903ee;
-        public static final int tvImageNum = 0x7f0903ef;
-        public static final int tvTitle = 0x7f0903f0;
-        public static final int uniform = 0x7f0903fc;
-        public static final int up = 0x7f0903fe;
-        public static final int useLogo = 0x7f09040c;
-        public static final int viewPager = 0x7f090426;
-        public static final int withText = 0x7f09043b;
-        public static final int wrap_content = 0x7f09043d;
+        public static final int time = 0x7f090393;
+        public static final int title = 0x7f0903a8;
+        public static final int titleDividerNoCustom = 0x7f0903a9;
+        public static final int title_template = 0x7f0903ab;
+        public static final int top = 0x7f0903be;
+        public static final int topPanel = 0x7f0903bf;
+        public static final int tvFolderName = 0x7f0903ec;
+        public static final int tvImageNum = 0x7f0903ed;
+        public static final int tvTitle = 0x7f0903ee;
+        public static final int uniform = 0x7f0903fa;
+        public static final int up = 0x7f0903fc;
+        public static final int useLogo = 0x7f09040a;
+        public static final int viewPager = 0x7f090424;
+        public static final int withText = 0x7f090439;
+        public static final int wrap_content = 0x7f09043b;
     }
     public static final class integer {
         private integer() {}
@@ -878,16 +878,16 @@ public final class R {
         public static final int app_name = 0x7f0f004f;
         public static final int confirm = 0x7f0f0078;
         public static final int confirm_format = 0x7f0f0079;
-        public static final int image = 0x7f0f00cf;
-        public static final int maxnum = 0x7f0f00f9;
-        public static final int minnum = 0x7f0f010a;
-        public static final int open_camera_failure = 0x7f0f0144;
-        public static final int permission_camera_denied = 0x7f0f014d;
-        public static final int permission_storage_denied = 0x7f0f014f;
-        public static final int sd_disable = 0x7f0f0171;
-        public static final int search_menu_title = 0x7f0f0173;
-        public static final int status_bar_notification_info_overflow = 0x7f0f01aa;
-        public static final int takephoto = 0x7f0f01d5;
+        public static final int image = 0x7f0f00d0;
+        public static final int maxnum = 0x7f0f00fb;
+        public static final int minnum = 0x7f0f010c;
+        public static final int open_camera_failure = 0x7f0f014c;
+        public static final int permission_camera_denied = 0x7f0f0155;
+        public static final int permission_storage_denied = 0x7f0f0157;
+        public static final int sd_disable = 0x7f0f017e;
+        public static final int search_menu_title = 0x7f0f0180;
+        public static final int status_bar_notification_info_overflow = 0x7f0f01b7;
+        public static final int takephoto = 0x7f0f01e2;
     }
     public static final class style {
         private style() {}

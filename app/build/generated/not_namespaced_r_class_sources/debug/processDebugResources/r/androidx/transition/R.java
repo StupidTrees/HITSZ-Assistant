@@ -109,13 +109,13 @@ public final class R {
         public static final int tag_unhandled_key_listeners = 0x7f09034a;
         public static final int text = 0x7f09035c;
         public static final int text2 = 0x7f09035d;
-        public static final int time = 0x7f090395;
-        public static final int title = 0x7f0903aa;
-        public static final int transition_current_scene = 0x7f0903c6;
-        public static final int transition_layout_save = 0x7f0903c7;
-        public static final int transition_position = 0x7f0903c8;
-        public static final int transition_scene_layoutid_cache = 0x7f0903c9;
-        public static final int transition_transform = 0x7f0903ca;
+        public static final int time = 0x7f090393;
+        public static final int title = 0x7f0903a8;
+        public static final int transition_current_scene = 0x7f0903c4;
+        public static final int transition_layout_save = 0x7f0903c5;
+        public static final int transition_position = 0x7f0903c6;
+        public static final int transition_scene_layoutid_cache = 0x7f0903c7;
+        public static final int transition_transform = 0x7f0903c8;
     }
     public static final class integer {
         private integer() {}
@@ -135,7 +135,7 @@ public final class R {
     public static final class string {
         private string() {}
 
-        public static final int status_bar_notification_info_overflow = 0x7f0f01aa;
+        public static final int status_bar_notification_info_overflow = 0x7f0f01b7;
     }
     public static final class style {
         private style() {}

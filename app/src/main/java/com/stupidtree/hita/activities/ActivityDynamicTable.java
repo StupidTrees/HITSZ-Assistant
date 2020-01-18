@@ -46,7 +46,7 @@ public class ActivityDynamicTable extends BaseActivity {
         setContentView(R.layout.activity_dynamic_table);
         setWindowParams(true,false,false);
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("学习助手");
+        toolbar.setTitle(getString(R.string.label_activity_learning_assistant));
         collapsingToolbarLayout = findViewById(R.id.collapse);
         collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
         collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
