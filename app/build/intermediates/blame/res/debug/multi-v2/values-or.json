@@ -4,7 +4,7 @@
             "outputFile": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-or\\values-or.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\541b18460e37234a28c1dbcddda8444c\\res\\values-or\\values-or.xml",
+                    "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\6119d746697059b7e1b74aab4d181f56\\appcompat-1.1.0\\res\\values-or\\values-or.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -21,24 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\4082c5a69c53a62dd52b1fadf1592f6e\\res\\values-or\\values-or.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    },
-                    "to": {
-                        "startLines": "34",
-                        "startColumns": "4",
-                        "startOffsets": "3326",
-                        "endColumns": "100",
-                        "endOffsets": "3422"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\3eb0a1f76a48f25a2a61848295967183\\res\\values-or\\values-or.xml",
+                    "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\1c9808e429abf680ccd4a9858ea887b5\\preference-1.1.0\\res\\values-or\\values-or.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8",
                         "startColumns": "4,4,4,4,4,4,4",
@@ -52,6 +35,23 @@
                         "startOffsets": "2856,2930,3019,3098,3427,3596,3680",
                         "endColumns": "73,88,78,138,168,83,80",
                         "endOffsets": "2925,3014,3093,3232,3591,3675,3756"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\e9dab9c67c1ee3668e0bbf86c6d8cbd8\\core-1.1.0\\res\\values-or\\values-or.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "34",
+                        "startColumns": "4",
+                        "startOffsets": "3326",
+                        "endColumns": "100",
+                        "endOffsets": "3422"
                     }
                 }
             ]

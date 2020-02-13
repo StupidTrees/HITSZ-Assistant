@@ -20,7 +20,7 @@ import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.TaskListAdapter;
 import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
-import com.stupidtree.hita.fragments.FragmentAddTask;
+import com.stupidtree.hita.fragments.popup.FragmentAddTask;
 
 import java.util.ArrayList;
 import java.util.List;

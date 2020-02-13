@@ -64,7 +64,7 @@ import static com.stupidtree.hita.HITAApplication.cookies_ut_card;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.ut_username;
-import static com.stupidtree.hita.fragments.FragmentNavi.ORDER_NAME;
+import static com.stupidtree.hita.fragments.main.FragmentNavi.ORDER_NAME;
 
 public class NaviPageAdapter extends RecyclerView.Adapter {
     List<Integer> mBeans;

@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.appcompat.app.AlertDialog;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,13 +21,17 @@ import com.stupidtree.hita.activities.ActivityLocation;
 import com.stupidtree.hita.activities.ActivityLogin;
 import com.stupidtree.hita.activities.ActivityLoginJWTS;
 import com.stupidtree.hita.activities.ActivityLoginUT;
+import com.stupidtree.hita.activities.ActivityNewsDetail;
 import com.stupidtree.hita.activities.ActivityPhotoDetail;
 import com.stupidtree.hita.activities.ActivityPostDetail;
+import com.stupidtree.hita.activities.ActivitySearch;
 import com.stupidtree.hita.activities.ActivitySubject;
 import com.stupidtree.hita.activities.ActivityTeacher;
+import com.stupidtree.hita.activities.ActivityTeacherOfficial;
 import com.stupidtree.hita.activities.ActivityUTService;
 import com.stupidtree.hita.activities.ActivityUserCenter;
 import com.stupidtree.hita.activities.ActivityUserProfile;
+import com.stupidtree.hita.fragments.news.FragmentNewsBulletin;
 import com.stupidtree.hita.online.Canteen;
 import com.stupidtree.hita.online.Classroom;
 import com.stupidtree.hita.online.Dormitory;
@@ -41,15 +47,63 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 import static com.stupidtree.hita.HITAApplication.login_ut;
 import static com.stupidtree.hita.HITAApplication.ut_username;
+import static com.stupidtree.hita.diy.RevealAnimation.EXTRA_CIRCULAR_REVEAL_X;
+import static com.stupidtree.hita.diy.RevealAnimation.EXTRA_CIRCULAR_REVEAL_Y;
 
 public class ActivityUtils {
 
+    public static void searchFor(Context from,String keyword,String type){
+        Intent i = new Intent(from, ActivitySearch.class);
+        i.putExtra("keyword",keyword);
+        i.putExtra("type",type);
+        from.startActivity(i);
+    }
+    public static void openInBrowser(Context from,String link){
+        Uri uri = Uri.parse(link);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        from.startActivity(intent);
+    }
+    public static void startOfficialTeacherActivity_transition(Activity from,String id,String url,String name,View transition){
+        Intent i = new Intent(from, ActivityTeacherOfficial.class);
+        i.putExtra("id",id);
+        i.putExtra("url",url);
+        i.putExtra("name",name);
+        transition.setTransitionName("image");
+        ActivityOptionsCompat ip = ActivityOptionsCompat.makeSceneTransitionAnimation(from,transition,"image");
+        from.startActivity(i,ip.toBundle());
+    }
+    public static void startOfficialTeacherActivity(Context from,String id,String url,String name){
+        Intent i = new Intent(from, ActivityTeacherOfficial.class);
+        i.putExtra("id",id);
+        i.putExtra("url",url);
+        i.putExtra("name",name);
+        from.startActivity(i);
+    }
+    public static void startNewsActivity(Context from,String url,String title){
+        Intent i = new Intent(from, ActivityNewsDetail.class);
+        i.putExtra("link", url);
+        i.putExtra("title", title);
+        i.putExtra("mode","hitsz_news");
+        from.startActivity(i);
+    }
+    public static void startZSWActivity(Context from,String title,String url){
+        Intent i = new Intent(from, ActivityNewsDetail.class);
+        i.putExtra("link", url);
+        i.putExtra("title", title);
+        i.putExtra("mode","zsw_news");
+        from.startActivity(i);
+    }
     public static void startPhotoDetailActivity_transition(Activity from,String imageurl, View transition){
         Intent i = new Intent(from, ActivityPhotoDetail.class);
         i.putExtra("imagePath",imageurl);
         transition.setTransitionName("image");
         ActivityOptionsCompat ip = ActivityOptionsCompat.makeSceneTransitionAnimation(from);
         from.startActivity(i,ip.toBundle());
+    }
+    public static void startPhotoDetailActivity(Activity from,String imageurl){
+        Intent i = new Intent(from, ActivityPhotoDetail.class);
+        i.putExtra("imagePath",imageurl);
+        from.startActivity(i);
     }
     public static void startSubjectActivity_name(Context from,String name){
         Intent i = new Intent(from, ActivitySubject.class);

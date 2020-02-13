@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.popup.FragmentBindStuNum;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;

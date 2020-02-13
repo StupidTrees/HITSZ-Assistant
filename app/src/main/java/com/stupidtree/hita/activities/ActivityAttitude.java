@@ -1,7 +1,6 @@
 package com.stupidtree.hita.activities;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -14,7 +13,7 @@ import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.AttitudeListAdapter;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
-import com.stupidtree.hita.fragments.FragmentAddAttitude;
+import com.stupidtree.hita.fragments.popup.FragmentAddAttitude;
 import com.stupidtree.hita.online.Attitude;
 
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import java.util.Objects;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
 
 public class ActivityAttitude extends BaseActivity implements FragmentAddAttitude.AttachedActivity{
 

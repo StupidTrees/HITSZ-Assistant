@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stupidtree.hita"
     android:targetSandboxVersion="2"
-    android:versionCode="20200117"
-    android:versionName="1.17" >
+    android:versionCode="20200122"
+    android:versionName="1.22新教务版" >
 
     <uses-sdk
         android:minSdkVersion="23"
@@ -109,6 +109,24 @@
         <activity
             android:name="com.stupidtree.hita.activities.ActivityTeacher"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityTeacherOfficial_External"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <data
+                    android:host="faculty.hitsz.edu.cn"
+                    android:scheme="http" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityTeacherOfficial"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
         <activity android:name="com.stupidtree.hita.activities.ActivityDynamicTable" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityJWTS"
@@ -197,6 +215,16 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="5883fb948ec30c3f56f65e46e65f0b09" />
+
+        <provider
+            android:name="com.stupidtree.hita.MFileProvider"
+            android:authorities="com.stupidtree.hita.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <activity
             android:name="com.yuyh.library.imgsel.ui.ISListActivity"

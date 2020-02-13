@@ -1,11 +1,14 @@
 package com.stupidtree.hita.hita;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.stupidtree.hita.R;
 
-import org.ansj.domain.Nature;
-import org.ansj.domain.Term;
-
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
@@ -22,30 +25,115 @@ public class TextTools {
 
     public static String[] words_time_DOW = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期天", "周一", "周二", "周三", "周四", "周五", "周六", "周天", "周日", "星期日", "星期1", "星期2", "星期3", "星期4", "星期5", "星期6", "周1", "周2", "周3", "周4", "周5", "周6"};
 
+    public static List<Term> NaiveSegmentation(String sentence){
+        List<Term> result = new ArrayList();
+        String leftSentence = sentence;
+        while (true){
+            Term next = getFirstTerm(leftSentence);
+            if(next==null){
+                if(leftSentence.length()>0)result.add(new Term(leftSentence,"unknown"));
+                break;
+            }
+            Log.e("next_term:",next.toString());
+            if(next.getIndexInSentence()!=0) result.add(new Term(leftSentence.substring(0,next.getIndexInSentence()),"unknown"));
+            result.add(next);
+            leftSentence = leftSentence.substring(next.getIndexInSentence()+next.getContent().length());
+        }
+        return result;
+    }
+
+    private static List<Term> getAllTermsFound(String sentence){
+        List<Term> res = new ArrayList<>();
+        String content;
+        if((content = ContainsStrFromArray(sentence,R.array.t_w))!=null){
+            res.add(new Term(content,"t_w").setIndexInSentence(sentence.indexOf(content)).setPriority(109));
+        } 
+        if((content = ContainsStrFromArray(sentence,R.array.t_dow))!=null){
+            res.add(new Term(content,"t_dow").setIndexInSentence(sentence.indexOf(content)).setPriority(108));
+        }
+        if((content = ContainsStrFromArray(sentence,R.array.words_time_days_with_period))!=null){
+            res.add(new Term(content,"t_dow_p").setIndexInSentence(sentence.indexOf(content)).setPriority(107));
+        }
+        if((content = ContainsStrFromArray(sentence,R.array.t_num))!=null){
+            res.add(new Term(content,"t_num").setIndexInSentence(sentence.indexOf(content)).setPriority(106));
+        }
+        if((content = ContainsStrFromArray(sentence,R.array.t_h))!=null){
+            res.add(new Term(content,"t_h").setIndexInSentence(sentence.indexOf(content)).setPriority(105));
+        }if((content = ContainsStrFromArray(sentence,R.array.t_m))!=null){
+            res.add(new Term(content,"t_m").setIndexInSentence(sentence.indexOf(content)).setPriority(104));
+        }if((content = ContainsStrFromArray(sentence,R.array.t_pr))!=null){
+            res.add(new Term(content,"t_pr").setIndexInSentence(sentence.indexOf(content)).setPriority(103));
+        }if((content = ContainsStrFromArray(sentence,R.array.t_pr))!=null){
+            res.add(new Term(content,"t_pr").setIndexInSentence(sentence.indexOf(content)).setPriority(102));
+        } if((content = ContainsStrFromArray(sentence,R.array.words_to))!=null){
+            res.add(new Term(content,"to").setIndexInSentence(sentence.indexOf(content)).setPriority(101));
+        }if((content = ContainsStrFromArray(sentence,R.array.sub))!=null){
+            res.add(new Term(content,"sub").setIndexInSentence(sentence.indexOf(content)).setPriority(100));
+        } if((content = ContainsStrFromArray(sentence,R.array.t_next_one))!=null){
+            res.add(new Term(content,"t_next_one").setIndexInSentence(sentence.indexOf(content)).setPriority(99));
+        }if((content = ContainsStrFromArray(sentence,R.array.words_this))!=null){
+            res.add(new Term(content,"this").setIndexInSentence(sentence.indexOf(content)).setPriority(98));
+        }if((content = ContainsStrFromArray(sentence,R.array.words_next))!=null){
+            res.add(new Term(content,"next").setIndexInSentence(sentence.indexOf(content)).setPriority(97));
+        }if((content = ContainsStrFromArray(sentence,R.array.words_last))!=null){
+            res.add(new Term(content,"last").setIndexInSentence(sentence.indexOf(content)).setPriority(96));
+        }if((content = ContainsStrFromArray(sentence,R.array.words_hita))!=null){
+            res.add(new Term(content,"hita").setIndexInSentence(sentence.indexOf(content)).setPriority(95));
+        }if((content = ContainsStrFromArray(sentence,R.array.words_number))!=null){
+            res.add(new Term(content,"number").setIndexInSentence(sentence.indexOf(content)).setPriority(94));
+        }
+        return res;
+    }
+    private static Term getFirstTerm(String sentence){
+        List<Term> all = getAllTermsFound(sentence);
+        if(all.size()==0) return null;
+        List<Term> termsWithMinIndex = new ArrayList<>();
+        Term minIndex = all.get(0);
+        for(Term t:all){
+            if(t.getIndexInSentence()<minIndex.getIndexInSentence()){
+                termsWithMinIndex.clear();
+                minIndex = t;
+                termsWithMinIndex.add(minIndex);
+            }else if(t.getIndexInSentence()==minIndex.getIndexInSentence()){
+                minIndex = t;
+                termsWithMinIndex.add(minIndex);
+            }
+        }
+        if(termsWithMinIndex.size()==1) return termsWithMinIndex.get(0);
+        else{
+            Term maxPriority = all.get(0);
+            for(Term t:all){
+                if(t.getPriority()>maxPriority.getPriority()) maxPriority = t;
+            }
+            return maxPriority;
+        }
+    }
+
+
+
     public static List<Term> ReTag(List<Term> x) {
         for (Term t : x) {
-            if (mEquals(t.getName(),R.array.words_hita)) t.setNature(new Nature("hita"));
-            if (mEquals(t.getName(),R.array.words_ee)) t.setNature(new Nature("ee"));
-
-            if (mEquals(t.getName(), words_time_DOW)) t.setNature(new Nature("t_dow"));
-            if (mEquals(t.getName(),R.array. words_time_week_withoutHead)) t.setNature(new Nature("t_w"));
-            if (isNumber(t.getName()) || mEquals(t.getName(), R.array.words_number))
-                t.setNature(new Nature("number"));
-            if (mEquals(t.getName(), R.array.words_time_period)) t.setNature(new Nature("t_pr"));
-            if (mEquals(t.getName(), R.array.words_time_hour)) t.setNature(new Nature("t_h"));
-            if (mEquals(t.getName(), R.array.words_to)) t.setNature(new Nature("to"));
-            if (mEquals(t.getName(), R.array.words_time_minute)) t.setNature(new Nature("t_m"));
-            if (mEquals(t.getName(), R.array.words_this)) t.setNature(new Nature("this"));
-            if (mEquals(t.getName(), R.array.words_next)) t.setNature(new Nature("next"));
-            if (mEquals(t.getName(), R.array.words_last)) t.setNature(new Nature("last"));
-            if(mEquals(t.getName(),R.array.words_time_days)) t.setNature(new Nature("t_dow"));
-            if(mEquals(t.getName(),R.array.words_time_days_with_period)) t.setNature(new Nature("t_dow_p"));
-            if(mEquals(t.getName(),R.array.words_next_one)) t.setNature(new Nature("t_nextone"));
-            if(mEquals(t.getName(), R.array.words_add_remind)) t.setNature(new Nature("add_remind"));
-            if(mEquals(t.getName(),R.array.word_subject_wtv)
-            ||mEquals(t.getName(),R.array.word_subject_alt)
-                    ||mEquals(t.getName(),R.array.word_subject_comp)
-            ) t.setNature(new Nature("sub"));
+            //if (mEquals(t.getContent(),R.array.words_hita)) t.setTag("hita");
+            if (mEquals(t.getContent(),R.array.words_ee)) t.setTag("ee");
+            //if (mEquals(t.getContent(), words_time_DOW)) t.setTag("t_dow");
+            //if (mEquals(t.getContent(),R.array. words_time_week_withoutHead)) t.setTag("t_w");
+//            if (isNumber(t.getContent()) || mEquals(t.getContent(), R.array.words_number))
+//                t.setTag("number");
+            //if (mEquals(t.getContent(), R.array.words_time_period)) t.setTag("t_pr");
+            //if (mEquals(t.getContent(), R.array.words_time_hour)) t.setTag("t_h");
+            //if (mEquals(t.getContent(), R.array.words_to)) t.setTag("to");
+            //if (mEquals(t.getContent(), R.array.words_time_minute)) t.setTag("t_m");
+            //if (mEquals(t.getContent(), R.array.words_this)) t.setTag("this");
+           // if (mEquals(t.getContent(), R.array.words_next)) t.setTag("next");
+            //if (mEquals(t.getContent(), R.array.words_last)) t.setTag("last");
+            //if(mEquals(t.getContent(),R.array.words_time_days)) t.setTag("t_dow");
+            //if(mEquals(t.getContent(),R.array.words_time_days_with_period)) t.setTag("t_dow_p");
+            //if(mEquals(t.getContent(),R.array.words_next_one)) t.setTag("t_nextone");
+            if(mEquals(t.getContent(), R.array.words_add_remind)) t.setTag("add_remind");
+//            if(mEquals(t.getContent(),R.array.word_subject_wtv)
+//            ||mEquals(t.getContent(),R.array.word_subject_alt)
+//                    ||mEquals(t.getContent(),R.array.word_subject_comp)
+//            ) t.setTag("sub");
         }
         return x;
     }
@@ -69,6 +157,14 @@ public class TextTools {
             if (x.contains(i)) return true;
         }
         return false;
+    }
+    public static String ContainsStrFromArray(String x, int id) {
+        String[] bases = HContext.getResources().getStringArray(id);
+        if (bases == null) return null;
+        for (String i : bases) {
+            if(x.contains(i))return i;
+        }
+        return null;
     }
     public static boolean mEquals(String x, String[] bases) {
         for (String i : bases) {
@@ -115,8 +211,8 @@ public class TextTools {
     public static String getStringWithTag(List<Term> x, String type, int number) {
         List<String> resultList = new ArrayList<>();
         for (Term m : x) {
-            if (m.getNatureStr().equals(type)) {
-                resultList.add(m.getName());
+            if (m.getTag().equals(type)) {
+                resultList.add(m.getContent());
             }
         }
         if (resultList.size() <= 0) return "";
@@ -132,8 +228,8 @@ public class TextTools {
 
             List<String> resultList = new ArrayList<>();
             for (Term m : x) {
-                if (m.getNatureStr().equals(type)) {
-                    resultList.add(m.getName());
+                if (m.getTag().equals(type)) {
+                    resultList.add(m.getContent());
                 }
             }
             if (resultList.size() <= 0) return "";
@@ -144,19 +240,19 @@ public class TextTools {
             List<String> resultList = new ArrayList<>();
             for (Term m : x) {
                 if (isFromName) {
-                    if (mContains(m.getName(), from)) gotit++;
+                    if (mContains(m.getContent(), from)) gotit++;
                 } else {
-                    if (mContains(m.getNatureStr(), from)) gotit++;
+                    if (mContains(m.getTag(), from)) gotit++;
                 }
                 if (gotit < number1) {
 
                 } else if (number2 == -1) {
-                    if (m.getNatureStr().equals(type)) {
-                        resultList.add(m.getName());
+                    if (m.getTag().equals(type)) {
+                        resultList.add(m.getContent());
                     }
                 } else if (gotit < number2) {
-                    if (m.getNatureStr().equals(type)) {
-                        resultList.add(m.getName());
+                    if (m.getTag().equals(type)) {
+                        resultList.add(m.getContent());
                     }
                 }
             }
@@ -169,11 +265,11 @@ public class TextTools {
     public static String getStringAfterTag(List<Term> x, String[] from) {
         int last = 0;
         for(int i=0;i<x.size();i++){
-            if(mContains(x.get(i).getNatureStr(),from)) last = i;
+            if(mContains(x.get(i).getTag(),from)) last = i;
         }
         StringBuilder sb = new StringBuilder();
         for(int i = last+1;i<x.size();i++){
-            sb.append(x.get(i).getName());
+            sb.append(x.get(i).getContent());
         }
         return sb.toString();
     }
@@ -190,15 +286,15 @@ public class TextTools {
     public static int getCount_contains(List<Term> x, String key, boolean isName) {
         int result = 0;
         if (!isName) for (Term t : x)
-            if (t.getNatureStr().contains(key)) result++;
-            else for (Term y : x) if (y.getName().contains(key)) result++;
+            if (t.getTag().contains(key)) result++;
+            else for (Term y : x) if (y.getContent().contains(key)) result++;
         return result;
     }
     public static int getCount_Equals(List<Term> x, String key, boolean isName) {
         int result = 0;
         if (!isName) for (Term t : x)
-            if (t.getNatureStr().equals(key)) result++;
-            else for (Term y : x) if (y.getName().equals(key)) result++;
+            if (t.getTag().equals(key)) result++;
+            else for (Term y : x) if (y.getContent().equals(key)) result++;
         return result;
     }
     public int getCount(List<Term> x, String[] base, boolean isName) {
@@ -206,7 +302,7 @@ public class TextTools {
         if (!isName) {
             for (Term t : x) {
                 for (int i = 0; i < base.length; i++) {
-                    if (t.getNatureStr().equals(base[i])) {
+                    if (t.getTag().equals(base[i])) {
                         result++;
                         break;
                     }
@@ -215,7 +311,7 @@ public class TextTools {
         } else {
             for (Term t : x) {
                 for (int i = 0; i < base.length; i++) {
-                    if (t.getName().equals(base[i])) {
+                    if (t.getContent().equals(base[i])) {
                         result++;
                         break;
                     }
@@ -231,7 +327,7 @@ public class TextTools {
         if (!isName) {
             for (Term t : x) {
                 for (int i = 0; i < base.length; i++) {
-                    if (t.getNatureStr().equals(base[i])) {
+                    if (t.getTag().equals(base[i])) {
                         result++;
                         break;
                     }
@@ -240,7 +336,7 @@ public class TextTools {
         } else {
             for (Term t : x) {
                 for (int i = 0; i < base.length; i++) {
-                    if (t.getName().equals(base[i])) {
+                    if (t.getContent().equals(base[i])) {
                         result++;
                         break;
                     }
@@ -258,22 +354,22 @@ public class TextTools {
         int tagNum = 0;
         for (int i = 0; i < x.size(); i++) {
 
-            if (mEquals(x.get(i).getNatureStr(), tag)) tagNum++;
+            if (mEquals(x.get(i).getTag(), tag)) tagNum++;
             if (tagNum >= number2 && number2 != 0) return result;
             if (tagNum < number1 && number1 != 0) continue;
             if (isName) {
-                if (mEquals(x.get(i).getName(), base)) result++;
+                if (mEquals(x.get(i).getContent(), base)) result++;
             } else {
-                if (mEquals(x.get(i).getNatureStr(), base)) result++;
+                if (mEquals(x.get(i).getTag(), base)) result++;
             }
         }
         if (tagNum == 0) {
             for (int i = 0; i < x.size(); i++) {
 
                 if (isName) {
-                    if (mEquals(x.get(i).getName(), base)) result++;
+                    if (mEquals(x.get(i).getContent(), base)) result++;
                 } else {
-                    if (mEquals(x.get(i).getNatureStr(), base)) result++;
+                    if (mEquals(x.get(i).getTag(), base)) result++;
                 }
             }
         }
@@ -289,22 +385,22 @@ public class TextTools {
         int tagNum = 0;
         for (int i = 0; i < x.size(); i++) {
 
-            if (mEquals(x.get(i).getNatureStr(), tag)) tagNum++;
+            if (mEquals(x.get(i).getTag(), tag)) tagNum++;
             if (tagNum >= number2 && number2 != 0) break;
             if (tagNum < number1 && number1 != 0) continue;
             if (isName) {
-                if (mEquals(x.get(i).getName(), base)) resultList.add(x.get(i).getName());
+                if (mEquals(x.get(i).getContent(), base)) resultList.add(x.get(i).getContent());
             } else {
-                if (mEquals(x.get(i).getNatureStr(), base)) resultList.add(x.get(i).getName());
+                if (mEquals(x.get(i).getTag(), base)) resultList.add(x.get(i).getContent());
             }
         }
         if (tagNum == 0) {
             for (int i = 0; i < x.size(); i++) {
 
                 if (isName) {
-                    if (mEquals(x.get(i).getName(), base)) resultList.add(x.get(i).getName());
+                    if (mEquals(x.get(i).getContent(), base)) resultList.add(x.get(i).getContent());
                 } else {
-                    if (mEquals(x.get(i).getNatureStr(), base)) resultList.add(x.get(i).getName());
+                    if (mEquals(x.get(i).getTag(), base)) resultList.add(x.get(i).getContent());
                 }
             }
         }
@@ -320,22 +416,22 @@ public class TextTools {
         int tagNum = 0;
         for (int i = 0; i < x.size(); i++) {
 
-            if (mEquals(x.get(i).getNatureStr(), tag)) tagNum++;
+            if (mEquals(x.get(i).getTag(), tag)) tagNum++;
             if (tagNum >= number2 && number2 != 0) break;
             if (tagNum < number1 && number1 != 0) continue;
             if (isName) {
-                if (mEquals(x.get(i).getName(), base)) resultList.add(x.get(i));
+                if (mEquals(x.get(i).getContent(), base)) resultList.add(x.get(i));
             } else {
-                if (mEquals(x.get(i).getNatureStr(), base)) resultList.add(x.get(i));
+                if (mEquals(x.get(i).getTag(), base)) resultList.add(x.get(i));
             }
         }
         if (tagNum == 0) {
             for (int i = 0; i < x.size(); i++) {
 
                 if (isName) {
-                    if (mEquals(x.get(i).getName(), base)) resultList.add(x.get(i));
+                    if (mEquals(x.get(i).getContent(), base)) resultList.add(x.get(i));
                 } else {
-                    if (mEquals(x.get(i).getNatureStr(), base)) resultList.add(x.get(i));
+                    if (mEquals(x.get(i).getTag(), base)) resultList.add(x.get(i));
                 }
             }
         }
@@ -352,6 +448,20 @@ public class TextTools {
             }
         }
         return true;
+    }
+
+    public static boolean likeWithContain(String a,String b){
+        if(TextUtils.isEmpty(a)&&!TextUtils.isEmpty(b)
+        ||TextUtils.isEmpty(b)&&!TextUtils.isEmpty(a)
+        ) return false;
+        boolean b1 = a.contains(b) || b.contains(a);
+        if(b1) return true;
+        int delta = 0;
+        if(a.length()<=5&&b.length()<=5) delta = 1;
+        else if(a.length()<=8&&b.length()<=8) delta = 2;
+        else if (a.length()<=10&&b.length()<=10)delta = 3;
+        else if(a.length()>=11&&b.length()>=11) delta = 4;
+        return EditDistance(a,b)<=delta;
     }
 
     public static boolean like(String a,String b){

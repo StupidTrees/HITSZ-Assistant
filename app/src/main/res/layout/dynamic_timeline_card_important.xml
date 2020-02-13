@@ -62,6 +62,23 @@
                     android:textSize="18sp"
                     android:transitionName="course_name" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|start"
+                    android:layout_marginLeft="16dp"
+                    android:background="@drawable/radius_grey_lgiht_button_bg"
+                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:backgroundTintMode="src_over"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:text="第13周 星期一"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -97,14 +114,29 @@
 
                 </LinearLayout>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/radius_primay_lgiht_button_bg"
+                android:backgroundTint="@color/background_bottom_color_as_tint"
+                android:orientation="vertical">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginRight="16dp"
+                    android:background="@drawable/radius_primay_lgiht_button_bg"
+                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:backgroundTintMode="src_over"
                     android:clickable="false"
                     android:orientation="horizontal"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="8dp"
                     app:theme="@style/button_ripple_primary_large">
 
                     <ImageView
@@ -114,7 +146,7 @@
 
                         android:alpha="0.8"
                         android:clickable="false"
-                        android:tint="?attr/text_color_secondary"
+                        android:tint="?attr/colorPrimary"
                         android:tintMode="src_in"
                         app:srcCompat="@drawable/ic_location2" />
 
@@ -123,35 +155,43 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|start"
-                        android:layout_marginLeft="8dp"
                         android:layout_weight="1"
                         android:alpha="0.8"
+                        android:fontFamily="sans-serif-black"
                         android:maxEms="5"
                         android:singleLine="true"
                         android:text="T3402"
-                        android:textColor="?attr/text_color_secondary"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="14sp"
                         android:transitionName="course_name" />
 
                 </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginRight="16dp"
-                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tl_tv_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:background="@drawable/radius_primay_lgiht_button_bg"
+                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:backgroundTintMode="src_over"
+                    android:fontFamily="sans-serif-black"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="34min"
+                    android:textColor="?attr/colorPrimary"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:text="34min"
                     android:textColor="?attr/text_color_secondary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <ProgressBar
                     android:id="@+id/event_progressbar"
@@ -159,7 +199,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="4dp"
                     android:layout_gravity="bottom"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:progressDrawable="@drawable/style_progressbar_primary_fade" />
             </LinearLayout>
         </LinearLayout>

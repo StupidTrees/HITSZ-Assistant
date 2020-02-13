@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
-import com.stupidtree.hita.fragments.FragmentEmptyClassroomDialog;
+import com.stupidtree.hita.fragments.popup.FragmentEmptyClassroomDialog;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.timetable.TimetableCore;

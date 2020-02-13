@@ -1,12 +1,8 @@
 package com.stupidtree.hita.activities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -15,10 +11,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -29,25 +21,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.iflytek.cloud.ErrorCode;
-import com.iflytek.cloud.InitListener;
-import com.iflytek.cloud.RecognizerListener;
-import com.iflytek.cloud.RecognizerResult;
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechError;
-import com.iflytek.cloud.SpeechRecognizer;
-import com.iflytek.cloud.SpeechSynthesizer;
-import com.iflytek.cloud.SpeechUtility;
-import com.iflytek.cloud.SynthesizerListener;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
+import com.stupidtree.hita.hita.Term;
 import com.stupidtree.hita.timetable.Subject;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.hita.ChatBotA;
@@ -63,21 +45,13 @@ import com.stupidtree.hita.online.ChatMessage;
 import com.stupidtree.hita.online.Infos;
 import com.stupidtree.hita.online.Teacher;
 import com.stupidtree.hita.util.ActivityUtils;
-import com.stupidtree.hita.util.IatSettings;
-import com.stupidtree.hita.util.JsonParser;
 
-import org.ansj.domain.Result;
-import org.ansj.domain.Term;
-import org.ansj.splitWord.analysis.ToAnalysis;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -88,9 +62,9 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
-import jaygoo.widget.wlv.WaveLineView;
 
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.hita.ChatBotA.propcessSerchEvents;
 import static com.stupidtree.hita.hita.TextTools.BEFORE;
 import static com.stupidtree.hita.hita.TextTools.NEXT;
 import static com.stupidtree.hita.hita.TextTools.THIS;
@@ -108,48 +82,24 @@ import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_D
 import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_EXAM;
 import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_REMIND;
 
-public class ActivityChatbot extends BaseActivity implements View.OnClickListener {
+public class ActivityChatbot extends BaseActivity {
     protected BottomSheetDialog dialog;
-    private static final String TAG = ActivityChatbot.class.getSimpleName();
-    private static final int REQUEST_PERMISSION = 1;
-    public static final String EXTRA_CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
-    public static final String EXTRA_CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
     private final int VIEW_TYPE_LEFT = -10;
     private final int VIEW_TYPE_RIGHT = -11;
     private EditText mEtMessageInput;
     private ImageView mBtnSend;
     Toolbar mToolbar;
-    LinearLayout textInputLayout,voiceInputLayout;
+    LinearLayout textInputLayout;
     LottieAnimationView animationView;
-    FloatingActionButton fab_shutup;
     ChatBotA chatbotA;
     ChatBotB chatbotB;
     ChatBotIteractTask pageTask;
     JsonObject chatBotInfos;
 
-    //语音听写对象
-    private SpeechRecognizer mSpeechRecognizer;
-    //默认发音人
-    private String voicer = "xiaoyan";
-    //语音听写UI
-    //private static RecognizerDialog mRecognizerDialog;
-    //用hashmap来存储听写的结果
-    private static HashMap<String, String> mIatResults = new LinkedHashMap<>();
-    //语音合成对象
-    private static SpeechSynthesizer mSpeechSynthesizer;
 
-    //存储数据对象
-    private SharedPreferences mSharedPreferences;
-    private String mEngineType = SpeechConstant.TYPE_CLOUD;
-    private boolean mTranslateEnale = false;
-    private int mRet = 0;
-    private long mLastTime;
-    InputMethodManager mImManager;
     ChatBotListAdapter ListAdapter;
     RecyclerView ChatList;
     LinearLayoutManager layoutManager;
-    // LayoutAnimationController layoutAnimationController;
-    WaveLineView waveLineView;
 
     public static int State;
     List<EventItem> StateEventList;
@@ -170,26 +120,13 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         setWindowParams(true, true, false);
-        initXfVoice();
         chatbotA = new ChatBotA(this);
         chatbotB = new ChatBotB();
         setContentView(R.layout.activity_chatbot);
         initViews();
         initListAndAdapter();
-        if (!defaultSP.getBoolean("ChatBot_useKeyboard", false)) {
-            waveLineView.setVolume(0);
-            waveLineView.startAnim();
-        }
-        checkPermissions();
-        initIFlyParams();
         initChatBotInfo();
-        //onClick(rootLayout);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ToAnalysis.parse("abc");
-            }
-        }).start();
+
     }
 
     void initChatBotInfo() {
@@ -209,7 +146,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                 if (ChatBotListRes.size() == 0) {
                     ChatBotMessageItem cmi = new ChatBotMessageItem(VIEW_TYPE_LEFT, chatBotInfos.get("message_show").getAsString());
                     cmi.setHint(chatBotInfos.get("hint").getAsString());
-                    addMessageView(cmi, cmi.message, null, false);
+                    addMessageView(cmi, cmi.message, null);
                 }
                 initHitaAnimation();
             }
@@ -230,324 +167,28 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         animationView.playAnimation();
     }
 
-    private void initXfVoice() {
-        SpeechUtility.createUtility(getApplicationContext(), SpeechConstant.APPID + "=5c4aa1d3");
-    }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
 
-    @Override
-    public void onClick(View v) {
-        if (mSpeechSynthesizer.isSpeaking()) {
-            mSpeechSynthesizer.stopSpeaking();
-        } else if (waveLineView.getVisibility() != View.VISIBLE || mSpeechRecognizer.isListening()) {
-            mSpeechRecognizer.stopListening();
-
-            // voiceRippleBackground.stopRippleAnimation();
-            waveLineView.setVolume(0);
-            return;
-        }
-        //FlowerCollector.onEvent(ActivityChatbot.this, "iat_recognize");
-        mIatResults.clear();
-        setSpeechParam();
-        mRet = mSpeechRecognizer.startListening(mRecognizerListener);
-        if (mRet != ErrorCode.SUCCESS) {
-            Toast.makeText(ActivityChatbot.this.getApplicationContext(), "听写失败，错误码是：" + mRet, Toast.LENGTH_LONG).show();
-        }
-
-    }
 
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        waveLineView.setVolume(0);
-        if (mSpeechRecognizer.isListening()) mSpeechRecognizer.stopListening();
-        if (waveLineView.isRunning()) waveLineView.stopAnim();
-        if (mSpeechSynthesizer.isSpeaking()) mSpeechSynthesizer.stopSpeaking();
-    }
-
-    //初始化讯飞语音各参数
-    private void initIFlyParams() {
-        //初始化语音听写对象
-        mSpeechRecognizer = SpeechRecognizer.createRecognizer(ActivityChatbot.this, mInitListener);
-        //初始化语音听写的Dialog
-        //mRecognizerDialog = new RecognizerDialog(ActivityChatbot.this, mInitListener);
-        mSharedPreferences = ActivityChatbot.this.getSharedPreferences(IatSettings.PREFER_NAME, Activity.MODE_PRIVATE);
-        //初始化合成对象
-        mSpeechSynthesizer = SpeechSynthesizer.createSynthesizer(ActivityChatbot.this, mTtsInitListener);
-        mImManager = (InputMethodManager) ActivityChatbot.this.getSystemService(Context.INPUT_METHOD_SERVICE);
-    }
-
-    //讯飞语音听写初始化的监听器
-    private InitListener mInitListener = new InitListener() {
-        @Override
-        public void onInit(int code) {
-            Log.d(TAG, "SpeechRecognizer init() code=" + code);
-            if (code != ErrorCode.SUCCESS) {
-                Toast.makeText(ActivityChatbot.this.getApplicationContext(), "初始化失败，错误码为：" + code, Toast.LENGTH_LONG).show();
-            }
-        }
-    };
 
 
-    //讯飞语音合成初始化的监听器
-    private InitListener mTtsInitListener = new InitListener() {
-        @Override
-        public void onInit(int code) {
-            Log.d(TAG, "InitListener init() code=" + code);
-            if (code != ErrorCode.SUCCESS) {
-                Toast.makeText(ActivityChatbot.this.getApplicationContext(), "初始化失败，错误码为：" + code, Toast.LENGTH_LONG).show();
-            }
-        }
-    };
 
 
-    private SynthesizerListener mTtsListener = new SynthesizerListener() {
-        @Override
-        public void onSpeakBegin() {
-            fab_shutup.show();
-            //Toast.makeText(FragmentChatBot_old.this.getApplicationContext(),"开始播放", Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onBufferProgress(int i, int i1, int i2, String s) {
-
-        }
-
-        @Override
-        public void onSpeakPaused() {
-            //Toast.makeText(ActivityChatbot.this.getApplicationContext(), "暂停播放", Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onSpeakResumed() {
-            //Toast.makeText(ActivityChatbot.this.getApplicationContext(), "继续播放", Toast.LENGTH_LONG).show();
-
-        }
-
-        @Override
-        public void onSpeakProgress(int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onCompleted(SpeechError speechError) {
-            fab_shutup.hide();
-            if (speechError == null) {
-                //Toast.makeText(FragmentChatBot_old.this.getApplicationContext(),"播放完成",Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(ActivityChatbot.this.getApplicationContext(), speechError.getPlainDescription(true), Toast.LENGTH_LONG).show();
-            }
-        }
-
-        @Override
-        public void onEvent(int i, int i1, int i2, Bundle bundle) {
-
-        }
-    };
-
-    private void voiceInputDone(RecognizerResult results) {
-        String text = JsonParser.parseIatResult(results.getResultString());
-        String sn = null;
-        try {
-            JSONObject resultJSON = new JSONObject(results.getResultString());
-            sn = resultJSON.optString("sn");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        mIatResults.put(sn, text);
-        StringBuffer resultBuffer = new StringBuffer();
-        for (String key : mIatResults.keySet()) {
-            resultBuffer.append(mIatResults.get(key));
-        }
-        String message = resultBuffer.toString();
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - mLastTime > 1500) {
-            addMessageToChat_Right(message);
-            mLastTime = currentTime;
-        }
-    }
-
-    private void translateInputDone(RecognizerResult results) {
-        String trans = JsonParser.parseTransResult(results.getResultString(), "dst");
-        String oris = JsonParser.parseTransResult(results.getResultString(), "src");
-
-        if (TextUtils.isEmpty(trans) || TextUtils.isEmpty(oris)) {
-            Toast.makeText(ActivityChatbot.this.getApplicationContext(), "解析结果失败，请确认是否已经开通翻译功能", Toast.LENGTH_LONG).show();
-        }
-    }
 
 
-    //讯飞语音识别的监听器
-    private RecognizerListener mRecognizerListener = new RecognizerListener() {
-        @Override
-        public void onVolumeChanged(int i, byte[] bytes) {
-            waveLineView.setVolume(30 + i * 20);
-        }
-
-        @Override
-        public void onBeginOfSpeech() {
-            waveLineView.setVolume(30);
-        }
-
-        @Override
-        public void onEndOfSpeech() {
-            waveLineView.setVolume(0);
-        }
-
-        @Override
-        public void onResult(RecognizerResult recognizerResult, boolean isLast) {
-            waveLineView.setVolume(0);
-            if (mTranslateEnale) {
-                translateInputDone(recognizerResult);
-                Log.d(TAG, "听写监听打印翻译结果");
-            } else {
-                voiceInputDone(recognizerResult);
-                Log.d(TAG, "听写监听打印普通结果");
-            }
-
-            if (isLast) {
-                //TODO 处理最后的结果
-            }
-        }
-
-        @Override
-        public void onError(SpeechError speechError) {
-            waveLineView.setVolume(0);
-            if (mTranslateEnale && speechError.getErrorCode() == 14002) {
-                Toast.makeText(ActivityChatbot.this, speechError.getPlainDescription(true) + "\n请确认是否已经开通过翻译功能", Toast.LENGTH_SHORT).show();
-
-            } else if (!(speechError.getErrorCode() == 10118)) {
-                Toast.makeText(ActivityChatbot.this, speechError.getPlainDescription(true), Toast.LENGTH_SHORT).show();
-            }
-        }
 
 
-        @Override
-        public void onEvent(int i, int i1, int i2, Bundle bundle) {
-            waveLineView.setVolume(0);
-        }
-    };
-
-    //设置讯飞听写参数
-    public void setSpeechParam() {
-        //清空参数
-        mSpeechRecognizer.setParameter(SpeechConstant.PARAMS, null);
-        //设置听写的引擎
-        mSpeechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, mEngineType);
-        //设置返回结果的格式
-        mSpeechRecognizer.setParameter(SpeechConstant.RESULT_TYPE, "json");
-
-        //设置倾向于听写大写数字
-        mSpeechRecognizer.setParameter("nunum", "1");
-
-        this.mTranslateEnale = mSharedPreferences.getBoolean(this.getString(R.string.pref_key_translate), false);
-        if (mTranslateEnale) {
-            mSpeechRecognizer.setParameter(SpeechConstant.ASR_SCH, "1");
-            mSpeechRecognizer.setParameter(SpeechConstant.ADD_CAP, "translate");
-            mSpeechRecognizer.setParameter(SpeechConstant.TRS_SRC, "its");
-        }
-
-        //设置语言
-        String lag = mSharedPreferences.getString("iat_language_preference", "mandarin");
-        if (lag.equals("en_us")) {
-            mSpeechRecognizer.setParameter(SpeechConstant.LANGUAGE, "en_us");
-            mSpeechRecognizer.setParameter(SpeechConstant.ACCENT, null);
-
-            if (mTranslateEnale) {
-                mSpeechRecognizer.setParameter(SpeechConstant.ORI_LANG, "en");
-                mSpeechRecognizer.setParameter(SpeechConstant.ACCENT, "cn");
-            }
-        } else {
-            mSpeechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
-            mSpeechRecognizer.setParameter(SpeechConstant.ACCENT, lag);
-            if (mTranslateEnale) {
-                mSpeechRecognizer.setParameter(SpeechConstant.ORI_LANG, "cn");
-                mSpeechRecognizer.setParameter(SpeechConstant.ACCENT, "en");
-            }
-        }
-        //设置语音前端点：静音超时的时间，用户多长时间不说话就视为超时
-        mSpeechRecognizer.setParameter(SpeechConstant.VAD_BOS, mSharedPreferences.getString("iat_vadbos_preference", "4000"));
-        //设置语音后端点，用户停止说话多长时间即认为不再输入，这个时候就自动停止录音
-        mSpeechRecognizer.setParameter(SpeechConstant.VAD_EOS, mSharedPreferences.getString("iat_vadeos_preference", "1000"));
-        mSpeechRecognizer.setParameter(SpeechConstant.ASR_PTT, mSharedPreferences.getString("iat_punc_preference", "1"));
-
-        //设置保存路径
-        mSpeechRecognizer.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
-        mSpeechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, ActivityChatbot.this.getFilesDir() + "/msc/iat.wav");
-    }
-
-    //设置讯飞语音合成参数
-    public void setVoiceParam() {
-        mSpeechSynthesizer.setParameter(SpeechConstant.PARAMS, null);
-        if (mEngineType.equals(SpeechConstant.TYPE_CLOUD)) {
-            mSpeechSynthesizer.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
-            mSpeechSynthesizer.setParameter(SpeechConstant.VOICE_NAME, voicer);
-            mSpeechSynthesizer.setParameter(SpeechConstant.SPEED, mSharedPreferences.getString("speed_preference", "50"));
-            mSpeechSynthesizer.setParameter(SpeechConstant.PITCH, mSharedPreferences.getString("pitch_preference", "50"));
-            mSpeechSynthesizer.setParameter(SpeechConstant.VOLUME, mSharedPreferences.getString("volume_preference", "50"));
-        } else {
-            mSpeechSynthesizer.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_LOCAL);
-            mSpeechSynthesizer.setParameter(SpeechConstant.VOICE_NAME, "");
-        }
-        mSpeechSynthesizer.setParameter(SpeechConstant.STREAM_TYPE, mSharedPreferences.getString("stram_preference", "3"));
-        mSpeechSynthesizer.setParameter(SpeechConstant.KEY_REQUEST_FOCUS, "true");
-
-        //设置保存路径
-        mSpeechRecognizer.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
-        mSpeechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, ActivityChatbot.this.getFilesDir() + "/msc/tts.wav");
-
-    }
-
-    private void checkPermissions() {
-        List<String> permissionList = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(ActivityChatbot.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(ActivityChatbot.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(ActivityChatbot.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.RECORD_AUDIO);
-        }
-        if (ContextCompat.checkSelfPermission(ActivityChatbot.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.READ_PHONE_STATE);
-        }
-        if (ContextCompat.checkSelfPermission(ActivityChatbot.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.READ_CONTACTS);
-        }
-        if (ContextCompat.checkSelfPermission(ActivityChatbot.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-        if (!permissionList.isEmpty()) {
-            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
-            ActivityCompat.requestPermissions(ActivityChatbot.this, permissions, REQUEST_PERMISSION);
-        }
-    }
 
     private void initViews() {
-        waveLineView = findViewById(R.id.waveLineView);
         mEtMessageInput = findViewById(R.id.edit_send);
         mBtnSend = findViewById(R.id.btn_send);
-        //btSpeak = findViewById(R.id.fab_speak);
-        fab_shutup = findViewById(R.id.fab_shutup);
         textInputLayout = findViewById(R.id.textInput);
-        voiceInputLayout = findViewById(R.id.voiceInput);
         rootLayout = findViewById(R.id.chatbot_root_layout);
-        fab_shutup.hide();
-        fab_shutup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSpeechSynthesizer.isSpeaking()) {
-                    mSpeechSynthesizer.stopSpeaking();
-                }
-                fab_shutup.hide();
-            }
-        });
         mBtnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -560,18 +201,8 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                 addMessageToChat_Right(message);
             }
         });
-        waveLineView.setOnClickListener(this);
         // btSpeak.setOnClickListener(this);
         initToolBar();
-        if (defaultSP.getBoolean("ChatBot_useKeyboard", false)) {
-            textInputLayout.setVisibility(View.VISIBLE);
-            //btSpeak.hide();
-            voiceInputLayout.setVisibility(View.GONE);
-        } else {
-            textInputLayout.setVisibility(View.GONE);
-            //btSpeak.show();
-            voiceInputLayout.setVisibility(View.VISIBLE);
-        }
     }
 
     private void initListAndAdapter() {
@@ -620,7 +251,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         JsonObject message = new JsonObject();
         message.addProperty("message_show", msg);
         ChatBotMessageItem cmi = new ChatBotMessageItem(VIEW_TYPE_RIGHT, msg);
-        addMessageView(cmi, msg, null, false);
+        addMessageView(cmi, msg, null);
         postToChatBot(msg);
     }
 
@@ -639,20 +270,13 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
     //收到聊天机器人的回复后
     private void getReply(JsonObject received) {
         new ProcessReplyMessageTask(received).executeOnExecutor(HITAApplication.TPE);
-        setVoiceParam();
     }
 
 
     private void addMessageView(ChatBotMessageItem message, String textOnShow,
-                                String textToRead, boolean willSpeak) {
+                                String textToRead) {
         if (textToRead == null) textToRead = textOnShow;
         /*语音广播*/
-        if (willSpeak && message.type == VIEW_TYPE_LEFT) {
-            int code = mSpeechSynthesizer.startSpeaking(textToRead, mTtsListener);
-            if (code != ErrorCode.SUCCESS) {
-                Toast.makeText(ActivityChatbot.this, "语音合成失败，错误码是：" + code, Toast.LENGTH_LONG).show();
-            }
-        }
         if (message.type == VIEW_TYPE_RIGHT) message.setMessage("“" + textOnShow + "”");
         else message.setMessage(textOnShow);
         ListAdapter.addMessage(message);
@@ -662,217 +286,6 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
        // ChatList.scrollToPosition(ListAdapter.getItemCount() - 1);
     }
 
-    private List<EventItem> propcessSerchEvents(JsonObject values) {
-        int fromW = values.get("fW").getAsInt();
-        int toW = values.get("tW").getAsInt();
-        int fromDOW = values.get("fDOW").getAsInt();
-        int toDOW = values.get("tDOW").getAsInt();
-        HTime fromT = new HTime(values.get("fH").getAsInt(), values.get("fM").getAsInt());
-        HTime toT = new HTime(values.get("tH").getAsInt(), values.get("tM").getAsInt());
-        int tag = values.get("tag").getAsInt();
-        int num = values.get("num").getAsInt();
-        int thisDOW = now.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : now.get(Calendar.DAY_OF_WEEK) - 1;
-        if (fromW == BEFORE) fromW = timeTableCore.getThisWeekOfTerm() - 1 <= 0 ? 1 : timeTableCore.getThisWeekOfTerm() - 1;
-        if (fromW == THIS) fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
-        if (fromW == NEXT)
-            fromW = timeTableCore.isThisTerm() ? ((timeTableCore.getThisWeekOfTerm() + 1 > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : timeTableCore.getThisWeekOfTerm() + 1) : 2;
-        if (toW == BEFORE) toW = timeTableCore.getThisWeekOfTerm() - 1 <= 0 ? 1 : timeTableCore.getThisWeekOfTerm() - 1;
-        if (toW == THIS) toW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
-        if (toW == NEXT)
-            toW = timeTableCore.isThisTerm() ? ((timeTableCore.getThisWeekOfTerm() + 1 > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : timeTableCore.getThisWeekOfTerm() + 1) : 2;
-
-        if (fromW == -1) {
-            if (fromDOW == BEFORE) {
-                if (thisDOW < 2) {
-                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
-                    fromDOW = 7;
-                } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
-                    fromDOW = thisDOW - 1;
-                }
-            } else if (fromDOW == T_BEFORE) {
-                if (thisDOW < 3) {
-                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
-                    if (thisDOW == 2) fromDOW = 7;
-                    else if (thisDOW == 1) fromDOW = 6;
-                } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
-                    fromDOW = thisDOW - 2;
-                }
-            } else if (fromDOW == TT_BEFORE) {
-                if (thisDOW < 4) {
-                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
-                    if (thisDOW == 3) fromDOW = 7;
-                    else if (thisDOW == 2) fromDOW = 6;
-                    else if (thisDOW == 1) fromDOW = 5;
-                } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
-                    fromDOW = thisDOW - 3;
-                }
-            } else if (fromDOW == THIS) {
-                fromW = timeTableCore.getThisWeekOfTerm();
-                fromDOW = thisDOW;
-            } else if (fromDOW == NEXT) {
-                if (thisDOW == 7) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-                    fromDOW = 1;
-                } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
-                    fromDOW = thisDOW + 1;
-                }
-            } else if (fromDOW == T_NEXT) {
-                if (thisDOW == 6) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-                    fromDOW = 1;
-                } else if (thisDOW == 7) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-                    fromDOW = 2;
-                } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
-                    fromDOW = thisDOW + 2;
-                }
-            } else if (fromDOW == TT_NEXT) {
-                if (thisDOW == 5) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-                    fromDOW = 1;
-                } else if (thisDOW == 6) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-                    fromDOW = 2;
-                } else if (thisDOW == 7) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-                    fromDOW = 3;
-                } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
-                    fromDOW = thisDOW + 3;
-                }
-            }
-        }
-        if (toW == -1) {
-            if (toDOW == BEFORE) {
-                if (thisDOW < 2) {
-                    toW = timeTableCore.getThisWeekOfTerm() - 1;
-                    toDOW = 7;
-                } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
-                    toDOW = thisDOW - 1;
-                }
-            } else if (toDOW == T_BEFORE) {
-                if (thisDOW < 3) {
-                    toW = timeTableCore.getThisWeekOfTerm() - 1;
-                    if (thisDOW == 2) toDOW = 7;
-                    else if (thisDOW == 1) toDOW = 6;
-                } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
-                    toDOW = thisDOW - 2;
-                }
-            } else if (toDOW == TT_BEFORE) {
-                if (thisDOW < 4) {
-                    toW = timeTableCore.getThisWeekOfTerm() - 1;
-                    if (thisDOW == 3) toDOW = 7;
-                    else if (thisDOW == 2) toDOW = 6;
-                    else if (thisDOW == 1) toDOW = 5;
-                } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
-                    toDOW = thisDOW - 3;
-                }
-            } else if (toDOW == THIS) {
-                toW = timeTableCore.getThisWeekOfTerm();
-                toDOW = thisDOW;
-            } else if (toDOW == NEXT) {
-                if (thisDOW == 7) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-                    toDOW = 1;
-                } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
-                    toDOW = thisDOW + 1;
-                }
-            } else if (toDOW == T_NEXT) {
-                if (thisDOW == 6) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-                    toDOW = 1;
-                } else if (thisDOW == 7) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-                    toDOW = 2;
-                } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
-                    toDOW = thisDOW + 2;
-                }
-            } else if (toDOW == TT_NEXT) {
-                if (thisDOW == 5) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-                    toDOW = 1;
-                } else if (thisDOW == 6) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-                    toDOW = 2;
-                } else if (thisDOW == 7) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-                    toDOW = 3;
-                } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
-                    toDOW = thisDOW + 3;
-                }
-            }
-        }
-
-
-        if (toDOW == -1 || fromDOW == -1) {
-            if (fromDOW != -1) toDOW = fromDOW;
-            else if (fromW == -1 && toW == -1) {
-                fromDOW = thisDOW;
-                toDOW = fromDOW;
-            } else {
-                fromDOW = 1;
-                toDOW = 7;
-            }
-        }
-        if (fromW == -1 || toW == -1) {
-            if (fromW == toW) toW = fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
-            else if (fromW == -1) fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : toW;
-            else if (toW == -1) toW = fromW;
-        }
-        if (fromT.hour == -1) {
-            fromT.hour = 0;
-            fromT.minute = 0;
-        }
-        if (toT.hour == -1) {
-            toT.hour = 23;
-            toT.minute = 59;
-        }
-        if (toW > timeTableCore.getCurrentCurriculum().getTotalWeeks())
-            toW = timeTableCore.getCurrentCurriculum().getTotalWeeks();
-        toW = (toW > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : toW;
-        System.out.println("放入查询函数的是：fW=" + fromW + ",fDOW=" + fromDOW + ",fT=" + fromT.tellTime() + ",tW=" + toW + ",tDOW=" + toDOW + ",tT=" + toT.tellTime());
-        List<EventItem> result = null;
-        switch (tag) {
-            case ChatBotA.FUN_SEARCH_EVENT_ALL:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT);
-                break;
-            case ChatBotA.FUN_SEARCH_EVENT_COURSE:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_COURSE);
-                break;
-            case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_ARRANGEMENT);
-                break;
-            case ChatBotA.FUN_SEARCH_EVENT_EXAM:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_EXAM);
-                break;
-            case ChatBotA.FUN_SEARCH_EVENT_REMIND:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_REMIND);
-                break;
-            case ChatBotA.FUN_SEARCH_EVENT_DDL:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_DEADLINE);
-                break;
-        }
-        if (num != -1 && result != null && result.size() > 0) {
-            if (num != TextTools.LAST && num >= result.size()) return result;
-            if (num == TextTools.LAST) num = result.size();
-            ArrayList<EventItem> temp = new ArrayList<>();
-            temp.add(result.get(num - 1));
-            return temp;
-        } else {
-            return result;
-        }
-    }
 
     private EventItem propcessAddRemind(JsonObject values) {
         String name = values.get("name").getAsString();
@@ -1077,7 +490,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
 
         @Override
         protected JsonObject doInBackground(String... strings) {
-            if (chatbotA.simpleJudge(message, ActivityChatbot.this)) {
+            if (chatbotA.simpleJudge(message)) {
                 return chatbotA.Interact(message);
             } else {
                 State = STATE_NORMAL;
@@ -1090,13 +503,6 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                     cmb.addWhereEqualTo("queryText", message);
                 } else if (message.length() <= 5) {
                     cmb.addWhereContains("queryText", message);
-                } else {
-                    Result x = ToAnalysis.parse(message);
-                    List<String> strs = new ArrayList<>();
-                    for (Term t : x.getTerms()) {
-                        strs.add(t.getName());
-                    }
-                    cmb.addWhereContainsAll("queryArray", strs);
                 }
                 // Log.e("where:",chatMessageBmobQuery.getWhere().toString());
                 //chatMessageBmobQuery.addWhereEqualTo("queryText",message);
@@ -1485,7 +891,7 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            addMessageView(messagge, textOnShow, textToRead, true);
+            addMessageView(messagge, textOnShow, textToRead);
         }
     }
 
@@ -1555,8 +961,8 @@ public class ActivityChatbot extends BaseActivity implements View.OnClickListene
                     ChatMessage cm = new ChatMessage();
                     cm.setQueryText(q);
                     List<String> queryArr = new ArrayList<>();
-                    for(Term t:ToAnalysis.parse(q)){
-                        queryArr.add(t.getName());
+                    for(Term t:TextTools.NaiveSegmentation(query)){
+                        queryArr.add(t.getContent());
                     }
                     cm.setQueryArray(queryArr);
                     if (show.contains("@@")) {

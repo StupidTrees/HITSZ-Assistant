@@ -10,7 +10,8 @@
         <item>dark_mode_normal</item>
         <item>dark_mode_follow</item>
     </string-array>
-    <string-array name="words_search"><item>查找</item>
+    <string-array name="words_search">
+        <item>查找</item>
         <item>搜索</item>
         <item>有哪些</item>
         <item>有什么</item>
@@ -50,11 +51,13 @@
     <string-array name="words_exam">
         <item>考试</item>
     </string-array>
-    <string-array name="words_remind"><item>提醒</item>
+    <string-array name="words_remind">
+        <item>提醒</item>
         <item>嘱托</item>
         <item>提示</item>
     </string-array>
-    <string-array name="words_add_remind"><item>提醒</item>
+    <string-array name="words_add_remind">
+        <item>提醒</item>
         <item>记得</item>
         <item>记住让</item>
         <item>提醒我</item>
@@ -62,7 +65,8 @@
         <item>记得让我</item>
         <item>记住让我</item>
     </string-array>
-    <string-array name="words_course_special"><item>上课不</item>
+    <string-array name="words_course_special">
+        <item>上课不</item>
         <item>上课吗</item>
         <item>上课否</item>
         <item>上不上课</item>
@@ -76,7 +80,8 @@
         <item>几节课</item>
         <item>啥课</item>
     </string-array>
-    <string-array name="words_where"><item>在哪</item>
+    <string-array name="words_where">
+        <item>在哪</item>
         <item>是哪</item>
         <item>哪间</item>
         <item>哪边</item>
@@ -85,66 +90,17 @@
         <item>什么</item>
         <item>哪栋</item>
     </string-array>
-    <string-array name="words_target_findClassroom"><item>在哪上课</item>
+    <string-array name="words_target_findClassroom">
+        <item>在哪上课</item>
         <item>上课在哪</item>
         <item>在哪上</item>
     </string-array>
-    <string-array name="words_classroom"><item>教室</item>
+    <string-array name="words_classroom">
+        <item>教室</item>
         <item>班级</item>
         <item>讲堂</item>
     </string-array>
-    <string-array name="words_time_days"><item>明天</item>
-        <item>后天</item>
-        <item>大后天</item>
-        <item>昨天</item>
-        <item>今天</item>
-        <item>前天</item>
-        <item>大前天</item>
-    </string-array>
-    <string-array name="words_time_days_with_period"><item>今晚</item>
-        <item>明晚</item>
-        <item>今早</item>
-        <item>明早</item>
-        <item>昨晚</item>
-        </string-array>
-    <string-array name="words_time_week_withoutHead"><item>1周</item>
-        <item>2周</item>
-        <item>3周</item>
-        <item>4周</item>
-        <item>5周</item>
-        <item>6周</item>
-        <item>7周</item>
-        <item>8周</item>
-        <item>9周</item>
-        <item>11周</item>
-        <item>12周</item>
-        <item>13周</item>
-        <item>14周</item>
-        <item>15周</item>
-        <item>16周</item>
-        <item>17周</item>
-        <item>18周</item>
-        <item>19周</item>
-        <item>10周</item>
-        <item>一周</item>
-        <item>二周</item>
-        <item>三周</item>
-        <item>四周</item>
-        <item>五周</item>
-        <item>六周</item>
-        <item>七周</item>
-        <item>八周</item>
-        <item>九周</item>
-        <item>十周</item>
-        <item>十一周</item>
-        <item>十二周</item>
-        <item>十三周</item>
-        <item>十四周</item>
-        <item>十五周</item>
-        <item>十六周</item>
-        <item>十七周</item>
-        <item>十八周</item>
-        <item>十九周</item>
+    <string-array name="t_w">
         <item>前周</item>
         <item>上周</item>
         <item>这周</item>
@@ -153,9 +109,175 @@
         <item>这星期</item>
         <item>下星期</item>
         <item>上星期</item>
+        <item>第1周</item>
+        <item>第2周</item>
+        <item>第3周</item>
+        <item>第4周</item>
+        <item>第5周</item>
+        <item>第6周</item>
+        <item>第7周</item>
+        <item>第8周</item>
+        <item>第9周</item>
+        <item>第10周</item>
+        <item>第11周</item>
+        <item>第12周</item>
+        <item>第13周</item>
+        <item>第14周</item>
+        <item>第15周</item>
+        <item>第16周</item>
+        <item>第17周</item>
+        <item>第18周</item>
+        <item>第19周</item>
+        <item>第一周</item>
+        <item>第二周</item>
+        <item>第三周</item>
+        <item>第四周</item>
+        <item>第五周</item>
+        <item>第六周</item>
+        <item>第七周</item>
+        <item>第八周</item>
+        <item>第九周</item>
+        <item>第十周</item>
+        <item>第十一周</item>
+        <item>第十二周</item>
+        <item>第十三周</item>
+        <item>第十四周</item>
+        <item>第十五周</item>
+        <item>第十六周</item>
+        <item>第十七周</item>
+        <item>第十八周</item>
+        <item>第十九周</item>
     </string-array>
-
-    <string-array name="words_time_hour"><item>一点</item>
+    <string-array name="t_num">
+        <item>第一节</item>
+        <item>第二节</item>
+        <item>第三节</item>
+        <item>第四节</item>
+        <item>第五节</item>
+        <item>第六节</item>
+        <item>第七节</item>
+        <item>第八节</item>
+        <item>第九节</item>
+        <item>第十节</item>
+        <item>第十一节</item>
+        <item>第十二节</item>
+        <item>第1节</item>
+        <item>第2节</item>
+        <item>第3节</item>
+        <item>第4节</item>
+        <item>第5节</item>
+        <item>第6节</item>
+        <item>第7节</item>
+        <item>第8节</item>
+        <item>第9节</item>
+        <item>第10节</item>
+        <item>第11节</item>
+        <item>第12节</item>
+        <item>第一件</item>
+        <item>第二件</item>
+        <item>第三件</item>
+        <item>第四件</item>
+        <item>第五件</item>
+        <item>第六件</item>
+        <item>第七件</item>
+        <item>第八件</item>
+        <item>第九件</item>
+        <item>第十件</item>
+        <item>第十一件</item>
+        <item>第十二件</item>
+        <item>第1件</item>
+        <item>第2件</item>
+        <item>第3件</item>
+        <item>第4件</item>
+        <item>第5件</item>
+        <item>第6件</item>
+        <item>第7件</item>
+        <item>第8件</item>
+        <item>第9件</item>
+        <item>第10件</item>
+        <item>第11件</item>
+        <item>第12件</item>
+        <item>第一个</item>
+        <item>第二个</item>
+        <item>第三个</item>
+        <item>第四个</item>
+        <item>第五个</item>
+        <item>第六个</item>
+        <item>第七个</item>
+        <item>第八个</item>
+        <item>第九个</item>
+        <item>第十个</item>
+        <item>第十一个</item>
+        <item>第十二个</item>
+        <item>第1个</item>
+        <item>第2个</item>
+        <item>第3个</item>
+        <item>第4个</item>
+        <item>第5个</item>
+        <item>第6个</item>
+        <item>第7个</item>
+        <item>第8个</item>
+        <item>第9个</item>
+        <item>第10个</item>
+        <item>第11个</item>
+        <item>第12个</item>
+        <item>最后一个</item>
+        <item>最后那个</item>
+        <item>最后的</item>
+        <item>最后一件</item>
+        <item>最后那件</item>
+        <item>最后一节</item>
+        <item>最后那节</item>
+    </string-array>
+    <string-array name="words_time_days">
+        <item>明天</item>
+        <item>后天</item>
+        <item>大后天</item>
+        <item>昨天</item>
+        <item>今天</item>
+        <item>前天</item>
+        <item>大前天</item>
+    </string-array>
+    <string-array name="t_dow">
+        <item>明天</item>
+        <item>后天</item>
+        <item>大后天</item>
+        <item>昨天</item>
+        <item>今天</item>
+        <item>前天</item>
+        <item>大前天</item>
+        <item>周一</item>
+        <item>周二</item>
+        <item>周三</item>
+        <item>周四</item>
+        <item>周五</item>
+        <item>周六</item>
+        <item>周日</item>
+        <item>星期一</item>
+        <item>星期二</item>
+        <item>星期三</item>
+        <item>星期四</item>
+        <item>星期五</item>
+        <item>星期六</item>
+        <item>星期日</item>
+        <item>周1</item>
+        <item>周2</item>
+        <item>周3</item>
+        <item>周4</item>
+        <item>周5</item>
+        <item>周6</item>
+        <item>周天</item>
+        <item>周7</item>
+        <item>星期1</item>
+        <item>星期2</item>
+        <item>星期3</item>
+        <item>星期4</item>
+        <item>星期5</item>
+        <item>星期6</item>
+        <item>星期7</item>
+    </string-array>
+    <string-array name="t_h">
+        <item>一点</item>
         <item>二点</item>
         <item>两点</item>
         <item>三点</item>
@@ -180,7 +302,83 @@
         <item>二十二点</item>
         <item>二十三点</item>
         <item>二十四点</item>
+        <item>1点</item>
+        <item>2点</item>
+        <item>3点</item>
+        <item>4点</item>
+        <item>5点</item>
+        <item>6点</item>
+        <item>7点</item>
+        <item>8点</item>
+        <item>9点</item>
+        <item>10点</item>
+        <item>11点</item>
+        <item>12点</item>
+        <item>13点</item>
+        <item>14点</item>
+        <item>15点</item>
+        <item>16点</item>
+        <item>17点</item>
+        <item>18点</item>
+        <item>19点</item>
+        <item>20点</item>
+        <item>21点</item>
+        <item>22点</item>
+        <item>23点</item>
+        <item>24点</item>
         <item>零点</item>
+        <item>0点</item>
+        <item>一点钟</item>
+        <item>二点钟</item>
+        <item>两点钟</item>
+        <item>三点钟</item>
+        <item>四点钟</item>
+        <item>五点钟</item>
+        <item>六点钟</item>
+        <item>七点钟</item>
+        <item>八点钟</item>
+        <item>九点钟</item>
+        <item>十点钟</item>
+        <item>十一点钟</item>
+        <item>十二点钟</item>
+        <item>十三点钟</item>
+        <item>十四点钟</item>
+        <item>十五点钟</item>
+        <item>十六点钟</item>
+        <item>十七点钟</item>
+        <item>十八点钟</item>
+        <item>十九点钟</item>
+        <item>二十点钟</item>
+        <item>二十一点钟</item>
+        <item>二十二点钟</item>
+        <item>二十三点钟</item>
+        <item>二十四点钟</item>
+        <item>1点钟</item>
+        <item>2点钟</item>
+        <item>3点钟</item>
+        <item>4点钟</item>
+        <item>5点钟</item>
+        <item>6点钟</item>
+        <item>7点钟</item>
+        <item>8点钟</item>
+        <item>9点钟</item>
+        <item>10点钟</item>
+        <item>11点钟</item>
+        <item>12点钟</item>
+        <item>13点钟</item>
+        <item>14点钟</item>
+        <item>15点钟</item>
+        <item>16点钟</item>
+        <item>17点钟</item>
+        <item>18点钟</item>
+        <item>19点钟</item>
+        <item>20点钟</item>
+        <item>21点钟</item>
+        <item>22点钟</item>
+        <item>23点钟</item>
+        <item>24点钟</item>
+        <item>零点钟</item>
+        <item>0点钟</item>
         <item>一点半</item>
         <item>二点半</item>
         <item>两点半</item>
@@ -233,31 +431,6 @@
         <item>二十三点整</item>
         <item>二十四点整</item>
         <item>零点整</item>
-        <item>1点</item>
-        <item>2点</item>
-        <item>3点</item>
-        <item>4点</item>
-        <item>5点</item>
-        <item>6点</item>
-        <item>7点</item>
-        <item>8点</item>
-        <item>9点</item>
-        <item>10点</item>
-        <item>11点</item>
-        <item>12点</item>
-        <item>13点</item>
-        <item>14点</item>
-        <item>15点</item>
-        <item>16点</item>
-        <item>17点</item>
-        <item>18点</item>
-        <item>19点</item>
-        <item>20点</item>
-        <item>21点</item>
-        <item>22点</item>
-        <item>23点</item>
-        <item>24点</item>
-        <item>0点</item>
         <item>1点半</item>
         <item>2点半</item>
         <item>3点半</item>
@@ -309,7 +482,412 @@
         <item>24点整</item>
         <item>0点整</item>
     </string-array>
-    <string-array name="words_time_minute"><item>零一分</item>
+    <string-array name="t_m">
+        <item>零一分</item>
+        <item>零二分</item>
+        <item>零三分</item>
+        <item>零四分</item>
+        <item>零五分</item>
+        <item>零六分</item>
+        <item>零七分</item>
+        <item>零八分</item>
+        <item>零九分</item>
+        <item>零十分</item>
+        <item>零一分</item>
+        <item>零二分</item>
+        <item>零三分</item>
+        <item>零四分</item>
+        <item>零五分</item>
+        <item>零六分</item>
+        <item>零七分</item>
+        <item>零八分</item>
+        <item>零九分</item>
+        <item>零十分</item>
+        <item>零十一分</item>
+        <item>零十二分</item>
+        <item>零十三分</item>
+        <item>零十四分</item>
+        <item>零十五分</item>
+        <item>零十六分</item>
+        <item>零十七分</item>
+        <item>零十八分</item>
+        <item>零十九分</item>
+        <item>零二十分</item>
+        <item>零二十一分</item>
+        <item>零二十二分</item>
+        <item>零二十三分</item>
+        <item>零二十四分</item>
+        <item>零二十五分</item>
+        <item>零二十六分</item>
+        <item>零二十七分</item>
+        <item>零二十八分</item>
+        <item>零二十九分</item>
+        <item>零三十分</item>
+        <item>零三十一分</item>
+        <item>零三十二分</item>
+        <item>零三十三分</item>
+        <item>零三十四分</item>
+        <item>零三十五分</item>
+        <item>零三十六分</item>
+        <item>零三十七分</item>
+        <item>零三十八分</item>
+        <item>零三十九分</item>
+        <item>零四十分</item>
+        <item>零四十一分</item>
+        <item>零四十二分</item>
+        <item>零四十三分</item>
+        <item>零四十四分</item>
+        <item>零四十五分</item>
+        <item>零四十六分</item>
+        <item>零四十七分</item>
+        <item>零四十八分</item>
+        <item>零四十九分</item>
+        <item>零五十分</item>
+        <item>零五十一分</item>
+        <item>零五十二分</item>
+        <item>零五十三分</item>
+        <item>零五十四分</item>
+        <item>零五十五分</item>
+        <item>零五十六分</item>
+        <item>零五十七分</item>
+        <item>零五十八分</item>
+        <item>零五十九分</item>
+        <item>零1分</item>
+        <item>零2分</item>
+        <item>零3分</item>
+        <item>零4分</item>
+        <item>零5分</item>
+        <item>零6分</item>
+        <item>零7分</item>
+        <item>零8分</item>
+        <item>零9分</item>
+        <item>零10分</item>
+        <item>零11分</item>
+        <item>零12分</item>
+        <item>零13分</item>
+        <item>零14分</item>
+        <item>零15分</item>
+        <item>零16分</item>
+        <item>零17分</item>
+        <item>零18分</item>
+        <item>零19分</item>
+        <item>零20分</item>
+        <item>零21分</item>
+        <item>零22分</item>
+        <item>零23分</item>
+        <item>零24分</item>
+        <item>零25分</item>
+        <item>零26分</item>
+        <item>零27分</item>
+        <item>零28分</item>
+        <item>零29分</item>
+        <item>零30分</item>
+        <item>零31分</item>
+        <item>零32分</item>
+        <item>零33分</item>
+        <item>零34分</item>
+        <item>零35分</item>
+        <item>零36分</item>
+        <item>零37分</item>
+        <item>零38分</item>
+        <item>零39分</item>
+        <item>零40分</item>
+        <item>零41分</item>
+        <item>零42分</item>
+        <item>零43分</item>
+        <item>零44分</item>
+        <item>零45分</item>
+        <item>零46分</item>
+        <item>零47分</item>
+        <item>零48分</item>
+        <item>零49分</item>
+        <item>零50分</item>
+        <item>零51分</item>
+        <item>零52分</item>
+        <item>零53分</item>
+        <item>零54分</item>
+        <item>零55分</item>
+        <item>零56分</item>
+        <item>零57分</item>
+        <item>零58分</item>
+        <item>零59分</item>
+        <item>一分</item>
+        <item>两分</item>
+        <item>二分</item>
+        <item>三分</item>
+        <item>四分</item>
+        <item>五分</item>
+        <item>六分</item>
+        <item>七分</item>
+        <item>八分</item>
+        <item>九分</item>
+        <item>十分</item>
+        <item>一分</item>
+        <item>二分</item>
+        <item>三分</item>
+        <item>四分</item>
+        <item>五分</item>
+        <item>六分</item>
+        <item>七分</item>
+        <item>八分</item>
+        <item>九分</item>
+        <item>十分</item>
+        <item>十一分</item>
+        <item>十二分</item>
+        <item>十三分</item>
+        <item>十四分</item>
+        <item>十五分</item>
+        <item>十六分</item>
+        <item>十七分</item>
+        <item>十八分</item>
+        <item>十九分</item>
+        <item>二十分</item>
+        <item>二十一分</item>
+        <item>二十二分</item>
+        <item>二十三分</item>
+        <item>二十四分</item>
+        <item>二十五分</item>
+        <item>二十六分</item>
+        <item>二十七分</item>
+        <item>二十八分</item>
+        <item>二十九分</item>
+        <item>三十分</item>
+        <item>三十一分</item>
+        <item>三十二分</item>
+        <item>三十三分</item>
+        <item>三十四分</item>
+        <item>三十五分</item>
+        <item>三十六分</item>
+        <item>三十七分</item>
+        <item>三十八分</item>
+        <item>三十九分</item>
+        <item>四十分</item>
+        <item>四十一分</item>
+        <item>四十二分</item>
+        <item>四十三分</item>
+        <item>四十四分</item>
+        <item>四十五分</item>
+        <item>四十六分</item>
+        <item>四十七分</item>
+        <item>四十八分</item>
+        <item>四十九分</item>
+        <item>五十分</item>
+        <item>五十一分</item>
+        <item>五十二分</item>
+        <item>五十三分</item>
+        <item>五十四分</item>
+        <item>五十五分</item>
+        <item>五十六分</item>
+        <item>五十七分</item>
+        <item>五十八分</item>
+        <item>五十九分</item>
+        <item>1分</item>
+        <item>2分</item>
+        <item>3分</item>
+        <item>4分</item>
+        <item>5分</item>
+        <item>6分</item>
+        <item>7分</item>
+        <item>8分</item>
+        <item>9分</item>
+        <item>10分</item>
+        <item>11分</item>
+        <item>12分</item>
+        <item>13分</item>
+        <item>14分</item>
+        <item>15分</item>
+        <item>16分</item>
+        <item>17分</item>
+        <item>18分</item>
+        <item>19分</item>
+        <item>20分</item>
+        <item>21分</item>
+        <item>22分</item>
+        <item>23分</item>
+        <item>24分</item>
+        <item>25分</item>
+        <item>26分</item>
+        <item>27分</item>
+        <item>28分</item>
+        <item>29分</item>
+        <item>30分</item>
+        <item>31分</item>
+        <item>32分</item>
+        <item>33分</item>
+        <item>34分</item>
+        <item>35分</item>
+        <item>36分</item>
+        <item>37分</item>
+        <item>38分</item>
+        <item>39分</item>
+        <item>40分</item>
+        <item>41分</item>
+        <item>42分</item>
+        <item>43分</item>
+        <item>44分</item>
+        <item>45分</item>
+        <item>46分</item>
+        <item>47分</item>
+        <item>48分</item>
+        <item>49分</item>
+        <item>50分</item>
+        <item>51分</item>
+        <item>52分</item>
+        <item>53分</item>
+        <item>54分</item>
+        <item>55分</item>
+        <item>56分</item>
+        <item>57分</item>
+        <item>58分</item>
+        <item>59分</item>
+        <item>零一分</item>
+        <item>零二分</item>
+        <item>零三分</item>
+        <item>零四分</item>
+        <item>零五分</item>
+        <item>零六分</item>
+        <item>零七分</item>
+        <item>零八分</item>
+        <item>零九分</item>
+        <item>零十分</item>
+        <item>零一分</item>
+        <item>零二分</item>
+        <item>零三分</item>
+        <item>零四分</item>
+        <item>零五分</item>
+        <item>零六分</item>
+        <item>零七分</item>
+        <item>零八分</item>
+        <item>零九分</item>
+        <item>零十分</item>
+        <item>零十一分</item>
+        <item>零十二分</item>
+        <item>零十三分</item>
+        <item>零十四分</item>
+        <item>零十五分</item>
+        <item>零十六分</item>
+        <item>零十七分</item>
+        <item>零十八分</item>
+        <item>零十九分</item>
+        <item>零二十分</item>
+        <item>零二十一分</item>
+        <item>零二十二分</item>
+        <item>零二十三分</item>
+        <item>零二十四分</item>
+        <item>零二十五分</item>
+        <item>零二十六分</item>
+        <item>零二十七分</item>
+        <item>零二十八分</item>
+        <item>零二十九分</item>
+        <item>零三十分</item>
+        <item>零三十一分</item>
+        <item>零三十二分</item>
+        <item>零三十三分</item>
+        <item>零三十四分</item>
+        <item>零三十五分</item>
+        <item>零三十六分</item>
+        <item>零三十七分</item>
+        <item>零三十八分</item>
+        <item>零三十九分</item>
+        <item>零四十分</item>
+        <item>零四十一分</item>
+        <item>零四十二分</item>
+        <item>零四十三分</item>
+        <item>零四十四分</item>
+        <item>零四十五分</item>
+        <item>零四十六分</item>
+        <item>零四十七分</item>
+        <item>零四十八分</item>
+        <item>零四十九分</item>
+        <item>零五十分</item>
+        <item>零五十一分</item>
+        <item>零五十二分</item>
+        <item>零五十三分</item>
+        <item>零五十四分</item>
+        <item>零五十五分</item>
+        <item>零五十六分</item>
+        <item>零五十七分</item>
+        <item>零五十八分</item>
+        <item>零五十九分</item>
+    </string-array>
+    <string-array name="sub">
+        <item>试课</item>
+        <item>查课</item>
+        <item>察课</item>
+        <item>察科目</item>
+        <item>试科目</item>
+        <item>查科目</item>
+        <item>慕课</item>
+        <item>木刻</item>
+        <item>穆克</item>
+        <item>幕课</item>
+        <item>必修课</item>
+        <item>选修课</item>
+        <item>任选课</item>
+        <item>必修</item>
+        <item>科目</item>
+        <item>门课</item>
+        <item>MOOC</item>
+        <item>mooc</item>
+    </string-array>
+    <string-array name="words_time_days_with_period">
+        <item>今晚</item>
+        <item>明晚</item>
+        <item>今早</item>
+        <item>明早</item>
+        <item>昨晚</item>
+    </string-array>
+    <string-array name="words_time_week_withoutHead">
+        <item>1周</item>
+        <item>2周</item>
+        <item>3周</item>
+        <item>4周</item>
+        <item>5周</item>
+        <item>6周</item>
+        <item>7周</item>
+        <item>8周</item>
+        <item>9周</item>
+        <item>11周</item>
+        <item>12周</item>
+        <item>13周</item>
+        <item>14周</item>
+        <item>15周</item>
+        <item>16周</item>
+        <item>17周</item>
+        <item>18周</item>
+        <item>19周</item>
+        <item>10周</item>
+        <item>一周</item>
+        <item>二周</item>
+        <item>三周</item>
+        <item>四周</item>
+        <item>五周</item>
+        <item>六周</item>
+        <item>七周</item>
+        <item>八周</item>
+        <item>九周</item>
+        <item>十周</item>
+        <item>十一周</item>
+        <item>十二周</item>
+        <item>十三周</item>
+        <item>十四周</item>
+        <item>十五周</item>
+        <item>十六周</item>
+        <item>十七周</item>
+        <item>十八周</item>
+        <item>十九周</item>
+        <item>前周</item>
+        <item>上周</item>
+        <item>这周</item>
+        <item>下周</item>
+        <item>本周</item>
+        <item>这星期</item>
+        <item>下星期</item>
+        <item>上星期</item>
+    </string-array>
+
+    <string-array name="words_time_minute">
+        <item>零一分</item>
         <item>零二分</item>
         <item>零三分</item>
         <item>零四分</item>
@@ -507,7 +1085,8 @@
         <item>58分</item>
         <item>59分</item>
     </string-array>
-    <string-array name="words_time_period"><item>上午</item>
+    <string-array name="t_pr">
+        <item>上午</item>
         <item>中午</item>
         <item>早晨</item>
         <item>早上</item>
@@ -528,7 +1107,8 @@
         <item>~</item>
         <item>-</item>
     </string-array>
-    <string-array name="words_number"><item>一</item>
+    <string-array name="words_number">
+        <item>一</item>
         <item>二</item>
         <item>三</item>
         <item>四</item>
@@ -558,7 +1138,8 @@
         <item>二十八</item>
         <item>二十九</item>
     </string-array>
-    <string-array name="words_this"><item>这</item>
+    <string-array name="words_this">
+        <item>这</item>
         <item>此</item>
         <item>本</item>
     </string-array>
@@ -583,7 +1164,7 @@
         <item>下下星期</item>
         <item>上上星期</item>
     </string-array>
-    <string-array name="words_next_one">
+    <string-array name="t_next_one">
         <item>一会儿</item>
         <item>一会</item>
         <item>接下来</item>

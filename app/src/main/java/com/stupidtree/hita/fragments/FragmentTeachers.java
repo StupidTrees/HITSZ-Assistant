@@ -167,7 +167,7 @@ public class FragmentTeachers extends BaseFragment {
             viewHolder.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ActivityUtils.startTeacherActivity(getActivity(), listRes.get(i).get("name"));
+                    ActivityUtils.searchFor(getActivity(), listRes.get(i).get("name"),"teacher");
                 }
             });
         }

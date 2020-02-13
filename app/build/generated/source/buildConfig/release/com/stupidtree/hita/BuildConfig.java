@@ -8,6 +8,6 @@ public final class BuildConfig {
   public static final String APPLICATION_ID = "com.stupidtree.hita";
   public static final String BUILD_TYPE = "release";
   public static final String FLAVOR = "";
-  public static final int VERSION_CODE = 20200114;
-  public static final String VERSION_NAME = "新教务适配1.13";
+  public static final int VERSION_CODE = 20200122;
+  public static final String VERSION_NAME = "1.22新教务版";
 }

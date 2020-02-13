@@ -57,7 +57,8 @@ public class TimeTableBlockView extends FrameLayout {
     }
 
 
-    public TimeTableBlockView(@NonNull Context context, @NonNull Object obj,boolean colorful) {
+    @SuppressLint("ResourceAsColor")
+    public TimeTableBlockView(@NonNull Context context, @NonNull Object obj, boolean colorful) {
 
         super(context);
         this.block = obj;
@@ -79,14 +80,13 @@ public class TimeTableBlockView extends FrameLayout {
             if(colorful&&(ei.eventType==TimetableCore.TIMETABLE_EVENT_TYPE_COURSE||
                     ei.eventType==TimetableCore.TIMETABLE_EVENT_TYPE_EXAM)
                     ){
-                card.getBackground().mutate().setAlpha(180);
+                //card.getBackground().mutate().setAlpha(180);
                 String query;
                 if(ei.eventType==TimetableCore.TIMETABLE_EVENT_TYPE_EXAM&&ei.mainName.endsWith("考试")) query = ei.mainName.substring(0,ei.mainName.length()-2);
                 else query = ei.mainName;
                 int getC = defaultSP.getInt("color:"+query,-1);
                 if(getC ==-1){
                     int color = ColorBox.getRandomColor_Material();
-
                     card.setBackgroundTintList(ColorStateList.valueOf(color));
                     // card.setCardBackgroundColor(color);
                     defaultSP.edit().putInt("color:"+ei.mainName,color).apply();
@@ -94,6 +94,7 @@ public class TimeTableBlockView extends FrameLayout {
                     card.setBackgroundTintList(ColorStateList.valueOf(getC));
                     //card.setCardBackgroundColor(getC);
                 }
+                //title.setTextColor(getC);
                 title.setTextColor(Color.WHITE);
                 subtitle.setTextColor(Color.WHITE);
                 icon.setColorFilter(Color.WHITE);

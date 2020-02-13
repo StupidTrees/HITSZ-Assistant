@@ -1,7 +1,6 @@
 package com.stupidtree.hita.diy;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,7 +17,7 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.timetable.timetable.EventItem;
 import com.stupidtree.hita.timetable.timetable.Task;
-import com.stupidtree.hita.fragments.FragmentTimeLine;
+import com.stupidtree.hita.fragments.main.FragmentTimeLine;
 import com.stupidtree.hita.hita.TextTools;
 
 import java.util.ArrayList;

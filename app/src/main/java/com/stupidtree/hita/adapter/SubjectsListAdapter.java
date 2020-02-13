@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.activities.ActivitySubject;
 import com.stupidtree.hita.timetable.Subject;
 import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.timetable.EventItem;
@@ -120,21 +122,21 @@ public class SubjectsListAdapter extends RecyclerView.Adapter {
 
 
     //判断是否是title，如果是，title占满一行的所有子项，则是ColumnNum个，如果是item，占满一个子项
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        //如果是title就占据2个单元格(重点)
-        GridLayoutManager manager = (GridLayoutManager) recyclerView.getLayoutManager();
-        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if(mBeans.get(position) instanceof String||mBeans.get(position) instanceof Integer){
-                    return columnNum;
-                }else {
-                    return 1;
-                }
-            }
-        });
-    }
+//    @Override
+//    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+//        //如果是title就占据2个单元格(重点)
+//        GridLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//            @Override
+//            public int getSpanSize(int position) {
+//                if(mBeans.get(position) instanceof String||mBeans.get(position) instanceof Integer){
+//                    return columnNum;
+//                }else {
+//                    return 1;
+//                }
+//            }
+//        });
+//    }
 
     public ArrayList<Object> getList(){
         return mBeans;
@@ -211,8 +213,29 @@ public class SubjectsListAdapter extends RecyclerView.Adapter {
             super.onPostExecute(integer);
             pb.setProgress(integer);
             tv.setText(integer+"%");
-            if(color!=-1) icon.setColorFilter(color);
-            else icon.clearColorFilter();
+            if(color!=-1){
+                icon.setClickable(true);
+                icon.setColorFilter(color);
+                icon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new com.stupidtree.hita.diy.ColorPickerDialog(mFragment.getContext())
+                                .initColor(color).show(new com.stupidtree.hita.diy.ColorPickerDialog.OnColorSelectedListener() {
+                            @Override
+                            public void OnSelected(int color) {
+                                defaultSP.edit().putInt("color:"+subject.getName(),color).apply();
+                                icon.setColorFilter(color);
+                            }
+                        });
+                    }
+                });
+
+            }
+            else {
+                icon.setClickable(false);
+                icon.setOnClickListener(null);
+                icon.clearColorFilter();
+            }
         }
     }
 

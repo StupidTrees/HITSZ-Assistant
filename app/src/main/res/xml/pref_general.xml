@@ -74,22 +74,6 @@
             android:title="@string/setting_title_always_on_notifi" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/settings_category_hita">
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="ChatBot_speakNow"
-            android:summary="@string/settings_summary_auto_read"
-            android:textColor="?attr/text_color_primary"
-            android:textColorHint="?attr/text_color_secondary"
-            android:title="@string/settings_title_auto_read" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="ChatBot_useKeyboard"
-            android:summary="@string/settings_summary_use_keyboard"
-            android:textColor="?attr/text_color_primary"
-            android:textColorHint="?attr/text_color_secondary"
-            android:title="@string/settings_title_use_keyboard" />
-    </PreferenceCategory>
 
 
 </PreferenceScreen>

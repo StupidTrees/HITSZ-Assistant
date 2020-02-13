@@ -13,9 +13,9 @@ import android.view.View;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.NewsPagerAdapter;
-import com.stupidtree.hita.fragments.FragmentNewsBulletin;
-import com.stupidtree.hita.fragments.FragmentNewsIPNews;
-import com.stupidtree.hita.fragments.FragmentNewsLecture;
+import com.stupidtree.hita.fragments.news.FragmentNewsBulletin;
+import com.stupidtree.hita.fragments.news.FragmentNewsIPNews;
+import com.stupidtree.hita.fragments.news.FragmentNewsLecture;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.stupidtree.hita.activities;
 
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -19,9 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
-import com.skydoves.colorpickerview.ColorEnvelope;
-import com.skydoves.colorpickerview.ColorPickerDialog;
-import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
@@ -39,7 +36,7 @@ import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
-import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
+import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialog;
 
 
 public class ActivitySubject extends BaseActivity {
@@ -51,7 +48,6 @@ public class ActivitySubject extends BaseActivity {
     RecyclerView courseList;
     SubjectCoursesListAdapter listAdapter;
     ArcProgress arcProgress;
-    net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout toolbarLayout;
     TextView name,point, attr, totalcourses, exam, school, xnxq, type, code, score_qz, score_qm, score_none;
     CardView   card_allcourses;
     View card_rate,card_color;
@@ -114,29 +110,38 @@ public class ActivitySubject extends BaseActivity {
         pickColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ColorPickerDialog.Builder(ActivitySubject.this)
-                        .attachAlphaSlideBar(false)
-                        .attachBrightnessSlideBar(true)
-                        .setTitle(R.string.pick_color)
-                        .setPositiveButton(R.string.button_confirm,
-                                new ColorEnvelopeListener() {
-                                    @Override
-                                    public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
-                                        defaultSP.edit().putInt("color:"+subject.getName(),envelope.getColor()).apply();
-                                        colorSample.setColorFilter(envelope.getColor());
-                                        setResult(RESULT_COLOR_CHANGED);
-                                            }
-                                })
-                        .setNegativeButton(R.string.button_cancel,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                })
-                        .attachAlphaSlideBar(true) // default is true. If false, do not show the AlphaSlideBar.
-                        .attachBrightnessSlideBar(true)  // default is true. If false, do not show the BrightnessSlideBar.
-                        .show();
+                new com.stupidtree.hita.diy.ColorPickerDialog(ActivitySubject.this)
+                        .initColor(defaultSP.getInt("color:"+subject.getName(),Color.YELLOW)).show(new com.stupidtree.hita.diy.ColorPickerDialog.OnColorSelectedListener() {
+                    @Override
+                    public void OnSelected(int color) {
+                        defaultSP.edit().putInt("color:"+subject.getName(),color).apply();
+                        colorSample.setColorFilter(color);
+                        setResult(RESULT_COLOR_CHANGED);
+                    }
+                });
+//                new ColorPickerDialog.Builder(ActivitySubject.this)
+//                        .attachAlphaSlideBar(false)
+//                        .attachBrightnessSlideBar(true)
+//                        .setTitle(R.string.pick_color)
+//                        .setPositiveButton(R.string.button_confirm,
+//                                new ColorEnvelopeListener() {
+//                                    @Override
+//                                    public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
+//                                        defaultSP.edit().putInt("color:"+subject.getName(),envelope.getColor()).apply();
+//                                        colorSample.setColorFilter(envelope.getColor());
+//                                        setResult(RESULT_COLOR_CHANGED);
+//                                            }
+//                                })
+//                        .setNegativeButton(R.string.button_cancel,
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialogInterface, int i) {
+//                                        dialogInterface.dismiss();
+//                                    }
+//                                })
+//                        .attachAlphaSlideBar(true) // default is true. If false, do not show the AlphaSlideBar.
+//                        .attachBrightnessSlideBar(true)  // default is true. If false, do not show the BrightnessSlideBar.
+//                        .show();
             }
         });
     }
@@ -256,6 +261,7 @@ public class ActivitySubject extends BaseActivity {
        pageTask_progress.executeOnExecutor(HITAApplication.TPE);
     }
 
+    @SuppressLint("StaticFieldLeak")
     class InitProgressTask extends AsyncTask<String, Integer, Integer> {
 
         @Override
@@ -285,6 +291,7 @@ public class ActivitySubject extends BaseActivity {
 
 
 
+    @SuppressLint("StaticFieldLeak")
     class InitCourseListTask extends AsyncTask<String, Integer, ArrayList<EventItem>> {
 
         @Override
@@ -320,6 +327,7 @@ public class ActivitySubject extends BaseActivity {
     }
 
 
+    @SuppressLint("StaticFieldLeak")
     class InitSubjectTask extends AsyncTask{
 
         @Override
@@ -332,6 +340,7 @@ public class ActivitySubject extends BaseActivity {
             return subject!=null;
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);

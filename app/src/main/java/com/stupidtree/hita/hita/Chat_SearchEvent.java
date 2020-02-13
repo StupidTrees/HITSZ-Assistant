@@ -3,20 +3,17 @@ package com.stupidtree.hita.hita;
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.R;
 
-import org.ansj.domain.Nature;
-import org.ansj.domain.Term;
 
 import java.util.List;
 
 import static com.stupidtree.hita.hita.TextTools.*;
-import static org.nlpcn.commons.lang.util.WordAlert.isNumber;
 
 public class Chat_SearchEvent {
 
     private static final int SC_WW = 1;
     private static final int SC_NO = 2;
 
-    JsonObject Process(List<Term> x, int TAG) {
+    public static JsonObject Process(List<Term> x, int TAG) {
         reUnion(x);
         System.out.println("已完成重组："+x);
         JsonObject result = new JsonObject();
@@ -38,61 +35,61 @@ public class Chat_SearchEvent {
         return result;
     }
 
-    private void reUnion(List<Term> x) {
+    private static void reUnion(List<Term> x) {
         for (int i = 0; i < x.size(); i++) {
-            if (x.get(i).getNatureStr().equals("t*w")) {
-                x.get(i).setNature(new Nature("t_w"));
-                x.get(i).setName(x.get(i).getName().substring(0, x.get(i).getName().length() - 1));
-                x.add(i + 1, new Term("到", 1000, "to", 1000));
+            if (i+1<x.size()&&x.get(i).getTag().equals("t*w")) {
+                x.get(i).setTag(("t_w"));
+                x.get(i).setContent(x.get(i).getContent().substring(0, x.get(i).getContent().length() - 1));
+                x.add(i + 1, new Term("到",  "to"));
             }
-            if (x.get(i).getNatureStr().equals("t*m")) {
-                x.get(i).setNature(new Nature("t_m"));
-                x.get(i).setName(x.get(i).getName().substring(0, x.get(i).getName().length() - 1));
-                x.add(i + 1, new Term("到", 1000, "to", 1000));
+            if (i+1<x.size()&&x.get(i).getTag().equals("t*m")) {
+                x.get(i).setTag(("t_m"));
+                x.get(i).setContent(x.get(i).getContent().substring(0, x.get(i).getContent().length() - 1));
+                x.add(i + 1, new Term("到",  "to"));
             }
-            if (x.get(i).getNatureStr().equals("number") && TextTools.mContains(x.get(i + 2).getNatureStr(), new String[]{"t_w", "t*w"}) && TextTools.mContains(x.get(i + 1).getName(), R.array.words_to)) {
-                x.get(i).setName(x.get(i).getName() + "周");
-                x.get(i).setNature(new Nature("t_w"));
+            if (i+1<x.size()&&i+2<x.size()&&x.get(i).getTag().equals("number") && TextTools.mContains(x.get(i + 2).getTag(), new String[]{"t_w", "t*w"}) && TextTools.mContains(x.get(i + 1).getContent(), R.array.words_to)) {
+                x.get(i).setContent(x.get(i).getContent() + "周");
+                x.get(i).setTag(("t_w"));
             }
-            if (x.get(i).getNatureStr().equals("t_dow") && TextTools.mContains(x.get(i + 1).getName(), R.array.words_to) && TextTools.mEquals(x.get(i + 2).getName(),R.array.words_number)) {
-                x.get(i + 2).setName("周" + x.get(i + 2).getName());
-                x.get(i + 2).setNature(new Nature("t_dow"));
+            if (i+1<x.size()&&i+2<x.size()&&x.get(i).getTag().equals("t_dow") && TextTools.mContains(x.get(i + 1).getContent(), R.array.words_to) && TextTools.mEquals(x.get(i + 2).getContent(),R.array.words_number)) {
+                x.get(i + 2).setContent("周" + x.get(i + 2).getContent());
+                x.get(i + 2).setTag(("t_dow"));
             }
-            if (x.get(i).getNatureStr().equals("number") && x.get(i + 1).getName().equals(":") && x.get(i + 2).getNatureStr().equals("number")) {
-                x.get(i).setNature(new Nature("t_h"));
-                x.get(i).setName(x.get(i).getName() + "点");
-                x.get(i + 2).setNature(new Nature("t_m"));
-                x.get(i + 2).setName(x.get(i + 2).getName() + "分");
+            if (i+1<x.size()&&i+2<x.size()&&x.get(i).getTag().equals("number") && x.get(i + 1).getContent().equals(":") && x.get(i + 2).getTag().equals("number")) {
+                x.get(i).setTag(("t_h"));
+                x.get(i).setContent(x.get(i).getContent() + "点");
+                x.get(i + 2).setTag(("t_m"));
+                x.get(i + 2).setContent(x.get(i + 2).getContent() + "分");
 
             }
-            if (x.get(i).getNatureStr().equals("this") && x.get(i + 1).getNatureStr().equals("t_dow")) {
-                x.get(i).setNature(new Nature("t_w"));
-                x.get(i).setName("这周");
+            if (i+1<x.size()&&x.get(i).getTag().equals("this") && x.get(i + 1).getTag().equals("t_dow")) {
+                x.get(i).setTag(("t_w"));
+                x.get(i).setContent("这周");
             }
-            if (x.get(i).getNatureStr().equals("next") && x.get(i + 1).getNatureStr().equals("t_dow")) {
-                x.get(i).setNature(new Nature("t_w"));
-                x.get(i).setName("下周");
+            if (i+1<x.size()&&x.get(i).getTag().equals("next") && x.get(i + 1).getTag().equals("t_dow")) {
+                x.get(i).setTag(("t_w"));
+                x.get(i).setContent("下周");
             }
-            if (x.get(i).getNatureStr().equals("last") && x.get(i + 1).getNatureStr().equals("t_dow")) {
-                x.get(i).setNature(new Nature("t_w"));
-                x.get(i).setName("上周");
+            if (i+1<x.size()&&x.get(i).getTag().equals("last") && x.get(i + 1).getTag().equals("t_dow")) {
+                x.get(i).setTag(("t_w"));
+                x.get(i).setContent("上周");
             }
-            if(TextTools.mEquals(x.get(i).getName(),R.array.words_backup_next)&&x.get(i+1).getNatureStr().equals("number")){
-                String old = x.get(i+1).getName();
+            if(i+1<x.size()&&TextTools.mEquals(x.get(i).getContent(),R.array.words_backup_next)&&x.get(i+1).getTag().equals("number")){
+                String old = x.get(i+1).getContent();
                 x.remove(i+1);
-                x.add(i+1,new Term("周"+old,1000,"t_dow",1000));
+                x.add(i+1,new Term("周"+old,"t_dow"));
             }
-            if(TextTools.mEquals(x.get(i).getName(),R.array.words_time_days_with_period)){
-                String first = x.get(i).getName().substring(0,1)+"天";
-                String second  = x.get(i).getName().substring(1)+"上";
+            if(TextTools.mEquals(x.get(i).getContent(),R.array.words_time_days_with_period)){
+                String first = x.get(i).getContent().substring(0,1)+"天";
+                String second  = x.get(i).getContent().substring(1)+"上";
                 x.remove(i);
-                x.add(i,new Term(first,1000,"t_dow",1000));
-                x.add(i+1,new Term(second,1000,"t_pr",1000));
+                x.add(i,new Term(first,"t_dow"));
+                x.add(i+1,new Term(second,"t_pr"));
             }
         }
     }
 
-    private int Judge(List<Term> x) {
+    public static int Judge(List<Term> x) {
         if(TextTools.getCount_contains(x,"t_nextone",false)>=1){
             return SC_NO;
         }
@@ -107,7 +104,7 @@ public class Chat_SearchEvent {
         return 0;
     }
 
-    private JsonObject processSEWW(List<Term> x) {
+    private static JsonObject processSEWW(List<Term> x) {
         String fromW_Txt;
         String toW_Txt;
         String fromDOW_Txt;
@@ -255,7 +252,7 @@ public class Chat_SearchEvent {
         return OBJ;
     }
 
-    private int parseWeekText(String text) {
+    private static int parseWeekText(String text) {
         if (text == null || text.equals("")) return -1;
         String pureText = null;
         int result = -1;
@@ -293,7 +290,7 @@ public class Chat_SearchEvent {
         return result;
     }
 
-    private int parseDOWText(String text) {
+    private static int parseDOWText(String text) {
         if (text == null || text.equals("")) return -1;
         String pureText = null;
         int result = -1;
@@ -442,7 +439,7 @@ public class Chat_SearchEvent {
 
     }
 
-    private int parsePeriodText(String text) {
+    private static int parsePeriodText(String text) {
         /*上午（0~11）=1，中午(11.01~13.00)=2，下午(13.01~17.00)=3，晚上(17.01~24.00)=4*/
         String[] morning = {"上午", "早上", "早晨", "前半天"};
         String[] noon = {"中午", "午间"};

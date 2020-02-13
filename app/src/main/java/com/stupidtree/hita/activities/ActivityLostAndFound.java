@@ -1,10 +1,5 @@
 package com.stupidtree.hita.activities;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -16,39 +11,22 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.diy.PickInfoDialog;
-import com.stupidtree.hita.fragments.FragmentAddLAF;
+import com.stupidtree.hita.fragments.popup.FragmentAddLAF;
 import com.stupidtree.hita.fragments.FragmentLostAndFound;
-import com.stupidtree.hita.online.Location;
-import com.stupidtree.hita.online.LostAndFound;
 import com.stupidtree.hita.online.HITAUser;
-import com.yuyh.library.imgsel.ISNav;
-import com.yuyh.library.imgsel.common.ImageLoader;
-import com.yuyh.library.imgsel.config.ISListConfig;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UploadFileListener;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.fragments.FragmentAddLAF.FOUND;
+import static com.stupidtree.hita.fragments.popup.FragmentAddLAF.FOUND;
 
 
 public class ActivityLostAndFound extends BaseActivity implements FragmentLostAndFound.OnFragmentInteractionListener

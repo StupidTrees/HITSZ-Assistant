@@ -2,6 +2,7 @@
 package com.stupidtree.hita.hita;
 
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.airbnb.lottie.L;
@@ -9,9 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.stupidtree.hita.online.ChatMessage;
-
-import org.ansj.domain.Term;
-import org.ansj.splitWord.analysis.ToAnalysis;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -84,7 +82,7 @@ public class ChatBotB {
                     if(!reply.contains("请求次数")){
                         ChatMessage cm = new ChatMessage();
                         List<String> arr = new ArrayList();
-                        for(Term t: ToAnalysis.parse(text)) arr.add(t.getName());
+                        for(Term t: TextTools.NaiveSegmentation(text))arr.add(t.getContent());
                         cm.setQueryArray(arr);
                         cm.setQueryText(text);
                         cm.setAnswer(re.toString());
@@ -158,7 +156,7 @@ public class ChatBotB {
                     if(!reply.contains("请求次数")){
                         ChatMessage cm = new ChatMessage();
                         List<String> arr = new ArrayList();
-                        for(Term t: ToAnalysis.parse(text)) arr.add(t.getName());
+                        for(Term t: TextTools.NaiveSegmentation(text)) arr.add(t.getContent());
                         cm.setQueryArray(arr);
                         cm.setQueryText(text);
                         cm.setAnswer(result.toString());

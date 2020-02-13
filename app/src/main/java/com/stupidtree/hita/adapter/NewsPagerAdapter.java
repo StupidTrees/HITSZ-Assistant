@@ -7,10 +7,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
-import com.stupidtree.hita.fragments.FragmentNewsBulletin;
-import com.stupidtree.hita.fragments.FragmentNewsIPNews;
-import com.stupidtree.hita.fragments.FragmentNewsLecture;
-
 import java.util.List;
 
 public class NewsPagerAdapter extends FragmentPagerAdapter {

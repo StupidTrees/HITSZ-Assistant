@@ -29,7 +29,7 @@
         android:clickable="true"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:longClickable="true"
-        app:cardBackgroundColor="?attr/colorPrimary"
+        app:cardBackgroundColor="?attr/background_color_second"
         app:cardCornerRadius="16dp"
         app:cardElevation="@dimen/timeline_card_elevation">
 
@@ -41,48 +41,71 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tl_tv_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginRight="16dp"
-                    android:text="10:15-10:32"
-                    android:textColor="@color/material_text_icon_white"
-                    android:textSize="12sp"
-                    android:transitionName="course_time" />
 
                 <TextView
                     android:id="@+id/tl_tv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-black"
+                    android:layout_gravity="left"
+                    android:gravity="left"
                     android:maxEms="10"
                     android:singleLine="true"
-                    android:text="最后期限！"
-                    android:textColor="@color/material_text_icon_white"
-                    android:textSize="16sp" />
+                    android:text="学习"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:clickable="false"
+                    android:orientation="horizontal"
+                    android:visibility="visible"
+                    app:theme="@style/button_ripple_primary_large">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_gravity="center"
+
+                        android:alpha="0.8"
+                        android:clickable="false"
+                        android:tint="?attr/text_color_secondary"
+                        android:tintMode="src_in"
+                        app:srcCompat="@drawable/ic_access_time" />
+
+                    <TextView
+                        android:id="@+id/tl_tv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:layout_marginLeft="8dp"
+                        android:alpha="0.8"
+                        android:text="10:15-10:32"
+                        android:textColor="?attr/text_color_secondary"
+                        android:textSize="14sp"
+                        android:transitionName="course_time" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:id="@+id/imageView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginRight="16dp"
-                android:tint="@color/material_text_icon_white"
-                app:srcCompat="@drawable/ic_timeline_deadline" />
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/radius_primay_round_icon_bg"
+                android:backgroundTint="@color/background_bottom_color_as_tint"
+                android:backgroundTintMode="src_over"
+                android:padding="8dp"
+                android:tint="?attr/colorPrimary"
+                android:tintMode="src_in"
+                app:srcCompat="@drawable/ic_warning" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

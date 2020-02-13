@@ -8,8 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".fragments.FragmentFDY">
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
         app:cardBackgroundColor="?attr/background_color_second"

@@ -14,6 +14,7 @@ import androidx.annotation.WorkerThread;
 
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.online.Bmob_User_Data;
 import com.stupidtree.hita.online.TimeTable_upload_helper;
 import com.stupidtree.hita.timetable.timetable.EventItem;
@@ -55,6 +56,7 @@ public class TimetableCore {
     private String currentCurriculumId = null;
     private boolean isThisTerm = true;
     private int thisWeekOfTerm = -1;
+
     public TimetableCore() {
 
     }
@@ -401,8 +403,6 @@ public class TimetableCore {
             timeWatcher.refreshProgress(false, true);
         }
     }
-
-
 
 
     @WorkerThread
@@ -886,6 +886,44 @@ public class TimetableCore {
         }
         result.removeAll(toRemove);
         return result;
+    }
+
+    @WorkerThread
+    public List<EventItem> getEventWithInfoContains(String text) {
+        List<EventItem> result = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        String q = "%" + text + "%";
+        Cursor c = sd.query("timetable", null,
+                "name LIKE ? OR tag2 LIKE ? OR tag3 LIKE ? OR tag4 LIKE ?", new String[]{q, q, q, q}, null, null, null);
+        while (c.moveToNext()) {
+            result.addAll(new EventItemHolder(c).getAllEvents());
+        }
+        c.close();
+        return result;
+    }
+
+    @WorkerThread
+    public List<EventItem> getEventWithInfoContainsAll(List<String> texts) {
+        List<EventItem> res = new ArrayList<>();
+        List<EventItem> UnderTimeCondition = getEventWithInfoContains(texts.get(0));
+        for (EventItem ei : UnderTimeCondition) {
+            boolean allMatched = true;
+            Log.e("course", String.valueOf(ei));
+            for (String cdt : texts) {
+                Log.e("cdt",cdt);
+                boolean match = TextTools.likeWithContain(ei.getMainName(), cdt)
+                        || TextTools.likeWithContain(ei.getTag2(), cdt)
+                        || TextTools.likeWithContain(ei.getTag3(), cdt)
+                        || TextTools.likeWithContain(ei.getTag4(), cdt);
+                if (!match) {
+                    allMatched = false;
+                    break;
+                }
+            }
+            Log.e("all_mat", String.valueOf(allMatched));
+            if (allMatched) res.add(ei);
+        }
+        return res;
     }
 
 

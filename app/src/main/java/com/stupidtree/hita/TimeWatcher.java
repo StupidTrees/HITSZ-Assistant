@@ -401,7 +401,11 @@ public class TimeWatcher {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            refreshProgress(false, true);
+            try {
+                refreshProgress(false, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }

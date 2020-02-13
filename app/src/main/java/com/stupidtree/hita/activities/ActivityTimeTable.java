@@ -27,7 +27,7 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.TimeTablePagerAdapter;
 import com.stupidtree.hita.timetable.Subject;
-import com.stupidtree.hita.fragments.FragmentAddEvent;
+import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
 import com.stupidtree.hita.fragments.FragmentTimeTablePage;
 import com.stupidtree.hita.util.ColorBox;
 

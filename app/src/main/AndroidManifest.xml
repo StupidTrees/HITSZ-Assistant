@@ -37,6 +37,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
 
+
     <application
         android:name=".HITAApplication"
         android:allowBackup="true"
@@ -45,6 +46,8 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
+
         <activity android:name=".activities.ActivityTasks"
             android:windowSoftInputMode="adjustPan"
             />
@@ -102,6 +105,24 @@
         <activity
             android:name=".activities.ActivityTeacher"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.ActivityTeacherOfficial_External"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <data
+                    android:scheme="http"
+                    android:host="faculty.hitsz.edu.cn"
+                    />
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.ActivityTeacherOfficial"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity android:name=".activities.ActivityDynamicTable" />
         <activity
             android:name=".activities.ActivityJWTS"
@@ -190,6 +211,16 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="5883fb948ec30c3f56f65e46e65f0b09" />
+        <provider
+            android:name=".MFileProvider"
+            android:authorities="com.stupidtree.hita.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.stupidtree.hita.diy;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -25,6 +31,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityNotes;
+import com.stupidtree.hita.activities.ActivitySearch;
 import com.stupidtree.hita.activities.ActivityTeacher;
 import com.stupidtree.hita.adapter.CourseNoteGridAdapter;
 import com.stupidtree.hita.timetable.Note;
@@ -142,40 +149,53 @@ public class CourseDialog extends AlertDialog {
         more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                float fromD,toD;
                 if(!expanded){
                     moreLayout.setVisibility(View.VISIBLE);
                     new RefreshTask().executeOnExecutor(TPE);
-                    more.setRotation(180f);
+                    fromD = 0f;
+                    toD = 180f;
+                    //more.setRotation(180f);
 
                 }else{
                     moreLayout.setVisibility(View.GONE);
+                    fromD = 180f;
+                    toD = 0f;
                    // new RefreshTask().executeOnExecutor(TPE);
-                    more.setRotation(0f);
+                   // more.setRotation(0f);
                 }
                 expanded = !expanded;
-
+                RotateAnimation ra = new RotateAnimation(fromD,toD, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                ra.setInterpolator(new DecelerateInterpolator());
+                ra.setDuration(300);//设置动画持续周期
+                ra.setRepeatCount(0);//设置重复次数
+                ra.setFillAfter(true);//动画执行完后是否停留在执行完的状态
+                more.setAnimation(ra);
+                more.startAnimation(ra);
 
 
             }
         });
         teacher_detail.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 final String[] names = ei.tag3.split("，");
                 if (names.length > 1) {
                     AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(HContext.getString(R.string.pick_teacher)).setItems(names, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent il = new Intent(getContext(), ActivityTeacher.class);
-                            il.putExtra("name", names[i]);
-                            getContext().startActivity(il);
+//                            Intent il = new Intent(getContext(), ActivityTeacher.class);
+//                            il.putExtra("name", names[i]);
+//                            getContext().startActivity(il);
+                            ActivityUtils.searchFor(getContext(),names[i],"teacher");
                         }
                     }).create();
                     ad.show();
                 } else {
-                    Intent i = new Intent(getContext(), ActivityTeacher.class);
-                    i.putExtra("name", ei.tag3);
-                    getContext().startActivity(i);
+                    ActivityUtils.searchFor(getContext(),ei.tag3,"teacher");
+//                    Intent i = new Intent(getContext(), ActivityTeacher.class);
+//                    i.putExtra("name", ei.tag3);
+//                    getContext().startActivity(i);
                 }
             }
         });

@@ -41,7 +41,7 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
-import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
+import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialog;
 
 
 public class FragmentTimeTablePage extends BaseFragment {

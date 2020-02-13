@@ -27,7 +27,7 @@ import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_COURSE;
 import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE;
 import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_REMIND;
-import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
+import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialog;
 
 public class TimeTableViewGroup extends ViewGroup {
     int week;

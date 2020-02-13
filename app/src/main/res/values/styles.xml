@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- 设置toolbar按钮样式-->
         <item name="drawerArrowStyle">@style/left_Drawer_Arrow_Style</item>
         <item name="background_color_bottom">@color/material_background_grey_50</item>

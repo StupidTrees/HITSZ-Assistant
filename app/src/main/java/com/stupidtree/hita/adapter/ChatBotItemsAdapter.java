@@ -21,7 +21,7 @@ import com.stupidtree.hita.util.ActivityUtils;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
+import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialog;
 
 
 public class ChatBotItemsAdapter extends RecyclerView.Adapter<ChatBotItemsAdapter.mHolder> {

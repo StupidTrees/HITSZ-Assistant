@@ -64,53 +64,6 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_speak"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="false"
-        android:layout_centerVertical="false"
-        android:layout_gravity="bottom|center|right"
-        android:layout_marginStart="@dimen/material_fab_margin"
-        android:layout_marginTop="@dimen/material_fab_margin"
-        android:layout_marginEnd="@dimen/material_fab_margin"
-        android:layout_marginBottom="@dimen/material_fab_margin"
-        android:tint="@color/material_text_icon_white"
-        android:tintMode="src_in"
-
-        android:transitionName="fab"
-        android:visibility="gone"
-        app:fabCustomSize="60dp"
-        app:maxImageSize="36dp"
-        app:srcCompat="@drawable/bt_chatbot_voice_wave" />
-
-    <LinearLayout
-        android:id="@+id/voiceInput"
-        android:layout_width="match_parent"
-        android:layout_height="116dp"
-        android:layout_gravity="bottom"
-        android:orientation="vertical"
-        android:visibility="visible">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="16dp"
-            app:srcCompat="@drawable/background_color_gradient_reverse" />
-
-        <jaygoo.widget.wlv.WaveLineView
-            android:id="@+id/waveLineView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_gravity="bottom"
-            android:background="?attr/background_color_bottom"
-            android:visibility="visible"
-            app:wlvBackgroundColor="#00000000"
-            app:wlvLineColor="?attr/colorPrimary"
-            app:wlvMoveSpeed="290"
-            app:wlvSensibility="10" />
-    </LinearLayout>
-
     <LinearLayout
         android:id="@+id/textInput"
         android:layout_width="match_parent"
@@ -167,31 +120,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_margin="8dp"
-        android:alpha="0.5"
-        android:text="语音听写能力来自科大讯飞"
-        android:visibility="invisible" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_shutup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
-        android:layout_marginTop="24dp"
-        android:layout_marginRight="20dp"
-        android:clickable="true"
-        android:scaleType="fitCenter"
-        android:tint="?attr/colorAccent"
-        app:backgroundTint="@color/material_text_icon_white"
-        app:fab_size="mini"
-        app:layout_anchor="@+id/chat_recyclerview"
-        app:layout_anchorGravity="end|center"
-        app:maxImageSize="56dp"
-        app:srcCompat="@drawable/fab_chatbot_shutup" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

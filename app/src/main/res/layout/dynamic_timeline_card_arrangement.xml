@@ -50,44 +50,51 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/tl_tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:gravity="left"
+                    android:maxEms="10"
+                    android:singleLine="true"
+                    android:text="学习"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="18sp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="8dp"
+                    android:clickable="false"
+                    android:orientation="horizontal"
+                    android:visibility="visible"
+                    app:theme="@style/button_ripple_primary_large">
 
                     <ImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
                         android:layout_gravity="center"
-                        android:layout_marginRight="8dp"
-                        android:tint="?attr/colorPrimary"
-                        app:srcCompat="@drawable/ic_timeline_arrangement" />
+
+                        android:alpha="0.8"
+                        android:clickable="false"
+                        android:tint="?attr/text_color_secondary"
+                        android:tintMode="src_in"
+                        app:srcCompat="@drawable/ic_access_time" />
 
                     <TextView
-                        android:id="@+id/tl_tv_name"
+                        android:id="@+id/tl_tv_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:gravity="left"
-                        android:maxEms="10"
-                        android:singleLine="true"
-                        android:text="学习"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="18sp" />
+                        android:layout_gravity="top"
+                        android:layout_marginLeft="8dp"
+                        android:alpha="0.8"
+                        android:text="10:15-10:32"
+                        android:textColor="?attr/text_color_secondary"
+                        android:textSize="14sp"
+                        android:transitionName="course_time" />
 
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tl_tv_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:layout_marginTop="8dp"
-                    android:text="10:15-10:32"
-                    android:textColor="?attr/text_color_secondary"
-                    android:textSize="14sp"
-                    android:transitionName="course_time" />
 
             </LinearLayout>
 
@@ -98,6 +105,18 @@
                 android:layout_marginRight="16dp"
                 android:orientation="vertical">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/radius_primay_round_icon_bg"
+                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:backgroundTintMode="src_over"
+                    android:padding="8dp"
+                    android:tint="?attr/colorPrimary"
+                    android:tintMode="src_in"
+                    app:srcCompat="@drawable/ic_event" />
+
                 <TextView
                     android:id="@+id/tl_tv_duration"
                     android:layout_width="wrap_content"
@@ -106,7 +125,8 @@
                     android:layout_marginTop="8dp"
                     android:text="34min"
                     android:textColor="?attr/text_color_secondary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <ProgressBar
                     android:id="@+id/event_progressbar"

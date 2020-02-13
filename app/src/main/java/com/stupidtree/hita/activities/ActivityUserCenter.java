@@ -9,7 +9,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -19,6 +21,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
@@ -52,11 +55,13 @@ import com.stupidtree.hita.fragments.FragmentSubjects;
 import com.stupidtree.hita.fragments.FragmentUserCenter_sync;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.util.FileOperator;
+import com.stupidtree.hita.util.SystemPictureSelector;
 import com.yuyh.library.imgsel.ISNav;
 import com.yuyh.library.imgsel.common.ImageLoader;
 import com.yuyh.library.imgsel.config.ISListConfig;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -200,9 +205,8 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
         change_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 自由配置选项
-                //检查是否有读写权限
-
+//                SystemPictureSelector.openPic(ActivityUserCenter.this,0);
+//
 
                 @SuppressLint("ResourceType")
                 ISListConfig config = new ISListConfig.Builder()

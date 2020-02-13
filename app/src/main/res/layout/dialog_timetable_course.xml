@@ -533,11 +533,13 @@
         android:id="@+id/more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:alpha="0.4"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
         android:paddingRight="16dp"
         android:paddingBottom="16dp"
+        android:tint="?attr/colorControlNormal"
         app:srcCompat="@drawable/ic_arrow_drop_down"
         app:theme="@style/button_ripple_primary" />
 

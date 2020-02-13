@@ -17,7 +17,6 @@
         android:animationCache="false"
         android:layoutAnimation="@anim/recycler_layout_animation_falls_down"
         android:overScrollMode="never"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp" />
+ />
 
 </LinearLayout>

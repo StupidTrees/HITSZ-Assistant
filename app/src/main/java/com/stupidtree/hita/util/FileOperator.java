@@ -35,9 +35,6 @@ import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.ToastHander;
@@ -260,37 +257,37 @@ public class FileOperator {
     }
 
     ///////////////////////////////以下为内部辅助函数////////////////////////////////////////////////
-    /*函数功能:把Excel文件转化成java通用类的形式
-     * 参数1：Excel文件名*/
-    public static Map<String, List<List<String>>> analyzeXls(String fileName) {
-        Map<String, List<List<String>>> map = new HashMap<>();
-        List<List<String>> rows;
-        List<String> columns = null;
-        try {
-            Workbook workbook = Workbook.getWorkbook(new File(fileName));
-            Sheet[] sheets = workbook.getSheets();
-            for (Sheet sheet : sheets) {
-                rows = new ArrayList<>();
-                String sheetName = sheet.getName();
-                for (int i = 0; i < sheet.getRows(); i++) {
-                    Cell[] sheetRow = sheet.getRow(i);
-                    int columnNum = sheet.getColumns();
-                    for (int j = 0; j < sheetRow.length; j++) {
-                        if (j % columnNum == 0) {  //按行存数据
-                            columns = new ArrayList<>();
-                        }
-                        columns.add(sheetRow[j].getContents());
-                    }
-                    rows.add(columns);
-                }
-                map.put(sheetName, rows);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return map;
-    }
+//    /*函数功能:把Excel文件转化成java通用类的形式
+//     * 参数1：Excel文件名*/
+//    public static Map<String, List<List<String>>> analyzeXls(String fileName) {
+//        Map<String, List<List<String>>> map = new HashMap<>();
+//        List<List<String>> rows;
+//        List<String> columns = null;
+//        try {
+//            Workbook workbook = Workbook.getWorkbook(new File(fileName));
+//            Sheet[] sheets = workbook.getSheets();
+//            for (Sheet sheet : sheets) {
+//                rows = new ArrayList<>();
+//                String sheetName = sheet.getName();
+//                for (int i = 0; i < sheet.getRows(); i++) {
+//                    Cell[] sheetRow = sheet.getRow(i);
+//                    int columnNum = sheet.getColumns();
+//                    for (int j = 0; j < sheetRow.length; j++) {
+//                        if (j % columnNum == 0) {  //按行存数据
+//                            columns = new ArrayList<>();
+//                        }
+//                        columns.add(sheetRow[j].getContents());
+//                    }
+//                    rows.add(columns);
+//                }
+//                map.put(sheetName, rows);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return map;
+//    }
 
     /*函数功能:从教务系统课表文字中分析出课程信息（写这个真滴累）
      * 参数1：一格中的文字*/

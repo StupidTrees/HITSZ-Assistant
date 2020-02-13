@@ -76,10 +76,7 @@ public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapte
             case TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT:
                 v = mInflater.inflate(R.layout.dynamic_timeline_card_arrangement, viewGroup, false);
                 break;
-            case TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC:
-                v = mInflater.inflate(R.layout.dynamic_timeline_card_dynamic, viewGroup, false);
-                break;
-            case TIMELINE_EVENT_TYPE_PASSED:
+           case TIMELINE_EVENT_TYPE_PASSED:
                 v = mInflater.inflate(R.layout.dynamic_timeline_card_passed, viewGroup, false);
                 break;
             case TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE:

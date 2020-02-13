@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -79,9 +80,8 @@ public class FragmentSubjects extends BaseFragment {
     private void initSubjects(View v) {
         listRes = new ArrayList<>();
         subjectsList = v.findViewById(R.id.usercenter_subjects_list);
-        subjectsAdapter = new SubjectsListAdapter(this, listRes, 2);
-        GridLayoutManager glm = new GridLayoutManager(getContext(), 2);
-        subjectsList.setLayoutManager(glm);
+        subjectsAdapter = new SubjectsListAdapter(this, listRes, 1);
+        subjectsList.setLayoutManager(new LinearLayoutManager(getContext()));
         subjectsList.setAdapter(subjectsAdapter);
         subjectsAdapter.setColorfulMode(defaultSP.getBoolean("timetable_colorful_mode",true));
         subjectsAdapter.setmOnItemClickListener(new SubjectsListAdapter.OnItemClickListener() {

@@ -3,7 +3,6 @@ package com.stupidtree.hita.hita;
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.R;
 
-import org.ansj.domain.Term;
 
 import java.util.List;
 

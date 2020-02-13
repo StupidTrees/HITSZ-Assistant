@@ -47,7 +47,7 @@
 //import static com.stupidtree.hita.HITAApplication.isDataAvailable;
 //import static com.stupidtree.hita.HITAApplication.mainTimeTable;
 //import static com.stupidtree.hita.HITAApplication.thisCurriculumIndex;
-//import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
+//import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialog;
 //
 //
 //public class FragmentJWTS_ksxx extends BaseFragment {

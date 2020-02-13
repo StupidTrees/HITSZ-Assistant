@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.stupidtree.hita.hita.TextTools;
+import com.stupidtree.hita.util.FileOperator;
 import com.stupidtree.hita.util.JsonUtils;
 
 import org.jsoup.Connection;
@@ -28,6 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 
@@ -387,8 +391,15 @@ public class JWCore {
                     // System.out.println(m);
                 }
             } catch (Exception e) {
+                FileOperator.errorTableText et = new FileOperator.errorTableText(s.toString(),e);
+                et.save(new SaveListener<String>() {
+                    @Override
+                    public void done(String s, BmobException e) {
+
+                    }
+                });
                 e.printStackTrace();
-                throw JWException.newDialogMessageExpection("导入错误！" + e.toString());
+                throw JWException.newDialogMessageExpection("导入错误！已上传错误报告" + e.toString());
             }
             return result;
         } catch (IOException e) {

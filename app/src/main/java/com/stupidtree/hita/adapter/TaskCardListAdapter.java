@@ -30,8 +30,8 @@ import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.timetable.EventItem;
 import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
-import com.stupidtree.hita.fragments.FragmentAddEvent;
-import com.stupidtree.hita.fragments.FragmentAddTask;
+import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
+import com.stupidtree.hita.fragments.popup.FragmentAddTask;
 
 import com.stupidtree.hita.hita.TextTools;
 
@@ -47,7 +47,7 @@ import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.integerToString;
-import static com.stupidtree.hita.fragments.FragmentTimeLine.showEventDialog;
+import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialog;
 
 public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapter.BaseHolder> {
     public static final int TYPE_TASK = 8;

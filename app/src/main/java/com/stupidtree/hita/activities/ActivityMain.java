@@ -57,11 +57,11 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.NormalPagerAdapter;
 import com.stupidtree.hita.timetable.Curriculum;
-import com.stupidtree.hita.fragments.FragmentAddEvent;
-import com.stupidtree.hita.fragments.FragmentNavi;
-import com.stupidtree.hita.fragments.FragmentTasks;
+import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
+import com.stupidtree.hita.fragments.main.FragmentNavi;
+import com.stupidtree.hita.fragments.main.FragmentTasks;
 import com.stupidtree.hita.fragments.FragmentTheme;
-import com.stupidtree.hita.fragments.FragmentTimeLine;
+import com.stupidtree.hita.fragments.main.FragmentTimeLine;
 import com.stupidtree.hita.fragments.FragmentTimeTablePage;
 import com.stupidtree.hita.jw.JWException;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -199,6 +199,8 @@ public class ActivityMain extends BaseActivity
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+               // Intent i = new Intent(ActivityMain.this,ActivitySearch.class);
+               // startActivity(i);
                 if (menuItem.getItemId() == R.id.action_search) {
                     WindowManager manager = getWindowManager();
                     DisplayMetrics outMetrics = new DisplayMetrics();
@@ -214,12 +216,12 @@ public class ActivityMain extends BaseActivity
     void initPager() {
         mainPager = findViewById(R.id.mainPager);
         mainTabs = findViewById(R.id.mainTabs);
-        ArrayList fragments = new ArrayList();
+        ArrayList<com.stupidtree.hita.BaseFragment> fragments = new ArrayList<>();
         fragments.add(nvf);
         fragments.add(tlf);
        // fragments.add(new FragmentTasksBackUp());
         if (tskf != null & app_task_enabled) fragments.add(tskf);
-        mainTabs.setSelectedTabIndicatorColor(Color.parseColor("#00000000"));
+        //mainTabs.setSelectedTabIndicatorColor(Color.parseColor("#00000000"));
         pagerAdapter = new NormalPagerAdapter(getSupportFragmentManager(), fragments,
                 new String[]{HContext.getString(R.string.maintab_navi), HContext.getString(R.string.maintab_today),HContext.getString(R.string.maintab_events)});
         mainTabs.setupWithViewPager(mainPager);

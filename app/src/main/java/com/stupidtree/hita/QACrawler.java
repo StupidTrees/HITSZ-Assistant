@@ -6,11 +6,19 @@ import android.graphics.Color;
 import android.util.Log;
 
 import com.stupidtree.hita.hita.TextTools;
+import com.stupidtree.hita.online.SearchException;
+import com.stupidtree.hita.online.SearchHITSZCore;
+import com.stupidtree.hita.online.SearchHITSZZSCore;
+import com.stupidtree.hita.online.SearchLibraryCore;
+import com.stupidtree.hita.online.SearchTeacherCore;
 import com.stupidtree.hita.util.FileOperator;
 import com.stupidtree.hita.util.SafecodeUtil;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
+import java.io.IOException;
+import java.lang.annotation.Documented;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,79 +28,12 @@ import java.util.Map;
 public class QACrawler {
 
     public static void main(String[] args) {
-        String mainSTR = "\"【实验】信号与系统实验\n" +
-                "[9-12节][10-10周]\n" +
-                "[(K405)信号处理实验室]";
-        mainSTR = mainSTR.replaceAll("待生效","").replaceAll("\n","");
-
-        String[] main = mainSTR.split("\\[");
-
-        List<String> lineClips = Arrays.asList(main);
-        List<String> infoClips = new ArrayList<>();
-        String name = lineClips.get(0); //名字一定是第一个
-
-        for (int i=1;i<lineClips.size();i++) {
-            String line = lineClips.get(i);
-            for (String in : line.split("]\\[")) {
-                infoClips.add(in.replaceAll("]", "").replaceAll("\\[", ""));
-            }
+       SearchLibraryCore slc =  new SearchLibraryCore();
+        try {
+            System.out.println(slc.searchForResult("刘慈欣"));
+        } catch (SearchException e) {
+            e.printStackTrace();
         }
-        System.out.println(infoClips);
-        String teacher = "", weekText = "", classroom = "";
-        String specificTime = null;
-        for (int i = 0; i < infoClips.size(); i++) {
-            String info = infoClips.get(i);
-            if (TextTools.containsNumber(info)&&info.contains("周")||
-                    TextTools.isNumber(info.replaceAll(",","").replaceAll("-","").replaceAll("单","").replaceAll("双","")))
-                weekText = info;
-            else if (TextTools.containsNumber(info)&&info.contains("节")) specificTime = info.replaceAll("节", "");
-            else if (i == infoClips.size() - 1) classroom = info;
-            else teacher = info;
-        }
-
-        StringBuilder weeks = new StringBuilder();
-        List<Integer> weekI = new ArrayList<>();
-        for (String wk : weekText.split(",")) {
-            boolean pairW = false;
-            boolean singW = false;
-            if (wk.contains("单")) {
-                singW = true;
-                wk = wk.replaceAll("单", "").replaceAll("周", "");
-            } else if (wk.contains("双")) {
-                pairW = true;
-                wk = wk.replaceAll("双", "").replaceAll("周", "");
-            } else wk = wk.replaceAll("周", "");
-            if (wk.contains("-")) {
-                String[] ft = wk.split("-");
-                int from = Integer.parseInt(ft[0]);
-                int to = Integer.parseInt(ft[1]);
-                for (int i = from; i <= to; i++) {
-                    if (pairW && i % 2 != 0 || singW && i % 2 == 0) continue;
-                    if (!weekI.contains(i)) weekI.add(i);
-                    //weeks.append(i+"").append(",");
-                }
-            } else if (!weekI.contains(Integer.parseInt(wk)))
-                weekI.add(Integer.parseInt(wk));
-        }
-        for (int i = 0; i < weekI.size(); i++) {
-            weeks.append(weekI.get(i) + "").append(i == weekI.size() - 1 ? "" : ",");
-        }
-
-        Map<String, String> m = new HashMap();
-        int beginFinal = 0, lastFinal = 2;
-        if (specificTime != null&&specificTime.contains("-")) {
-            String[] spcf = specificTime.split("-");
-            beginFinal = Integer.parseInt(spcf[0]);
-            lastFinal = Integer.parseInt(spcf[1]) - beginFinal + 1;
-        }
-        m.put("name", name);
-        m.put("teacher", teacher);
-        m.put("classroom", classroom);
-        // m.put("weeks_raw",weekText);
-        m.put("weeks", weeks.toString());
-
-        System.out.println(m);
-
     }
 
     static String EnChTo(String input) {

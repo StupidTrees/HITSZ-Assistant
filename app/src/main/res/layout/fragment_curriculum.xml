@@ -27,6 +27,7 @@
             app:cardBackgroundColor="?attr/background_color_second"
             app:cardCornerRadius="16dp"
             app:cardElevation="12dp"
+            app:cardMaxElevation="32dp"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
             <LinearLayout
@@ -37,8 +38,8 @@
 
                 <ImageView
                     android:id="@+id/cm_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="16dp"
                     android:tint="@color/material_text_icon_white"
@@ -65,186 +66,208 @@
                 <ImageView
                     android:id="@+id/cm_more"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:padding="16dp"
-                    app:srcCompat="@drawable/ic_more"
+                    android:tint="@color/material_background_white"
+                    app:srcCompat="@drawable/ic_arrow_drop_down"
                     app:theme="@style/button_ripple_white" />
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/head_expand"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="?attr/background_color_second"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/set_start_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/start_date_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center|start"
-                        android:text="开始于：2019-6-24"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="16sp"
-                        tools:ignore="HardcodedText" />
-
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:layout_gravity="center|right"
-                        android:layout_marginStart="4dp"
-                        android:alpha="0.6"
-                        android:tint="?attr/colorControlNormal"
-                        android:tintMode="src_in"
-                        app:srcCompat="@drawable/bt_edit"
-                        app:theme="@style/button_ripple_primary"
-                        tools:ignore="RtlHardcoded" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/set_total_weeks"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    tools:ignore="UseCompoundDrawables">
-
-                    <TextView
-                        android:id="@+id/total_weeks_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center|end"
-                        android:text="共15周"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="16sp"
-                        tools:ignore="HardcodedText" />
-
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:layout_gravity="center|right"
-                        android:layout_marginStart="4dp"
-                        android:alpha="0.6"
-                        android:tint="?attr/colorControlNormal"
-                        android:tintMode="src_in"
-                        app:srcCompat="@drawable/bt_edit"
-                        app:theme="@style/button_ripple_primary"
-                        tools:ignore="RtlHardcoded" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="?attr/background_color_second"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+            android:layout_height="wrap_content"
+            app:el_expanded="false"
+            app:layout_scrollFlags="scroll">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <Switch
-                    android:id="@+id/enable_color"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_margin="16dp"
-                    android:layout_weight="1"
-                    android:text="@string/curriculum_manager_enable_color"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="16sp" />
-
-                <net.cachapa.expandablelayout.ExpandableLayout
-                    android:id="@+id/expandable"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:el_expanded="true">
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="?attr/background_color_second"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="8dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/reset_colors"
+                        <LinearLayout
+                            android:id="@+id/set_start_date"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?attr/selectableItemBackground"
-                            android:padding="16dp"
-                            android:text="@string/curriculum_manager_randomly_allocate_color"
-                            android:textColor="?attr/text_color_secondary" />
-
-                        <TextView
-                            android:id="@+id/reset_colors_to_theme"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
+                            android:layout_height="match_parent"
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?attr/selectableItemBackground"
                             android:gravity="center"
+                            android:orientation="horizontal"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:id="@+id/start_date_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center|start"
+                                android:text="开始于：2019-6-24"
+                                android:textColor="?attr/text_color_secondary"
+                                android:textSize="16sp"
+                                tools:ignore="HardcodedText" />
+
+                            <ImageView
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
+                                android:layout_gravity="center|right"
+                                android:layout_marginStart="4dp"
+                                android:alpha="0.6"
+                                android:tint="?attr/colorControlNormal"
+                                android:tintMode="src_in"
+                                app:srcCompat="@drawable/bt_edit"
+                                app:theme="@style/button_ripple_primary"
+                                tools:ignore="RtlHardcoded" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/set_total_weeks"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:gravity="center"
+                            android:orientation="horizontal"
                             android:padding="16dp"
-                            android:text="@string/curriculum_manager_set_theme_color"
-                            android:textColor="?attr/text_color_secondary" />
+                            tools:ignore="UseCompoundDrawables">
+
+                            <TextView
+                                android:id="@+id/total_weeks_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center|start"
+                                android:text="共15周"
+                                android:textColor="?attr/text_color_secondary"
+                                android:textSize="16sp"
+                                tools:ignore="HardcodedText" />
+
+                            <ImageView
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
+                                android:layout_gravity="center|right"
+                                android:layout_marginStart="4dp"
+                                android:alpha="0.6"
+                                android:tint="?attr/colorControlNormal"
+                                android:tintMode="src_in"
+                                app:srcCompat="@drawable/bt_edit"
+                                app:theme="@style/button_ripple_primary"
+                                tools:ignore="RtlHardcoded" />
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/delete"
+                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/delete_curriculum" />
 
                     </LinearLayout>
 
-                </net.cachapa.expandablelayout.ExpandableLayout>
+                </androidx.cardview.widget.CardView>
 
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="?attr/background_color_second"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <Switch
+                            android:id="@+id/enable_color"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_margin="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/curriculum_manager_enable_color"
+                            android:textColor="?attr/text_color_primary"
+                            android:textSize="16sp" />
+
+                        <net.cachapa.expandablelayout.ExpandableLayout
+                            android:id="@+id/expandable"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:el_expanded="true">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/reset_colors"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:foreground="?attr/selectableItemBackground"
+                                    android:padding="16dp"
+                                    android:text="@string/curriculum_manager_randomly_allocate_color"
+                                    android:textColor="?attr/text_color_secondary" />
+
+                                <TextView
+                                    android:id="@+id/reset_colors_to_theme"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:foreground="?attr/selectableItemBackground"
+                                    android:gravity="center"
+                                    android:padding="16dp"
+                                    android:text="@string/curriculum_manager_set_theme_color"
+                                    android:textColor="?attr/text_color_secondary" />
+
+                            </LinearLayout>
+
+                        </net.cachapa.expandablelayout.ExpandableLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
+        </net.cachapa.expandablelayout.ExpandableLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/subjects_tablayout"

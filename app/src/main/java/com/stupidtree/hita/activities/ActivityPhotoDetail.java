@@ -26,7 +26,7 @@ public class ActivityPhotoDetail extends BaseActivity {
         setContentView(R.layout.activity_note_detail);
         imagePath = getIntent().getStringExtra("imagePath");
         photoView = findViewById(R.id.photoview);
-        Glide.with(this).load(imagePath).into(photoView);
+        Glide.with(this).load(imagePath).timeout(10000).into(photoView);
         //photoView.setImageDrawable(GlideDrawable.createFromPath(imagePath));
         photoView.enable();
        // noteText.setText(text);

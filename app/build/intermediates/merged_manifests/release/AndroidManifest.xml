@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stupidtree.hita"
-    android:versionCode="20200114"
-    android:versionName="新教务适配1.13" >
+    android:versionCode="20200122"
+    android:versionName="1.22新教务版" >
 
     <uses-sdk
         android:minSdkVersion="23"
@@ -61,12 +61,6 @@
             android:label="@string/title_activity_search"
             android:theme="@style/ChatBotTheme"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="com.stupidtree.hita.activities.ActivityXL"
-            android:label="@string/title_activity_xl"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.stupidtree.hita.activities.ActivityYX_FDY" />
-        <activity android:name="com.stupidtree.hita.activities.ActivityYX_ToSchool" />
         <activity android:name="com.stupidtree.hita.activities.ActivityEmptyClassroomDetail" />
         <activity android:name="com.stupidtree.hita.activities.ActivityEmptyClassroom" />
         <activity android:name="com.stupidtree.hita.activities.ActivityPostDetail" />
@@ -84,16 +78,17 @@
             </intent-filter>
         </service>
 
-        <receiver android:name="com.stupidtree.hita.TimeLineWidget" >
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.stupidtree.hita.UPDATE_ALL" />
-            </intent-filter>
+        <!-- <receiver android:name=".TimeLineWidget"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> -->
+        <!-- <action android:name="com.stupidtree.hita.UPDATE_ALL" /> -->
+        <!-- </intent-filter> -->
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/time_line_widget_info" />
-        </receiver>
+
+        <!-- <meta-data -->
+        <!-- android:name="android.appwidget.provider" -->
+        <!-- android:resource="@xml/time_line_widget_info" /> -->
+        <!-- </receiver> -->
         <receiver android:name="com.stupidtree.hita.NotificationClickReceiver" />
 
         <activity android:name="com.stupidtree.hita.activities.ActivitySetting" />
@@ -105,20 +100,31 @@
             android:authorities="com.stupidtree.hita.BmobContentProvider" />
 
         <activity
-            android:name="com.stupidtree.hita.activities.ActivityRankBoard"
+            android:name="com.stupidtree.hita.activities.ActivityLeaderBoard"
             android:label="@string/title_activity_food"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityTeacher"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.stupidtree.hita.activities.ActivitySubjectManager"
-            android:theme="@style/AppTheme" />
-        <activity android:name="com.stupidtree.hita.activities.ActivityDynamicTable" />
+            android:name="com.stupidtree.hita.activities.ActivityTeacherOfficial_External"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <data
+                    android:host="faculty.hitsz.edu.cn"
+                    android:scheme="http" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
         <activity
-            android:name="com.stupidtree.hita.activities.ActivityCourse"
-            android:label="@string/title_activity_couse"
-            android:theme="@style/AppTheme" />
+            android:name="com.stupidtree.hita.activities.ActivityTeacherOfficial"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity android:name="com.stupidtree.hita.activities.ActivityDynamicTable" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityJWTS"
             android:theme="@style/AppTheme" />
@@ -146,7 +152,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.stupidtree.hita.activities.ActivityHITSZInfo"
+            android:name="com.stupidtree.hita.activities.ActivityNews"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityLogin"
@@ -167,14 +173,13 @@
             android:label="@string/title_activity_notes"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.stupidtree.hita.activities.ActivityUniversity"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name="com.stupidtree.hita.activities.ActivityMain"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name="com.stupidtree.hita.activities.ActivityCampusLocations" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivitySchoolCalendar"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityCurriculumManager"
             android:label="@string/title_activity_import_data"
@@ -207,6 +212,16 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="5883fb948ec30c3f56f65e46e65f0b09" />
+
+        <provider
+            android:name="com.stupidtree.hita.MFileProvider"
+            android:authorities="com.stupidtree.hita.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <activity
             android:name="com.yuyh.library.imgsel.ui.ISListActivity"

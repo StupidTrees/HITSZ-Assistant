@@ -15,6 +15,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +34,7 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.SubjectsListAdapter;
 import com.stupidtree.hita.adapter.SubjectsManagerPagerAdapter;
+import com.stupidtree.hita.diy.CourseDialog;
 import com.stupidtree.hita.diy.PickNumberDialog;
 import com.stupidtree.hita.diy.PickSimpleDateDialog;
 import com.stupidtree.hita.timetable.Curriculum;
@@ -56,11 +61,13 @@ public class FragmentCurriculum extends BaseFragment {
     private TabLayout tabLayout;
     private TextView name;
     private TextView from;
+    private ExpandableLayout headExpand;
     private TextView totalWeeks;
     private ImageView image, more;
-    private LinearLayout setTotalWeek,setStartDate;
+    private Button delete;
+    private LinearLayout setTotalWeek, setStartDate;
     private CardView card;
-    private TextView resetColors,resetColorsToTheme;
+    private TextView resetColors, resetColorsToTheme;
     private ExpandableLayout expandableLayout;
     private Switch enable_color;
 
@@ -104,11 +111,13 @@ public class FragmentCurriculum extends BaseFragment {
     }
 
     void initViews(View v) {
+        delete = v.findViewById(R.id.delete);
         setTotalWeek = v.findViewById(R.id.set_total_weeks);
         setStartDate = v.findViewById(R.id.set_start_date);
         name = v.findViewById(R.id.cm_name);
         from = v.findViewById(R.id.start_date_text);
         totalWeeks = v.findViewById(R.id.total_weeks_text);
+        headExpand = v.findViewById(R.id.head_expand);
         image = v.findViewById(R.id.cm_image);
         more = v.findViewById(R.id.cm_more);
         card = v.findViewById(R.id.card);
@@ -120,7 +129,7 @@ public class FragmentCurriculum extends BaseFragment {
             @Override
             public void onClick(View v) {
                 AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.dialog_title_random_allocate))
-                        .setNegativeButton(getString(R.string.button_cancel),null).setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
+                        .setNegativeButton(getString(R.string.button_cancel), null).setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 new resetColorTask().executeOnExecutor(TPE);
@@ -133,7 +142,7 @@ public class FragmentCurriculum extends BaseFragment {
             @Override
             public void onClick(View v) {
                 AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.dialog_title_set_to_theme))
-                        .setNegativeButton(getString(R.string.button_cancel),null).setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
+                        .setNegativeButton(getString(R.string.button_cancel), null).setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 new resetColorToThemeTask().executeOnExecutor(TPE);
@@ -143,16 +152,16 @@ public class FragmentCurriculum extends BaseFragment {
             }
         });
 
-        boolean colorfulOn = defaultSP.getBoolean("timetable_colorful_mode",true);
+        boolean colorfulOn = defaultSP.getBoolean("timetable_colorful_mode", true);
         enable_color.setChecked(colorfulOn);
-        if(colorfulOn) expandableLayout.expand();
-        else  expandableLayout.collapse();
+        if (colorfulOn) expandableLayout.expand();
+        else expandableLayout.collapse();
 
         enable_color.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                if(isChecked)expandableLayout.expand();
-                else  expandableLayout.collapse();
+                if (isChecked) expandableLayout.expand();
+                else expandableLayout.collapse();
                 new enableColorTask(isChecked).execute();
             }
         });
@@ -179,46 +188,50 @@ public class FragmentCurriculum extends BaseFragment {
                         curriculum.setStartDate(date);
                         new saveCurriculumTask().executeOnExecutor(TPE);
                     }
-                }).setInitialValue(curriculum.getStart_year(),curriculum.getStart_month(),curriculum.getStart_day())
-                .show();
+                }).setInitialValue(curriculum.getStart_year(), curriculum.getStart_month(), curriculum.getStart_day())
+                        .show();
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.attention)).setMessage(getString(R.string.dialog_message_delete_curriculum)).
+                        setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new deleteTask(curriculum.getCurriculumCode()).executeOnExecutor(TPE);
+                            }
+                        }).setNegativeButton(getString(R.string.button_cancel), null).
+                        create();
+                ad.show();
             }
         });
         more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu pm = new PopupMenu(getContext(), v);
-                pm.getMenuInflater().inflate(R.menu.menu_opr_curriculum, pm.getMenu());
-                pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.curriculum_opr_detail) {
-                            AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.dialog_title_curriculum_detail)).
-                                    setMessage(String.format(getString(R.string.dialog_message_curriculum_detail),curriculum.getName(),curriculum.getCurriculumCode())).create();
-                            ad.show();
-                            return true;
-                        } else if (item.getItemId() == R.id.curriculum_opr_delete) {
-                            AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.attention)).setMessage(getString(R.string.dialog_message_delete_curriculum)).
-                                    setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            new deleteTask(curriculum.getCurriculumCode()).executeOnExecutor(TPE);
-                                        }
-                                    }).setNegativeButton(getString(R.string.button_cancel), null).
-                                    create();
-                            ad.show();
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-                pm.show();
+                float fromD,toD;
+                if(!headExpand.isExpanded()){
+                    fromD = 0f;
+                    toD = 180f;
+                }else{
+                    fromD = 180f;
+                    toD = 0f;
+                }
+                RotateAnimation ra = new RotateAnimation(fromD,toD, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                ra.setInterpolator(new DecelerateInterpolator());
+                ra.setDuration(300);//设置动画持续周期
+                ra.setRepeatCount(0);//设置重复次数
+                ra.setFillAfter(true);//动画执行完后是否停留在执行完的状态
+                more.setAnimation(ra);
+                more.startAnimation(ra);
+                headExpand.toggle();
             }
         });
         card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.dialog_title_curriculum_detail)).
-                        setMessage(String.format(getString(R.string.dialog_message_curriculum_detail),curriculum.getName(),curriculum.getCurriculumCode())).create();
+                        setMessage(String.format(getString(R.string.dialog_message_curriculum_detail), curriculum.getName(), curriculum.getCurriculumCode())).create();
                 ad.show();
             }
         });
@@ -238,7 +251,6 @@ public class FragmentCurriculum extends BaseFragment {
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setTabIndicatorFullWidth(false);
     }
-
 
 
     class deleteTask extends AsyncTask {
@@ -295,7 +307,7 @@ public class FragmentCurriculum extends BaseFragment {
             name.setText(curriculum.getName().substring(0, curriculum.getName().indexOf("(")));
         else name.setText(curriculum.getName());
         from.setText(getString(R.string.curriculum_manager_satrtat) + curriculum.readStartDate());
-        totalWeeks.setText(String.format(getString(R.string.curriculum_manager_total),curriculum.getTotalWeeks()));
+        totalWeeks.setText(String.format(getString(R.string.curriculum_manager_total), curriculum.getTotalWeeks()));
         if (curriculum.getName().contains("春")) image.setImageResource(R.drawable.ic_spring);
         else if (curriculum.getName().contains("夏")) image.setImageResource(R.drawable.ic_summer);
         else if (curriculum.getName().contains("秋")) image.setImageResource(R.drawable.ic_autumn);
@@ -310,7 +322,7 @@ public class FragmentCurriculum extends BaseFragment {
     }
 
 
-    class enableColorTask extends AsyncTask{
+    class enableColorTask extends AsyncTask {
 
         boolean enable;
 
@@ -321,53 +333,55 @@ public class FragmentCurriculum extends BaseFragment {
         @SuppressLint("ApplySharedPref")
         @Override
         protected Object doInBackground(Object[] objects) {
-            defaultSP.edit().putBoolean("timetable_colorful_mode",enable).commit();
+            defaultSP.edit().putBoolean("timetable_colorful_mode", enable).commit();
             return null;
         }
 
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            ((FragmentSubjects)fragments.get(0)).Refresh(true);
+            ((FragmentSubjects) fragments.get(0)).Refresh(true);
         }
     }
+
     @SuppressLint("StaticFieldLeak")
-    class resetColorToThemeTask extends AsyncTask{
+    class resetColorToThemeTask extends AsyncTask {
 
         @SuppressLint("ApplySharedPref")
         @Override
         protected Object doInBackground(Object[] objects) {
-            for(Subject s:timeTableCore.getCurrentCurriculum().getSubjects()){
-                defaultSP.edit().putInt("color:"+s.getName(),getColorPrimary()).commit();
+            for (Subject s : timeTableCore.getCurrentCurriculum().getSubjects()) {
+                defaultSP.edit().putInt("color:" + s.getName(), getColorPrimary()).commit();
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Object o) {
-            ((FragmentSubjects)fragments.get(0)).Refresh(true);
+            ((FragmentSubjects) fragments.get(0)).Refresh(true);
             super.onPostExecute(o);
         }
     }
-    class resetColorTask extends AsyncTask{
+
+    class resetColorTask extends AsyncTask {
 
         @SuppressLint("ApplySharedPref")
         @Override
         protected Object doInBackground(Object[] objects) {
-            for(Subject s:timeTableCore.getCurrentCurriculum().getSubjects()){
-                defaultSP.edit().putInt("color:"+s.getName(), ColorBox.getRandomColor_Material()).commit();
+            for (Subject s : timeTableCore.getCurrentCurriculum().getSubjects()) {
+                defaultSP.edit().putInt("color:" + s.getName(), ColorBox.getRandomColor_Material()).commit();
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Object o) {
-            ((FragmentSubjects)fragments.get(0)).Refresh(true);
+            ((FragmentSubjects) fragments.get(0)).Refresh(true);
             super.onPostExecute(o);
         }
     }
 
-    class saveCurriculumTask extends AsyncTask{
+    class saveCurriculumTask extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object[] objects) {
@@ -379,7 +393,7 @@ public class FragmentCurriculum extends BaseFragment {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             Refresh();
-            Toast.makeText(getContext(), R.string.curriculum_updated,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.curriculum_updated, Toast.LENGTH_SHORT).show();
         }
     }
 }
