@@ -1958,6 +1958,7 @@ drawable ic_person
 drawable ic_priority_high
 drawable ic_progress
 drawable ic_qq
+drawable ic_question_mark
 drawable ic_rate_review
 drawable ic_refresh
 drawable ic_return
@@ -1965,6 +1966,7 @@ drawable ic_rmb
 drawable ic_round
 drawable ic_run
 drawable ic_search
+drawable ic_search_solid
 drawable ic_settings
 drawable ic_short_text
 drawable ic_spring
@@ -2472,10 +2474,14 @@ id hita_animation_view
 id hita_canteen
 id hita_course
 id hita_explore
+id hita_hita
 id hita_item1
 id hita_item2
 id hita_item3
 id hita_item4
+id hita_item5
+id hita_item6
+id hita_search
 id hita_ut
 id hitszinfo_pager
 id hitszinfo_tab
@@ -3221,6 +3227,7 @@ id visible
 id vote_result
 id voted
 id voting
+id vpn
 id webview
 id wed
 id week
@@ -3972,8 +3979,12 @@ string navi_campus_billboard_p
 string navi_campus_billboard_s
 string navi_campus_card_p
 string navi_campus_card_s
+string navi_campus_hita_p
+string navi_campus_hita_s
 string navi_campus_laf_p
 string navi_campus_laf_s
+string navi_campus_search_p
+string navi_campus_search_s
 string navi_campus_title
 string navi_campus_vote_p
 string navi_campus_vote_s
@@ -4248,6 +4259,7 @@ string update_release_time
 string update_size
 string update_version
 string uploaded_success
+string use_vpn_hint
 string user_center_you_have_punched
 string user_info_updated
 string usercenter_info_bind

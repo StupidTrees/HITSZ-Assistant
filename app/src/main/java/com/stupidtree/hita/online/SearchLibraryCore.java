@@ -81,7 +81,7 @@ public class SearchLibraryCore {
                     .data("v_index", "all")
                     .data("sortfield", "ptitle")
                     .data("sorttype", "desc")
-                    .data("pageNum", "10")
+                    .data("pageNum", "50")
                     .ignoreHttpErrors(true)
                     .ignoreContentType(true)
                     .data("v_page", "" + (pagerOffset + 1));

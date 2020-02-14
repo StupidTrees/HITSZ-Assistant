@@ -1,16 +1,19 @@
 package com.stupidtree.hita.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +35,7 @@ import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityAttitude;
 import com.stupidtree.hita.activities.ActivityChatbot;
 import com.stupidtree.hita.activities.ActivityEmptyClassroom;
+import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.activities.ActivityNews;
 import com.stupidtree.hita.activities.ActivityLostAndFound;
 import com.stupidtree.hita.activities.ActivityLeaderBoard;
@@ -298,6 +302,25 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                     ActivityUtils.startUTActivity(mContext);
                 }
             });
+            vb.card_hita.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent pp = new Intent(mContext, ActivityChatbot.class);
+                    mContext.startActivity(pp);
+                }
+            });
+            vb.card_search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mContext instanceof ActivityMain){
+                        WindowManager manager = ((ActivityMain)mContext).getWindowManager();
+                        DisplayMetrics outMetrics = new DisplayMetrics();
+                        manager.getDefaultDisplay().getMetrics(outMetrics);
+                        int width = outMetrics.widthPixels;
+                        ((ActivityMain)mContext).presentActivity((ActivityMain)mContext,width,10);
+                    }
+                }
+            });
         }else if(holder instanceof ViewHolder_Mood){
             final ViewHolder_Mood vm = (ViewHolder_Mood) holder;
             vm.card.setOnClickListener(new View.OnClickListener() {
@@ -455,7 +478,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
     class ViewHolder_Hita extends NaviViewHolder {
         TextView hint, hint_second;
        // Button button;
-        LinearLayout card_explore, card_lostandfound, card_canteen,card_ut;
+        LinearLayout card_explore, card_lostandfound, card_canteen,card_ut,card_hita,card_search;
         //card_locations;
 
         public ViewHolder_Hita(@NonNull View itemView) {
@@ -466,6 +489,8 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
             card_lostandfound = itemView.findViewById(R.id.hita_item2);
             card_ut = itemView.findViewById(R.id.hita_item4);
             card_explore = itemView.findViewById(R.id.hita_item3);
+            card_hita = itemView.findViewById(R.id.hita_item5);
+            card_search = itemView.findViewById(R.id.hita_item6);
             //button = itemView.findViewById(R.id.button);
             // card_locations = itemView.findViewById(R.id.navipage_card_location);
         }

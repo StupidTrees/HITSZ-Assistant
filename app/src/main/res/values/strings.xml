@@ -97,7 +97,7 @@
     <string name="guide_5p">点击进入日程表</string>
     <string name="guide_5s">加强版课程表</string>
     <string name="guide_6p">这里可以进行搜索</string>
-    <string name="guide_6s">找教室，找老师...</string>
+    <string name="guide_6s">HIT全局搜...</string>
     <string name="guide_7p">登录HITSZ助手账号</string>
     <string name="guide_7s">开启精彩体验吧</string>
     <string name="notif_installQQ">请安装QQ后再反馈！</string>
@@ -414,7 +414,7 @@
     <string name="subject_title_scores">成绩</string>
     <string name="subject_score_none">还没有成绩信息，试试登录教务系统同步吧</string>
     <string name="subject_color">课程颜色</string>
-    <string name="search_hint">空格分隔关键字...</string>
+    <string name="search_hint">明天下午...</string>
     <string name="pick_color">选择颜色</string>
     <string name="check_for_update">检查更新</string>
     <string name="checking_for_update">检查更新...</string>
@@ -509,6 +509,11 @@
     <string name="timetable_type_ddl">DDL</string>
     <string name="timetable_type_arrange">安排</string>
     <string name="timetable_total_searched">共查找到%d件事件</string>
+    <string name="navi_campus_search_p">HIT全局搜</string>
+    <string name="navi_campus_search_s">啥都有</string>
+    <string name="navi_campus_hita_p">希塔</string>
+    <string name="navi_campus_hita_s">已经死亡</string>
+    <string name="use_vpn_hint">校外请使用官方vpn连接</string>
     <string-array name="curriculum_tabs">
         <item>科目</item>
         <item>教师</item>

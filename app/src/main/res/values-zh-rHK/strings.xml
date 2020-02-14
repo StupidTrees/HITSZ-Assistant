@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HITSZ助手</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">HITSZ助手</string>
+    <string name="nav_header_subtitle">HITSZ Assistant</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="app_notification_channel_id">hita_channel</string>
+    <string name="app_notification_channel_id_learning">"hita_learning_channel"</string>
+    <!-- Example defaultSP for Notifications -->
+
+    <string name="title_activity_main">MainActivity</string>
+    <string name="drawer_open">抽屉打开</string>
+    <string name="drawer_close">抽屉关闭</string>
+    <string name="title_activity_test">test</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_import_data">ImportDataActivity</string>
+    <string name="title_activity_loading">LoadingActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_user_center">UserCenterActivity</string>
+    <string name="large_text"> "Material is the metaphor.\n\n" "A material metaphor is the unifying theory of a rationalized space and a system of motion." "The material is grounded in tactile reality, inspired by the study of paper and ink, yet " "technologically advanced and open to imagination and magic.\n" "Surfaces and edges of the material provide visual cues that are grounded in reality. The " "use of familiar tactile attributes helps users quickly understand affordances. Yet the " "flexibility of the material creates new affordances that supercede those in the physical " "world, without breaking the rules of physics.\n" "The fundamentals of light, surface, and movement are key to conveying how objects move, " "interact, and exist in space and in relation to each other. Realistic lighting shows " "seams, divides space, and indicates moving parts.\n\n" "Bold, graphic, intentional.\n\n" "The foundational elements of print based design typography, grids, space, scale, color, " "and use of imagery guide visual treatments. These elements do far more than please the " "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge " "imagery, large scale typography, and intentional white space create a bold and graphic " "interface that immerse the user in the experience.\n" "An emphasis on user actions makes core functionality immediately apparent and provides " "waypoints for the user.\n\n" "Motion provides meaning.\n\n" "Motion respects and reinforces the user as the prime mover. Primary user actions are " "inflection points that initiate motion, transforming the whole design.\n" "All action takes place in a single environment. Objects are presented to the user without " "breaking the continuity of experience even as they transform and reorganize.\n" "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. " "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n" "3D world.\n\n" "The material environment is a 3D space, which means all objects have x, y, and z " "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the " "positive z-axis extending towards the viewer. Every sheet of material occupies a single " "position along the z-axis and has a standard 1dp thickness.\n" "On the web, the z-axis is used for layering and not for perspective. The 3D world is " "emulated by manipulating the y-axis.\n\n" "Light and shadow.\n\n" "Within the material environment, virtual lights illuminate the scene. Key lights create " "directional shadows, while ambient light creates soft shadows from all angles.\n" "Shadows in the material environment are cast by these two light sources. In Android " "development, shadows occur when light sources are blocked by sheets of material at " "various positions along the z-axis. On the web, shadows are depicted by manipulating the " "y-axis only. The following example shows the card with a height of 6dp.\n\n" "Resting elevation.\n\n" "All material objects, regardless of size, have a resting elevation, or default elevation " "that does not change. If an object changes elevation, it should return to its resting " "elevation as soon as possible.\n\n" "Component elevations.\n\n" "The resting elevation for a component type is consistent across apps (e.g., FAB elevation " "does not vary from 6dp in one app to 16dp in another app).\n" "Components may have different resting elevations across platforms, depending on the depth " "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n" "Responsive elevation and dynamic elevation offsets.\n\n" "Some component types have responsive elevation, meaning they change elevation in response " "to user input (e.g., normal, focused, and pressed) or system events. These elevation " "changes are consistently implemented using dynamic elevation offsets.\n" "Dynamic elevation offsets are the goal elevation that a component moves towards, relative " "to the component’s resting state. They ensure that elevation changes are consistent " "across actions and component types. For example, all components that lift on press have " "the same elevation change relative to their resting elevation.\n" "Once the input event is completed or cancelled, the component will return to its resting " "elevation.\n\n" "Avoiding elevation interference.\n\n" "Components with responsive elevations may encounter other components as they move between " "their resting elevations and dynamic elevation offsets. Because material cannot pass " "through other material, components avoid interfering with one another any number of ways, " "whether on a per component basis or using the entire app layout.\n" "On a component level, components can move or be removed before they cause interference. " "For example, a floating action button (FAB) can disappear or move off screen before a " "user picks up a card, or it can move if a snackbar appears.\n" "On the layout level, design your app layout to minimize opportunities for interference. " "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere " "when a user tries to pick up one of cards.\n\n" </string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_get_from_hit">Sign in</string>
+    <!-- Strings related to login_jwts -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions." </string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="title_activity_notes">ActivityNotes</string>
+    <string name="title_activity_subject">ActivitySubject</string>
+    <string name="title_activity_setting">Settings</string>
+    <string name="title_activity_gfh">ActivityGFH</string>
+    <string name="title_activity_couse">ActivityCouse</string>
+    <string name="title_activity_teacher">ActivityTeacher</string>
+    <string name="title_activity_classroom">ActivityClassroom</string>
+    <string name="title_activity_food">ActivityFood</string>
+    <string name="no_result">对不起，没有搜索到相关数据！</string>
+    <string name="skid_activty_2_text">Do one thing at a time, and do well.Keep on going never give up.
+        Whatever is worth doing is worth doing well.I can because i think i can.Jack of all trades and master of none.
+    Whatever is worth doing is worth doing well.Keep on going never give up.</string>
+    <string name="timeline_head_free_title">今天好閒惹</string>
+    <string name="timeline_head_free_subtitle">享受當下！ </string>
+    <string name="timeline_head_goodnight_title">夜深惹</string>
+    <string name="timeline_head_goodnight_subtitle">晚安！ </string>
+    <string name="timeline_head_goodmorning_title">早上好</string>
+    <string name="timeline_head_lunch_title">午餐時間</string>
+    <string name="timeline_head_lunch_subtitle">去哪吃?</string>
+    <string name="timeline_head_dinner_title">晚餐時間</string>
+    <string name="timeline_head_dinner_subtitle">去哪吃?</string>
+    <string name="timeline_head_normal_title">暫時沒有事件</string>
+    <string name="timeline_head_normal_subtitle">自由安排</string>
+    <string name="timeline_head_finish_title">全部結束</string>
+    <string name="timeline_head_finish_subtitle">享受生活吧！ </string>
+    <string name="timeline_head_gonow_subtitle"></string>
+    <string name="timeline_head_nulluser_title">請先登錄</string>
+    <string name="timeline_head_nulluser_subtitle">登錄後享受更多服務</string>
+    <string name="timeline_head_nulldata_title">無數據</string>
+    <string name="timeline_head_nulldata_subtitle">請先導入課表</string>
+    <string name="timeline_head_notthisterm_title">假期</string>
+    <string name="timeline_head_notthisterm_subtitle">本學期未開始！ </string>
+    <string name="title_activity_user_profile">ActivityUserProfile</string>
+    <string name="shortcut_empty_classroom_short">空教室</string>
+    <string name="shortcut_empty_classroom_long">空教室查詢</string>
+    <string name="shortcut_explore_short">希塔</string>
+    <string name="shortcut_explore_long">希塔HITA</string>
+    <string name="shortcut_timetable_short">課表</string>
+    <string name="shortcut_timetable_long">課程表</string>
+    <string name="shortcut_news_short">信息窗</string>
+    <string name="shortcut_news_long">信息窗口</string>
+    <string name="title_activity_xl">ActivityXL</string>
+    <string name="title_activity_search">ActivitySearch</string>
+    <string name="update_dialog_title">有可用更新</string>
+    <string name="update_dialog_mes1">新版本</string>
+    <string name="update_dialog_mes2">發佈時間</string>
+    <string name="button_confirm">確定</string>
+    <string name="button_cancel">取消</string>
+    <string name="guide_1p">歡迎使用HITSZ助手</string>
+    <string name="guide_1s">下面我來教你怎麼用喔</string>
+    <string name="guide_2p">這上面叫頂部Tab啦</string>
+    <string name="guide_2s">你可以在設定里面改</string>
+    <string name="guide_3p">點擊展開抽屜</string>
+    <string name="guide_3s">功能都在這了啦</string>
+    <string name="guide_4p">點擊進入個人中心</string>
+    <string name="guide_4s">等下要登錄喔</string>
+    <string name="guide_5p">點擊進入日程表</string>
+    <string name="guide_5s">無敵課程表</string>
+    <string name="guide_6p">這裡是全局搜索</string>
+    <string name="guide_6s">什麼都能搜喔...</string>
+    <string name="guide_7p">登錄HITSZ助手賬號</string>
+    <string name="guide_7s">開啟精彩體驗吧</string>
+    <string name="notif_installQQ">請安裝QQ後再反饋！ </string>
+    <string name="drawer_username_null">登錄</string>
+    <string name="drawer_signature_null">HITSZ助手賬號</string>
+    <string name="drawer_signature_none">無簽名</string>
+    <string name="main_drawer_menu_jwts">教務系統</string>
+    <string name="main_drawer_menu_ut">大學城內部網</string>
+    <string name="main_drawer_menu_info">信息窗口</string>
+    <string name="main_drawer_menu_search">搜索</string>
+    <string name="main_drawer_category_other">其他</string>
+    <string name="main_drawer_menu_darkmode">烏漆嘛黑模式</string>
+    <string name="main_drawer_menu_settings">設定</string>
+    <string name="main_drawer_menu_report">意見反饋</string>
+    <string name="main_drawer_menu_about">關於</string>
+    <string name="main_drawer_menu_curriculums">課表管理</string>
+    <string name="main_drawer_menu_studyassistant">學習助手</string>
+    <string name="main_drawer_menu_hita">希塔</string>
+    <string name="main_drawer_menu_theme">主題</string>
+    <string name="punch_success_normal">打卡成功</string>
+    <string name="punch_success_happy">打卡成功，祝你開心每一天</string>
+    <string name="punch_success_sad">打卡成功，加油鸭！ </string>
+    <string name="load_news_failed">加載新聞失敗</string>
+    <string name="load_lecture_failed">加載講座失敗</string>
+    <string name="load_annouce_failed">加載通知失敗</string>
+    <string name="punch_failed">打卡失敗！ </string>
+    <string name="max_title_happy">心情愉悅</string>
+    <string name="max_title_normal">心情一般</string>
+    <string name="max_title_sad">心情不好</string>
+    <string name="maintab_navi">校園</string>
+    <string name="maintab_today">今日</string>
+    <string name="maintab_events">事務</string>
+    <string name="sign_up">註冊</string>
+    <string name="log_in">登錄</string>
+    <string name="navi_jw_title">教務功能</string>
+    <string name="navi_jw_jw_p">掌上教務</string>
+    <string name="navi_jw_jw_s">告別網頁</string>
+    <string name="navi_jw_emptyclassroom_s">找地方學習</string>
+    <string name="navi_jw_xl_s">何時放假</string>
+    <string name="navi_jw_xl_p">校歷</string>
+    <string name="navi_hint_text">長按卡片可以拖動調整次序哦</string>
+    <string name="navi_hint_button">知道了啦</string>
+    <string name="navi_campus_title">校園生活</string>
+    <string name="navi_campus_laf_s">丟東西了嗎</string>
+    <string name="navi_campus_laf_p">失物尋物</string>
+    <string name="navi_campus_vote_s">表個態吧</string>
+    <string name="navi_campus_vote_p">態度牆</string>
+    <string name="navi_campus_card_s">應該能用的</string>
+    <string name="navi_campus_billboard_s">用戶評分</string>
+    <string name="navi_campus_billboard_p">食堂排行</string>
+    <string name="navi_mood_greet">Hi, 今天心情如何？ </string>
+    <string name="navi_mood_title">今日校園心情</string>
+    <string name="navi_mood_point">分</string>
+    <string name="ade_title">添加事件</string>
+    <string name="ade_arrangement">日程</string>
+    <string name="ade_ddl">DDL</string>
+    <string name="ade_course">課程</string>
+    <string name="ade_exam">考試</string>
+    <string name="ade_inputhint">輸入內容...</string>
+    <string name="ade_namehint">輸入事件名稱...</string>
+    <string name="ade_tag2">標籤2</string>
+    <string name="ade_tag3">標籤3</string>
+    <string name="ade_pick_subject">選擇科目</string>
+    <string name="ade_pick_time">設定日期與時間段</string>
+    <string name="ade_pick_task">處理任務</string>
+    <string name="ade_pick_location">選擇地點</string>
+    <string name="ade_wholeday">全天</string>
+    <string name="add_laf_title">發布%s</string>
+    <string name="add_laf_name_hint">輸入標題：%s</string>
+    <string name="add_laf_name_hint_lost">丟失...</string>
+    <string name="add_laf_name_hint_found">​​找到...</string>
+    <string name="add_laf_detail_hint">輸入詳細內容</string>
+    <string name="add_laf_image">添加圖片</string>
+    <string name="add_laf_contact_hint">設定聯繫方式</string>
+    <string name="add_laf_location">不設定地點</string>
+    <string name="add_laf_anonymous">匿名發布</string>
+    <string name="button_post">發布</string>
+    <string name="theme_name_red">濃烈紅</string>
+    <string name="theme_name_pink">Lover粉</string>
+    <string name="theme_name_brown">高端棕</string>
+    <string name="theme_name_blue">哈工藍</string>
+    <string name="theme_name_grey">谷歌灰</string>
+    <string name="theme_name_android">安卓綠</string>
+    <string name="theme_name_purple">弯弯紫</string>
+    <string name="theme_name_green">原諒綠</string>
+    <string name="theme_name_deep_orange">百香橙橙</string>
+    <string name="theme_name_indigo">Indigo</string>
+    <string name="theme_name_cyan">蛇精青</string>
+    <string name="theme_name_amber">琥珀</string>
+    <string name="usercenter_sync_autoupload">自動保存數據到服務器</string>
+    <string name="usercenter_sync_autoupload_hint">自動保存將頻繁進行，這會消耗性能及流量，但可以及時保存數據變更</string>
+    <string name="usercenter_sync_download">下載雲端數據到本地</string>
+    <string name="usercenter_sync_download_hint">這將清除本地數據，並置課表為教務課表</string>
+    <string name="usercenter_info_bind">綁定學號</string>
+    <string name="usercenter_info_nick">暱稱</string>
+    <string name="usercenter_info_signature">個性簽名</string>
+    <string name="usercenter_info_username">賬號</string>
+    <string name="usercenter_info_school">學院</string>
+    <string name="usercenter_info_realname">姓名</string>
+    <string name="day">天</string>
+    <string name="days">%d天</string>
+    <string name="usercenter_ut_laf_title">發過的失物招領</string>
+    <string name="ut_card_title">深圳大學城校園卡</string>
+    <string name="ut_card_balance">餘額</string>
+    <string name="ut_card_lost">掛失狀態</string>
+    <string name="ut_card_freeze">凍結狀態</string>
+    <string name="ut_card_state">卡狀態</string>
+    <string name="ut_card_check">檢查狀態</string>
+    <string name="mood_title">校園心情指數</string>
+    <string name="signup_username">設定登錄賬號</string>
+    <string name="signup_password">密碼</string>
+    <string name="signup_confirm_password">確認密碼</string>
+    <string name="signup_nick">暱稱</string>
+    <string name="login_username">賬號</string>
+    <string name="login_password">密碼</string>
+    <string name="grkb_import_xnxq">導入學期</string>
+    <string name="grkb_upload_teacher_hint">如果教師信息不全，請開啟後導入，這將耗費一些緩存和處理時間，但會幫助我們將教務系統上的教師信息保存到雲教師庫</string>
+    <string name="grkb_attention">請注意</string>
+    <string name="grkb_attention_hint">如果出現解析錯誤，請保持網絡暢通導入課表，app將訪問云端補丁修復錯誤課表。但無論如何導入後請務必核對官方課表</string>
+    <string name="grkb_upload_teacher">幫助完善教師數據庫</string>
+    <string name="cjgl_xnxq">查詢學期</string>
+    <string name="cjgl_subject_name">課程名稱</string>
+    <string name="cjgl_subject_type">類別</string>
+    <string name="cjgl_subject_exam">考核</string>
+    <string name="cjgl_subject_credit">學分</string>
+    <string name="cjgl_subject_total_score">總成績</string>
+    <string name="cjgl_subject_final_score">最終</string>
+    <string name="bind_stun_title">綁定哈工大深圳學號</string>
+    <string name="bind_stun_stunum">學號</string>
+    <string name="bind_stun_password">統一身份登錄密碼</string>
+    <string name="add_task_title">添加待辦</string>
+    <string name="add_task_name_hint">輸入任務名...</string>
+    <string name="add_task_everyday">每日任務</string>
+    <string name="add_task_limitation">任務期限</string>
+    <string name="add_attitude_title">發布態度話題</string>
+    <string name="add_attitude_name">輸入標題</string>
+    <string name="add_attitude_image">添加圖片</string>
+    <string name="hitsz">哈工大深圳</string>
+    <string name="login_jwts_tysfrzdl">統一身份認證登錄</string>
+    <string name="username">賬號</string>
+    <string name="password">密碼</string>
+    <string name="login">登錄</string>
+    <string name="hita_account">HITSZ助手賬號</string>
+    <string name="app_slogan">only for HITers</string>
+    <string name="location_laf_title">該地點的失物尋物</string>
+    <string name="navi_campus_card_p">校園卡</string>
+    <string name="navi_jw_emptyclassroom_p">空教室查詢</string>
+    <string name="notif_importdatafirst">請先導入課表！ </string>
+    <string name="timetable_tab_title">第%d週</string>
+    <string name="logout_message">註銷後，本地所有數據將會被清空</string>
+    <string name="tt_monday">一</string>
+    <string name="tt_tuesday">二</string>
+    <string name="tt_wednesday">三</string>
+    <string name="tt_thursday">四</string>
+    <string name="tt_friday">五</string>
+    <string name="tt_saturday">六</string>
+    <string name="tt_sunday">日</string>
+    <string name="tt_wholeday">全天</string>
+    <string name="user_center_you_have_punched">累計簽到%d天</string>
+    <string name="date_day">%d日</string>
+    <string name="week">第%d週</string>
+    <string name="navi_semister_not_begun">學期未開始</string>
+    <string name="navi_semister_no_data">無學期數據</string>
+    <string name="add_laf_no_location">不設定地點</string>
+    <string name="navi_settings_title">設定導航頁內容</string>
+    <string name="ade_no_suitable_allocation">沒有找到合適的分配時間！ </string>
+    <string name="ade_set_time_first">請先設定日期！ </string>
+    <string name="pick_location">選擇地點</string>
+    <string name="ade_exam_name">輸入考試名稱...</string>
+    <string name="ade_teacher_name">設定任課教師...</string>
+    <string name="ade_noti_event_name">請輸入事件名稱!</string>
+    <string name="ade_noti_exam_name">請輸入考試名稱!</string>
+    <string name="ade_noti_set_time">請設定事件時間</string>
+    <string name="ade_noti_time_ircorrect">請輸入正確的事件時間！ </string>
+    <string name="ade_noti_set_subject">請選擇考試科目！ </string>
+    <string name="ade_noti_set_subject_course">請選擇課程科目！ </string>
+    <string name="ade_noti_too_long">時長超過任務時長！ </string>
+    <string name="ade_set_time_period">設定日期與時間段</string>
+    <string name="ade_set_time_date">設定日期與時間</string>
+    <string name="ade_set_date">設定日期</string>
+    <string name="add_laf_noti_title">請輸入標題！ </string>
+    <string name="label_activity_attitude">HITSZ態度牆</string>
+    <string name="label_activity_tasks">任務管理</string>
+    <string name="task_card_title_tasknum">共有%d個待辦任務</string>
+    <string name="task_card_title_notask">沒有正在進行的任務</string>
+    <string name="task_card_title_ddlnum">共有%d個DDL</string>
+    <string name="task_card_title_noddl">現在沒有DDL</string>
+    <string name="exam_card_cd">考試倒計時%s%s%s%s</string>
+    <string name="exam_card_noexam">沒有考試</string>
+    <string name="wholeday">全天</string>
+    <string name="found">​​失物招領</string>
+    <string name="lost">尋物啟事</string>
+    <string name="dialog_pick_course_title">設定課程時間</string>
+    <string name="dialog_pick_course_to">到</string>
+    <string name="dialog_pick_course_label">選擇上課週數：</string>
+    <string name="period">第%d節</string>
+    <string name="today">今天</string>
+    <string name="tomorrow">明天</string>
+    <string name="tda_tomorrow">後天</string>
+    <string name="pick_single_time_label1">週</string>
+    <string name="pick_single_time_label2">時</string>
+    <string name="pick_single_time_label3">分</string>
+    <string name="main_drawer_category_function">功能</string>
+    <string name="menu_timeable_from_zero">從零點開始顯示</string>
+    <string name="menu_timeable_draw_line">顯示當前時間線</string>
+    <string name="menu_timeable_color">科目顏色</string>
+    <string name="menu_timeable_random_allocate">隨機分配顏色</string>
+    <string name="menu_timeable_use_theme">各科目使用主題色</string>
+    <string name="dialog_title_random_allocate">是否隨機生成各科目顏色？ </string>
+    <string name="dialog_title_set_to_theme">是否將各科目顏色設定為主題色？ </string>
+    <string name="dialog_title_set_total_weeks">設定總週數</string>
+    <string name="dialog_title_curriculum_detail">課表詳情</string>
+    <string name="dialog_message_curriculum_detail">課表名稱：%s\n課表代碼：%s</string>
+    <string name="attention">注意</string>
+    <string name="dialog_message_delete_curriculum">刪除課表將刪除一切與之關聯的事件、科目、任務，確定嗎？ </string>
+    <string name="curriculum_manager_satrtat">開始於：</string>
+    <string name="curriculum_manager_total">學期共%d週</string>
+    <string name="curriculum_manager_enable_color">啟用科目顏色</string>
+    <string name="curriculum_manager_randomly_allocate_color">隨機分配顏色</string>
+    <string name="curriculum_manager_set_theme_color">全部設為主題色</string>
+    <string name="menu_timeable_curriculum">課表管理</string>
+    <string name="snack_semester_notstarted">這個學期還沒有開始喲</string>
+    <string name="dialog_tag1">標籤1</string>
+    <string name="dialog_tag2">標籤2</string>
+    <string name="dialog_time">時間</string>
+    <string name="dialog_date">日期</string>
+    <string name="dialog_teacher">教師</string>
+    <string name="dialog_classroom">教室</string>
+    <string name="dialog_period">節數</string>
+    <string name="dialog_this_course_s">該課時</string>
+    <string name="dialog_this_course_p">為本科目的第%d次課</string>
+    <string name="dialog_course_rate_p">課程自評</string>
+    <string name="dialog_course_rate_s">這堂課學得怎麼樣？ </string>
+    <string name="dialog_course_notes">課堂筆記整理</string>
+    <string name="notif_delete_success">刪除成功！ </string>
+    <string name="dialog_title_sure_delete">確定刪除嗎？ </string>
+    <string name="dialog_message_sure_delete">刪除課程後,可以通過導入課表或同步雲端數據恢復初始課表</string>
+    <string name="none">無</string>
+    <string name="pick_teacher">選擇教師</string>
+    <string name="pick_classroom">選擇教室</string>
+    <string name="dialog_no_notes">沒有筆記，點擊添加</string>
+    <string name="dialog_notes_num">這堂課共有%d條本地筆記</string>
+    <string name="menu_import_curriculum">從教務系統導入課表</string>
+    <string name="menu_logout_jw">註銷教務登錄狀態</string>
+    <string name="menu_open_in_browser">瀏覽器打開</string>
+    <string name="menu_all_subjects">所有科目</string>
+    <string name="menu_search_teacher_website">查找教師網站</string>
+    <string name="menu_logout_ut">註銷大學城登錄狀態</string>
+    <string name="menu_logout">註銷</string>
+    <string name="menu_delete">刪除</string>
+    <string name="menu_show_subject">查看科目</string>
+    <string name="menu_details">詳情</string>
+    <string name="settings_category_functions">功能開關</string>
+    <string name="settings_summary_mainthirdpage">開啟後首頁將展示事務</string>
+    <string name="settings_title_mainthirdpage">首頁第三屏</string>
+    <string name="settings_summary_task">開啟後方可使用學習助手</string>
+    <string name="settings_title_task">任務模塊(開發階段)</string>
+    <string name="settings_summary_autologin">需要綁定學號並設定本地登錄密碼</string>
+    <string name="settings_title_autologin">後台自動登錄教務</string>
+    <string name="settings_title_jwpassword">設定教務登錄密碼</string>
+    <string name="settings_summary_jwpassword">出於隱私安全，密碼不會保存在雲</string>
+    <string name="settings_category_appearance">外觀設定</string>
+    <string name="settings_title_darkmode">深色模式選項</string>
+    <string name="settings_summary_darkmode">設定大可莫得開啟時機</string>
+    <string name="settings_category_timetable">課程表設定</string>
+    <string name="settings_summary_colormode">在課表和科目管理頁面為不同科目著色</string>
+    <string name="settings_title_colormode">啟用科目顏色（多彩模式）</string>
+    <string name="settings_category_app">應用設定</string>
+    <string name="settings_summary_auto_check_update">建議開啟</string>
+    <string name="settings_title_auto_check_update">進入app自動檢查更新</string>
+    <string name="settings_summary_auto_download_wifi">建議開啟</string>
+    <string name="settings_title_auto_download_wifi">Wifi自動下載更新</string>
+    <string name="setting_summary_always_on_notifi">重啟後生效</string>
+    <string name="setting_title_always_on_notifi">常駐通知欄</string>
+    <string name="settings_category_hita">希塔設定</string>
+    <string name="settings_title_auto_read">自動播放回复</string>
+    <string name="settings_summary_auto_read">speak now!</string>
+    <string name="settings_summary_use_keyboard">建議使用語音</string>
+    <string name="settings_title_use_keyboard">使用鍵盤輸入</string>
+    <string name="notif_effect_after_restart">重啟應用生效</string>
+    <string name="settings_not_set_yet">未設定</string>
+    <string name="settings_already_set">已設定</string>
+    <string name="settings_noti_loginfirst">請先登錄綁定學號</string>
+    <string name="settings_noti_bindfirst">請先綁定學號</string>
+    <string name="settings_noti_bound_to">綁定學號:%s</string>
+    <string name="settings_darkmode_auto_with_time">按時間自動開關</string>
+    <string name="settings_darkmode_mannually">手動開關</string>
+    <string name="settings_darkmode_follow_system">跟隨系統</string>
+    <string name="settings_category_auto_login">自動登錄設定</string>
+    <string name="label_activity_settings">設定</string>
+    <string name="label_activity_utmood">HITSZ校園心情</string>
+    <string name="mood_0">哀鴻遍野</string>
+    <string name="mood_1">嚶嚶嚶</string>
+    <string name="mood_2">心情糟糕</string>
+    <string name="mood_3">煩悶</string>
+    <string name="mood_4">一般</string>
+    <string name="mood_5">不錯</string>
+    <string name="mood_6">很棒</string>
+    <string name="mood_7">棒極惹</string>
+    <string name="mood_8">高興瘋惹</string>
+    <string name="label_activity_empty_classroom">空教室查詢</string>
+    <string name="subject_compulsory">性質</string>
+    <string name="subject_credit">學分</string>
+    <string name="subject_total">總學時</string>
+    <string name="subject_exam">考試課</string>
+    <string name="subject_title_info">科目信息</string>
+    <string name="subject_code">課程代碼</string>
+    <string name="subject_xnxq">學年學期</string>
+    <string name="subject_type">課程類別</string>
+    <string name="subject_school">開設院系</string>
+    <string name="subject_title_all_courses">所有課時</string>
+    <string name="subject_progress_text">進度</string>
+    <string name="subject_self_rate">自評點數</string>
+    <string name="subject_title_scores">成績</string>
+    <string name="subject_score_none">還沒有成績信息，試試登錄教務系統同步吧</string>
+    <string name="subject_color">課程顏色</string>
+    <string name="search_hint">明天下午...</string>
+    <string name="pick_color">選擇顏色</string>
+    <string name="check_for_update">檢查更新</string>
+    <string name="checking_for_update">檢查更新...</string>
+    <string name="start_download">開始下載</string>
+    <string name="install">安裝</string>
+    <string name="pause">暫停</string>
+    <string name="continue_download">繼續下載</string>
+    <string name="update_version">版本：</string>
+    <string name="update_size">文件大小：</string>
+    <string name="update_release_time">發佈時間：</string>
+    <string name="update_log">更新日誌：</string>
+    <string name="version">版本：</string>
+    <string name="label_activity_about_hita">關於</string>
+    <string name="new_version_available">檢測到版本更新</string>
+    <string name="already_up_to_date">已是最新版本！ </string>
+    <string name="update_available">檢查到更新</string>
+    <string name="check_for_update_failed">檢查更新失敗！ </string>
+    <string name="delete_installation_package">刪除安裝包</string>
+    <string name="timeline_head_ongoing_subtitle">正在進行</string>
+    <string name="timelinr_goodmorning_subtitle">今天共有%d節課</string>
+    <string name="timeline_gonow_subtitle">%d分鐘後開始</string>
+    <string name="timeline_counting_middle">後進行</string>
+    <string name="timeline_counting_free">接下來沒事惹</string>
+    <string name="unknown_location">未知地點</string>
+    <string name="progress">進度</string>
+    <string name="bind">綁定</string>
+    <string name="signup">註冊</string>
+    <string name="set_signature">設定個性簽名</string>
+    <string name="notif_signature_updated">更改簽名成功</string>
+    <string name="notif_signature_update_failed">更改簽名失敗</string>
+    <string name="notif_set_nick">設定暱稱</string>
+    <string name="notif_nick_updated">更改暱稱成功</string>
+    <string name="notif_nick_update_failed">更改暱稱失敗</string>
+    <string name="notif_bind_studentnumber_success">綁定學號成功</string>
+    <string name="notif_bind_studentnumber_already">該學號已與其他賬號綁定！ </string>
+    <string name="user_info_updated">已更新用戶信息</string>
+    <string name="dialog_message_bind_failed">綁定失敗！ </string>
+    <string name="button_try_again">再來一次</string>
+    <string name="notif_migrate_data_failed">遷移數據失敗</string>
+    <string name="dialog_title_already_bound_to">該學號已和%s(%s)綁定</string>
+    <string name="dialog_item_migrate_data">遷移該賬號數據至本賬號</string>
+    <string name="login_success_syncing">登錄成功,正在同步用戶數據……</string>
+    <string name="username_or_password_wrong">用戶名或密碼錯誤</string>
+    <string name="login_failed">登錄失敗</string>
+    <string name="enter_username">請輸入用戶名</string>
+    <string name="enter_password">請輸入密碼</string>
+    <string name="sync_success">成功同步該賬號的課表！ </string>
+    <string name="sync_error">同步用戶數據出錯！ </string>
+    <string name="uploaded_success">上傳成功！ </string>
+    <string name="no_data_on_cloud">雲端沒有數據！ </string>
+    <string name="curriculum_updated">已更新課表參數</string>
+    <string name="enter_name">輸入名稱...</string>
+    <string name="give_me_that_permission">請授予HITSZ助手相關權限</string>
+    <string name="mute_assistant">上課靜音助手</string>
+    <string name="mute_assistant_tag1">上課前</string>
+    <string name="mute_assistant_tag2">分鐘開啟靜音</string>
+    <string name="mute_assistant_tag3">下課時自動關閉靜音模式</string>
+    <string name="mute_assistant_tag4">強制靜音</string>
+    <string name="mute_assistant_tag5">上課時監聽音量調節事件，強制歸零。一定程度上抗擊惡意APP</string>
+    <string name="preview_assistant_tag1">自動生成預習任務</string>
+    <string name="preview_assistant_tag2">每天花</string>
+    <string name="preview_assistant_tag3">分鐘預習</string>
+    <string name="preview_assistant_tag4">僅安排考試課</string>
+    <string name="preview_assistant_tag5">APP將綜合科目信息與用戶喜好，為重要性強的科目安排預習複習等任務，也會為任務自動分配處理事件，幫助你的學習生活麼麼噠</string>
+    <string name="label_activity_learning_assistant">學習助手</string>
+    <string name="delete">刪除</string>
+    <string name="delete_curriculum">刪除課程表</string>
+    <string name="tab_hitsz_website_info">哈工深官網</string>
+    <string name="load_more">加載更多</string>
+    <string name="web_total_searched">共搜索到%d條結果(顯示%d條)</string>
+    <string name="nothing_found">​​沒有搜索到結果</string>
+    <string name="teacher_total_searched">共查找到%d位教師</string>
+    <string name="tab_search_teacher">教師</string>
+    <string name="teacher_no_description"> </string>
+    <string name="email">郵箱</string>
+    <string name="phone">電話</string>
+    <string name="address">地址</string>
+    <string name="no_teacher_contact_data">無數據</string>
+    <string name="teacher_no_page">暫時沒有更多信息</string>
+    <string name="tab_search_zsw">哈工深招生網</string>
+    <string name="zsw_total_searched">共查找到%d條信息</string>
+    <string name="posted_in">發佈於</string>
+    <string name="total_views">瀏覽量</string>
+    <string name="search_connect_error">網絡出錯，請重試</string>
+    <string name="search_resolve_error">解析出錯，請重試</string>
+    <string name="tab_search_library">圖書館</string>
+    <string name="lib_ut">大學城</string>
+    <string name="lib_sz">深圳市</string>
+    <string name="tab_search_timetable">時間表</string>
+    <string name="timetable_type_course">課程</string>
+    <string name="timetable_type_exam">考試</string>
+    <string name="timetable_type_ddl">DDL</string>
+    <string name="timetable_type_arrange">安排</string>
+    <string name="timetable_total_searched">共查找到%d件事件</string>
+    <string name="navi_campus_search_p">HIT全局搜</string>
+    <string name="navi_campus_search_s">啥都有</string>
+    <string name="navi_campus_hita_p">希塔</string>
+    <string name="navi_campus_hita_s">已經死掉惹</string>
+    <string name="use_vpn_hint">校外請使用官方vpn連接</string>
+    <string-array name="curriculum_tabs">
+        <item>科目</item>
+        <item>教師</item>
+    </string-array>
+    <string-array name="user_center_tabs">
+        <item>校園</item>
+        <item>個人資料</item>
+        <item>同步</item>
+    </string-array>
+    <string-array name="months">
+        <item>1月</item>
+        <item>2月</item>
+        <item>3月</item>
+        <item>4月</item>
+        <item>5月</item>
+        <item>6月</item>
+        <item>7月</item>
+        <item>8月</item>
+        <item>9月</item>
+        <item>10月</item>
+        <item>11月</item>
+        <item>12月</item>
+    </string-array>
+    <string-array name="months_full">
+        <item>1月</item>
+        <item>2月</item>
+        <item>3月</item>
+        <item>4月</item>
+        <item>5月</item>
+        <item>6月</item>
+        <item>7月</item>
+        <item>8月</item>
+        <item>9月</item>
+        <item>10月</item>
+        <item>11月</item>
+        <item>12月</item>
+    </string-array>
+    <string-array name="dow1">
+        <item>星期一</item>
+        <item>星期二</item>
+        <item>星期三</item>
+        <item>星期四</item>
+        <item>星期五</item>
+        <item>星期六</item>
+        <item>星期日</item>
+    </string-array>
+    <string-array name="dow2">
+        <item>週一</item>
+        <item>週二</item>
+        <item>週三</item>
+        <item>週四</item>
+        <item>週五</item>
+        <item>週六</item>
+        <item>週日</item>
+    </string-array>
+    <string-array name="laf_tabs">
+        <item>尋物啟事</item>
+        <item>失物招領</item>
+    </string-array>
+    <string-array name="navi_setting_items">
+        <item>校區新聞</item>
+        <item>校園生活</item>
+        <item>校園心情</item>
+        <item>教務功能</item>
+        <item>校園卡管理（連接大學城內部網後顯示）</item>
+    </string-array>
+    <string-array name="leaderboard_tabs">
+        <item>食堂排行</item>
+    </string-array>
+    <string-array name="news_tabs">
+        <item>通知公告</item>
+        <item>講座信息</item>
+        <item>校區要聞</item>
+        <item>校園動態</item>
+        <item>綜合新聞</item>
+    </string-array>
+</resources>

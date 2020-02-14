@@ -73,6 +73,14 @@ array sentence_fun_explore
 array sentence_fun_infos
 array sentence_fun_jwts
 array sentence_fun_laf
+array sub
+array t_dow
+array t_h
+array t_m
+array t_next_one
+array t_num
+array t_pr
+array t_w
 array user_center_tabs
 array word_subject_alt
 array word_subject_comp
@@ -93,7 +101,6 @@ array words_exam
 array words_hita
 array words_last
 array words_next
-array words_next_one
 array words_number
 array words_remind
 array words_search
@@ -102,9 +109,7 @@ array words_task
 array words_this
 array words_time_days
 array words_time_days_with_period
-array words_time_hour
 array words_time_minute
-array words_time_period
 array words_time_week_withoutHead
 array words_to
 array words_where
@@ -1896,6 +1901,7 @@ drawable ic_dynamic
 drawable ic_edit_black_24dp
 drawable ic_email
 drawable ic_empty
+drawable ic_event
 drawable ic_exit
 drawable ic_facility
 drawable ic_finish
@@ -1952,6 +1958,7 @@ drawable ic_person
 drawable ic_priority_high
 drawable ic_progress
 drawable ic_qq
+drawable ic_question_mark
 drawable ic_rate_review
 drawable ic_refresh
 drawable ic_return
@@ -1959,6 +1966,7 @@ drawable ic_rmb
 drawable ic_round
 drawable ic_run
 drawable ic_search
+drawable ic_search_solid
 drawable ic_settings
 drawable ic_short_text
 drawable ic_spring
@@ -1995,6 +2003,7 @@ drawable ic_uncheck
 drawable ic_university
 drawable ic_view
 drawable ic_walk
+drawable ic_warning
 drawable ic_wb_cloudy
 drawable ic_web
 drawable ic_winter
@@ -2036,6 +2045,7 @@ drawable notify_panel_notification_icon_bg
 drawable preference_list_divider_material
 drawable radius_grey_lgiht_button_bg
 drawable radius_primay_lgiht_button_bg
+drawable radius_primay_round_icon_bg
 drawable res_select_add_event_arrange_off
 drawable res_select_add_event_arrange_on
 drawable res_select_add_event_course_off
@@ -2464,10 +2474,14 @@ id hita_animation_view
 id hita_canteen
 id hita_course
 id hita_explore
+id hita_hita
 id hita_item1
 id hita_item2
 id hita_item3
 id hita_item4
+id hita_item5
+id hita_item6
+id hita_search
 id hita_ut
 id hitszinfo_pager
 id hitszinfo_tab
@@ -2516,6 +2530,7 @@ id imageView40
 id imageView5
 id imageView6
 id imageView7
+id imageView8
 id imageView9
 id image_clear
 id import_root
@@ -2967,6 +2982,7 @@ id switch_darkmode
 id switch_mute_after
 id switch_skip_no_exam
 id switch_teacher
+id tabItem
 id tabMode
 id tablayout
 id tabs
@@ -3211,6 +3227,7 @@ id visible
 id vote_result
 id voted
 id voting
+id vpn
 id webview
 id wed
 id week
@@ -3455,7 +3472,6 @@ layout dynamic_teacher_official_info_page
 layout dynamic_teacher_search_result_item
 layout dynamic_timeline_card_arrangement
 layout dynamic_timeline_card_deadline
-layout dynamic_timeline_card_dynamic
 layout dynamic_timeline_card_important
 layout dynamic_timeline_card_passed
 layout dynamic_timeline_wholeday
@@ -3963,8 +3979,12 @@ string navi_campus_billboard_p
 string navi_campus_billboard_s
 string navi_campus_card_p
 string navi_campus_card_s
+string navi_campus_hita_p
+string navi_campus_hita_s
 string navi_campus_laf_p
 string navi_campus_laf_s
+string navi_campus_search_p
+string navi_campus_search_s
 string navi_campus_title
 string navi_campus_vote_p
 string navi_campus_vote_s
@@ -4192,6 +4212,7 @@ string timeline_head_nulluser_title
 string timeline_head_ongoing_subtitle
 string timelinr_goodmorning_subtitle
 string timetable_tab_title
+string timetable_total_searched
 string timetable_type_arrange
 string timetable_type_course
 string timetable_type_ddl
@@ -4238,6 +4259,7 @@ string update_release_time
 string update_size
 string update_version
 string uploaded_success
+string use_vpn_hint
 string user_center_you_have_punched
 string user_info_updated
 string usercenter_info_bind

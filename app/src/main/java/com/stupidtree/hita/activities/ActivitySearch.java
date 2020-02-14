@@ -45,7 +45,9 @@ import com.stupidtree.hita.fragments.search.FragmentSearchResult_teacher;
 import com.stupidtree.hita.fragments.search.FragmentSearchResult_timetable;
 import com.stupidtree.hita.fragments.search.FragmentSearchResult_web;
 import com.stupidtree.hita.fragments.search.FragmentSearchResult_zsw;
+import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.online.Location;
+import com.stupidtree.hita.online.SearchItem;
 import com.stupidtree.hita.online.Teacher;
 
 import java.util.ArrayList;
@@ -55,9 +57,12 @@ import java.util.TimerTask;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 
+import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.SearchResultList;
 import static com.stupidtree.hita.HITAApplication.searchText;
@@ -142,39 +147,39 @@ public class ActivitySearch extends BaseActivity {
         });
         searchview = findViewById(R.id.searchview);
         searchview.setText(searchText);
-        searchview.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                int old =  SearchResultList.size();
-//                searchText = s.toString();
-//                SearchResultList.clear();
-//                listAdapter.notifyItemRangeRemoved(0, old);
-//                if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED){
-//                    pageTask.cancel(true);
-//                }
-//                pageTask =  new getSuggestionsTask(s.toString());
-//                pageTask.executeOnExecutor(HITAApplication.TPE);
-//                if (!TextUtils.isEmpty(s.toString())) {
-//                    if(fragments.get(pager.getCurrentItem()) instanceof FragmentSearchResult_timetable){
-//                        fragments.get(pager.getCurrentItem()).setSearchText(s.toString());
-//                        fragments.get(pager.getCurrentItem()).Search(true);
-//                    }
+//        searchview.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 //
-//                }
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-
-            }
-        });
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+////                int old =  SearchResultList.size();
+////                searchText = s.toString();
+////                SearchResultList.clear();
+////                listAdapter.notifyItemRangeRemoved(0, old);
+////                if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED){
+////                    pageTask.cancel(true);
+////                }
+////                pageTask =  new getSuggestionsTask(s.toString());
+////                pageTask.executeOnExecutor(HITAApplication.TPE);
+////                if (!TextUtils.isEmpty(s.toString())) {
+////                    if(fragments.get(pager.getCurrentItem()) instanceof FragmentSearchResult_timetable){
+////                        fragments.get(pager.getCurrentItem()).setSearchText(s.toString());
+////                        fragments.get(pager.getCurrentItem()).Search(true);
+////                    }
+////
+////                }
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//
+//            }
+//        });
         searchview.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {

@@ -388,7 +388,7 @@ public class JWCore {
                         result.add(m);
                     }
 
-                    // System.out.println(m);
+                 //   System.out.println(m);
                 }
             } catch (Exception e) {
                 FileOperator.errorTableText et = new FileOperator.errorTableText(s.toString(),e);
@@ -403,6 +403,7 @@ public class JWCore {
             }
             return result;
         } catch (IOException e) {
+            e.printStackTrace();
             throw JWException.getConnectErrorExpection();
         }
     }

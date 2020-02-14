@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,10 +21,12 @@ import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.diy.ButtonLoading;
 import com.stupidtree.hita.jw.JWException;
+import com.stupidtree.hita.util.ActivityUtils;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.List;
 
 
 import javax.net.ssl.HostnameVerifier;
@@ -31,6 +34,11 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
+
+import cn.bmob.v3.BmobArticle;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 import static com.stupidtree.hita.HITAApplication.*;
 
@@ -49,6 +57,7 @@ public class ActivityLoginJWTS extends BaseActivity {
     TextView loadingError;
     String lt;
     String execution;
+    ImageView vpnHint;
    // Button bt_vpn;
     //验证码
     private byte[] checkPic;
@@ -79,8 +88,25 @@ public class ActivityLoginJWTS extends BaseActivity {
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         login = findViewById(R.id.login);
+        vpnHint = findViewById(R.id.vpn);
         loginCard = findViewById(R.id.logincard);
         loadingError = findViewById(R.id.loadingerror);
+        vpnHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BmobQuery<BmobArticle> bq = new BmobQuery<>();
+                bq.addWhereEqualTo("objectId","\tVkLlSSSW");
+                bq.findObjects(new FindListener<BmobArticle>() {
+                    @Override
+                    public void done(List<BmobArticle> list, BmobException e) {
+                        String url;
+                        if(e==null&&list!=null&&list.size()>0) url = list.get(0).getUrl();
+                        else url = "http://files.hita.store/2020/02/14/ae00758f40817fab808e32dbf3aea7eb.html";
+                        ActivityUtils.openInBrowser(ActivityLoginJWTS.this,url);
+                    }
+                });
+            }
+        });
         login.setOnButtonLoadingListener(new ButtonLoading.OnButtonLoadingListener() {
             @Override
             public void onClick() {

@@ -96,19 +96,13 @@ public class TimetableCore {
     @WorkerThread
     public boolean addCurriculumToTimeTable(CurriculumCreator il) {
         if (il == null) return false;
-        List<Curriculum> allCurriculum = getAllCurriculum();
-        List<Curriculum> toDEl = new ArrayList<>();
-        for (Curriculum temp : allCurriculum) {
-            if (temp.getCurriculumCode().equals(il.getCurriculumCode())) {
-                toDEl.add(temp);
-            }
-        }
-        allCurriculum.removeAll(toDEl);
         Curriculum cur = il.getCurriculum();
-        if (toDEl.size() > 0) cur.setObjectId(toDEl.get(0).getObjectId());
+        SQLiteDatabase sdb = mDBHelper.getWritableDatabase();
         if (cur.getWeekOfTerm(now) > cur.getTotalWeeks()) cur.setTotalWeeks(cur.getWeekOfTerm(now));
-        allCurriculum.add(cur);
+        sdb.delete("curriculum","curriculum_code=?",new String[]{il.getCurriculumCode()});
+        sdb.insert("curriculum",null,cur.getContentValues());
         currentCurriculumId = cur.getCurriculumCode();
+        currentCurriculum = cur;
         // timeTablegetCurrentCurriculum().getMainTimeTable().clearCurriculum(il.getCurriculumId());
         addCurriculum(il);
         addSubjects(il);
@@ -424,7 +418,7 @@ public class TimetableCore {
                 //EventHolders.add(new EventItemHolder(1,ci.name,ci.place,null,ci.tag,getTimeAtNumber(ci.begin,ci.last).get(0),getTimeAtNumber(ci.begin,ci.last).get(1),ci.DOW,ci.weeks));
             }
         }
-    }
+         }
 
     public static List<HTime> getTimeAtNumber(int begin, int last) {
         int[] startDots = {830, 930, 1030, 1130, 1345, 1440, 1545, 1640, 1830, 1925, 2030, 2125};

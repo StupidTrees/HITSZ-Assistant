@@ -17,6 +17,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.online.SearchItem;
+
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+
+import static com.stupidtree.hita.HITAApplication.CurrentUser;
 
 public abstract class FragmentSearchResult extends BaseFragment {
 
@@ -64,7 +70,15 @@ public abstract class FragmentSearchResult extends BaseFragment {
         void OnClickTransition(View view,int position,View transition);
         void OnLongClick(View view, int position);
     }
-    public abstract void Search(boolean hideContent);
+    public void Search(boolean hideContent){
+        new SearchItem(searchText,getTitle(), CurrentUser)
+                .save(new SaveListener<String>() {
+                    @Override
+                    public void done(String s, BmobException e) {
+
+                    }
+                });
+    };
 
     protected void refreshStart(boolean hideContent){
         swipeRefreshLayout.setRefreshing(true);

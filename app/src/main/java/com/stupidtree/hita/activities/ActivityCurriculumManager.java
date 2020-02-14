@@ -189,7 +189,10 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
         @Override
         protected Object doInBackground(Object[] objects) {
             pagerData.clear();
-            pagerData.addAll(timeTableCore.getAllCurriculum());
+            for(Curriculum c:timeTableCore.getAllCurriculum()){
+                if(c!=null)pagerData.add(c);
+            }
+
             return null;
         }
 
@@ -211,7 +214,6 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
                 noneLayout.setVisibility(View.VISIBLE);
                 fab.hide();
             }
-
             int curIndex = 0;
             for(curIndex=0;curIndex<pagerData.size();curIndex++){
                 if(pagerData.get(curIndex).getCurriculumCode().equals(timeTableCore.getCurrentCurriculum().getCurriculumCode())){

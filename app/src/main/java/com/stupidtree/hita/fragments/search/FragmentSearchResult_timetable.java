@@ -80,6 +80,7 @@ public class FragmentSearchResult_timetable extends FragmentSearchResult{
 
     @Override
     public void Search(boolean hide) {
+        super.Search(hide);
         if(TextUtils.isEmpty(searchText)){
             swipeRefreshLayout.setRefreshing(false);
             return;

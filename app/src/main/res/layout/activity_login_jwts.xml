@@ -39,6 +39,7 @@
                     android:layout_gravity="left"
                     android:layout_marginBottom="6dp"
                     android:alpha="0.8"
+                    android:fontFamily="sans-serif-black"
                     android:text="@string/hitsz"
                     android:textColor="@color/material_text_icon_white"
                     android:textSize="24sp" />
@@ -52,6 +53,32 @@
                     android:textSize="36sp"
                     android:textStyle="bold" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.8"
+                        android:text="@string/use_vpn_hint"
+                        android:textColor="@color/material_text_icon_white"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/vpn"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:alpha="0.5"
+                        android:clickable="true"
+                        android:tint="@color/material_text_icon_white"
+                        app:srcCompat="@drawable/ic_question_mark" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <androidx.appcompat.widget.Toolbar
@@ -62,6 +89,7 @@
                 android:minHeight="@dimen/material_toolbar_height"
                 app:layout_collapseMode="pin"
                 app:theme="@style/ToolBarTheme_Light" />
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

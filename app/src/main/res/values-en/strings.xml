@@ -600,4 +600,9 @@
     <string name="timetable_type_ddl">DDL</string>
     <string name="timetable_type_arrange">Arrangement</string>
     <string name="timetable_total_searched">%d events were found</string>
+    <string name="navi_campus_search_p">search</string>
+    <string name="navi_campus_search_s">everything</string>
+    <string name="navi_campus_hita_p">Hita</string>
+    <string name="navi_campus_hita_s">already dead</string>
+    <string name="use_vpn_hint">Use the official VPN if failed</string>
 </resources>
