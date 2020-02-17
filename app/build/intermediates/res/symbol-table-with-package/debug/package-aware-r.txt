@@ -2287,6 +2287,8 @@ id checkbox
 id checked
 id chip
 id chip_group
+id chosen_down
+id chosen_up
 id chronometer
 id circle_progress
 id cjgl_pager
@@ -3102,7 +3104,6 @@ id title_exam
 id title_template
 id tl_card
 id tl_head_counting_image
-id tl_head_counting_middle
 id tl_head_counting_name
 id tl_head_counting_time
 id tl_head_gonow_classroom
@@ -3455,6 +3456,7 @@ layout dynamic_pile_item
 layout dynamic_places_item
 layout dynamic_scenery_item
 layout dynamic_search_item
+layout dynamic_search_location_result_item
 layout dynamic_subject_courseitem
 layout dynamic_subject_foot
 layout dynamic_subject_list_title
@@ -3499,6 +3501,7 @@ layout fragment_add_attitude
 layout fragment_add_event
 layout fragment_add_laf
 layout fragment_add_task
+layout fragment_attitude
 layout fragment_bind_student_number
 layout fragment_canteen_list
 layout fragment_classroom_list
@@ -3728,6 +3731,10 @@ string app_notification_channel_id_learning
 string app_slogan
 string appbar_scrolling_view_behavior
 string attention
+string attitude_tabs_history_top
+string attitude_tabs_latest_created
+string attitude_tabs_latest_updated
+string attitude_tabs_weekly_top
 string bind
 string bind_stun_password
 string bind_stun_stunum
@@ -3875,6 +3882,7 @@ string load_lecture_failed
 string load_more
 string load_news_failed
 string location_laf_title
+string location_total_searched
 string log_in
 string login
 string login_failed
@@ -4162,6 +4170,7 @@ string sync_error
 string sync_success
 string tab_hitsz_website_info
 string tab_search_library
+string tab_search_location
 string tab_search_teacher
 string tab_search_timetable
 string tab_search_zsw
@@ -4173,6 +4182,7 @@ string task_card_title_tasknum
 string tda_tomorrow
 string teacher_no_description
 string teacher_no_page
+string teacher_temp_label
 string teacher_total_searched
 string theme_name_amber
 string theme_name_android
@@ -4186,6 +4196,8 @@ string theme_name_indigo
 string theme_name_pink
 string theme_name_purple
 string theme_name_red
+string time_format_1
+string time_format_2
 string timeline_counting_free
 string timeline_counting_middle
 string timeline_gonow_subtitle

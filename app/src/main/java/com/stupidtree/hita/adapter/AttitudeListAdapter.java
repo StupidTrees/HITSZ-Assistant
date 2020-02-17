@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.popup.FragmentAddAttitude;
 import com.stupidtree.hita.online.Attitude;
 import com.stupidtree.hita.online.HITAUser;
 
@@ -34,7 +35,10 @@ public class AttitudeListAdapter extends RecyclerView.Adapter<AttitudeListAdapte
     LayoutInflater mInflater;
     Context mContext;
 
+    FragmentAddAttitude.AttachedActivity attachedActivity;
+
     public AttitudeListAdapter(Context mContext, List<Attitude> mBeans) {
+        if(mContext instanceof FragmentAddAttitude.AttachedActivity) attachedActivity = (FragmentAddAttitude.AttachedActivity) mContext;
         this.mBeans = mBeans;
         this.mContext = mContext;
         this.mInflater = LayoutInflater.from(mContext);
@@ -56,21 +60,29 @@ public class AttitudeListAdapter extends RecyclerView.Adapter<AttitudeListAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewH holder, final int position) {
         final Attitude attitude = mBeans.get(position);
-        holder.title.setText(attitude.getTitle());
+        holder.title.setText(attitude.getTitle().replaceAll("\n"," "));
+        holder.time.setText(attitude.getCreatedAt());
+        holder.result.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext,"您已表过态啦",Toast.LENGTH_SHORT).show();
+            }
+        });
         new refreshItemTask(holder,position,attitude,CurrentUser).executeOnExecutor(TPE);
     }
 
     class ViewH extends RecyclerView.ViewHolder {
-        TextView title,upT,downT;
+        TextView title,upT,downT,time;
         FrameLayout voted;
         LinearLayout voting;
-        ImageView up,down;
+        ImageView up,down,chosen_up,chosen_down;
         ProgressBar result;
 
 
         public ViewH(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
+            time = itemView.findViewById(R.id.time);
             up = itemView.findViewById(R.id.up);
             down = itemView.findViewById(R.id.down);
             voted = itemView.findViewById(R.id.voted);
@@ -78,6 +90,8 @@ public class AttitudeListAdapter extends RecyclerView.Adapter<AttitudeListAdapte
             upT = itemView.findViewById(R.id.up_text);
             downT = itemView.findViewById(R.id.down_text);
             result = itemView.findViewById(R.id.vote_result);
+            chosen_up = itemView.findViewById(R.id.chosen_up);
+            chosen_down = itemView.findViewById(R.id.chosen_down);
         }
     }
 
@@ -113,7 +127,14 @@ public class AttitudeListAdapter extends RecyclerView.Adapter<AttitudeListAdapte
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            if((boolean)o){
+            if(!o.toString().equals("none")){
+                if(o.toString().equals("up")){
+                    holder.chosen_up.setVisibility(View.VISIBLE);
+                    holder.chosen_down.setVisibility(View.GONE);
+                }else if(o.toString().equals("down")){
+                    holder.chosen_down.setVisibility(View.VISIBLE);
+                    holder.chosen_up.setVisibility(View.GONE);
+                }
                 holder.voted.setVisibility(View.VISIBLE);
                 holder.voting.setVisibility(View.GONE);
                 holder.upT.setText(attitude.getUp()+"");
@@ -150,6 +171,7 @@ public class AttitudeListAdapter extends RecyclerView.Adapter<AttitudeListAdapte
                                     e.printStackTrace();
                                     Toast.makeText(mContext,"表态失败"+e.toString(),Toast.LENGTH_SHORT).show();
                                 }
+                                if(attachedActivity!=null) attachedActivity.refreshOthers();
                                 notifyItemChanged(position);
                             }
                         });

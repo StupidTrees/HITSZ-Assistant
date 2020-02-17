@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menu tools:context="com.stupidtree.hita.activities.ActivityTimeTable"
-
     xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
 
   <item android:title="@string/menu_timeable_curriculum" android:id="@+id/action_curriculum_manager"
@@ -25,8 +24,4 @@
   <item android:title="@string/menu_timeable_use_theme" android:id="@+id/action_reset_color_to_theme"
       app:showAsAction="never"
       android:orderInCategory="80" />
-  <!--<item android:title="切换课程表" android:id="@+id/action_import_timetable"-->
-      <!--app:showAsAction="never"-->
-      <!--android:orderInCategory="90"-->
-      <!--/>-->
 </menu>

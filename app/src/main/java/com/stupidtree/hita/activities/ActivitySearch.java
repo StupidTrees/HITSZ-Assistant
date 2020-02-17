@@ -41,6 +41,7 @@ import com.stupidtree.hita.diy.RevealAnimation;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.fragments.search.FragmentSearchResult;
 import com.stupidtree.hita.fragments.search.FragmentSearchResult_library;
+import com.stupidtree.hita.fragments.search.FragmentSearchResult_location;
 import com.stupidtree.hita.fragments.search.FragmentSearchResult_teacher;
 import com.stupidtree.hita.fragments.search.FragmentSearchResult_timetable;
 import com.stupidtree.hita.fragments.search.FragmentSearchResult_web;
@@ -119,9 +120,10 @@ public class ActivitySearch extends BaseActivity {
         int index = 0;
         if(purpose.equals("timetable")) index = 0;
         else if(purpose.equals("teacher")) index = 1;
-        else if(purpose.equals("library")) index = 2;
-        else if(purpose.equals("hitsz")) index = 3;
-        else if(purpose.equals("hitzs")) index = 4;
+        else if(purpose.equals("location")) index = 2;
+        else if(purpose.equals("library")) index = 3;
+        else if(purpose.equals("hitsz")) index = 4;
+        else if(purpose.equals("hitzs")) index = 5;
         pager.setCurrentItem(index);
     }
 
@@ -204,8 +206,8 @@ public class ActivitySearch extends BaseActivity {
         pager = findViewById(R.id.pager);
         tabs = findViewById(R.id.tabs);
         fragments.add(new FragmentSearchResult_timetable(getString(R.string.tab_search_timetable)));
-
         fragments.add(new FragmentSearchResult_teacher(getString(R.string.tab_search_teacher)));
+        fragments.add(new FragmentSearchResult_location(getString(R.string.tab_search_location)));
         fragments.add(new FragmentSearchResult_library(getString(R.string.tab_search_library)));
         fragments.add(new FragmentSearchResult_web(getString(R.string.tab_hitsz_website_info)));
         fragments.add(new FragmentSearchResult_zsw(getString(R.string.tab_search_zsw)));

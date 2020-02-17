@@ -195,71 +195,58 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:background="?attr/background_color_second"
-                    android:gravity="center"
                     android:orientation="vertical"
                     android:visibility="invisible">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tl_head_counting_time"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="16dp"
-                            android:layout_weight="1"
-                            android:gravity="bottom|start"
-                            android:maxEms="9"
-                            android:textColor="?attr/text_color_primary"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tl_head_counting_middle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="16dp"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <Space
+                    <TextView
+                        android:id="@+id/tl_head_counting_time"
                         android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:id="@+id/tl_head_counting_image"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_marginBottom="4dp"
-                        android:alpha="0.4"
-                        android:scaleType="centerCrop"
-                        android:tint="?attr/colorControlNormal"
-                        android:tintMode="src_in"
-                        android:visibility="visible"
-                        app:srcCompat="@drawable/ic_access_alarm_black_24dp" />
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginRight="16dp"
+                        android:gravity="bottom|start"
+                        android:maxEms="9"
+                        android:textColor="?attr/text_color_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tl_head_counting_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="48dp"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="16dp"
                         android:alpha="0.8"
-                        android:background="@drawable/radius_primay_lgiht_button_bg"
-                        android:backgroundTint="@color/background_bottom_color_as_tint"
-                        android:backgroundTintMode="src_over"
-                        android:fontFamily="sans-serif-black"
                         android:gravity="center"
                         android:maxEms="8"
-                        android:padding="10dp"
                         android:singleLine="true"
-                        android:textColor="?attr/colorPrimary"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="18sp" />
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/tl_head_counting_image"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/radius_primay_round_icon_bg"
+                            android:backgroundTint="@color/background_bottom_color_as_tint"
+                            android:backgroundTintMode="src_over"
+                            android:padding="8dp"
+                            android:scaleType="centerCrop"
+                            android:tint="?attr/colorPrimary"
+                            android:tintMode="src_in"
+                            android:visibility="visible"
+                            app:srcCompat="@drawable/ic_access_alarm_black_24dp" />
+                    </FrameLayout>
 
                 </LinearLayout>
 

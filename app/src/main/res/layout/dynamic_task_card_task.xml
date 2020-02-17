@@ -65,11 +65,15 @@
 
         <ImageView
             android:id="@+id/empty"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_gravity="center"
             android:layout_margin="24dp"
-            android:tint="?attr/background_icon_color_second"
+            android:background="@drawable/radius_primay_round_icon_bg"
+            android:backgroundTint="@color/background_bottom_color_as_tint"
+            android:backgroundTintMode="src_over"
+            android:padding="16dp"
+            android:tint="?attr/colorPrimary"
             android:tintMode="src_in"
             app:srcCompat="@drawable/ic_finish" />
 

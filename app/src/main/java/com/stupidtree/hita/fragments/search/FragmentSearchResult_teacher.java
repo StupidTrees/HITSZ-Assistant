@@ -21,16 +21,19 @@ import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.online.SearchException;
 import com.stupidtree.hita.online.SearchTeacherCore;
+import com.stupidtree.hita.online.Teacher;
 import com.stupidtree.hita.util.ActivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobQuery;
+
 import static com.stupidtree.hita.HITAApplication.TPE;
 
 public class FragmentSearchResult_teacher extends FragmentSearchResult{
     private TeacherSearchAdapter adapter;
-    private List<SparseArray<String>> listRes;
+    private List<Object> listRes;
     private SearchTeacherCore searchTeacherCore;
     public FragmentSearchResult_teacher(String title) {
         super(title);
@@ -59,13 +62,18 @@ public class FragmentSearchResult_teacher extends FragmentSearchResult{
             @Override
             public void OnClickTransition(View view, int position, View transition) {
                 try {
-                    SparseArray<String> sa = listRes.get(position);
-                    ActivityUtils.startOfficialTeacherActivity_transition(getActivity(),
-                            sa.get(SearchTeacherCore.ID),
-                            sa.get(SearchTeacherCore.URL),
-                            sa.get(SearchTeacherCore.NAME),
-                            transition
-                    );
+                    if(listRes.get(position) instanceof SparseArray){
+                        SparseArray<String> sa = (SparseArray<String>) listRes.get(position);
+                        ActivityUtils.startOfficialTeacherActivity_transition(getActivity(),
+                                sa.get(SearchTeacherCore.ID),
+                                sa.get(SearchTeacherCore.URL),
+                                sa.get(SearchTeacherCore.NAME),
+                                transition
+                        );
+                    }else if(listRes.get(position) instanceof Teacher){
+                        ActivityUtils.startTeacherActivity(getActivity(), (Teacher) listRes.get(position));
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -130,14 +138,24 @@ public class FragmentSearchResult_teacher extends FragmentSearchResult{
         @Override
         protected Object doInBackground(Object[] objects) {
             listRes.clear();
-            List<SparseArray<String>> res = null;
+            List<SparseArray<String>> res1 = null;
+            List<Teacher> res2 = null;
             try {
-                res = searchTeacherCore.searchForResult(keyword);
+                res1 = searchTeacherCore.searchForResult(keyword);
             } catch (SearchException e) {
                return e;
             }
-            listRes.addAll(res);
-            return res.size();
+            listRes.addAll(res1);
+            try {
+                BmobQuery<Teacher> bq = new BmobQuery<>();
+                bq.addWhereEqualTo("name",keyword);
+                res2 = bq.findObjectsSync(Teacher.class);
+                listRes.addAll(res2);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return listRes.size();
         }
 
         @Override
@@ -157,14 +175,14 @@ public class FragmentSearchResult_teacher extends FragmentSearchResult{
 
 
     class TeacherSearchAdapter extends RecyclerView.Adapter<TeacherSearchAdapter.TeacherSearchViewHoler> {
-        List<SparseArray<String>> mBeans;
+        List<Object> mBeans;
         OnItemClickListener onItemClickListener;
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
             this.onItemClickListener = onItemClickListener;
         }
 
-        public TeacherSearchAdapter(List<SparseArray<String>> mBeans) {
+        public TeacherSearchAdapter(List<Object> mBeans) {
             this.mBeans = mBeans;
         }
 
@@ -180,20 +198,40 @@ public class FragmentSearchResult_teacher extends FragmentSearchResult{
         @SuppressLint("CheckResult")
         @Override
         public void onBindViewHolder(@NonNull final TeacherSearchViewHoler holder, final int position) {
-            holder.title.setText(mBeans.get(position).get(0));
-            holder.type.setText(mBeans.get(position).get(2));
-            holder.department.setText(mBeans.get(position).get(SearchTeacherCore.DEPARTMENT));
-            Glide.with(getContext()).load("http://faculty.hitsz.edu.cn/file/showHP.do?d="+
-                    mBeans.get(position).get(SearchTeacherCore.ID)+"&&w=200&&h=200&&prevfix=200-")
-                    .apply(RequestOptions.circleCropTransform())
-                    .placeholder(R.drawable.ic_account_activated)
-                    .into(holder.picture);
-            if(onItemClickListener!=null)holder.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onItemClickListener.OnClickTransition(view,position,holder.picture);
-                }
-            });
+            if(mBeans.get(position) instanceof SparseArray){
+                SparseArray<String> tsa = (SparseArray) mBeans.get(position);
+                holder.title.setText(tsa.get(0));
+                holder.type.setVisibility(View.GONE);
+                holder.department.setText(tsa.get(SearchTeacherCore.DEPARTMENT));
+                Glide.with(getContext()).load("http://faculty.hitsz.edu.cn/file/showHP.do?d="+
+                        tsa.get(SearchTeacherCore.ID)+"&&w=200&&h=200&&prevfix=200-")
+                        .apply(RequestOptions.circleCropTransform())
+                        .placeholder(R.drawable.ic_account_activated)
+                        .into(holder.picture);
+                if(onItemClickListener!=null)holder.card.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onItemClickListener.OnClickTransition(view,position,holder.picture);
+                    }
+                });
+            }else if(mBeans.get(position) instanceof Teacher){
+                Teacher t = (Teacher) mBeans.get(position);
+                holder.title.setText(t.getName());
+                holder.department.setText(t.getSchool());
+                holder.type.setVisibility(View.VISIBLE);
+                holder.type.setText(R.string.teacher_temp_label);
+                Glide.with(getContext()).load(t.getPhotoLink())
+                        .apply(RequestOptions.circleCropTransform())
+                        .placeholder(R.drawable.ic_account_activated)
+                        .into(holder.picture);
+                if(onItemClickListener!=null)holder.card.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onItemClickListener.OnClickTransition(view,position,holder.picture);
+                    }
+                });
+            }
+
         }
 
 

@@ -224,12 +224,12 @@
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\1c9808e429abf680ccd4a9858ea887b5\\preference-1.1.0\\res\\layout\\preference_widget_seekbar_material.xml"
     },
     {
-        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\debug\\drawable_btn_checkbox_unchecked_mtrl.xml.flat",
-        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\6119d746697059b7e1b74aab4d181f56\\appcompat-1.1.0\\res\\drawable\\btn_checkbox_unchecked_mtrl.xml"
-    },
-    {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\debug\\color_mtrl_choice_chip_ripple_color.xml.flat",
         "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\5d52d9573d8a8f70a8462cc8f8a42ce9\\material-1.1.0\\res\\color\\mtrl_choice_chip_ripple_color.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\debug\\drawable_btn_checkbox_unchecked_mtrl.xml.flat",
+        "source": "C:\\Users\\23211\\.gradle\\caches\\transforms-2\\files-2.1\\6119d746697059b7e1b74aab4d181f56\\appcompat-1.1.0\\res\\drawable\\btn_checkbox_unchecked_mtrl.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4_abc_list_selector_disabled_holo_dark.9.png.flat",
@@ -546,6 +546,10 @@
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_university.xml.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\activity_university.xml"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\debug\\layout_fragment_attitude.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\fragment_attitude.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\debug\\layout_fragment_usercenter_info.xml.flat",
@@ -2526,6 +2530,10 @@
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\debug\\drawable-anydpi_amap_end.png.flat",
         "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\drawable-anydpi\\amap_end.png"
+    },
+    {
+        "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\debug\\layout_dynamic_search_location_result_item.xml.flat",
+        "source": "C:\\projects\\hita\\HITA_V\\app\\src\\main\\res\\layout\\dynamic_search_location_result_item.xml"
     },
     {
         "merged": "C:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\res\\merged\\debug\\layout_fragment_jwts_pyfa_zxjxjh.xml.flat",

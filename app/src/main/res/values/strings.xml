@@ -514,6 +514,15 @@
     <string name="navi_campus_hita_p">希塔</string>
     <string name="navi_campus_hita_s">已经死亡</string>
     <string name="use_vpn_hint">校外请使用官方vpn连接</string>
+    <string name="attitude_tabs_latest_created">最新话题</string>
+    <string name="attitude_tabs_latest_updated">最近互动</string>
+    <string name="attitude_tabs_weekly_top">本周最热</string>
+    <string name="attitude_tabs_history_top">总榜</string>
+    <string name="teacher_temp_label">助手服务器暂存</string>
+    <string name="tab_search_location">地点</string>
+    <string name="location_total_searched">共找到%d个地点</string>
+    <string name="time_format_1">%d小时%d分钟</string>
+    <string name="time_format_2">%d分钟</string>
     <string-array name="curriculum_tabs">
         <item>科目</item>
         <item>教师</item>

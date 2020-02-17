@@ -372,6 +372,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentTimeTable
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.toolbar_time_table,menu);
 //        MenuItem item = (MenuItem) menu.findItem(R.id.action_switch_timetable);
 //        item.setActionView(R.layout.util_dynamictimetable_toolbar_actionlayout);

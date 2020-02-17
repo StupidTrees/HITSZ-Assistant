@@ -22,22 +22,37 @@
             android:fitsSystemWindows="true"
             android:gravity="center"
             android:minHeight="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:theme="?attr/toolbarStyle" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:tabIndicator="@color/transparent_none"
+            app:tabMode="scrollable"
+            app:tabPaddingEnd="24dp"
+            app:tabPaddingStart="24dp">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Monday" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tuesday" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wednesday" />
+        </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresh"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layoutAnimation="@anim/recycler_layout_animation_slide_from_right"
-            android:overScrollMode="never" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -49,5 +64,13 @@
         app:srcCompat="@drawable/bt_edit"
         android:focusable="true"
         tools:ignore="RtlHardcoded" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

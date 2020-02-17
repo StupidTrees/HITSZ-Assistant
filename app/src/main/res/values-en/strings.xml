@@ -605,4 +605,13 @@
     <string name="navi_campus_hita_p">Hita</string>
     <string name="navi_campus_hita_s">already dead</string>
     <string name="use_vpn_hint">Use the official VPN if failed</string>
+    <string name="attitude_tabs_latest_created">Latest topic</string>
+    <string name="attitude_tabs_latest_updated">Recent interaction</string>
+    <string name="attitude_tabs_weekly_top">Top50 this week</string>
+    <string name="attitude_tabs_history_top">Top 50 in history</string>
+    <string name="teacher_temp_label">Staged on app server</string>
+    <string name="tab_search_location">Locations</string>
+    <string name="location_total_searched">%d locations were found</string>
+    <string name="time_format_1">"%d h %d min "</string>
+    <string name="time_format_2">%d minutes</string>
 </resources>

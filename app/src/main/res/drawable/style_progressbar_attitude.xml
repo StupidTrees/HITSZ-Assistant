@@ -4,7 +4,7 @@
 
         <shape>
 
-            <corners android:radius="8dip" />
+            <corners android:radius="15dip" />
 
             <gradient
                 android:angle="0"
@@ -21,7 +21,7 @@
 
             <shape>
 
-                <corners android:radius="8dip" />
+                <corners android:radius="15dip" />
 
                 <gradient
                     android:angle="0"

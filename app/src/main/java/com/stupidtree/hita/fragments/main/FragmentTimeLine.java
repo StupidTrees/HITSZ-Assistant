@@ -96,7 +96,7 @@ public class FragmentTimeLine extends BaseFragment implements
     private List<EventItem> timelineRes, wholeDayRes;
     private ImageView bt_bar_timetable, bt_bar_addEvent;
     private LinearLayout head_counting, head_goNow;
-    private TextView head_counting_time, head_counting_name, head_counting_middle,
+    private TextView head_counting_time, head_counting_name,
             head_goQuickly_classroom;
     private CardView head_card;
     private TextView head_title, head_subtitle;
@@ -263,7 +263,6 @@ public class FragmentTimeLine extends BaseFragment implements
         heads = new View[]{head_image, head_goNow, circleProgress};
         head_counting_name = v.findViewById(R.id.tl_head_counting_name);
         head_counting_image = v.findViewById(R.id.tl_head_counting_image);
-        head_counting_middle = v.findViewById(R.id.tl_head_counting_middle);
         head_counting_time = v.findViewById(R.id.tl_head_counting_time);
         head_goQuickly_classroom = v.findViewById(R.id.tl_head_gonow_classroom);
     }
@@ -325,6 +324,7 @@ public class FragmentTimeLine extends BaseFragment implements
         });
     }
 
+    @SuppressLint("SetTextI18n")
     public void UpdateHeadView() {
         String titleToSet, subtitltToSet;
         if (CurrentUser == null) {
@@ -409,17 +409,22 @@ public class FragmentTimeLine extends BaseFragment implements
             }
         }
         if (nextEvent != null) {
-            String timeText = nextEvent.startTime.getDuration(new HTime(now)) >= 60 ?
-                    (nextEvent.startTime.getDuration(new HTime(now))) / 60 + "h" + nextEvent.startTime.getDuration(new HTime(now)) % 60 + "min"
-                    : nextEvent.startTime.getDuration(new HTime(now)) + "min";
+            String text1 = String.format(
+                    getString(R.string.time_format_1),
+                    nextEvent.startTime.getDuration(new HTime(now)) / 60,
+                    nextEvent.startTime.getDuration(new HTime(now)) % 60);
+            String text2 = String.format(
+                    getString(R.string.time_format_2),
+                    nextEvent.startTime.getDuration(new HTime(now))
+            );
+            String timeText = nextEvent.startTime.getDuration(new HTime(now)) >= 60 ? text1
+                    : text2;
             head_counting_name.setText(nextEvent.mainName);
-            head_counting_time.setText(timeText);
-            head_counting_middle.setText(R.string.timeline_counting_middle);
+            head_counting_time.setText(timeText+getString(R.string.timeline_counting_middle));
             head_counting_image.setImageResource(R.drawable.ic_access_alarm_black_24dp);
             // head_counting_name.setVisibility(View.VISIBLE);
         } else {
             head_counting_name.setText("see you");
-            head_counting_middle.setText("");
             head_counting_time.setText(R.string.timeline_counting_free);
             head_counting_image.setImageResource(R.drawable.ic_empty);
         }

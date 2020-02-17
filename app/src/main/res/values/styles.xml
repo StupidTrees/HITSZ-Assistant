@@ -162,6 +162,9 @@
     </style>
 
     <style name="ToolBarTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+<!--        <item name="colorPrimary">?attr/colorPrimary</item>-->
+<!--        <item name="colorAccent">?attr/colorAccent</item>-->
+<!--        <item name="colorPrimaryDark">?attr/colorPrimaryDark</item>-->
         <!--<item name="colorButtonNormal">?attr/toolbar_icon_color</item>-->
         <!--<item name="colorControlNormal">?attr/toolbar_icon_color</item>-->
     </style>

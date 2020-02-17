@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;

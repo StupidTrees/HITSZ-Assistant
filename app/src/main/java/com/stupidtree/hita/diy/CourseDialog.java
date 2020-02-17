@@ -223,11 +223,12 @@ public class CourseDialog extends AlertDialog {
                         AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(HContext.getString(R.string.pick_classroom)).setItems(classRoomItems, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityUtils.startLocationActivity_name(getContext(), classRooms.get(i));
+                                ActivityUtils.searchFor(getContext(),classRooms.get(i),"location");
+                                //ActivityUtils.startLocationActivity_name(getContext(), classRooms.get(i));
                             }
                         }).create();
                         ad.show();
-                    } else ActivityUtils.startLocationActivity_name(getContext(), ei.tag2);
+                    } else  ActivityUtils.searchFor(getContext(),ei.tag2,"location");
 //                    Intent i = new Intent(a,ActivityExplore.class);
 //                    i.putExtra("terminal",ei.tag2);
 //                    a.startActivity(i);

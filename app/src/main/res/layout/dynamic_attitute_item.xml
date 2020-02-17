@@ -6,7 +6,8 @@
     android:layout_margin="16dp"
     android:orientation="vertical"
     app:cardBackgroundColor="?attr/background_color_second"
-    app:cardCornerRadius="16dp">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,9 +21,19 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="5"
             android:text="你觉得呢？"
             android:textColor="?attr/text_color_primary"
             android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="2020-2-15"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="12sp" />
 
         <View
             android:layout_width="match_parent"
@@ -73,9 +84,9 @@
         <FrameLayout
             android:id="@+id/voted"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -83,7 +94,7 @@
                 android:id="@+id/vote_result"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="24dp"
+                android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:progressDrawable="@drawable/style_progressbar_attitude" />
 
@@ -91,26 +102,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:alpha="0.8"
-                    android:focusable="true"
-                    android:tint="@color/material_background_white"
-                    android:tintMode="src_in"
-                    app:srcCompat="@drawable/ic_thumb_down"
-                    app:theme="@style/button_ripple_primary" />
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:id="@+id/chosen_down"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:alpha="0.4"
+                        app:srcCompat="@drawable/round_white" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:alpha="0.8"
+                        android:focusable="true"
+                        android:tint="@color/material_background_white"
+                        android:tintMode="src_in"
+                        app:srcCompat="@drawable/ic_thumb_down"
+                        app:theme="@style/button_ripple_primary" />
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/down_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
                     android:text="12"
                     android:textColor="@color/material_text_icon_white"
                     android:textSize="12sp" />
@@ -124,20 +147,34 @@
                     android:id="@+id/up_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="4dp"
                     android:text="12"
                     android:textColor="@color/material_text_icon_white"
                     android:textSize="12sp" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:alpha="0.8"
-                    android:focusable="true"
-                    android:tint="@color/material_background_white"
-                    android:tintMode="src_in"
-                    app:srcCompat="@drawable/ic_thumb_up"
-                    app:theme="@style/button_ripple_primary" />
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:id="@+id/chosen_up"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:alpha="0.4"
+                        app:srcCompat="@drawable/round_white" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:alpha="0.8"
+                        android:focusable="true"
+                        android:tint="@color/material_background_white"
+                        android:tintMode="src_in"
+                        app:srcCompat="@drawable/ic_thumb_up"
+                        app:theme="@style/button_ripple_primary" />
+                </FrameLayout>
 
             </LinearLayout>
 

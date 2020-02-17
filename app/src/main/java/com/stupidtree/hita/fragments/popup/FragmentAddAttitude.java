@@ -33,6 +33,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
 import static android.app.Activity.RESULT_OK;
+import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 
 public class FragmentAddAttitude extends BottomSheetDialogFragment {
@@ -50,7 +51,8 @@ public class FragmentAddAttitude extends BottomSheetDialogFragment {
 
 
     public interface AttachedActivity{
-        void onFragmentCalledRefresh();
+        void refreshAll();
+        void refreshOthers();
     }
 
     public static FragmentAddAttitude newInstance(){
@@ -125,6 +127,7 @@ public class FragmentAddAttitude extends BottomSheetDialogFragment {
                     return;
                 }
                 attitude.setTitle(title.getText().toString());
+                attitude.setAuthor(CurrentUser);
 //                if(URI!=null){
 //                    final BmobFile bf = new BmobFile(new File(URI));
 //                    bf.upload(new UploadFileListener() {
@@ -137,7 +140,7 @@ public class FragmentAddAttitude extends BottomSheetDialogFragment {
 //                                    public void done(String s, BmobException e) {
 //                                        if(e==null){
 //                                            Toast.makeText(HContext,"发送成功！",Toast.LENGTH_SHORT).show();
-//                                            if(mAttachedActivity!=null) mAttachedActivity.onFragmentCalledRefresh(type==LOST?0:1);
+//                                            if(mAttachedActivity!=null) mAttachedActivity.refreshAll(type==LOST?0:1);
 //                                        }
 //                                        else Toast.makeText(HContext,"上传失败！",Toast.LENGTH_SHORT).show();
 //                                       }
@@ -152,7 +155,7 @@ public class FragmentAddAttitude extends BottomSheetDialogFragment {
                         @Override
                         public void done(String s, BmobException e) {
                             Toast.makeText(HContext,"成功！",Toast.LENGTH_SHORT).show();
-                            if(mAttachedActivity!=null) mAttachedActivity.onFragmentCalledRefresh();
+                            if(mAttachedActivity!=null) mAttachedActivity.refreshAll();
                         }
                     });
                // }

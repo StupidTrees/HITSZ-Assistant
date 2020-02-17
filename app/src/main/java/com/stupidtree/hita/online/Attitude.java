@@ -16,10 +16,12 @@ import static com.stupidtree.hita.HITAApplication.CurrentUser;
 
 public class Attitude extends BmobObject {
 
+
     String title;
     BmobRelation upUser;
     //List<String> upUser;
     BmobRelation downUser;
+    HITAUser author;
     int up;
     int down;
 
@@ -48,6 +50,14 @@ public class Attitude extends BmobObject {
     }
 
 
+    public HITAUser getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(HITAUser author) {
+        this.author = author;
+    }
+
     public void thumDown(HITAUser user){
         if(upUser==null) upUser = new BmobRelation();
         if(downUser==null) downUser = new BmobRelation();
@@ -72,27 +82,27 @@ public class Attitude extends BmobObject {
     }
 
     @WorkerThread
-    public boolean voted(HITAUser user){
+    public String voted(HITAUser user){
         BmobQuery<HITAUser> bq = new BmobQuery<>();
         BmobQuery<HITAUser> bq2 = new BmobQuery<>();
         bq.addWhereRelatedTo("upUser",new BmobPointer(this));
         List<HITAUser> uR = bq.findObjectsSync(HITAUser.class);
-        Log.e("result_u", String.valueOf(uR));
+       // Log.e("result_u", String.valueOf(uR));
 
         if(uR!=null&&uR.size()>0) {
-            for(HITAUser h:uR) if(h.getObjectId().equals(user.getObjectId())) return true;
+            for(HITAUser h:uR) if(h.getObjectId().equals(user.getObjectId())) return "up";
         }
 
         bq2.addWhereRelatedTo("downUser",new BmobPointer(this));
        // bq2.addWhereEqualTo("objectId",user.getObjectId());
        //Log.e("query", String.valueOf(bq2.getWhere()));
         List<HITAUser> uD = bq2.findObjectsSync(HITAUser.class);
-        Log.e("result_d", String.valueOf(uD));
+      //  Log.e("result_d", String.valueOf(uD));
         if(uD!=null&&uD.size()>0) {
-            for(HITAUser h:uD) if(h.getObjectId().equals(user.getObjectId())) return true;
+            for(HITAUser h:uD) if(h.getObjectId().equals(user.getObjectId())) return "down";
         }
 
-        return false;
+        return "none";
         //return upUser.getObjects().contains(new BmobPointer(user))||downUser.getObjects().contains(new BmobPointer(user));
     }
     public String getTitle() {

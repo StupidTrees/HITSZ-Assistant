@@ -40,10 +40,12 @@ import com.stupidtree.hita.online.Infos;
 
 import java.sql.Ref;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
@@ -86,6 +88,9 @@ public class ActivityUTMood extends BaseActivity
         swipeRefreshLayout.setRefreshing(true);
         BmobQuery<Infos> bq = new BmobQuery<>();
         bq.addWhereEqualTo("type","ut_mood");
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.MONTH,-2);
+        bq.addWhereGreaterThanOrEqualTo("createdAt",new BmobDate(c.getTime()));
         bq.order("createdAt");
         lineChart.setVisibility(View.INVISIBLE);
         bq.findObjects(new FindListener<Infos>() {

@@ -71,7 +71,8 @@ public abstract class FragmentSearchResult extends BaseFragment {
         void OnLongClick(View view, int position);
     }
     public void Search(boolean hideContent){
-        new SearchItem(searchText,getTitle(), CurrentUser)
+
+        if(!(this instanceof FragmentSearchResult_timetable)) new SearchItem(searchText,getTitle(), CurrentUser)
                 .save(new SaveListener<String>() {
                     @Override
                     public void done(String s, BmobException e) {
