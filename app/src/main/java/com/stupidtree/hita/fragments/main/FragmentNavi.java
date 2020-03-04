@@ -89,6 +89,7 @@ public class FragmentNavi extends BaseFragment {
     RecyclerView list;
     NaviPageAdapter listAdapter;
     SwipeRefreshLayout refreshLayout;
+    boolean firstEnter = true;
     Gson gson;
     HashMap<Integer,String> type_name_map = new HashMap();
     @Nullable
@@ -277,7 +278,7 @@ public class FragmentNavi extends BaseFragment {
                     banner.start();
                 } else if (bannerItemList.size() == 0) {
                     BannerItem temp = new BannerItem();
-                    temp.setImageUri("https://bmob-cdn-26359.bmobpay.com/2019/08/10/23ab6917400d551a805267303f0f840a.jpg");
+                   // temp.setImageUri("https://bmob-cdn-26359.bmobpay.com/2019/08/10/23ab6917400d551a805267303f0f840a.jpg");
                     temp.setTitle("同学们好");
                     temp.setAction(new JsonObject().toString());
                     temp.setSubtitle("加载banner失败");
@@ -308,7 +309,8 @@ public class FragmentNavi extends BaseFragment {
             else subtitle.setText(getString(R.string.navi_semister_not_begun)+" "+ getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(now)-1]);
 
         }else subtitle.setText(getString(R.string.navi_semister_no_data));
-        Refresh(false,false);
+                Refresh(firstEnter,false);
+        if(firstEnter)firstEnter = false;
         //banner.start();
         //refreshBanner();
         //refreshCanteen();

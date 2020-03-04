@@ -50,11 +50,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import cn.bmob.v3.http.I;
+
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
+
+import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_COURSE;
 import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE;
 import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_EXAM;
@@ -179,24 +183,12 @@ public class CourseDialog extends AlertDialog {
         teacher_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                final String[] names = ei.tag3.split("，");
-                if (names.length > 1) {
-                    AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(HContext.getString(R.string.pick_teacher)).setItems(names, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            Intent il = new Intent(getContext(), ActivityTeacher.class);
-//                            il.putExtra("name", names[i]);
-//                            getContext().startActivity(il);
-                            ActivityUtils.searchFor(getContext(),names[i],"teacher");
-                        }
-                    }).create();
-                    ad.show();
-                } else {
-                    ActivityUtils.searchFor(getContext(),ei.tag3,"teacher");
+                if(TextUtils.isEmpty(ei.tag3)) return;
+                ActivityUtils.searchFor(getContext(),ei.tag3,"teacher");
 //                    Intent i = new Intent(getContext(), ActivityTeacher.class);
 //                    i.putExtra("name", ei.tag3);
 //                    getContext().startActivity(i);
-                }
+
             }
         });
         if (TextUtils.isEmpty(ei.tag2)) {
@@ -206,6 +198,7 @@ public class CourseDialog extends AlertDialog {
             classroom_detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(TextUtils.isEmpty(ei.tag2)||Objects.equals(ei.tag2,"无地点")) return;
                     final String[] cr = ei.tag2.split("，\\[");
                     final ArrayList<String> classRooms = new ArrayList<>(Arrays.asList(cr));
                     if (classRooms.size() > 1) {
@@ -287,8 +280,11 @@ public class CourseDialog extends AlertDialog {
                                                 Toast.makeText(getContext(), HContext.getString(R.string.notif_delete_success), Toast.LENGTH_SHORT).show();
                                                 Intent i = new Intent();
                                                 i.putExtra("week", ei.week);
-                                                i.setAction("COM.STUPIDTREE.HITA.TIMETABLE_PAGE_REFRESH");
+                                                i.setAction(TIMETABLE_CHANGED);
+//                                                Intent i2 = new Intent();
+//                                                i.setAction(TASK_REFRESH);
                                                 LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
+                                                //LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i2);
                                                 CourseDialog.this.dismiss();
                                             }
                                         }

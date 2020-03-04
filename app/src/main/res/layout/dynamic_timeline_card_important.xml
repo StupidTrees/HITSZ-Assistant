@@ -68,7 +68,7 @@
                     android:layout_gravity="center|start"
                     android:layout_marginLeft="16dp"
                     android:background="@drawable/radius_grey_lgiht_button_bg"
-                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
                     android:backgroundTintMode="src_over"
                     android:paddingStart="8dp"
                     android:paddingTop="4dp"
@@ -121,15 +121,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="16dp"
-                android:background="@drawable/radius_primay_lgiht_button_bg"
-                android:backgroundTint="@color/background_bottom_color_as_tint"
+                android:background="@drawable/radius_accent_lgiht_button_bg"
+                android:backgroundTint="?attr/background_color_bottom_as_tint"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/radius_primay_lgiht_button_bg"
-                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:background="@drawable/radius_accent_lgiht_button_bg"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
                     android:backgroundTintMode="src_over"
                     android:clickable="false"
                     android:orientation="horizontal"
@@ -146,7 +146,7 @@
 
                         android:alpha="0.8"
                         android:clickable="false"
-                        android:tint="?attr/colorPrimary"
+                        android:tint="?attr/colorAccent"
                         android:tintMode="src_in"
                         app:srcCompat="@drawable/ic_location2" />
 
@@ -161,7 +161,7 @@
                         android:maxEms="5"
                         android:singleLine="true"
                         android:text="T3402"
-                        android:textColor="?attr/colorPrimary"
+                        android:textColor="?attr/colorAccent"
                         android:textSize="14sp"
                         android:transitionName="course_name" />
 
@@ -172,8 +172,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@drawable/radius_primay_lgiht_button_bg"
-                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:background="@drawable/radius_accent_lgiht_button_bg"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
                     android:backgroundTintMode="src_over"
                     android:fontFamily="sans-serif-black"
                     android:paddingLeft="16dp"
@@ -181,7 +181,7 @@
                     android:paddingRight="16dp"
                     android:paddingBottom="8dp"
                     android:text="34min"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="?attr/colorAccent"
                     android:visibility="gone" />
 
                 <TextView

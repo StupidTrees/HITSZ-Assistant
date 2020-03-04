@@ -26,7 +26,7 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.timeWatcher;
+import static com.stupidtree.hita.HITAApplication.timeServiceBinder;
 
 public class ActivityDynamicTable extends BaseActivity {
 
@@ -87,12 +87,10 @@ public class ActivityDynamicTable extends BaseActivity {
                 try {
                     if(isChecked){
                         if(forced_mute.isChecked()) {
-                            IntentFilter if2 = new IntentFilter();
-                            if2.addAction("android.media.VOLUME_CHANGED_ACTION");
-                            HContext.registerReceiver(timeWatcher.volumeChangeReciever,if2);
-                        }
+                            timeServiceBinder.registerVolumeWatcher();
+                            }
                             NotificationManager notificationManager =
-                                    (NotificationManager) HContext.getSystemService(NOTIFICATION_SERVICE);
+                                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
                             if(!notificationManager.isNotificationPolicyAccessGranted()) {
                                 auto_mute.setChecked(false);
@@ -108,7 +106,7 @@ public class ActivityDynamicTable extends BaseActivity {
                     }
                     else{
                         mute_expand.collapse();
-                        if(forced_mute.isChecked()) HContext.unregisterReceiver(timeWatcher.volumeChangeReciever);
+                        if(forced_mute.isChecked()) timeServiceBinder.unRegisterVolumeWatcher();
                         defaultSP.edit().putBoolean("auto_mute",false).apply();
                     }
                 } catch (Exception e) {
@@ -124,11 +122,9 @@ public class ActivityDynamicTable extends BaseActivity {
                 try {
                     defaultSP.edit().putBoolean("forced_mute",b).apply();
                     if(b){
-                        IntentFilter if2 = new IntentFilter();
-                        if2.addAction("android.media.VOLUME_CHANGED_ACTION");
-                        HContext.registerReceiver(timeWatcher.volumeChangeReciever,if2);
+                        timeServiceBinder.registerVolumeWatcher();
                     }else{
-                        HContext.unregisterReceiver(timeWatcher.volumeChangeReciever);
+                        timeServiceBinder.unRegisterVolumeWatcher();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

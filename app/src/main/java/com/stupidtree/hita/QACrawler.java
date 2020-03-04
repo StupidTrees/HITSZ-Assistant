@@ -1,37 +1,22 @@
 package com.stupidtree.hita;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.util.Log;
 
-import com.stupidtree.hita.hita.TextTools;
+import com.stupidtree.hita.jw.JWCore;
+import com.stupidtree.hita.jw.JWException;
 import com.stupidtree.hita.online.SearchException;
-import com.stupidtree.hita.online.SearchHITSZCore;
-import com.stupidtree.hita.online.SearchHITSZZSCore;
 import com.stupidtree.hita.online.SearchLibraryCore;
-import com.stupidtree.hita.online.SearchTeacherCore;
-import com.stupidtree.hita.util.FileOperator;
-import com.stupidtree.hita.util.SafecodeUtil;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.IOException;
-import java.lang.annotation.Documented;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class QACrawler {
 
     public static void main(String[] args) {
-       SearchLibraryCore slc =  new SearchLibraryCore();
+        JWCore jc = new JWCore();
         try {
-            System.out.println(slc.searchForResult("刘慈欣"));
-        } catch (SearchException e) {
+            jc.login("180110324","www,2012.com");
+            //System.out.println(jc.getSubjectDetailInfo());
+            jc.getSubjectDetail("96A9CE18140770DEE0530B18F80A4656");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -54,32 +39,6 @@ public class QACrawler {
 //            monyer+=String.fromCharCode(parseInt(s[i],h));
 //        return monyer;
 //    }
-
-    public static void gogogo(final String path) {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 500; i++) {
-                    Log.e("!", i + "");
-                    byte[] checkPic;
-                    try {
-                        checkPic = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/captchaImage").ignoreContentType(true).execute().bodyAsBytes();
-                        Bitmap bm = BitmapFactory.decodeByteArray(checkPic, 0, checkPic.length);
-                        Bitmap res = SafecodeUtil.getProcessedBitmap(bm);
-                        int j = 0;
-                        for (Bitmap m : SafecodeUtil.splitBitmapInto(res, 4, -6)) {
-                            FileOperator.saveByteImageToFile(path + "/safecodes/" + "/safecode" + i + "-" + j + ".png", m);
-                            j++;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-
-    }
 
     public static Bitmap binarization(Bitmap img) {
         int width, height;

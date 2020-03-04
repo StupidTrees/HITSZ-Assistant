@@ -42,7 +42,7 @@
             android:layout_gravity="center|start"
             android:layout_marginTop="8dp"
             android:background="@drawable/radius_grey_lgiht_button_bg"
-            android:backgroundTint="@color/background_bottom_color_as_tint"
+            android:backgroundTint="?attr/background_color_bottom_as_tint"
             android:backgroundTintMode="src_over"
             android:paddingStart="8dp"
             android:paddingTop="4dp"

@@ -75,13 +75,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginLeft="@dimen/material_fab_margin"
-        android:layout_marginTop="@dimen/material_fab_margin"
-        android:layout_marginRight="96dp"
-        android:layout_marginBottom="@dimen/material_fab_margin"
+        android:layout_margin="16dp"
         android:clickable="true"
-        app:layout_behavior=".diy.mBottomHideBehavior"
+        android:focusable="true"
         android:tint="@color/material_text_icon_white"
+        app:layout_anchor="@+id/timetable_viewpager"
+        app:layout_anchorGravity="end|bottom"
+        app:layout_behavior=".diy.mBottomHideBehavior"
         app:srcCompat="@drawable/ic_return" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -90,9 +90,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/material_fab_margin"
-        app:layout_behavior=".diy.mBottomHideBehavior"
         android:clickable="true"
         android:tint="@color/material_text_icon_white"
+        android:visibility="gone"
+        app:layout_behavior=".diy.mBottomHideBehavior"
         app:srcCompat="@drawable/fab_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

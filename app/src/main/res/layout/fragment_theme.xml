@@ -10,11 +10,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/bottom_sheet_radius_background"
         android:backgroundTint="?attr/background_color_second"
         android:orientation="vertical"
-        tools:context=".fragments.FragmentTheme">
+        tools:context=".fragments.popup.FragmentTheme">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
@@ -22,8 +22,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|center_horizontal|top"
             android:layout_marginTop="48dp"
+            android:layout_marginBottom="36dp"
             app:cardBackgroundColor="?attr/background_color_bottom"
             app:cardCornerRadius="6dp"
+            app:cardElevation="12dp"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <LinearLayout
@@ -34,12 +36,15 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/demo_card"
                     android:layout_width="280dp"
-                    android:layout_height="120dp"
+                    android:layout_height="80dp"
                     android:layout_gravity="top"
-                    android:layout_margin="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
                     app:cardBackgroundColor="?attr/background_color_second"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="4dp">
+                    app:cardElevation="8dp">
 
                     <ImageView
                         android:id="@+id/demo_bg"
@@ -57,9 +62,9 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="16dp"
+                    android:layout_height="12dp"
                     android:layout_marginLeft="24dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="24dp"
                     android:layout_marginBottom="10dp"
                     app:cardBackgroundColor="?attr/background_icon_color_bottom"
@@ -68,21 +73,11 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="16dp"
+                    android:layout_height="12dp"
                     android:layout_marginLeft="24dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginRight="24dp"
-                    app:cardBackgroundColor="?attr/background_icon_color_bottom"
-                    app:cardCornerRadius="9dp"
-                    app:cardElevation="0dp" />
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="16dp"
-                    android:layout_marginLeft="24dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginRight="24dp"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="16dp"
                     app:cardBackgroundColor="?attr/background_icon_color_bottom"
                     app:cardCornerRadius="9dp"
                     app:cardElevation="0dp" />
@@ -91,12 +86,12 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/demo_fab"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_gravity="bottom|right"
                 android:layout_margin="16dp"
                 app:cardBackgroundColor="@color/amber_primary_dark"
-                app:cardCornerRadius="28dp"
+                app:cardCornerRadius="24dp"
                 app:cardElevation="8dp"
                 app:layout_anchor="@+id/demo_card"
                 app:layout_anchorGravity="end|bottom"
@@ -104,136 +99,14 @@
 
         </androidx.cardview.widget.CardView>
 
-        <HorizontalScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginTop="24dp"
-            android:overScrollMode="never"
-            android:scrollbars="none">
-
-            <RadioGroup
-                android:id="@+id/radioGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="16dp"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                tools:layout_editor_absoluteY="170dp">
-
-                <RadioButton
-                    android:id="@+id/radioButton1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_red"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_pink"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_brown"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_blue"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_grey"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_android"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton7"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_purple"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_green"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_deep_orange"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton10"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_indigo"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton11"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_cyan"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/radioButton12"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="24dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_weight="1"
-                    android:text="@string/theme_name_amber"
-                    android:textSize="18sp" />
-
-            </RadioGroup>
-        </HorizontalScrollView>
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layoutAnimation="@anim/recycler_layout_animation_falls_down"
+            android:overScrollMode="never" />
 
     </LinearLayout>
 
@@ -244,10 +117,10 @@
         android:layout_gravity="right|top"
         android:layout_marginEnd="32dp"
         android:clickable="true"
+        android:focusable="true"
         app:layout_anchor="@+id/linearLayout"
         app:layout_anchorGravity="end|top"
         app:srcCompat="@drawable/fab_done"
-        tools:ignore="RtlHardcoded"
-        android:focusable="true" />
+        tools:ignore="RtlHardcoded" />
 
 </FrameLayout>

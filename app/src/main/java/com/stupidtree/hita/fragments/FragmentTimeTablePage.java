@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,6 +25,7 @@ import android.widget.TextView;
 
 import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.HITAApplication;
+import com.stupidtree.hita.diy.TimeTableBlockView;
 import com.stupidtree.hita.timetable.timetable.HTime;
 import com.stupidtree.hita.diy.TimeTableViewGroup;
 import com.stupidtree.hita.hita.TextTools;
@@ -42,44 +42,51 @@ import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialog;
+import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 
-public class FragmentTimeTablePage extends BaseFragment {
+public class FragmentTimeTablePage extends BaseFragment implements TimeTableBlockView.TimeTablePreferenceRoot {
 
     public boolean hasInit = false;
-    View pageView;
-    public int pageWeek;
-   // boolean curiculumOnly;
-    boolean wholeday;
-    boolean colorfulMode,drawNowLine;
-    NestedScrollView scrollView;
-    TimeTableViewGroup timeTableView;
-    int start;
-    /*辅助性变量区*/
-    Calendar temp0 = Calendar.getInstance();
-    /*UI类常量*/
-    static int CARD_HEIGHT = 160;//课程表卡片高度
-
+    private int pageWeek;
+    private boolean wholeday;
+    private boolean drawNowLine;
+    private NestedScrollView scrollView;
+    private TimeTableViewGroup timeTableView;
+    private int start;
+    private String titleGravity;
+    private String cardBackground;
+    private String titleColor;
+    private String subTitleColor;
+    private String iconColor;
+    private boolean enableIcon;
+    private boolean colorfulMode;
+    private int bgOpacity;
+    private int titleAlpha;
+    private int subtitleAlpha;
+    private boolean boldText;
+    private int card_height;
     /*控件对象区*/
-    TextView[] tdays = new TextView[8]; //顶部日期文本
-    TextView[] tWholeDays = new TextView[7];
-    CardView[] tWholeDayCards = new CardView[7];
-    LinearLayout classNumberLayout;
-    LinearLayout wholedayLayout;
-    refreshPageTask pageTask;
-    BroadcastReceiver receiver;
-    IntentFilter ift;
-    LocalBroadcastManager localBroadcastManager;
+    private TextView[] tdays = new TextView[8]; //顶部日期文本
+    private TextView[] tWholeDays = new TextView[7];
+    private CardView[] tWholeDayCards = new CardView[7];
+    private LinearLayout classNumberLayout;
+    private LinearLayout wholedayLayout;
+    private refreshPageTask pageTask;
+    private BroadcastReceiver receiver;
+    private IntentFilter ift;
+    private LocalBroadcastManager localBroadcastManager;
 
     public FragmentTimeTablePage() {
         localBroadcastManager = LocalBroadcastManager.getInstance(HContext);
         ift = new IntentFilter();
-        ift.addAction("COM.STUPIDTREE.HITA.TIMETABLE_PAGE_REFRESH");
+        ift.addAction(TIMETABLE_CHANGED);
+        //ift.addAction(TIMETABLE_PAGE_REFRESH);
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.e("timetable_page" + pageWeek, "收到刷新广播");
-                if (FragmentTimeTablePage.this.isDetached() || FragmentTimeTablePage.this.isRemoving() || FragmentTimeTablePage.this.isStateSaved())
+                //Log.e("timetable_page" + pageWeek, "收到刷新广播");
+                if (!FragmentTimeTablePage.this.isResumed()||FragmentTimeTablePage.this.isDetached() || FragmentTimeTablePage.this.isRemoving() || FragmentTimeTablePage.this.isStateSaved())
                     return;
                 if (intent.getIntExtra("week", 1) == pageWeek) RefreshPageView(pageWeek);
             }
@@ -99,26 +106,35 @@ public class FragmentTimeTablePage extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CARD_HEIGHT = defaultSP.getInt("TimeTable_cardheight", 160);//课程表卡片高度
-
         if (getArguments() != null) {
             pageWeek = getArguments().getInt("week");
         }
-      //  curiculumOnly = defaultSP.getBoolean("timetable_curriculumonly", false);
-        wholeday = defaultSP.getBoolean("timetable_wholeday", false);
-        colorfulMode = defaultSP.getBoolean("timetable_colorful_mode", true);
-        drawNowLine= defaultSP.getBoolean("timetable_draw_now_line", true);
-
+        syncAllPreferences();
         start = wholeday ? 0 : 8;
-
-
     }
+
+    private void syncAllPreferences(){
+        cardBackground = defaultSP.getString("timetable_card_background","gradient");
+        card_height = defaultSP.getInt("timetable_card_height", 160);//课程表卡片高度
+        titleGravity = defaultSP.getString("timetable_card_title_gravity","top");
+        bgOpacity = defaultSP.getInt("timetable_card_opacity",100);
+        enableIcon = defaultSP.getBoolean("timetable_card_icon_enable",true);
+        boldText = defaultSP.getBoolean("timetable_card_text_bold",false);
+        titleColor = defaultSP.getString("timetable_card_title_color","white");
+        subTitleColor = defaultSP.getString("timetable_card_subtitle_color","white");
+        iconColor = defaultSP.getString("timetable_card_icon_color","white");
+        colorfulMode = defaultSP.getBoolean("subjects_color_enable", false);
+        wholeday = defaultSP.getBoolean("timetable_wholeday", false);
+        drawNowLine = defaultSP.getBoolean("timetable_draw_now_line", true);
+        titleAlpha = defaultSP.getInt("timetable_card_title_alpha",100);
+        subtitleAlpha = defaultSP.getInt("timetable_card_subtitle_alpha",100);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dynamic_timetable_page, null);
-        pageView = v;
         initDateTextViews(v);
         initWholeDayCardViews(v);
         initWholeDayTextViews(v);
@@ -138,7 +154,7 @@ public class FragmentTimeTablePage extends BaseFragment {
         TextView text;
         for (int i = start; i < 24; i++) {
             view = LayoutInflater.from(this.getContext()).inflate(R.layout.dynamic_timetable_left_time, null);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CARD_HEIGHT);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, card_height);
             //params.setMargins(0, 0, 20, 0);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -203,19 +219,15 @@ public class FragmentTimeTablePage extends BaseFragment {
     }
 
     public void RefreshPageView(int week) {
-        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
+            pageTask.cancel(true);
         pageTask = new refreshPageTask(week);
         pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
     public void NotifyRefresh() {
         if (!hasInit) return;
-        CARD_HEIGHT = defaultSP.getInt("TimeTable_cardheight", 160);//课程表卡片高度
-       // curiculumOnly = defaultSP.getBoolean("timetable_curriculumonly", false);
-        wholeday = defaultSP.getBoolean("timetable_wholeday", false);
-        colorfulMode = defaultSP.getBoolean("timetable_colorful_mode", true);
-        drawNowLine = defaultSP.getBoolean("timetable_draw_now_line", true);
-
+        syncAllPreferences();
         start = wholeday ? 0 : 8;
         createLeftView();
         RefreshPageView(pageWeek);
@@ -225,13 +237,6 @@ public class FragmentTimeTablePage extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         localBroadcastManager.registerReceiver(receiver, ift);
-
-        if (context instanceof OnFragmentInteractionListener) {
-
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -244,17 +249,13 @@ public class FragmentTimeTablePage extends BaseFragment {
 
     @Override
     protected void stopTasks() {
-        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
+            pageTask.cancel(true);
     }
 
     @Override
     public void Refresh() {
 
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
 
@@ -277,7 +278,7 @@ public class FragmentTimeTablePage extends BaseFragment {
                 for (int i = 0; i < oneDayEvent.size(); i++) {
                     if (usedIndex.contains(i)) continue;
                     EventItem ei = oneDayEvent.get(i);
-                    if(ei.isWholeDay){
+                    if (ei.isWholeDay) {
                         oneDay.add(ei);
                         continue;
                     }
@@ -285,13 +286,13 @@ public class FragmentTimeTablePage extends BaseFragment {
                     result.add(ei);
                     for (int j = i + 1; j < oneDayEvent.size(); j++) {
                         EventItem x = oneDayEvent.get(j);
-                        if(x.isWholeDay) continue;
+                        if (x.isWholeDay) continue;
                         if (ei.startTime.equals(x.startTime) && ei.endTime.equals(x.endTime)) {
                             result.add(x);
                             usedIndex.add(j);
                         }
                     }
-                    if (result.size() > 1&&!ei.isWholeDay) oneDay.add(result);
+                    if (result.size() > 1 && !ei.isWholeDay) oneDay.add(result);
                     else oneDay.add(ei);
                 }
                 res.addAll(oneDay);
@@ -310,16 +311,16 @@ public class FragmentTimeTablePage extends BaseFragment {
                 if (wholeday) scrollView.post(new Runnable() {
                     @Override
                     public void run() {
-                        scrollView.scrollTo(0, 8 * CARD_HEIGHT);
+                        scrollView.scrollTo(0, 8 * card_height);
                     }
                 });
                 timeTableView.removeAllViews();
-                timeTableView.init(getActivity(), pageWeek, CARD_HEIGHT, new HTime(start, 0), getBGIconColor(), colorfulMode);
+                timeTableView.init(getBaseActivity(), pageWeek,FragmentTimeTablePage.this);
                 for (CardView cv : tWholeDayCards) {
                     cv.setVisibility(View.GONE);
                 }
                 boolean hasWholedayWholeWeek = false;
-                ArrayList <List<EventItem>> wholeDayMap = new ArrayList<>();
+                ArrayList<List<EventItem>> wholeDayMap = new ArrayList<>();
                 for (int i = 0; i < 7; i++) {
                     wholeDayMap.add(new ArrayList<EventItem>());
                 }
@@ -327,26 +328,26 @@ public class FragmentTimeTablePage extends BaseFragment {
                     if (o instanceof EventItem) {
                         if (!((EventItem) o).isWholeDay) timeTableView.addBlock(o);
                         else {
-                            wholeDayMap.get(((EventItem) o).DOW-1).add((EventItem) o);
-                            Log.e("add",o.toString());
+                            wholeDayMap.get(((EventItem) o).DOW - 1).add((EventItem) o);
+                            Log.e("add", o.toString());
                         }
-                    }else if(o instanceof List){
+                    } else if (o instanceof List) {
                         timeTableView.addBlock(o);
                     }
                 }
-                for (int p=0;p<7;p++) {
+                for (int p = 0; p < 7; p++) {
                     if (wholeDayMap.get(p).size() > 0) {
                         hasWholedayWholeWeek = true;
                         tWholeDayCards[p].setVisibility(View.VISIBLE);
                         tWholeDays[p].setText(wholeDayMap.get(p).size() + "");
-                        tWholeDayCards[p].setOnClickListener(new OnWholeDayCardClickListener(wholeDayMap.get(p), p+1));
+                        tWholeDayCards[p].setOnClickListener(new OnWholeDayCardClickListener(wholeDayMap.get(p), p + 1));
                     } else tWholeDayCards[p].setVisibility(View.GONE);
                 }
                 if (hasWholedayWholeWeek) wholedayLayout.setVisibility(View.VISIBLE);
                 else wholedayLayout.setVisibility(View.GONE);
 
-                if(pageWeek==timeTableCore.getThisWeekOfTerm()&&drawNowLine&&new HTime(now).after(new HTime(start,0))){
-                    timeTableView.addView(new TimeTableNowLine(getContext(),getColorPrimary()));
+                if (pageWeek == timeTableCore.getThisWeekOfTerm() && drawNowLine && new HTime(now).after(new HTime(start, 0))) {
+                    timeTableView.addView(new TimeTableNowLine(getContext(), getColorPrimary()));
                 }
 
 
@@ -355,6 +356,78 @@ public class FragmentTimeTablePage extends BaseFragment {
                 e.printStackTrace();
             }
         }
+    }
+    @Override
+    public boolean isColorEnabled() {
+        return colorfulMode;
+    }
+
+    @Override
+    public String getTitleColor() {
+        return titleColor;
+    }
+
+    @Override
+    public String getSubTitleColor() {
+        return subTitleColor;
+    }
+
+    @Override
+    public String getIconColor() {
+        return iconColor;
+    }
+
+    @Override
+    public boolean willBoldText() {
+        return boldText;
+    }
+
+    @Override
+    public boolean cardIconEnabled() {
+        return enableIcon;
+    }
+
+    @Override
+    public int getCardOpacity() {
+        return bgOpacity;
+    }
+
+    @Override
+    public int getCardHeight() {
+        return card_height;
+    }
+
+    @Override
+    public HTime getStartTime(){
+        return new HTime(start, 0);
+    }
+
+    @Override
+    public int getTodayBGColor() {
+        return getBGIconColor();
+    }
+
+    @Override
+    public int getTitleGravity() {
+        if(titleGravity.equals("top")) return Gravity.TOP|Gravity.CENTER_HORIZONTAL;
+        else if(titleGravity.equals("center")) return Gravity.CENTER;
+        else return Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
+    }
+
+    @Override
+    public int getTitleAlpha() {
+        return titleAlpha;
+    }
+
+    @Override
+    public int getSubtitleAlpha() {
+        return subtitleAlpha;
+    }
+
+
+    @Override
+    public String getCardBackground() {
+        return cardBackground;
     }
 
 

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.strToIntegerList;
+import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 public class FragmentTasks extends BaseFragment implements RefreshBroadcastReceiver.ActionListener {
     RecyclerView list;
@@ -53,9 +53,9 @@ public class FragmentTasks extends BaseFragment implements RefreshBroadcastRecei
         refreshBroadcastReceiver = new RefreshBroadcastReceiver();
         refreshBroadcastReceiver.setListener(this);
         IntentFilter iF = new IntentFilter();
-        iF.addAction("COM.STUPIDTREE.HITA.TASK_REFRESH");
-        iF.addAction("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
-        iF.addAction("COM.STUPIDTREE.HITA.TIMETABLE_PAGE_REFRESH");
+       // iF.addAction(TASK_REFRESH);
+        iF.addAction(TIMETABLE_CHANGED);
+        //iF.addAction(TIMETABLE_PAGE_REFRESH);
         localBroadcastManager.registerReceiver(refreshBroadcastReceiver, iF);
     }
 
@@ -100,7 +100,8 @@ public class FragmentTasks extends BaseFragment implements RefreshBroadcastRecei
 
     @Override
     public void receive(Context context, Intent intent) {
-        Log.e("fragmentTask_recieve",intent.getAction());
+        if(!isResumed()) return;
+       // Log.e("fragmentTask_recieve",intent.getAction());
         Refresh();
     }
 

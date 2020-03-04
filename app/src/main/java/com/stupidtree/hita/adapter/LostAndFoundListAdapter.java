@@ -37,7 +37,6 @@ import cn.bmob.v3.listener.UpdateListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.TimeWatcher.todaysEvents;
 import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
 public class LostAndFoundListAdapter extends RecyclerView.Adapter <LostAndFoundListAdapter.societyViewholder>{
@@ -76,7 +75,7 @@ public class LostAndFoundListAdapter extends RecyclerView.Adapter <LostAndFoundL
         mBeans.remove(position);
         notifyItemRemoved(position);
         if(position != mBeans.size()){ // 如果移除的是最后一个，忽略
-            notifyItemRangeChanged(position, todaysEvents.size() - position);
+            notifyItemRangeChanged(position, mBeans.size() - position);
         }
     }
 

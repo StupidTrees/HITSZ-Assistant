@@ -16,7 +16,7 @@
         app:tabIndicatorColor="#00000000"
         app:tabIndicatorFullWidth="false"
         app:tabMode="scrollable"
-        app:tabSelectedTextColor="?attr/colorPrimary"
+        app:tabSelectedTextColor="?attr/colorAccent"
         app:tabTextColor="?attr/text_color_secondary"
         app:tabUnboundedRipple="true">
 
@@ -40,4 +40,5 @@
         android:id="@+id/cjgl_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>

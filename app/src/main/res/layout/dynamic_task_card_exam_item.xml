@@ -60,8 +60,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/radius_primay_lgiht_button_bg"
-        android:backgroundTint="@color/background_bottom_color_as_tint"
+        android:background="@drawable/radius_accent_lgiht_button_bg"
+        android:backgroundTint="?attr/background_color_bottom_as_tint"
         android:backgroundTintMode="src_over"
         android:fontFamily="sans-serif-black"
         android:paddingLeft="16dp"
@@ -69,6 +69,6 @@
         android:paddingRight="16dp"
         android:paddingBottom="8dp"
         android:text="1天3小时"
-        android:textColor="?attr/colorPrimary" />
+        android:textColor="?attr/colorAccent" />
 
 </LinearLayout>

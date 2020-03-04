@@ -47,7 +47,7 @@
                 android:layout_gravity="center|start"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/radius_grey_lgiht_button_bg"
-                android:backgroundTint="@color/background_bottom_color_as_tint"
+                android:backgroundTint="?attr/background_color_bottom_as_tint"
                 android:backgroundTintMode="src_over"
                 android:paddingStart="8dp"
                 android:paddingTop="4dp"
@@ -67,11 +67,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="16dp"
-            android:background="@drawable/radius_primay_round_icon_bg"
-            android:backgroundTint="@color/background_bottom_color_as_tint"
+            android:background="@drawable/radius_accent_round_icon_bg"
+            android:backgroundTint="?attr/background_color_bottom_as_tint"
             android:backgroundTintMode="src_over"
             android:padding="8dp"
-            android:tint="?attr/colorPrimary"
+            android:tint="?attr/colorAccent"
             android:tintMode="src_in"
             app:srcCompat="@drawable/ic_chatbot_course" />
 

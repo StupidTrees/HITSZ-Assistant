@@ -64,10 +64,8 @@ import cn.bmob.v3.BmobQuery;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.cookies_ut_card;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.ut_username;
 import static com.stupidtree.hita.fragments.main.FragmentNavi.ORDER_NAME;
 
 public class NaviPageAdapter extends RecyclerView.Adapter {
@@ -248,7 +246,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                     ActivityUtils.startUTActivity(mContext);
                 }
             });
-            new refreshCardTask(vc.money,vc.loading).executeOnExecutor(TPE);
+          //  new refreshCardTask(vc.money,vc.loading).executeOnExecutor(TPE);
         }
         else if (holder instanceof ViewHolder_Hint) {
             ViewHolder_Hint vh = (ViewHolder_Hint) holder;
@@ -336,19 +334,19 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                 vm.normal.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new punchTask(1,HContext.getString(R.string.punch_success_normal),position).executeOnExecutor(TPE);
+                        new punchTask(1,mContext.getString(R.string.punch_success_normal),position).executeOnExecutor(TPE);
                     }
                 });
                 vm.happy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new punchTask(0,HContext.getString(R.string.punch_success_happy),position).executeOnExecutor(TPE);
+                        new punchTask(0,mContext.getString(R.string.punch_success_happy),position).executeOnExecutor(TPE);
                     }
                 });
                 vm.sad.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new punchTask(2,HContext.getString(R.string.punch_success_sad),position).executeOnExecutor(TPE);
+                        new punchTask(2,mContext.getString(R.string.punch_success_sad),position).executeOnExecutor(TPE);
 
                     }
                 });
@@ -911,88 +909,88 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         }
     }
 
-    class refreshCardTask extends AsyncTask{
-        TextView money;
-        ProgressBar loading;
-        String money_str;
-
-        public refreshCardTask(TextView money, ProgressBar loading) {
-            this.money = money;
-            this.loading = loading;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loading.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            try {
-                Connection.Response r = Jsoup.connect("http://10.64.1.15/sfrzwhlgportalHome.action")
-                        .data("errorcode","1")
-                        .header("Connection","keep-alive")
-                        .data("continueurl","http://ecard.utsz.edu.cn/accountcardUser.action")
-                        .data("ssoticketid",ut_username)
-                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36").header("Connection","keep-alive")
-                        .execute();
-                cookies_ut_card.clear();
-                cookies_ut_card.putAll(r.cookies());
-                Document d2 = Jsoup.connect("http://10.64.1.15/accountcardUser.action")
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-                        .header("Connection","keep-alive")
-                        .header("Host","10.64.1.15")
-                        .cookies(cookies_ut_card)
-                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-                        .header("Content-Type", "application/x-www-form-urlencoded")
-                        .get();
-                // System.out.println(d2);
-                Elements infosList = d2.select("td");
-                Elements toR = new Elements();
-                for(Element e:infosList){
-                    if(!e.hasClass("neiwen")||e.toString().contains("table")) toR.add(e);
-                }
-                infosList.removeAll(toR);
-                //System.out.println(infosList);
-                Map<String, String> infosMap = new HashMap<>();
-                for(int i = 0;i+1<infosList.size();i+=2){
-                    //Log.e("td", String.valueOf(infosList.get(i)));
-                    String key = infosList.get(i).text().replaceAll(" ","").replaceAll("：","");
-                    String value = infosList.get(i+1).text();
-                    infosMap.put(key,value);
-                }
-                //Log.e("infos", String.valueOf(infosMap));
-                //  name_str = infosMap.get("姓名").toString();
-                String ye = infosMap.get("余额");
-                int in1 = ye.indexOf("(");
-                int in2 = ye.indexOf("（");
-                int index = in1<in2?in1:in2;
-                money_str = ye.substring(0,index);
-//            number_str = infosMap.get("学工号").toString();
-//            kzt_str = infosMap.get("卡状态").toString();
-//            djzt_str = infosMap.get("冻结状态").toString();
-//            gszt_str = infosMap.get("挂失状态").toString();
-//            jczt_str = infosMap.get("检查状态").toString();
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            loading.setVisibility(View.GONE);
-            if((Boolean) o){
-                money.setText(money_str);
-            }else{
-                money.setText("--");
-            }
-        }
-    }
+//    class refreshCardTask extends AsyncTask{
+//        TextView money;
+//        ProgressBar loading;
+//        String money_str;
+//
+//        public refreshCardTask(TextView money, ProgressBar loading) {
+//            this.money = money;
+//            this.loading = loading;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            loading.setVisibility(View.VISIBLE);
+//        }
+//
+//        @Override
+//        protected Object doInBackground(Object[] objects) {
+//            try {
+//                Connection.Response r = Jsoup.connect("http://10.64.1.15/sfrzwhlgportalHome.action")
+//                        .data("errorcode","1")
+//                        .header("Connection","keep-alive")
+//                        .data("continueurl","http://ecard.utsz.edu.cn/accountcardUser.action")
+//                        .data("ssoticketid",ut_username)
+//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36").header("Connection","keep-alive")
+//                        .execute();
+//                cookies_ut_card.clear();
+//                cookies_ut_card.putAll(r.cookies());
+//                Document d2 = Jsoup.connect("http://10.64.1.15/accountcardUser.action")
+//                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+//                        .header("Connection","keep-alive")
+//                        .header("Host","10.64.1.15")
+//                        .cookies(cookies_ut_card)
+//                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+//                        .header("Content-Type", "application/x-www-form-urlencoded")
+//                        .get();
+//                // System.out.println(d2);
+//                Elements infosList = d2.select("td");
+//                Elements toR = new Elements();
+//                for(Element e:infosList){
+//                    if(!e.hasClass("neiwen")||e.toString().contains("table")) toR.add(e);
+//                }
+//                infosList.removeAll(toR);
+//                //System.out.println(infosList);
+//                Map<String, String> infosMap = new HashMap<>();
+//                for(int i = 0;i+1<infosList.size();i+=2){
+//                    //Log.e("td", String.valueOf(infosList.get(i)));
+//                    String key = infosList.get(i).text().replaceAll(" ","").replaceAll("：","");
+//                    String value = infosList.get(i+1).text();
+//                    infosMap.put(key,value);
+//                }
+//                //Log.e("infos", String.valueOf(infosMap));
+//                //  name_str = infosMap.get("姓名").toString();
+//                String ye = infosMap.get("余额");
+//                int in1 = ye.indexOf("(");
+//                int in2 = ye.indexOf("（");
+//                int index = in1<in2?in1:in2;
+//                money_str = ye.substring(0,index);
+////            number_str = infosMap.get("学工号").toString();
+////            kzt_str = infosMap.get("卡状态").toString();
+////            djzt_str = infosMap.get("冻结状态").toString();
+////            gszt_str = infosMap.get("挂失状态").toString();
+////            jczt_str = infosMap.get("检查状态").toString();
+//                return true;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return false;
+//            }
+//
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Object o) {
+//            super.onPostExecute(o);
+//            loading.setVisibility(View.GONE);
+//            if((Boolean) o){
+//                money.setText(money_str);
+//            }else{
+//                money.setText("--");
+//            }
+//        }
+//    }
 
      class punchTask extends AsyncTask{
         int type;

@@ -21,7 +21,12 @@ public class HITAUser extends BmobUser {
     String studentnumber;
     String avatarUri;
     String punchInfo;
+    String usingTheme;
 
+
+    public void setUsingTheme(String usingTheme) {
+        this.usingTheme = usingTheme;
+    }
 
     public String getRealname() {
         return realname;

@@ -6,153 +6,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:overScrollMode="never"
-    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-    tools:context=".jw.FragmentJWTS_cjgl_grcj">
-
-    <!-- TODO: Update blank fragment layout -->
-
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        app:elevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
+            android:minHeight="84dp"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            app:layout_scrollFlags="scroll|enterAlways">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="24dp"
                 android:fontFamily="sans-serif-black"
                 android:text="@string/cjgl_xnxq"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="24sp" />
+                android:textColor="@color/material_text_icon_white"
+                android:textSize="22sp" />
 
             <Spinner
                 android:id="@+id/xnxq_picker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center|left"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
+                android:backgroundTint="@color/material_text_icon_white"
                 android:padding="16dp" />
-
         </LinearLayout>
 
-        <LinearLayout
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/qmcj_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            android:focusable="true">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/jw_radius_bg_bottom"
+            android:overScrollMode="never"
+            android:paddingTop="16dp" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center|left"
-                android:text="@string/cjgl_subject_name"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp"
-                tools:ignore="RtlHardcoded" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1.6"
-                android:gravity="center|left"
-                android:singleLine="false"
-                android:text="@string/cjgl_subject_type"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp"
-                tools:ignore="RtlHardcoded" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1.6"
-                android:gravity="center|left"
-                android:singleLine="false"
-                android:text="@string/cjgl_subject_exam"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp"
-                tools:ignore="RtlHardcoded" />
-
-            <TextView
-                android:id="@+id/cjxx_point"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1.6"
-                android:gravity="center|left"
-                android:singleLine="false"
-                android:text="@string/cjgl_subject_credit"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp"
-                tools:ignore="RtlHardcoded" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1.6"
-                android:gravity="center|left"
-                android:singleLine="false"
-                android:text="@string/cjgl_subject_total_score"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp"
-                tools:ignore="RtlHardcoded" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1.6"
-                android:gravity="center|left"
-                android:singleLine="false"
-                android:text="@string/cjgl_subject_final_score"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="12sp"
-                tools:ignore="RtlHardcoded" />
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ProgressBar
-                android:id="@+id/qmcj_loading"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/qmcj_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:nestedScrollingEnabled="false" />
-
-        </FrameLayout>
-
-    </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

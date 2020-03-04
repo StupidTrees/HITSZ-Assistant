@@ -131,8 +131,10 @@ public class CurriculumCreator implements Serializable {
 
     public void updateSubjectInfo(List<Map<String,String>> data){
         for(Map<String,String> d:data){
+            boolean found = false;
             for(Subject s:Subjects){
-                if(TextTools.equals(s.getName(),d.get("name"),"【实验】")){
+                if(TextTools.equals(s.getName(), Objects.requireNonNull(d.get("name")),"【实验】")){
+                    found = true;
                     s.setCode(d.get("code"));
                     s.setSchool(d.get("school"));
                     s.setCompulsory(d.get("compulsory"));
@@ -141,6 +143,22 @@ public class CurriculumCreator implements Serializable {
                     s.setType(d.get("type"));
                     s.setTeacher(d.get("teacher"));
                     s.setXnxq(d.get("xnxq"));
+                    s.setId(d.get("id"));
+                }
+            }
+            if(d.get("type").equals("MOOC")){
+                if(!found){
+                    Subject s = new Subject(curriculumCode);
+                    s.setMOOC(true);
+                    s.setCode(d.get("code"));
+                    s.setSchool(d.get("school"));
+                    s.setCompulsory(d.get("compulsory"));
+                    s.setCredit(d.get("credit"));
+                    s.setTotalCourses(d.get("period"));
+                    s.setType(d.get("type"));
+                    s.setTeacher(d.get("teacher"));
+                    s.setXnxq(d.get("xnxq"));
+                    s.setId(d.get("id"));
                 }
             }
         }

@@ -17,6 +17,7 @@
             android:id="@+id/collapse"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:expandedTitleMarginStart="16dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
@@ -35,7 +36,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/location_radius_background"
+        android:background="@drawable/jw_radius_bg_bottom"
         app:behavior_overlapTop="0dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 

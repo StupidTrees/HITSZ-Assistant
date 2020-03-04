@@ -190,7 +190,7 @@ public class FragmentSearchResult_location extends FragmentSearchResult{
                 holder.type.setText(l.getType_Name());
                 Glide.with(getContext()).load(l.getImageURL())
                         .apply(RequestOptions.circleCropTransform())
-                        .placeholder(R.drawable.ic_account_activated)
+                        .placeholder(R.drawable.ic_location3)
                         .into(holder.picture);
                 if(onItemClickListener!=null)holder.card.setOnClickListener(new View.OnClickListener() {
                     @Override

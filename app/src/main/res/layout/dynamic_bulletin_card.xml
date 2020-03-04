@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-        app:cardBackgroundColor="?attr/background_color_second" xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bulletin_card"
     android:layout_width="match_parent"
@@ -13,7 +12,9 @@
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:minHeight="100dp"
     android:transitionName="cardview"
-    app:cardCornerRadius="12dp">
+    app:cardBackgroundColor="?attr/background_color_second"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,14 +49,25 @@
 
                 <TextView
                     android:id="@+id/bulletin_card_time"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:background="@drawable/radius_grey_lgiht_button_bg"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
+                    android:backgroundTintMode="src_over"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
                     android:singleLine="true"
                     android:text="2019-04-02"
                     android:textColor="?attr/text_color_secondary"
                     android:textSize="14sp" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
                 <ImageView
                     android:id="@+id/imageView5"

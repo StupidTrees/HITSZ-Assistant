@@ -1,0 +1,128 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        android:dialogTitle="@string/settings_summary_darkmode"
+        android:entries="@array/preference_dark_mode"
+        android:entryValues="@array/preference_dark_mode_values"
+        android:key="dark_mode_mode"
+        android:title="@string/settings_title_darkmode"
+        app:iconSpaceReserved="false" />
+
+    <PreferenceCategory
+        app:allowDividerAbove="false"
+        android:title="@string/settings_category_timetable"
+        app:iconSpaceReserved="false">
+        <ListPreference
+            android:defaultValue="default"
+            android:key="timetable_preset"
+            android:entries="@array/preference_timetable_preset"
+            android:entryValues="@array/preference_timetable_preset_values"
+            android:title="@string/settings_title_timetable_preset"
+            android:summary="@string/settings_summary_timetable_preset"
+            app:iconSpaceReserved="false"/>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="subjects_color_enable"
+            android:summary="@string/settings_summary_colormode"
+            android:title="@string/settings_title_colormode"
+            app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="gradient"
+            android:entries="@array/preference_card_background"
+            android:entryValues="@array/preference_card_background_values"
+            android:key="timetable_card_background"
+            android:title="@string/settings_title_timetable_card_background"
+            app:iconSpaceReserved="false" />
+        <SeekBarPreference
+            android:defaultValue="160"
+            app:min="80"
+            android:max="400"
+            app:showSeekBarValue="true"
+            app:selectable="true"
+            android:key="timetable_card_height"
+            android:summary="@string/settings_summary_timetable_card_height"
+            android:title="@string/settings_title_timetable_card_height"
+            app:iconSpaceReserved="false" />
+
+        <SeekBarPreference
+            android:defaultValue="100"
+            app:min="0"
+            android:max="100"
+            app:showSeekBarValue="true"
+            app:selectable="true"
+            android:key="timetable_card_opacity"
+            android:title="@string/settings_title_timetable_card_opacity"
+            app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="top"
+            android:entries="@array/preference_card_title_gravity"
+            android:entryValues="@array/preference_card_title_gravity_values"
+            android:key="timetable_card_title_gravity"
+            android:summary="@string/settings_summary_timetable_card_title_gravity"
+            android:title="@string/settings_title_timetable_card_title_gravity"
+            app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="timetable_card_text_bold"
+            android:summary="@string/settings_summary_timetable_card_text_bold"
+            android:title="@string/settings_title_timetable_card_text_bold"
+            app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="white"
+            android:key="timetable_card_title_color"
+            android:entries="@array/preference_card_title_color"
+            android:entryValues="@array/preference_card_title_color_values"
+            android:title="@string/settings_title_timetable_card_title_color"
+            app:iconSpaceReserved="false"/>
+        <SeekBarPreference
+            android:defaultValue="100"
+            app:min="0"
+            android:max="100"
+            app:showSeekBarValue="true"
+            app:selectable="true"
+            android:key="timetable_card_title_alpha"
+            android:title="@string/settings_title_timetable_card_title_alpha"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:defaultValue="white"
+            android:key="timetable_card_subtitle_color"
+            android:entries="@array/preference_card_title_color"
+            android:entryValues="@array/preference_card_title_color_values"
+            android:title="@string/settings_title_timetable_card_subtitle_color"
+            app:iconSpaceReserved="false"/>
+        <SeekBarPreference
+            android:defaultValue="100"
+            app:min="0"
+            android:max="100"
+            app:showSeekBarValue="true"
+            android:key="timetable_card_subtitle_alpha"
+            android:title="@string/settings_title_timetable_card_subtitle_alpha"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="timetable_card_icon_enable"
+            android:summary="@string/settings_summary_timetable_card_icon_enable"
+            android:title="@string/settings_title_timetable_card_icon_enable"
+            app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="white"
+            android:key="timetable_card_icon_color"
+            android:entries="@array/preference_card_title_color"
+            android:entryValues="@array/preference_card_title_color_values"
+            android:title="@string/settings_title_timetable_card_icon_color"
+            app:iconSpaceReserved="false"/>
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="timetable_back_enable"
+            android:summary="@string/settings_summary_timetable_back"
+            android:title="@string/settings_title_timetable_back"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

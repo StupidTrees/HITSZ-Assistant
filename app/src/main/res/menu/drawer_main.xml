@@ -4,7 +4,7 @@
     >
     <menu>
         <item android:title="@string/main_drawer_menu_jwts" android:id="@+id/drawer_nav_jwts" android:icon="@drawable/ic_menu_jwts"/>
-        <item android:title="@string/main_drawer_menu_ut" android:id="@+id/drawer_nav_ut" android:icon="@drawable/ic_card"/>
+        <item android:visible="false" android:title="@string/main_drawer_menu_ut" android:id="@+id/drawer_nav_ut" android:icon="@drawable/ic_card"/>
 
         <item android:title="@string/main_drawer_menu_info" android:id="@+id/drawer_nav_info" android:icon="@drawable/ic_menu_bulletin"/>
         <item android:title="@string/main_drawer_menu_search" android:id="@+id/drawer_nav_search" android:icon="@drawable/ic_search"/>

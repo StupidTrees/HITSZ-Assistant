@@ -2,13 +2,39 @@
 
 <resources>
 
-    <string-array name="preference_dark_mode">
-        <item>手动开关</item>
-        <item>跟随系统（仅测试原生和MIUI11）</item>
-    </string-array>
+
     <string-array name="preference_dark_mode_values">
         <item>dark_mode_normal</item>
         <item>dark_mode_follow</item>
+    </string-array>
+    <string-array name="preference_card_title_gravity_values">
+        <item>center</item>
+        <item>top</item>
+        <item>bottom</item>
+    </string-array>
+    <string-array name="preference_card_background_values">
+        <item>gradient</item>
+        <item>primary</item>
+        <item>accent</item>
+    </string-array>
+    <string-array name="preference_card_title_color_values">
+        <item>subject</item>
+        <item>white</item>
+        <item>black</item>
+        <item>primary</item>
+        <item>accent</item>
+    </string-array>
+    <string-array name="preference_card_title_color_values_subject_disabled">
+        <item>white</item>
+        <item>black</item>
+        <item>primary</item>
+        <item>accent</item>
+    </string-array>
+    <string-array name="preference_timetable_preset_values">
+        <item>default</item>
+        <item>subject-normal</item>
+        <item>theme</item>
+        <item>subject</item>
     </string-array>
     <string-array name="words_search">
         <item>查找</item>

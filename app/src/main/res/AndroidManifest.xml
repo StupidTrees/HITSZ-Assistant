@@ -94,7 +94,7 @@
             android:name=".activities.ActivitySubjectManager"
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.ActivityDynamicTable" />
-        <activity android:name=".fragments.FragmentTheme" />
+        <activity android:name=".fragments.popup.FragmentTheme" />
         <activity
             android:name=".activities.ActivityCourse"
             android:label="@string/title_activity_couse"
@@ -170,7 +170,6 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityChatbot"
-            android:theme="@style/ChatBotTheme"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activities.ActivityExplore"

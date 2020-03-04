@@ -72,16 +72,16 @@ public class SearchLibraryCore {
             Connection c = Jsoup.connect("https://opac.lib.utsz.edu.cn/Search/searchshow.jsp").
                     cookies(cookies)
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36")
-                    .data("v_value", text)
                     .header("Sec-Fetch-Dest", "document")
                     .header("Sec-Fetch-Mode", "nvigate")
                     .header("Sec-Fetch-Site", "same-origin")
                     .header("Sec-Fetch-User", "?1")
                     .data("v_tablearray", "bibliosm,serbibm,apabibibm,mmbibm,")
                     .data("v_index", "all")
+                    .data("v_value", text)
                     .data("sortfield", "ptitle")
                     .data("sorttype", "desc")
-                    .data("pageNum", "50")
+                    .data("pageNum", "20")
                     .ignoreHttpErrors(true)
                     .ignoreContentType(true)
                     .data("v_page", "" + (pagerOffset + 1));

@@ -389,7 +389,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
                 minutes %= 1440;
                 int hours = (int) (minutes / 60);
                 minutes %= 60;
-                String weekS = weeks > 0 ? String.format(mContext.getString(R.string.week),weeks) : "";
+                String weekS = weeks > 0 ? String.format(mContext.getString(R.string.count_week),weeks) : "";
                 String dayS = days > 0 ? String.format(mContext.getString(R.string.days),days) : "";
                 String hourS, minuteS;
                 if (!TextUtils.isEmpty(weekS)) {
@@ -434,7 +434,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
         @Override
         public void onBindViewHolder(@NonNull xHolder holder, final int position) {
             EventItem ddl = mBeans.get(position);
-            holder.time_date.setText(String.format(mContext.getString(R.string.week),ddl.week) + mContext.getResources().getStringArray(R.array.dow1)[ddl.DOW - 1]);
+            holder.time_date.setText(String.format(mContext.getString(R.string.count_week),ddl.week) + mContext.getResources().getStringArray(R.array.dow1)[ddl.DOW - 1]);
             if(ddl.isWholeDay) holder.time_time.setText(mContext.getString(R.string.wholeday));
             else holder.time_time.setText(ddl.startTime.tellTime());
             holder.title.setText(ddl.mainName);
@@ -448,7 +448,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             minutes %= 1440;
             int hours = (int) (minutes / 60);
             minutes %= 60;
-            String weekS = weeks > 0 ? String.format(mContext.getString(R.string.week),weeks) : "";
+            String weekS = weeks > 0 ? String.format(mContext.getString(R.string.count_week),weeks) : "";
             String dayS = days > 0 ? String.format(mContext.getString(R.string.days),days) : "";
             String hourS, minuteS;
             if (!TextUtils.isEmpty(weekS)) {
@@ -521,7 +521,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             minutes %= 1440;
             int hours = (int) (minutes / 60);
             minutes %= 60;
-            String weekS = weeks > 0 ? String.format(mContext.getString(R.string.week),weeks) : "";
+            String weekS = weeks > 0 ? String.format(mContext.getString(R.string.count_week),weeks) : "";
             String dayS = days > 0 ? String.format(mContext.getString(R.string.days),days) : "";
             String hourS, minuteS;
             if (!TextUtils.isEmpty(weekS)) {

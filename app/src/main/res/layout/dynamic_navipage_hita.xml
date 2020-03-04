@@ -37,11 +37,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="sans-serif-black"
                 android:gravity="center|start"
                 android:text="@string/navi_campus_title"
                 android:textColor="?attr/text_color_primary"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/hint_second"
@@ -176,7 +176,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/hita_item4"
+                    android:id="@+id/hita_item5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -186,6 +186,54 @@
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
                     android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/gradient_round"
+                        android:padding="10dp"
+                        android:tint="@color/material_text_icon_white"
+                        app:srcCompat="@drawable/hita_face1" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/navi_campus_hita_s"
+                            android:textColor="?attr/text_color_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/hita_hita"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|top"
+                            android:layout_marginTop="4dp"
+                            android:singleLine="true"
+                            android:text="@string/navi_campus_hita_p"
+                            android:textColor="?attr/text_color_primary"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/hita_item4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="36dp"
@@ -280,59 +328,11 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/hita_item5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/gradient_round"
-                        android:padding="10dp"
-                        android:tint="@color/material_text_icon_white"
-                        app:srcCompat="@drawable/hita_face1" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/navi_campus_hita_s"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/hita_hita"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center|top"
-                            android:layout_marginTop="4dp"
-                            android:singleLine="true"
-                            android:text="@string/navi_campus_hita_p"
-                            android:textColor="?attr/text_color_primary"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/hita_item6"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_weight="1"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
@@ -342,7 +342,6 @@
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:layout_gravity="center"
-                        android:layout_marginStart="8dp"
                         android:background="@drawable/gradient_round"
                         android:padding="10dp"
                         android:tint="@color/material_text_icon_white"

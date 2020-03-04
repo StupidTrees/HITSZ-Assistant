@@ -15,7 +15,7 @@ import com.stupidtree.hita.R;
 
 import java.util.Calendar;
 
-import static com.stupidtree.hita.HITAApplication.themeID;
+import static com.stupidtree.hita.HITAApplication.themeCore;
 import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
 public class PickSimpleDateDialog extends AlertDialog{
@@ -34,7 +34,7 @@ public class PickSimpleDateDialog extends AlertDialog{
         super(context);
         mOnDialogConformListener = onDialogConformListener;
         this.context = context;
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context,themeID);// your app theme here
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context,themeCore.getCurrentThemeID());// your app theme here
         View view = getLayoutInflater().cloneInContext(contextThemeWrapper).inflate(R.layout.dialog_pick_simple_date,null,false);
         setView(view);
         initViews(view);

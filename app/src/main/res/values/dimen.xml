@@ -20,6 +20,7 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">200dp</dimen>
 
+
     <dimen name="second_tab_height">32dp</dimen>
     <dimen name="jwts_second_tab_height">48dp</dimen>
 </resources>

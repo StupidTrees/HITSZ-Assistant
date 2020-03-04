@@ -28,10 +28,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
-            android:fontFamily="sans-serif-black"
             android:text="@string/navi_jw_title"
             android:textColor="?attr/text_color_primary"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"

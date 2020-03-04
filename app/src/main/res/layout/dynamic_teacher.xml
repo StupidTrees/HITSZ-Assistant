@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:layout_marginBottom="8dp"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:orientation="horizontal"
@@ -45,10 +46,14 @@
 
     <ImageView
         android:id="@+id/imageView28"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:tint="?attr/colorPrimary"
+        android:background="@drawable/radius_accent_round_icon_bg"
+        android:backgroundTint="?attr/background_color_bottom_as_tint"
+        android:backgroundTintMode="src_over"
+        android:padding="8dp"
+        android:tint="?attr/colorAccent"
         android:visibility="visible"
         app:srcCompat="@drawable/ic_dlg_tt_teacher" />
 

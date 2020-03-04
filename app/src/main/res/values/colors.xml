@@ -21,7 +21,7 @@
     <!-- 分割线背景色 -->
     <color name="white">#FFFFFF</color>
     <color name="colorBGChatbot">#00000000</color>
-    <color name="background_bottom_color_as_tint">#CFFAFAFA</color>
+<!--    <color name="background_bottom_color_as_tint">#CFFAFAFA</color>-->
 
 
     <color name="black_overlay">#66000000</color>
@@ -33,11 +33,11 @@
     <color name="red_accent">#FF5252</color>
     <color name="red_fade">#f44336</color>
 
-    <color name="pink_primary">#E91E63</color>
+    <color name="pink_primary">#ec008c</color>
     <color name="pink_primary_dark">#C2185B</color>
-    <color name="pink_accent">#FF4081</color>
-    <color name="pink_primary_light">#f06292</color>
-    <color name="pink_fade">#FD6585</color>
+    <color name="pink_accent">#ec008c</color>
+    <color name="pink_primary_light">#ec008c</color>
+    <color name="pink_fade">#fc6767</color>
 
     <color name="brown_primary">#795548</color>
     <color name="brown_primary_dark">#5D4037</color>
@@ -102,4 +102,93 @@
     <color name="amber_fade">#ff6f00</color>
     <color name="amber_primary_light">#ffe082</color>
 
+    <color name="rose_primary">#636FA4</color>
+    <color name="rose_primary_dark">#636FA4</color>
+    <color name="rose_accent">#636FA4</color>
+    <color name="rose_fade">#E8CBC0</color>
+    <color name="rose_primary_light">#E8CBC0</color>
+
+    <color name="vice_primary">#3494E6</color>
+    <color name="vice_primary_dark">#3494E6</color>
+    <color name="vice_accent">#3494E6</color>
+    <color name="vice_fade">#EC6EAD</color>
+    <color name="vice_primary_light">#3494E6</color>
+
+    <color name="mild_primary">#67B26F</color>
+    <color name="mild_primary_dark">#67B26F</color>
+    <color name="mild_accent">#4ca2cd</color>
+    <color name="mild_fade">#4ca2cd</color>
+    <color name="mild_primary_light">#67B26F</color>
+
+    <color name="morning_primary">#ff5f6d</color>
+    <color name="morning_primary_dark">#ff5f6d</color>
+    <color name="morning_accent">#ff5f6d</color>
+    <color name="morning_fade">#ffc371</color>
+    <color name="morning_primary_light">#ff5f6d</color>
+
+    <color name="ph_primary">#FF202020</color>
+    <color name="ph_primary_dark">#FF9900</color>
+    <color name="ph_accent">#FF9900</color>
+    <color name="ph_fade">#FF202020</color>
+    <color name="ph_primary_light">#FF9900</color>
+
+
+    <color name="p30_primary">#8EC5FC</color>
+    <color name="p30_primary_dark">#21D4FD</color>
+    <color name="p30_accent">#8EC5FC</color>
+    <color name="p30_fade">#a17fe0</color>
+    <color name="p30_primary_light">#a17fe0</color>
+
+    <color name="hit_primary">#215CC1</color>
+    <color name="hit_primary_dark">#215CC1</color>
+    <color name="hit_accent">
+        #215CC1</color>
+    <color name="hit_fade">
+        #215CC1</color>
+    <color name="hit_primary_light">
+        #215CC1</color>
+    <color name="cruelsummer_primary">#8849FF</color>
+    <color name="cruelsummer_primary_dark">#22269E</color>
+    <color name="cruelsummer_accent">
+        #5E9CFE</color>
+    <color name="cruelsummer_fade">
+        #5E9CFE</color>
+    <color name="cruelsummer_primary_light">
+        #5E9CFE</color>
+
+    <color name="mi_primary">#2c3e50</color>
+    <color name="mi_primary_dark">#2c3e50</color>
+    <color name="mi_accent">#2c3e50</color>
+    <color name="mi_fade">#bdc3c7</color>
+    <color name="mi_primary_light">#2c3e50</color>
+
+    <color name="tan_primary">#b36d61</color>
+    <color name="tan_primary_dark">#b36d61</color>
+    <color name="tan_accent">#b36d61</color>
+    <color name="tan_fade">#b36d61</color>
+    <color name="tan_primary_light">#b36d61</color>
+    
+    <color name="yadinglv_primary">#428675</color>
+    <color name="yadinglv_primary_dark">#6a97a4</color>
+    <color name="yadinglv_accent">#428675</color>
+    <color name="yadinglv_fade">#428675</color>
+    <color name="yadinglv_primary_light">#6a97a4</color>
+
+    <color name="manjianghong_primary">#a7535a</color>
+    <color name="manjianghong_primary_dark">#a7535a</color>
+    <color name="manjianghong_accent">#a7535a</color>
+    <color name="manjianghong_fade">#a7535a</color>
+    <color name="manjianghong_primary_light">#a7535a</color>
+
+    <color name="magic_primary">#4E7CA1</color>
+    <color name="magic_primary_dark">#4E7CA1</color>
+    <color name="magic_accent">#4E7CA1</color>
+    <color name="magic_fade">#4E7CA1</color>
+    <color name="magic_primary_light">#4E7CA1</color>
+
+    <color name="cyberpunk_primary">#3494E6</color>
+    <color name="cyberpunk_primary_dark">#3494E6</color>
+    <color name="cyberpunk_accent">#EC6EAD</color>
+    <color name="cyberpunk_fade">#EC6EAD</color>
+    <color name="cyberpunk_primary_light">#EC6EAD</color>
 </resources>

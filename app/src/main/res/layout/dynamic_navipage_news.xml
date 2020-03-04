@@ -65,7 +65,7 @@
                     android:alpha="0.8"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="?attr/text_color_primary"
+                    android:textColor="?attr/text_color_secondary"
                     android:textSize="12sp"
                     android:visibility="visible" />
             </LinearLayout>
@@ -94,7 +94,7 @@
                     android:alpha="0.8"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="?attr/text_color_primary"
+                    android:textColor="?attr/text_color_secondary"
                     android:textSize="12sp"
                     android:visibility="visible" />
             </LinearLayout>
@@ -123,7 +123,7 @@
                     android:layout_gravity="center"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="?attr/text_color_primary"
+                    android:textColor="?attr/text_color_secondary"
                     android:textSize="12sp"
                     android:visibility="visible" />
             </LinearLayout>

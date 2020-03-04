@@ -3,11 +3,13 @@ package com.stupidtree.hita.timetable;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.SparseArray;
 import android.widget.Toast;
 
 import androidx.annotation.WorkerThread;
@@ -40,10 +42,11 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.now;
+import static com.stupidtree.hita.HITAApplication.timeServiceBinder;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
-import static com.stupidtree.hita.HITAApplication.timeWatcher;
 import static com.stupidtree.hita.activities.ActivityMain.saveData;
 import static com.stupidtree.hita.timetable.CurriculumCreator.CURRICULUM_TYPE_COURSE;
+import static com.stupidtree.hita.timetable.TimeWatcherService.WATCHER_REFRESH;
 
 public class TimetableCore {
     public final static int TIMETABLE_EVENT_TYPE_COURSE = 1;
@@ -160,6 +163,7 @@ public class TimetableCore {
             if (isDataAvailable() && thisWeekOfTerm > getCurrentCurriculum().getTotalWeeks())
                 getCurrentCurriculum().setTotalWeeks(thisWeekOfTerm);
         }
+       // Log.e("cur_text",currentCurriculum.getCurriculumText());
     }
 
     public boolean isDataAvailable() {
@@ -341,7 +345,7 @@ public class TimetableCore {
             }
             if ((Boolean) o) {
                 Toast.makeText(HContext, R.string.sync_success, Toast.LENGTH_SHORT).show();
-                if (isDataAvailable()) timeWatcher.refreshNowAndNextEvent();
+                if (isDataAvailable()) timeServiceBinder.refreshNowAndNextEvent();
             } else {
                 Toast.makeText(HContext, R.string.sync_error, Toast.LENGTH_SHORT).show();
             }
@@ -394,7 +398,9 @@ public class TimetableCore {
             }
             defaultSP.edit().putString("current_curriculum", newId).commit();
             saveData();
-            timeWatcher.refreshProgress(false, true);
+//            Intent i = new Intent(WATCHER_REFRESH);
+//            HContext.sendBroadcast(i);
+            timeServiceBinder.refreshProgress();
         }
     }
 
@@ -421,8 +427,8 @@ public class TimetableCore {
          }
 
     public static List<HTime> getTimeAtNumber(int begin, int last) {
-        int[] startDots = {830, 930, 1030, 1130, 1345, 1440, 1545, 1640, 1830, 1925, 2030, 2125};
-        int[] endDots = {920, 1015, 1120, 1215, 1435, 1530, 1635, 1730, 1920, 2015, 2120, 2215};
+        int[] startDots = {830, 930, 1030, 1130, 1345, 1440, 1545, 1640, 1830, 1925, 2030, 2125,2230};
+        int[] endDots = {920, 1015, 1120, 1215, 1435, 1530, 1635, 1730, 1920, 2015, 2120, 2215,2320};
         List<HTime> temp = new ArrayList<>();
         HTime startTime, endTime;
         int sH = 0, sM = 0, eH = 0, eM = 0;
@@ -453,11 +459,77 @@ public class TimetableCore {
                 new TimePeriod(new HTime(19, 25), new HTime(20, 15)),
                 new TimePeriod(new HTime(20, 30), new HTime(21, 20)),
                 new TimePeriod(new HTime(21, 25), new HTime(22, 15)),
+                new TimePeriod(new HTime(22, 30), new HTime(23, 20)),
+
         };
         for (int i = 0; i < dots.length; i++) {
             if (to.during(dots[i])) return i + 1;
         }
         return -1;
+    }
+    public static int getNumberAtTime(HTime to) {
+
+        TimePeriod[] dots = new TimePeriod[]{
+                new TimePeriod(new HTime(8, 30), new HTime(9, 20)),
+                new TimePeriod(new HTime(9, 30), new HTime(10, 15)),
+                new TimePeriod(new HTime(10, 30), new HTime(11, 20)),
+                new TimePeriod(new HTime(11, 30), new HTime(12, 15)),
+                new TimePeriod(new HTime(13, 45), new HTime(14, 35)),
+                new TimePeriod(new HTime(14, 40), new HTime(15, 30)),
+                new TimePeriod(new HTime(15, 45), new HTime(16, 35)),
+                new TimePeriod(new HTime(16, 30), new HTime(17, 30)),
+                new TimePeriod(new HTime(18, 30), new HTime(19, 20)),
+                new TimePeriod(new HTime(19, 25), new HTime(20, 15)),
+                new TimePeriod(new HTime(20, 30), new HTime(21, 20)),
+                new TimePeriod(new HTime(21, 25), new HTime(22, 15)),
+        };
+        for (int i = 0; i < dots.length; i++) {
+            if (to.during(dots[i])) return i + 1;
+            else if(to.before(dots[i].start)) return i;
+        }
+        return -1;
+    }
+    public static TimePeriod getClassTimeByTimeContainedIn(HTime time) {
+        TimePeriod[] dots = new TimePeriod[]{
+                new TimePeriod(new HTime(8, 30), new HTime(9, 20)),
+                new TimePeriod(new HTime(9, 30), new HTime(10, 15)),
+                new TimePeriod(new HTime(10, 30), new HTime(11, 20)),
+                new TimePeriod(new HTime(11, 30), new HTime(12, 15)),
+                new TimePeriod(new HTime(13, 45), new HTime(14, 35)),
+                new TimePeriod(new HTime(14, 40), new HTime(15, 30)),
+                new TimePeriod(new HTime(15, 45), new HTime(16, 35)),
+                new TimePeriod(new HTime(16, 30), new HTime(17, 30)),
+                new TimePeriod(new HTime(18, 30), new HTime(19, 20)),
+                new TimePeriod(new HTime(19, 25), new HTime(20, 15)),
+                new TimePeriod(new HTime(20, 30), new HTime(21, 20)),
+                new TimePeriod(new HTime(21, 25), new HTime(22, 15)),
+        };
+        for (int i = 0; i < dots.length; i++) {
+            if (time.during(dots[i]))  return dots[i];
+        }
+        return null;
+    }
+
+    public static TimePeriod getClassSimplfiedTimeByTimeContainedIn(HTime time) {
+        TimePeriod[] dots = new TimePeriod[]{
+                new TimePeriod(new HTime(0, 0), new HTime(8, 30)),
+                new TimePeriod(new HTime(8, 30), new HTime(10, 15)),
+                new TimePeriod(new HTime(10, 15), new HTime(10, 30)),
+                new TimePeriod(new HTime(10, 30), new HTime(12, 15)),
+                new TimePeriod(new HTime(12, 15), new HTime(13, 45)),
+                new TimePeriod(new HTime(13, 45), new HTime(15, 30)),
+                new TimePeriod(new HTime(15, 30), new HTime(15, 45)),
+                new TimePeriod(new HTime(15, 45), new HTime(17, 30)),
+                new TimePeriod(new HTime(17, 30), new HTime(18, 30)),
+                new TimePeriod(new HTime(18, 30), new HTime(20, 15)),
+                new TimePeriod(new HTime(20, 15), new HTime(20, 30)),
+                new TimePeriod(new HTime(20, 30), new HTime(22, 15)),
+                new TimePeriod(new HTime(22, 15), new HTime(23, 59))
+        };
+        for (int i = 0; i < dots.length; i++) {
+            if (time.during(dots[i]))  return dots[i];
+        }
+        return null;
     }
 
     /*函数功能：添加事件*/

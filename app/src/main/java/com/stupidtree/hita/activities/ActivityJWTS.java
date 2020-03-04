@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import androidx.annotation.WorkerThread;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -19,34 +20,39 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.JWTSPagerAdapter;
+import com.stupidtree.hita.diy.MaterialCircleAnimator;
 import com.stupidtree.hita.jw.FragmentJWTS_cjgl;
 import com.stupidtree.hita.jw.FragmentJWTS_cjgl_grcj;
 import com.stupidtree.hita.jw.FragmentJWTS_grkb;
+import com.stupidtree.hita.jw.FragmentJWTS_xsxk;
 import com.stupidtree.hita.jw.JWException;
 import com.stupidtree.hita.jw.JWFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 
+import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.TPE;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 
-public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFragmentInteractionListener
-//        , FragmentJWTS_xsxk.OnFragmentInteractionListener, FragmentJWTS_ksxx.OnFragmentInteractionListener,
-        , FragmentJWTS_cjgl_grcj.OnFragmentInteractionListener//, FragmentJWTS_pyfa.OnFragmentInteractionListener, FragmentJWTS_pyfa_pyjhcx.OnFragmentInteractionListener, FragmentJWTS_pyfa_zxjxjh.OnFragmentInteractionListener,
-//        FragmentJWTS_cjgl_xxjd.OnFragmentInteractionListener,
-        ,FragmentJWTS_cjgl.OnFragmentInteractionListener//, FragmentJWTS_cjgl_xfj.OnFragmentInteractionListener
-{
+public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot {
     public static final String EXTRA_CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
     public static final String EXTRA_CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
     ViewPager pager;
@@ -55,7 +61,9 @@ public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFr
     TabLayout tabs;
     FloatingActionButton fab;
     CoordinatorLayout rootLayout;
-    SwipeRefreshLayout refresh;
+    List<Map<String, String>> xnxqItems;
+    Map<String, String> keyToTitle;
+    View loading;
 
 
     @Override
@@ -67,60 +75,28 @@ public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true, true, false);
+        setWindowParams(true, false, false);
         setContentView(R.layout.activity_jwts);
 
         initViews();
         initToolbar();
         initPager();
+        new loadBasicInfosTask().executeOnExecutor(TPE);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        new checkLoginTask().executeOnExecutor(
-                HITAApplication.TPE);
-        fragments.get(pager.getCurrentItem()).Refresh(
-                new JWFragment.OnRefreshStartListener() {
-                    @Override
-                    public void OnStart() {
-                        refresh.setRefreshing(true);
-                    }
-                },
-                new JWFragment.OnRefreshFinishListener() {
-                    @Override
-                    public void OnFinish() {
-                        refresh.setRefreshing(false);
-                    }
-                }
-        );
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        new checkLoginTask().executeOnExecutor(
+//                TPE);
+//    }
 
 
-    void initViews(){
+    void initViews() {
+        loading = findViewById(R.id.loading);
         rootLayout = findViewById(R.id.jwts_root);
         fab = findViewById(R.id.fab);
-        refresh = findViewById(R.id.refresh);
-        refresh.setColorSchemeColors(getColorPrimary(),getColorAccent(),getColorFade());
-        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fragments.get(pager.getCurrentItem()).Refresh(
-                        new JWFragment.OnRefreshStartListener() {
-                            @Override
-                            public void OnStart() {
-                                refresh.setRefreshing(true);
-                            }
-                        },
-                        new JWFragment.OnRefreshFinishListener() {
-                            @Override
-                            public void OnFinish() {
-                                refresh.setRefreshing(false);
-                            }
-                        }
-                );
-            }
-        });
+        xnxqItems = new ArrayList<>();
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -128,6 +104,7 @@ public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFr
 //            }
 //        });
     }
+
     void initToolbar() {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -176,19 +153,14 @@ public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFr
         tabs = findViewById(R.id.jwts_tab);
         pager = findViewById(R.id.jwts_pager);
         fragments = new ArrayList<>();
-        fragments.add(FragmentJWTS_grkb.newInstance());
-      //  fragments.add(FragmentJWTS_pyfa.newInstance());
-       // fragments.add(FragmentJWTS_xsxk.newInstance());
-        fragments.add(FragmentJWTS_cjgl.newInstance());
-       // fragments.add(FragmentJWTS_ksxx.newInstance());
-      //  fragments.add(FragmentJWTS_info.newInstance());
-        String[] titles = new String[]{"个人课表导入", "成绩查询"};
-        pagerAdapter = new JWTSPagerAdapter(getSupportFragmentManager(), fragments, titles);
+        keyToTitle = new HashMap<>();
+
+        // fragments.add(FragmentJWTS_ksxx.newInstance());
+        //  fragments.add(FragmentJWTS_info.newInstance());
+        pagerAdapter = new JWTSPagerAdapter(getSupportFragmentManager(), fragments);
         pager.setAdapter(pagerAdapter);
         tabs.setupWithViewPager(pager);
-        if(!TextUtils.isEmpty(getIntent().getStringExtra("terminal"))){
-            pager.setCurrentItem(Integer.parseInt(getIntent().getStringExtra("terminal")));
-        }
+
     }
 
     @Override
@@ -196,32 +168,124 @@ public class ActivityJWTS extends BaseActivity implements FragmentJWTS_grkb.OnFr
         getMenuInflater().inflate(R.menu.toolbar_jwts, menu);
         return super.onCreateOptionsMenu(menu);
     }
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
+    @Override
+    public List<Map<String, String>> getXNXQItems() {
+        return xnxqItems;
     }
 
-    class checkLoginTask extends AsyncTask<String, Integer, Boolean> {
+    @Override
+    public Map<String, String> getKeyToTitleMap() {
+        return keyToTitle;
+    }
+
+    class loadBasicInfosTask extends AsyncTask {
 
         @Override
-        protected Boolean doInBackground(String... strings) {
-            try {
-                return jwCore.loginCheck();
-            } catch (JWException e) {
-                return false;
-            }
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading.setVisibility(View.VISIBLE);
+            pager.setVisibility(View.GONE);
         }
 
         @Override
-        protected void onPostExecute(Boolean o) {
+        protected Object doInBackground(Object[] objects) {
+            try {
+                xnxqItems.clear();
+                xnxqItems.addAll(jwCore.getXNXQ());
+                keyToTitle.clear();
+                keyToTitle.putAll(jwCore.getXKColumnTitles());
+                return true;
+            } catch (JWException e) {
+                try {
+                    xnxqItems.clear();
+                    if (tryToReLogin()) {
+                        xnxqItems.addAll(jwCore.getXNXQ());
+                        keyToTitle.clear();
+                        keyToTitle.putAll(jwCore.getXKColumnTitles());
+                        return true;
+                    } else return e;
+                } catch (JWException e2) {
+                    return e2;
+                }
+            }
+
+        }
+
+
+        @Override
+        protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            if (!o) {
+            MaterialCircleAnimator.animHide(loading);
+            //  loading.setVisibility(View.GONE);
+            pager.setVisibility(View.VISIBLE);
+            if (o instanceof JWException) {
                 jwCore.logOut();
                 Toast.makeText(HContext, "页面过期，请返回重新登录！", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(ActivityJWTS.this, ActivityLoginJWTS.class);
                 startActivity(i);
                 finish();
+            } else if ((boolean) o) {
+                fragments.clear();
+                fragments.add(FragmentJWTS_grkb.newInstance());
+                fragments.add(FragmentJWTS_xsxk.newInstance());
+                fragments.add(FragmentJWTS_cjgl.newInstance());
+                //  fragments.add(FragmentJWTS_pyfa.newInstance());
+
+
+                pagerAdapter.notifyDataSetChanged();
+                if (!TextUtils.isEmpty(getIntent().getStringExtra("terminal"))) {
+                    pager.setCurrentItem(Integer.parseInt(getIntent().getStringExtra("terminal")));
+                }
+                for (int i = 0; i < fragments.size(); i++) {
+                    if (i == pager.getCurrentItem()) {
+                        JWFragment current = fragments.get(i);
+                        if (current.isResumed()) current.Refresh();
+                        else current.setWillRefreshOnResume(true);
+                    } else {
+                        fragments.get(i).setWillRefreshOnResume(true);
+                    }
+                }
             }
         }
     }
+
+
+    @WorkerThread
+    public static boolean tryToReLogin() throws JWException {
+        if (CurrentUser != null) {
+            String stun = CurrentUser.getStudentnumber();
+            String password = null;
+            if (!TextUtils.isEmpty(stun)) password = defaultSP.getString(stun + ".password", null);
+            if (password != null) {
+                return jwCore.login(stun, password);
+            }
+        }
+        return false;
+    }
+
+
+class checkLoginTask extends AsyncTask<String, Integer, Boolean> {
+
+    @Override
+    protected Boolean doInBackground(String... strings) {
+        try {
+            return jwCore.loginCheck();
+        } catch (JWException e) {
+            return false;
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Boolean o) {
+        super.onPostExecute(o);
+        if (!o) {
+            jwCore.logOut();
+            Toast.makeText(HContext, "页面过期，请返回重新登录！", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(ActivityJWTS.this, ActivityLoginJWTS.class);
+            startActivity(i);
+            finish();
+        }
+    }
+}
 }

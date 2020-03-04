@@ -95,7 +95,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/drawer_radius_bg"
+            android:background="?attr/drawer_header_buttons_background"
             android:baselineAligned="false"
             android:gravity="center|top"
             android:orientation="horizontal"
@@ -116,12 +116,12 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
-                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
                     android:backgroundTintMode="src_over"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    app:cardBackgroundColor="?attr/colorPrimary"
+                    app:cardBackgroundColor="?attr/colorAccent"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="0dp">
 
@@ -130,7 +130,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="center"
-                        android:tint="?attr/colorPrimary"
+                        android:tint="?attr/colorAccent"
                         app:srcCompat="@drawable/ic_menu_curriculum" />
                 </androidx.cardview.widget.CardView>
 
@@ -159,12 +159,12 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
-                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
                     android:backgroundTintMode="src_over"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    app:cardBackgroundColor="?attr/colorPrimary"
+                    app:cardBackgroundColor="?attr/colorAccent"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="0dp">
 
@@ -172,7 +172,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="center"
-                        android:tint="?attr/colorPrimary"
+                        android:tint="?attr/colorAccent"
                         app:srcCompat="@drawable/ic_dynamic" />
                 </androidx.cardview.widget.CardView>
 
@@ -201,12 +201,12 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
-                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
                     android:backgroundTintMode="src_over"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    app:cardBackgroundColor="?attr/colorPrimary"
+                    app:cardBackgroundColor="?attr/colorAccent"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="0dp">
 
@@ -215,7 +215,7 @@
                         android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:backgroundTint="?attr/colorPrimary"
-                        android:tint="?attr/colorPrimary"
+                        android:tint="?attr/colorAccent"
                         app:srcCompat="@drawable/hita_face1" />
                 </androidx.cardview.widget.CardView>
 
@@ -244,11 +244,11 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
-                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
                     android:backgroundTintMode="src_over"
                     android:clickable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
-                    app:cardBackgroundColor="?attr/colorPrimary"
+                    app:cardBackgroundColor="?attr/colorAccent"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="0dp">
 
@@ -256,7 +256,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:tint="?attr/colorPrimary"
+                        android:tint="?attr/colorAccent"
                         app:srcCompat="@drawable/ic_menu_theme" />
                 </androidx.cardview.widget.CardView>
 

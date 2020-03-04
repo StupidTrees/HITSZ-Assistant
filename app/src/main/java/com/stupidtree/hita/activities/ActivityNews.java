@@ -27,7 +27,6 @@ public class ActivityNews extends BaseActivity {
     List<Fragment> fragments;
     TabLayout tab;
     Toolbar toolbar;
-
     ActivityLostAndFound fragmentSociety;
 
     @Override

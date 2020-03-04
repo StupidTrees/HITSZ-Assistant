@@ -5,6 +5,9 @@
   <item android:title="@string/menu_timeable_curriculum" android:id="@+id/action_curriculum_manager"
       app:showAsAction="never"
       android:orderInCategory="70" />
+  <item android:title="@string/menu_timetable_style" android:id="@+id/action_timetable_style"
+      app:showAsAction="never"
+      android:orderInCategory="80" />
   <item android:title="@string/menu_timeable_from_zero" android:id="@+id/action_whole_day"
       app:showAsAction="never"
       android:orderInCategory="80"
@@ -21,7 +24,7 @@
   <item android:title="@string/menu_timeable_random_allocate" android:id="@+id/action_reset_color"
       app:showAsAction="never"
       android:orderInCategory="80" />
-  <item android:title="@string/menu_timeable_use_theme" android:id="@+id/action_reset_color_to_theme"
-      app:showAsAction="never"
-      android:orderInCategory="80" />
+<!--  <item android:title="@string/menu_timeable_use_theme" android:id="@+id/action_reset_color_to_theme"-->
+<!--      app:showAsAction="never"-->
+<!--      android:orderInCategory="80" />-->
 </menu>

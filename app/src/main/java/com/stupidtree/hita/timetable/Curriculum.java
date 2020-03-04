@@ -88,13 +88,13 @@ public class Curriculum extends BmobObject {
         subjectsText = jo.get("subjects").toString();
     }
     public Curriculum(Cursor cur) {
-        int sY = cur.getInt(3);
-        int sM = cur.getInt(4);
-        int sD = cur.getInt(5);
-        name = cur.getString(0);
-        totalWeeks = cur.getInt(2);
-        curriculumText = cur.getString(6);
-        curriculumCode = cur.getString(1);
+        int sY = cur.getInt(cur.getColumnIndex("start_year"));
+        int sM = cur.getInt(cur.getColumnIndex("start_month"));
+        int sD = cur.getInt(cur.getColumnIndex("start_day"));
+        name = cur.getString(cur.getColumnIndex("name"));
+        totalWeeks = cur.getInt(cur.getColumnIndex("total_weeks"));
+        curriculumText = cur.getString(cur.getColumnIndex("curriculum_text"));
+        curriculumCode = cur.getString(cur.getColumnIndex("curriculum_code"));
         int y, m, d;
         Calendar c = Calendar.getInstance();
         c.set(sY, sM - 1, sD);
@@ -461,7 +461,7 @@ public class Curriculum extends BmobObject {
         cv.put("start_month",start_month);
         cv.put("start_day",start_day);
         cv.put("total_weeks",totalWeeks);
-        cv.put("curriculum_text",curriculumText);
+        cv.put("curriculum_text",curriculumText==null?"{}":curriculumText);
         return cv;
     }
 

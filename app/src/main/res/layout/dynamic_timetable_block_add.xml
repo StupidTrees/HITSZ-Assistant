@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/card"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.2"
+            android:clickable="true"
+
+            app:srcCompat="@drawable/timetable_block_add_background" />
+<!--        android:tint="?attr/background_icon_color_bottom"-->
+<!--        android:tintMode="src_over"-->
+        <ImageView
+            android:id="@+id/add"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+
+            android:backgroundTintMode="src_over"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            app:theme="@style/button_ripple_primary_small"
+            android:tint="?attr/colorAccent"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/fab_add" />
+<!--        android:background="@drawable/radius_accent_round_icon_bg"-->
+<!--        android:backgroundTint="?attr/background_color_bottom_as_tint"-->
+
+    </FrameLayout>
+
+</merge>

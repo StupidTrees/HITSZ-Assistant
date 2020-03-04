@@ -56,10 +56,14 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:layout_gravity="center"
-            android:tint="#44000000"
+            android:background="@drawable/radius_accent_round_icon_bg"
+            android:backgroundTint="?attr/background_color_bottom_as_tint"
+            android:backgroundTintMode="src_over"
+            android:padding="16dp"
+            android:tint="?attr/colorAccent"
             android:tintMode="src_in"
             app:srcCompat="@drawable/ic_menu_jwts" />
 
@@ -67,7 +71,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="没有课表" />
+            android:layout_marginTop="16dp"
+            android:text="没有课表"
+            android:textColor="?attr/text_color_secondary" />
     </LinearLayout>
 
     <androidx.viewpager.widget.ViewPager

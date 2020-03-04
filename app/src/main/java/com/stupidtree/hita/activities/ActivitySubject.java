@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +24,13 @@ import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.jw.JWException;
+import com.stupidtree.hita.jw.JWFragment;
 import com.stupidtree.hita.timetable.Subject;
 import com.stupidtree.hita.timetable.timetable.EventItem;
 import com.stupidtree.hita.adapter.SubjectCoursesListAdapter;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
+import com.stupidtree.hita.util.ActivityUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -34,6 +39,7 @@ import java.util.Collections;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
+import static com.stupidtree.hita.HITAApplication.jwCore;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialog;
@@ -48,15 +54,17 @@ public class ActivitySubject extends BaseActivity {
     RecyclerView courseList;
     SubjectCoursesListAdapter listAdapter;
     ArcProgress arcProgress;
-    TextView name,point, attr, totalcourses, exam, school, xnxq, type, code, score_qz, score_qm, score_none;
-    CardView   card_allcourses;
-    View card_rate,card_color;
+    TextView name, point, attr, totalcourses, exam, school, xnxq, type, code, score_qz, score_qm, score_none;
+    CardView card_allcourses;
+    View card_rate, card_color;
     LinearLayout qz_score_layout, qm_score_layout;
     InitProgressTask pageTask_progress;
     //RefreshRatingTask pageTask_rating;
-    ImageView pickColor,colorSample;
+    ImageView pickColor, colorSample;
     InitCourseListTask pageTask_courseList;
     DecimalFormat df = new DecimalFormat("#0.00");
+    CardView jw_detail_entrance;
+    CardView jw_detail_button;
 
     boolean useCode;
     String subjectKey;
@@ -66,8 +74,10 @@ public class ActivitySubject extends BaseActivity {
 
     @Override
     protected void stopTasks() {
-        if(pageTask_progress!=null&&pageTask_progress.getStatus()!=AsyncTask.Status.FINISHED) pageTask_progress.cancel(true);
-       if(pageTask_courseList!=null&&pageTask_courseList.getStatus()!=AsyncTask.Status.FINISHED) pageTask_courseList.cancel(true);
+        if (pageTask_progress != null && pageTask_progress.getStatus() != AsyncTask.Status.FINISHED)
+            pageTask_progress.cancel(true);
+        if (pageTask_courseList != null && pageTask_courseList.getStatus() != AsyncTask.Status.FINISHED)
+            pageTask_courseList.cancel(true);
 
     }
 
@@ -86,6 +96,8 @@ public class ActivitySubject extends BaseActivity {
     }
 
     void initViews() {
+        jw_detail_entrance = findViewById(R.id.jw_subject_entrance);
+        jw_detail_button = findViewById(R.id.jw_subject_button);
         name = findViewById(R.id.subject_name);
         point = findViewById(R.id.subject_point);
         exam = findViewById(R.id.subject_exam);
@@ -104,17 +116,17 @@ public class ActivitySubject extends BaseActivity {
         card_allcourses = findViewById(R.id.subject_card_allcourses);
         card_rate = findViewById(R.id.subject_card_rate);
         card_color = findViewById(R.id.subject_card_color);
-      //  card_html = findViewById(R.id.subject_card_html);
+        //  card_html = findViewById(R.id.subject_card_html);
         score_none = findViewById(R.id.score_none);
 
         pickColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new com.stupidtree.hita.diy.ColorPickerDialog(ActivitySubject.this)
-                        .initColor(defaultSP.getInt("color:"+subject.getName(),Color.YELLOW)).show(new com.stupidtree.hita.diy.ColorPickerDialog.OnColorSelectedListener() {
+                        .initColor(defaultSP.getInt("color:" + subject.getName(), Color.YELLOW)).show(new com.stupidtree.hita.diy.ColorPickerDialog.OnColorSelectedListener() {
                     @Override
                     public void OnSelected(int color) {
-                        defaultSP.edit().putInt("color:"+subject.getName(),color).apply();
+                        defaultSP.edit().putInt("color:" + subject.getName(), color).apply();
                         colorSample.setColorFilter(color);
                         setResult(RESULT_COLOR_CHANGED);
                     }
@@ -167,14 +179,14 @@ public class ActivitySubject extends BaseActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if(item.getItemId()==R.id.action_subject_manager){
-                    Intent i = new Intent(ActivitySubject.this,ActivityCurriculumManager.class);
+                if (item.getItemId() == R.id.action_subject_manager) {
+                    Intent i = new Intent(ActivitySubject.this, ActivityCurriculumManager.class);
                     ActivitySubject.this.startActivity(i);
                 }
                 return true;
             }
         });
-       // toolbarLayout.setExpandedTitleGravity(CollapsingToolbarLayout.TEXT_ALIGNMENT_CENTER);
+        // toolbarLayout.setExpandedTitleGravity(CollapsingToolbarLayout.TEXT_ALIGNMENT_CENTER);
 
     }
 
@@ -185,6 +197,7 @@ public class ActivitySubject extends BaseActivity {
     }
 
     void setInfos() {
+        Log.e("id",subject.getId());
         name.setText(subject.getName());
         attr.setText(subject.getCompulsory());
         point.setText(subject.getCredit());
@@ -192,7 +205,7 @@ public class ActivitySubject extends BaseActivity {
         code.setText(subject.getCode());
         xnxq.setText(subject.getXnxq());
         type.setText(subject.getType());
-        colorSample.setColorFilter(defaultSP.getInt("color:"+subject.getName(),Color.YELLOW));
+        colorSample.setColorFilter(defaultSP.getInt("color:" + subject.getName(), Color.YELLOW));
         totalcourses.setText(subject.getTotalCourses());
         exam.setText((subject.isExam() ? "是" : "否") + (subject.isDefault() ? "(默认)" : ""));
         if (subject.isMOOC()) {
@@ -232,7 +245,7 @@ public class ActivitySubject extends BaseActivity {
             size++;
         }
         if (size == 0) rate = 0.0;
-        else rate =  sum / size;
+        else rate = sum / size;
         ratingText.setText(rate + "/5");
 //        if(subject.infoHTML!=null){
 //
@@ -241,13 +254,14 @@ public class ActivitySubject extends BaseActivity {
 //          //  Log.e("!!",subject.infoHTML);
 //    }else
 
-      //  card_html.setVisibility(View.GONE);
+        //  card_html.setVisibility(View.GONE);
 
     }
 
     void initCourseList() {
         courseList = findViewById(R.id.subject_recycler);
-        if(pageTask_courseList!=null&&pageTask_courseList.getStatus()!=AsyncTask.Status.FINISHED) pageTask_courseList.cancel(true);
+        if (pageTask_courseList != null && pageTask_courseList.getStatus() != AsyncTask.Status.FINISHED)
+            pageTask_courseList.cancel(true);
         pageTask_courseList = new InitCourseListTask();
         pageTask_courseList.executeOnExecutor(HITAApplication.TPE);
 
@@ -256,9 +270,10 @@ public class ActivitySubject extends BaseActivity {
     void initProgress() {
         arcProgress = findViewById(R.id.subject_progress);
         //arcProgress.setTextColor(getColorAccent());
-       if(pageTask_progress!=null&&pageTask_progress.getStatus()!=AsyncTask.Status.FINISHED) pageTask_progress.cancel(true);
-       pageTask_progress =  new InitProgressTask();
-       pageTask_progress.executeOnExecutor(HITAApplication.TPE);
+        if (pageTask_progress != null && pageTask_progress.getStatus() != AsyncTask.Status.FINISHED)
+            pageTask_progress.cancel(true);
+        pageTask_progress = new InitProgressTask();
+        pageTask_progress.executeOnExecutor(HITAApplication.TPE);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -290,7 +305,6 @@ public class ActivitySubject extends BaseActivity {
     }
 
 
-
     @SuppressLint("StaticFieldLeak")
     class InitCourseListTask extends AsyncTask<String, Integer, ArrayList<EventItem>> {
 
@@ -318,7 +332,7 @@ public class ActivitySubject extends BaseActivity {
 //                        i.putExtra("showSubject", false);
 //                        i.putExtras(b);
 //                        ActivitySubject.this.startActivity(i);
-                        showEventDialog(ActivitySubject.this,ei,v,null);
+                        showEventDialog(ActivitySubject.this, ei, v, null);
                     }
                 });
             }
@@ -328,7 +342,7 @@ public class ActivitySubject extends BaseActivity {
 
 
     @SuppressLint("StaticFieldLeak")
-    class InitSubjectTask extends AsyncTask{
+    class InitSubjectTask extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object[] objects) {
@@ -337,7 +351,7 @@ public class ActivitySubject extends BaseActivity {
             } else {
                 subject = timeTableCore.getCurrentCurriculum().getSubjectByCourseCode(subjectKey);
             }
-            return subject!=null;
+            return subject != null;
         }
 
         @SuppressLint("SetTextI18n")
@@ -345,7 +359,7 @@ public class ActivitySubject extends BaseActivity {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             isFirst = false;
-            if((boolean)o){
+            if ((boolean) o) {
 
                 initViews();
                 initToolBar();
@@ -361,13 +375,25 @@ public class ActivitySubject extends BaseActivity {
                     size++;
                 }
                 if (size == 0) rate = 0.0;
-                else rate =  sum / size;
+                else rate = sum / size;
                 ratingText.setText(df.format(rate) + "/5");
+                if (!jwCore.hasLogin() || TextUtils.isEmpty(subject.getId())) {
+                    jw_detail_entrance.setVisibility(View.GONE);
+                } else {
+                    jw_detail_entrance.setVisibility(View.VISIBLE);
+                    jw_detail_button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ActivityUtils.startJWSubjectActivity(getThis(), subject.getId());
+                        }
+                    });
+                }
             }
         }
     }
 
-    class RefreshSubjectTask extends AsyncTask{
+    @SuppressLint("StaticFieldLeak")
+    class RefreshSubjectTask extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object[] objects) {
@@ -376,14 +402,14 @@ public class ActivitySubject extends BaseActivity {
             } else {
                 subject = timeTableCore.getCurrentCurriculum().getSubjectByCourseCode(subjectKey);
             }
-            return subject!=null;
+            return subject != null;
         }
 
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
 
-            if((boolean)o){
+            if ((boolean) o) {
                 setInfos();
                 Double rate = 0.0;
                 Double sum = 0.0;
@@ -394,14 +420,23 @@ public class ActivitySubject extends BaseActivity {
                     size++;
                 }
                 if (size == 0) rate = 0.0;
-                else rate =  sum / size;
+                else rate = sum / size;
                 ratingText.setText(df.format(rate) + "/5");
+
+                if (!jwCore.hasLogin() || TextUtils.isEmpty(subject.getId())) {
+                    jw_detail_entrance.setVisibility(View.GONE);
+                } else {
+                    jw_detail_entrance.setVisibility(View.VISIBLE);
+                }
+
             }
         }
     }
+
+
     @Override
     protected void onResume() {
         super.onResume();
-        if(!isFirst) new RefreshSubjectTask().executeOnExecutor(TPE);
+        if (!isFirst) new RefreshSubjectTask().executeOnExecutor(TPE);
     }
 }

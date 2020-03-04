@@ -1,17 +1,13 @@
 package com.stupidtree.hita.activities;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -20,9 +16,6 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AlertDialog;
@@ -43,7 +36,6 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.BaseFragment;
-import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 
 import com.stupidtree.hita.diy.MaterialCircleAnimator;
@@ -55,13 +47,12 @@ import com.stupidtree.hita.fragments.FragmentSubjects;
 import com.stupidtree.hita.fragments.FragmentUserCenter_sync;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.util.FileOperator;
-import com.stupidtree.hita.util.SystemPictureSelector;
+import com.stupidtree.hita.util.GalleryPickerUtils;
 import com.yuyh.library.imgsel.ISNav;
 import com.yuyh.library.imgsel.common.ImageLoader;
 import com.yuyh.library.imgsel.config.ISListConfig;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,14 +62,18 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FetchUserInfoListener;
+import cn.bmob.v3.listener.ProgressCallback;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.util.GalleryPickerUtils.REQUEST_CROP_PHOTO;
+import static com.stupidtree.hita.util.GalleryPickerUtils.REQUEST_PICK_ONE_PHOTO;
 
 public class ActivityUserCenter extends BaseActivity implements FragmentSubjects.OnFragmentInteractionListener
         //, FragmentJWTS_info.OnListFragmentInteractionListener
@@ -205,17 +200,14 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
         change_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                SystemPictureSelector.openPic(ActivityUserCenter.this,0);
-//
-
-                @SuppressLint("ResourceType")
+                //GalleryPickerUtils.pickFromGallery(getThis());
                 ISListConfig config = new ISListConfig.Builder()
                         // 是否多选, 默认true
                         .multiSelect(false)
                         // 是否记住上次选中记录, 仅当multiSelect为true的时候配置，默认为true
                         .rememberSelected(false)
                         // 使用沉浸式状态栏
-                        .statusBarColor(getColorPrimaryDark())
+                       // .statusBarColor(getColorPrimaryDark())
                         // 返回图标ResId
                         .backResId(R.drawable.bt_notes_toolbar_back)
                         // 标题
@@ -248,8 +240,8 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
         viewpager = findViewById(R.id.usercenter_viewpager);
         String[] titles = getResources().getStringArray(R.array.user_center_tabs);
         fragments = new ArrayList<>();
-        fragments.add(FragmentUserCenter_ut.newInstance());
         fragments.add(new FragmentUserCenter_Info());
+        fragments.add(FragmentUserCenter_ut.newInstance());
         fragments.add(new FragmentUserCenter_sync());
         pagerAdapter = new UserCenterPagerAdapter(getSupportFragmentManager(), fragments, Arrays.asList(titles));
         viewpager.setAdapter(pagerAdapter);
@@ -262,11 +254,28 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // 图片选择结果回调
+//        switch (requestCode) {
+//            case REQUEST_PICK_ONE_PHOTO:
+//                Uri uri = data.getData();
+//                String filePath = FileOperator.getFilePathByUri(this, uri);
+////                if (!TextUtils.isEmpty(filePath)) {
+////                    new saveAvatarTask(filePath).executeOnExecutor(TPE); }
+////
+//                File output = new File(String.valueOf(getThis().getCacheDir()));//+"/avatar_temp.png");
+//                GalleryPickerUtils.cropPhoto(getThis(),uri,Uri.fromFile(output),200,200);
+//                break;
+//            case REQUEST_CROP_PHOTO:
+//                try {
+//                    Log.e("haha", String.valueOf(data.getData()));
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                break;
+//        }
         if (requestCode == REQUEST_LIST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> pathList = data.getStringArrayListExtra("result");
             new saveAvatarTask(pathList.get(0)).executeOnExecutor(
-                    HITAApplication.TPE);
+                    TPE);
         }
     }
 

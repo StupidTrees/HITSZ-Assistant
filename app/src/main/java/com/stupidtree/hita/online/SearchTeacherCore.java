@@ -1,5 +1,6 @@
 package com.stupidtree.hita.online;
 
+import android.text.TextUtils;
 import android.util.SparseArray;
 
 import androidx.annotation.WorkerThread;
@@ -49,32 +50,39 @@ public class SearchTeacherCore {
                 .replaceAll("女士", "");
         List<SparseArray<String>> res = new ArrayList<>();
 
-        Document d = null;
-        try {
-            d = Jsoup.connect("http://faculty.hitsz.edu.cn/hompage/findTeachersByName.do").
-                    cookies(cookies).
-                    userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36")
-                    .data("userName", text)
-                    .data("X-Requested-With", "XMLHttpRequest").
-                            post();
-        } catch (IOException e) {
-            throw SearchException.newConnectError();
-        }
-        try {
-            String json = d.getElementsByTag("body").text();
-            JsonObject jo = new JsonParser().parse(json).getAsJsonObject();
-            JsonArray ja = jo.get("rows").getAsJsonArray();
-            for (JsonElement je : ja) {
-                JsonObject teacher = je.getAsJsonObject();
-                SparseArray<String> sa = new SparseArray<String>();
-                sa.put(NAME, JsonUtils.getStringInfo(teacher, "userName"));
-                sa.put(ID, JsonUtils.getStringInfo(teacher, "id"));
-                sa.put(URL, JsonUtils.getStringInfo(teacher, "url"));
-                sa.put(DEPARTMENT, JsonUtils.getStringInfo(teacher, "department"));
-                res.add(sa);
+        if(!TextUtils.isEmpty(text)){
+            text = text.replaceAll(" ",",").replaceAll("，",",");
+            String[] keys = text.split(",");
+            for(String k:keys){
+                Document d = null;
+                try {
+                    d = Jsoup.connect("http://faculty.hitsz.edu.cn/hompage/findTeachersByName.do").
+                            cookies(cookies).
+                            userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36")
+                            .data("userName", k)
+                            .data("X-Requested-With", "XMLHttpRequest").
+                                    post();
+                } catch (IOException e) {
+                    throw SearchException.newConnectError();
+                }
+                try {
+                    String json = d.getElementsByTag("body").text();
+                    JsonObject jo = new JsonParser().parse(json).getAsJsonObject();
+                    JsonArray ja = jo.get("rows").getAsJsonArray();
+                    for (JsonElement je : ja) {
+                        JsonObject teacher = je.getAsJsonObject();
+                        SparseArray<String> sa = new SparseArray<String>();
+                        sa.put(NAME, JsonUtils.getStringInfo(teacher, "userName"));
+                        sa.put(ID, JsonUtils.getStringInfo(teacher, "id"));
+                        sa.put(URL, JsonUtils.getStringInfo(teacher, "url"));
+                        sa.put(DEPARTMENT, JsonUtils.getStringInfo(teacher, "department"));
+                        res.add(sa);
+                    }
+                } catch (Exception e) {
+                    throw SearchException.newResolveError();
+                }
+
             }
-        } catch (Exception e) {
-           throw SearchException.newResolveError();
         }
 
         return res;

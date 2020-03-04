@@ -15,7 +15,6 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.online.Canteen;
-import com.stupidtree.hita.util.ImageUtils;
 
 import java.text.DecimalFormat;
 import java.util.List;

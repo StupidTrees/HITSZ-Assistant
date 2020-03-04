@@ -5,14 +5,20 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,19 +27,28 @@ import android.widget.Button;
 
 public class XSXKListAdapter extends RecyclerView.Adapter<XSXKListAdapter.pyjhItemHolder> {
 
+    private static final int HEADER = 998;
+    private static final int ITEM = 394;
     List<Map<String, String>> mBeans;
     LayoutInflater mInflater;
     Context mContext;
     OnOperateClickListener mOnOperateClickListsner;
-
+    OnItemClickListener onItemClickListener;
     public interface OnOperateClickListener {
         void OnClick(View view, int index, boolean choose, String rwh);
     }
+    public interface OnItemClickListener {
+        void OnClick(View view,int position);
+    }
 
-    public XSXKListAdapter(Context context, List<Map<String, String>> res) {
-        mBeans = res;
-        mContext = context;
-        mInflater = LayoutInflater.from(context);
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public XSXKListAdapter(Context mContext, List<Map<String, String>> mBeans) {
+        this.mBeans = mBeans;
+        this.mInflater = LayoutInflater.from(mContext);
+        this.mContext = mContext;
     }
 
     public void setmOnOperateClickListsner(OnOperateClickListener mOnOperateClickListsner) {
@@ -43,70 +58,81 @@ public class XSXKListAdapter extends RecyclerView.Adapter<XSXKListAdapter.pyjhIt
     @NonNull
     @Override
     public pyjhItemHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = mInflater.inflate(R.layout.dynamic_jwts_xsxk_item, viewGroup, false);
-        return new pyjhItemHolder(v);
+        int layout;
+        if(i==ITEM) layout = R.layout.dynamic_jwt_xsxk_item;
+        else layout = R.layout.dynamic_jwt_xsxk_header;
+//        if(i==LABEL) layout = R.layout.dynamic_jw_xsxk_popup_item_button;
+//        else if(i==ITEM_TEXT) layout = R.layout.dynamic_jw_xsxk_popup_item_text;
+//        else if(i==ITEM_SPECIAL_TEXT) layout = R.layout.dynamic_jw_xsxk_popup_item_text_special;
+        View v = mInflater.inflate(layout, viewGroup, false);
+        return new pyjhItemHolder(v,i);
+    }
+
+//    @Override
+//    public int getItemViewType(int position) {
+//        if(position<labels.size()) return LABEL;
+//        int index = (position-labels.size())/labels.size();
+//        if(mBeans.get(index).get("button")!=null) return ITEM_BUTTON;
+//        if(mBeans.get(index).get("special")!=null) return ITEM_SPECIAL_TEXT;
+//        return ITEM_TEXT;
+//    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        if(mBeans.get(position).get("header")!=null) return HEADER;
+        else return ITEM;
     }
 
     @Override
     public void onBindViewHolder(@NonNull pyjhItemHolder pyjhItemHolder, final int i) {
-
-        pyjhItemHolder.name.setText(mBeans.get(i).get("kcmc"));
-        String totalORresult = mBeans.get(i).get("xs") == null ? mBeans.get(i).get("xkjg") : mBeans.get(i).get("xs");
-        pyjhItemHolder.totalcourses.setText(totalORresult);
-        pyjhItemHolder.content.setText(mBeans.get(i).get("yx/rl"));
-        pyjhItemHolder.point.setText(mBeans.get(i).get("xf"));
-        pyjhItemHolder.type.setText(mBeans.get(i).get("kclb"));
-        pyjhItemHolder.operate.setText(mBeans.get(i).get("bxOryx").equals("bx") ? "选课" : "退选");
-        if (mBeans.get(i).get("hasbutton").equals("true"))
-            pyjhItemHolder.operate.setVisibility(View.VISIBLE);
-        else pyjhItemHolder.operate.setVisibility(View.GONE);
-        if (mOnOperateClickListsner != null) {
-            pyjhItemHolder.operate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnOperateClickListsner.OnClick(v, i, mBeans.get(i).get("bxOryx").equals("bx"), mBeans.get(i).get("rwh"));
-                }
-            });
-        }
-        pyjhItemHolder.item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    StringBuilder sb = new StringBuilder();
-                    for (Map.Entry e : mBeans.get(i).entrySet()) {
-                        String name = getName(e.getKey().toString());
-                        if(name.equals("skip")) continue;
-                       // Log.e("entry:",e.toString());
-                        sb.append(name+"："+e.getValue()+"&&");
+        Map<String,String> itemM = mBeans.get(i);
+        if(pyjhItemHolder.viewType==ITEM){
+            pyjhItemHolder.name.setText(itemM.get("name"));
+            pyjhItemHolder.type.setText(itemM.get("type"));
+            pyjhItemHolder.credit.setText(itemM.get("credit"));
+            pyjhItemHolder.xs.setText(itemM.get("xs"));
+            if(onItemClickListener!=null){
+                pyjhItemHolder.item.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onItemClickListener.OnClick(v,Math.abs(i));
                     }
-                    String[] items = sb.toString().split("&&");
+                });
+            }
+        }else{
+            if(pyjhItemHolder.begin!=null){
+                if(itemM.get("begin")!=null) pyjhItemHolder.begin.setText(itemM.get("begin"));
+            }
+            if(pyjhItemHolder.end!=null){
+                if(itemM.get("end")!=null) pyjhItemHolder.end.setText(itemM.get("end"));
+            }
 
-                    AlertDialog ad = new AlertDialog.Builder(mContext).setItems(items,null).create();
-                    ad.show();
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try{
+                Date from = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(itemM.get("begin"));
+                Date to = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(itemM.get("end"));
+                Calendar tempNow = Calendar.getInstance();
+                if(from.before(tempNow.getTime())&&to.after(tempNow.getTime())){
+                    pyjhItemHolder.clock_activated.setVisibility(View.VISIBLE);
+                    pyjhItemHolder.clock_disabled.setVisibility(View.GONE);
+                }else{
+                    pyjhItemHolder.clock_activated.setVisibility(View.GONE);
+                    pyjhItemHolder.clock_disabled.setVisibility(View.VISIBLE);
                 }
+            }catch (Exception e){
 
             }
-        });
+        }
+
+//        if(pyjhItemHolder.type==LABEL&&i<labels.size()){
+//            pyjhItemHolder.text.setText(labels.get(i));
+//        }else {
+//            int index =i/labels.size()-1;
+//            int bias = i%labels.size();
+//            pyjhItemHolder.text.setText(mBeans.get(index).get(labels.get(bias)));
+//        }
     }
 
-
-    private String getName(String pinyin) {
-        if (pinyin.equals("kcmc")) return "课程名称";
-        if (pinyin.equals("kclb")) return "课程类别";
-        if (pinyin.equals("kcxz")) return "课程性质";
-        if (pinyin.equals("xf")) return "学分";
-        if (pinyin.equals("yx/rl")) return "已选/容量";
-        if (pinyin.equals("xkjg")) return "选课结果";
-        if (pinyin.equals("xs")) return "总学时";
-        if (pinyin.equals("zys")) return "志愿数";
-        if (pinyin.equals("gzyyxrs")) return "各志愿已选人数";
-        if (pinyin.equals("skxx")) return "上课信息";
-        if (pinyin.equals("xksj")) return "选课时间";
-        if (pinyin.equals("kkyx")) return "开课院系";
-        return "skip";
-    }
 
     @Override
     public int getItemCount() {
@@ -114,19 +140,24 @@ public class XSXKListAdapter extends RecyclerView.Adapter<XSXKListAdapter.pyjhIt
     }
 
     class pyjhItemHolder extends RecyclerView.ViewHolder {
-        Button operate;
-        TextView name, totalcourses, point, type, content;
-        LinearLayout item;
-
-        public pyjhItemHolder(@NonNull View itemView) {
+        View item;
+        TextView name,credit,xs,type;
+        TextView begin,end;// for header
+        ImageView clock_activated,clock_disabled;
+        int viewType;
+        public pyjhItemHolder(@NonNull View itemView,int viewType) {
             super(itemView);
-            totalcourses = itemView.findViewById(R.id.xsxk_totalcourses);
-            point = itemView.findViewById(R.id.xsxk_point);
-            type = itemView.findViewById(R.id.xsxk_type);
-            name = itemView.findViewById(R.id.xsxk_name);
-            operate = itemView.findViewById(R.id.xsxk_operate);
-            content = itemView.findViewById(R.id.xsxk_content);
-            item = itemView.findViewById(R.id.xsxk_item);
+            item = itemView.findViewById(R.id.item);
+            name = itemView.findViewById(R.id.name);
+            credit = itemView.findViewById(R.id.credit);
+            xs = itemView.findViewById(R.id.xs);
+            type = itemView.findViewById(R.id.type);
+            begin = itemView.findViewById(R.id.begin);
+            end = itemView.findViewById(R.id.end);
+            clock_activated = itemView.findViewById(R.id.activated);
+            clock_disabled = itemView.findViewById(R.id.disabled);
+            this.viewType = viewType;
+
         }
     }
 }

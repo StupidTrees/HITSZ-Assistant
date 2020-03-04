@@ -19,14 +19,13 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
-import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 
 public class FragmentUserCenter_Info extends BaseFragment {
 
 
-    TextView username, nick, studentnumber, realname, school, signature;
-    LinearLayout nickItem, signatureItem, studentsnumberItem;
+    private TextView username, nick, studentnumber, realname, school, signature;
+    private LinearLayout nickItem, signatureItem, studentsnumberItem;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,10 +70,10 @@ public class FragmentUserCenter_Info extends BaseFragment {
                                     @Override
                                     public void done(BmobException e) {
                                         if (e == null) {
-                                            Toast.makeText(HContext, R.string.notif_signature_updated, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), R.string.notif_signature_updated, Toast.LENGTH_SHORT).show();
                                             signature.setText(CurrentUser.getSignature());
                                         } else {
-                                            Toast.makeText(HContext, R.string.notif_signature_update_failed, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), R.string.notif_signature_update_failed, Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -101,10 +100,10 @@ public class FragmentUserCenter_Info extends BaseFragment {
                                     @Override
                                     public void done(BmobException e) {
                                         if (e == null) {
-                                            Toast.makeText(HContext, R.string.notif_nick_updated, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), R.string.notif_nick_updated, Toast.LENGTH_SHORT).show();
                                             nick.setText(CurrentUser.getNick());
                                         } else {
-                                            Toast.makeText(HContext, R.string.notif_nick_update_failed, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), R.string.notif_nick_update_failed, Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -130,7 +129,7 @@ public class FragmentUserCenter_Info extends BaseFragment {
                             public void done(BmobException e) {
                                 fbs.dismiss();
                                 if (e == null) {
-                                    Toast.makeText(HContext, R.string.notif_bind_studentnumber_success, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.notif_bind_studentnumber_success, Toast.LENGTH_SHORT).show();
                                     studentnumber.setText(CurrentUser.getStudentnumber());
                                     school.setText(CurrentUser.getSchool());
                                     realname.setText(CurrentUser.getRealname());
@@ -140,9 +139,9 @@ public class FragmentUserCenter_Info extends BaseFragment {
                                     studentnumber.setText(showText(CurrentUser.getStudentnumber()));
                                     CurrentUser.setStudentnumber(oldStuNumBackUp);
                                     if (e.getErrorCode() == 401)
-                                        Toast.makeText(HContext, R.string.notif_bind_studentnumber_already, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), R.string.notif_bind_studentnumber_already, Toast.LENGTH_SHORT).show();
                                     else
-                                        Toast.makeText(HContext, e.toString(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
                                 }
 
                             }
@@ -164,11 +163,11 @@ public class FragmentUserCenter_Info extends BaseFragment {
 //                                    @Override
 //                                    public void done(BmobException e) {
 //                                        if(e==null){
-//                                            Toast.makeText(HContext,"更改绑定学号成功",Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(getContext(),"更改绑定学号成功",Toast.LENGTH_SHORT).show();
 //                                            studentnumber.setText(CurrentUser.getStudentnumber());
 //                                        }else{
-//                                            if(e.getErrorCode()==401)  Toast.makeText(HContext,"该学号已与其他账号绑定！",Toast.LENGTH_SHORT).show();
-//                                            else Toast.makeText(HContext,e.toString(),Toast.LENGTH_SHORT).show();
+//                                            if(e.getErrorCode()==401)  Toast.makeText(getContext(),"该学号已与其他账号绑定！",Toast.LENGTH_SHORT).show();
+//                                            else Toast.makeText(getContext(),e.toString(),Toast.LENGTH_SHORT).show();
 //                                        }
 //
 //                                    }

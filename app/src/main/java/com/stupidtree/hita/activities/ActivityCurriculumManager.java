@@ -216,7 +216,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
             }
             int curIndex = 0;
             for(curIndex=0;curIndex<pagerData.size();curIndex++){
-                if(pagerData.get(curIndex).getCurriculumCode().equals(timeTableCore.getCurrentCurriculum().getCurriculumCode())){
+                if(pagerData.get(curIndex)!=null&&pagerData.get(curIndex).getCurriculumCode().equals(timeTableCore.getCurrentCurriculum().getCurriculumCode())){
                     break;
                 }
             }

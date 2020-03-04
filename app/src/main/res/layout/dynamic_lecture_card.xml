@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-        app:cardBackgroundColor="?attr/background_color_second" xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lecture_card"
@@ -13,12 +12,13 @@
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:minHeight="100dp"
     android:transitionName="cardview"
+    app:cardBackgroundColor="?attr/background_color_second"
     app:cardCornerRadius="16dp"
-    app:cardElevation="4dp">
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <ImageView
@@ -30,116 +30,129 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/lecture_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="16dp"
-                android:fontFamily="sans-serif-black"
-                android:singleLine="false"
-                android:text="母猪的产后护理"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/lecture_host"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="16dp"
-                android:singleLine="false"
-                android:text="演讲人：赵本山"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="13sp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/lecture_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="16dp"
-                android:singleLine="false"
-                android:text="讲座时间：今晚"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/lecture_place"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="16dp"
-                android:singleLine="false"
-                android:text="地点：T3"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/lecture_releasetime"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:singleLine="true"
-                android:text="2019-04-02"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/imageView15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:tint="?attr/colorPrimary"
-                android:visibility="gone"
-                app:srcCompat="@drawable/ic_turned_in" />
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/lecture_card_navi"
+                <TextView
+                    android:id="@+id/lecture_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:fontFamily="sans-serif-black"
+                    android:maxLines="3"
+                    android:singleLine="false"
+                    android:text="母猪的产后护理"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/lecture_host"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:singleLine="false"
+                    android:text="演讲人：赵本山"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/lecture_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:singleLine="true"
+                    android:text="讲座时间：今晚"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/lecture_place"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:singleLine="true"
+                    android:text="地点：T3"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/lecture_releasetime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:singleLine="true"
+                    android:text="2019-04-02"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:tint="?attr/colorPrimary"
-                app:theme="@style/button_ripple_primary"
-                app:srcCompat="@drawable/ic_near_me" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
+                <ImageView
+                    android:id="@+id/imageView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:padding="16dp"
+                    android:tint="?attr/colorPrimary"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_turned_in" />
+
+                <ImageView
+                    android:id="@+id/lecture_card_navi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/radius_accent_round_icon_bg"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
+                    android:backgroundTintMode="src_over"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    android:tint="?attr/colorAccent"
+                    app:srcCompat="@drawable/ic_near_me"
+                    app:theme="@style/button_ripple_primary" />
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

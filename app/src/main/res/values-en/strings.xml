@@ -31,6 +31,7 @@
     <string name="prompt_password">password (optional)</string>
     <string name="action_sign_in">sign in or register</string>
     <string name="action_sign_in_short">sign in</string>
+    <string name="app_notification_channel_name">HITSZ channel</string>
     <string name="error_invalid_email">this email address is invalid</string>
     <string name="error_invalid_password">this password is too short</string>
     <string name="error_incorrect_password">this password is incorrect</string>
@@ -102,7 +103,7 @@
     <string name="main_drawer_menu_settings">Settings</string>
     <string name="main_drawer_menu_report">Feedback</string>
     <string name="main_drawer_menu_about">About us</string>
-    <string name="main_drawer_menu_curriculums">Curriculums</string>
+    <string name="main_drawer_menu_curriculums">Timetables</string>
     <string name="main_drawer_menu_studyassistant">Learning</string>
     <string name="main_drawer_menu_hita">Hita</string>
     <string name="punch_success_happy">done, happy every day!</string>
@@ -150,15 +151,15 @@
     <string name="add_laf_image">add image</string>
     <string name="add_laf_anonymous">anonymous</string>
     <string name="theme_name_red">Burning Red</string>
-    <string name="theme_name_brown">High-end brown</string>
-    <string name="theme_name_blue">HIT Blue</string>
-    <string name="theme_name_grey">google grey</string>
-    <string name="theme_name_android">android green</string>
-    <string name="theme_name_green">forgiveness green</string>
-    <string name="theme_name_deep_orange">orange</string>
-    <string name="theme_name_indigo">indigo</string>
-    <string name="theme_name_cyan">su-cheng Cyan</string>
-    <string name="theme_name_amber">amber</string>
+    <string name="theme_name_brown">High-end Brown</string>
+    <string name="theme_name_blue">Sky Blue</string>
+    <string name="theme_name_grey">Google Grey</string>
+    <string name="theme_name_android">Android Green</string>
+    <string name="theme_name_green">Forgiveness Green</string>
+    <string name="theme_name_deep_orange">Orange</string>
+    <string name="theme_name_indigo">Indigo</string>
+    <string name="theme_name_cyan">Bright Cyan</string>
+    <string name="theme_name_amber">Amber</string>
     <string name="usercenter_sync_autoupload_hint">This will happen frequently, which will increase power consumption, but will save data changes in time</string>
     <string name="usercenter_sync_download">Synchronize cloud data</string>
     <string name="usercenter_sync_download_hint">This clears the local data and sets the schedule as the official schedule</string>
@@ -214,21 +215,7 @@
     <string name="add_laf_location">don\'t select location</string>
     <string name="add_task_name_hint">task name…</string>
     <string name="bind_stun_title">Bind student number of HITSZ</string>
-    <string name="bmob_common_action_cancel" tools:ignore="ButtonCase">cancel</string>
-    <string name="bmob_common_action_continue">continue</string>
-    <string name="bmob_common_action_info_exist">downloading…</string>
-    <string name="bmob_common_action_pause">pause</string>
-    <string name="bmob_common_download_failed">download failed</string>
-    <string name="bmob_common_download_finish">download completed, click to install</string>
-    <string name="bmob_common_download_notification_prefix">downloading: </string>
-    <string name="bmob_common_info_interrupt">download failed, please check your Internet connection</string>
-    <string name="bmob_common_network_break_alert">please check your Internet connection, then try again</string>
-    <string name="bmob_common_patch_finish">update completed, click to install</string>
-    <string name="bmob_common_pause_notification_prefix">paused: </string>
-    <string name="bmob_common_silent_download_finish">a new version is ready, click to install</string>
-    <string name="bmob_common_start_download_notification">downloading app…</string>
-    <string name="bmob_common_start_patch_notification">updating installation package</string>
-    <string name="button_cancel">Cancel</string>
+<string name="button_cancel">Cancel</string>
     <string name="button_post">Post</string>
     <string name="cjgl_subject_exam">exam</string>
     <string name="cjgl_subject_final_score">final</string>
@@ -250,8 +237,8 @@
     <string name="punch_success_normal">done</string>
     <string name="add_attitude_image">add image</string>
     <string name="sign_up">Sign Up</string>
-    <string name="theme_name_pink">Lover pink</string>
-    <string name="theme_name_purple">Gay purple</string>
+    <string name="theme_name_pink">Lover Pink</string>
+    <string name="theme_name_purple">Straight Purple</string>
     <string name="timeline_head_free_subtitle">Enjoy now!</string>
     <string name="update_dialog_title">Available updates</string>
     <string name="usercenter_sync_autoupload">Automatically upload data to the server</string>
@@ -270,6 +257,7 @@
     <string name="user_center_you_have_punched">You checked in for a total of %d days</string>
     <string name="date_day">% d</string>
     <string name="week">Week %d</string>
+    <string name="count_week">"%d weeks "</string>
     <string name="navi_semister_not_begun">Semester has not started</string>
     <string name="navi_semister_no_data">No semester data</string>
     <string name="add_laf_no_location">No location</string>
@@ -287,8 +275,8 @@
     <string name="ade_set_time_date">Pick date and time</string>
     <string name="ade_set_date">Pick date</string>
     <string-array name="user_center_tabs">
-        <item> Campus </item>
         <item> Profile </item>
+        <item> Campus </item>
         <item> Sync </item>
     </string-array>
     <string-array name="months">
@@ -390,8 +378,8 @@
     <string name="dialog_message_curriculum_detail">Schedule name：%s\nCode：%s</string>
     <string name="attention">Attention</string>
     <string name="dialog_message_delete_curriculum">Deleting a schedule will delete all events, subjects, and tasks associated with it. Are you sure?</string>
-    <string name="curriculum_manager_satrtat">starts: </string>
-    <string name="curriculum_manager_total">total %d weeks</string>
+    <string name="curriculum_manager_satrtat">Starts: </string>
+    <string name="curriculum_manager_total">%d weeks in total</string>
     <string name="curriculum_manager_enable_color">Enable colorful subjects</string>
     <string name="curriculum_manager_randomly_allocate_color">Randomly assign colors</string>
     <string name="curriculum_manager_set_theme_color">Apply theme color to all</string>
@@ -413,8 +401,8 @@
     <string name="dialog_title_sure_delete">Confirm to delete?</string>
     <string name="dialog_message_sure_delete">After deleting a course, you can restore the original schedule by importing the schedule or syncing the cloud data</string>
     <string name="none">None</string>
-    <string name="pick_teacher">Choose teacher</string>
-    <string name="pick_classroom">Choose classroom</string>
+    <string name="pick_teacher">Which teacher?</string>
+    <string name="pick_classroom">Which classroom?</string>
     <string name="dialog_no_notes">No notes, click to add</string>
     <string name="dialog_notes_num">%d local notes for this class found</string>
     <string name="menu_import_curriculum">Import timetables from the EA system</string>
@@ -441,13 +429,13 @@
     <string name="settings_summary_darkmode">wow awesome</string>
     <string name="settings_category_timetable">Timetable options</string>
     <string name="settings_summary_colormode">Tint all subjects with different color</string>
-    <string name="settings_title_colormode">Colorful Mode</string>
+    <string name="settings_title_colormode">Enable Subject color</string>
     <string name="settings_category_app">App options</string>
     <string name="settings_summary_auto_check_update">Recommended</string>
     <string name="settings_title_auto_check_update">Auto check for updates</string>
     <string name="settings_summary_auto_download_wifi">Recommended</string>
     <string name="settings_title_auto_download_wifi">Auto download upgrades in Wi-Fi</string>
-    <string name="setting_summary_always_on_notifi">Take effect after a restart</string>
+    <string name="setting_summary_always_on_notifi">don\'t hate it</string>
     <string name="setting_title_always_on_notifi">Resident on Notice Bar</string>
     <string name="settings_category_hita">Hita options</string>
     <string name="settings_title_auto_read">Auto read out the responses</string>
@@ -523,11 +511,12 @@
         <item>Teachers</item>
     </string-array>
     <string-array name="news_tabs">
-        <item>Announcement</item>
-        <item>Lectures</item>
-        <item>Campus Highlights</item>
         <item>Campus News</item>
-        <item>Comprehensive News</item>
+        <item>Lectures</item>
+        <item>Announcement</item>
+        <item>Campus Highlights</item>
+
+        <item>All News</item>
     </string-array>
     <string name="timeline_head_ongoing_subtitle">Ongoing</string>
     <string name="progress">progress</string>
@@ -612,6 +601,121 @@
     <string name="teacher_temp_label">Staged on app server</string>
     <string name="tab_search_location">Locations</string>
     <string name="location_total_searched">%d locations were found</string>
-    <string name="time_format_1">"%d h %d min "</string>
-    <string name="time_format_2">%d minutes</string>
+    <string name="time_format_1">"%d h %02d min "</string>
+    <string name="time_format_2">"%d minutes "</string>
+    <string name="theme_name_rose">Noble</string>
+    <string name="theme_name_vice">Vice City</string>
+    <string name="theme_name_mild">Mild</string>
+    <string name="theme_name_morning">Morning Light</string>
+    <string name="theme_name_ph">darkmode-P-hub</string>
+    <string name="theme_name_p30">Mirror of the sky</string>
+    <string name="theme_name_hit">HIT Blue</string>
+    <string name="theme_name_cruelsummer">Cruel Summer</string>
+    <string name="theme_name_mi">50 Shades of Grey</string>
+    <string name="theme_name_cyberpunk">darkmode-Cyberpunk</string>
+    <string name="xsxk_xnxq">Semester</string>
+    <string name="xsxk_type">Category</string>
+    <string name="jw_xk_tabs_bx">必修</string>
+    <string name="jw_xk_tabs_xx">限选</string>
+    <string name="jw_xk_tabs_cxyx">创新研修</string>
+    <string name="jw_xk_tabs_cxsy">创新实验</string>
+    <string name="jw_xk_tabs_ty">体育</string>
+    <string name="jw_xk_tabs_fankzy">方案内跨专业</string>
+    <string name="jw_xk_tabs_kzy">跨专业</string>
+    <string name="subject_name">Course Chinese Name</string>
+    <string name="subject_lang">Language of instruction</string>
+    <string name="subject_name_en">Course Name</string>
+    <string name="subject_tag">Note</string>
+    <string name="subject_descrip">Course Chinese Introduction</string>
+    <string name="subject_descrip_en">Course Introduction</string>
+    <string name="subject_guideline">Attachment: course outline(Chinese)</string>
+    <string name="subject_guideline_en">Attachment: course outline</string>
+    <string name="subject_teacher_name">Teacher name</string>
+    <string name="subject_teacher_responsible">responsible</string>
+    <string name="subject_teacher_files">Teaching materials</string>
+    <string name="subject_jw_title">Course details</string>
+    <string name="download_fail">Download error</string>
+    <string name="download_paused">Download paused</string>
+    <string name="download_canceld">Download canceled</string>
+    <string name="download_success">Download complete</string>
+    <string name="downloading">Downloading....</string>
+    <string name="download_open_folder">Open directory</string>
+    <string name="subject_jw_download_begin">Download starts, pull down the notification bar to see progress</string>
+    <string name="jw_xk_tabs_yx">已选课程</string>
+    <string name="download_file_progress_pattern">%d files in total</string>
+    <string name="xk_view_subject_detail">View course details</string>
+    <string name="xk_opoup_subject_detail">Course details</string>
+    <string name="xk_opoup_click_jump">Open</string>
+    <string name="jw_tabs_xk">选课</string>
+    <string name="jw_tabs_frkb">课表导入</string>
+    <string name="jw_tabs_cj">成绩管理</string>
+    <string name="jw_tabs_grcj">个人成绩</string>
+    <string name="subjet_jw_detail_click_jump">Open</string>
+    <string name="subject_jw_detail">Course details page on EAS</string>
+    <string name="subject_nothing">Subject data is empty, please try to re-import the schedule</string>
+    <string name="jw_xk_tabs_mooc">MOOC</string>
+    <string name="jw_xk_tabs_wlts">文理通识</string>
+    <string name="jw_xk_tabs_cx">重修</string>
+    <string name="app_notification_channel2_id">hita_channel2</string>
+    <string name="notifi_import_first">Please login and import one schedule</string>
+    <string name="app_notification_channel3_id">hita_channel3</string>
+    <string name="settings_title_app_language">APP Language</string>
+    <string name="settings_summary_timetable_back">return to this week immediately</string>
+    <string name="settings_title_timetable_back">Show \'back to now\' floating button</string>
+    <string name="settings_title_timetable_card_height">Height of event cards(pixels/hour)</string>
+    <string name="settings_summary_timetable_card_height">click to reset</string>
+    <string name="settings_title_timetable_card_opacity">Card background opacity</string>
+    <string name="settings_title_timetable_card_text_bold">Bold text</string>
+    <string name="settings_summary_timetable_card_text_bold">can be cute, sometime</string>
+    <string name="settings_title_timetable_card_icon_enable">Show little dot icon</string>
+    <string name="settings_summary_timetable_card_icon_enable">Title will move up if turned off</string>
+    <string name="settings_title_timetable_card_title_gravity">Title alignment</string>
+    <string name="settings_summary_timetable_card_title_gravity">The gravity of title text</string>
+    <string name="settings_title_timetable_card_background">Card background</string>
+    <string name="settings_title_timetable_card_title_color">Card title color</string>
+    <string name="settings_title_timetable_card_subtitle_color">Card subtitle color</string>
+    <string name="settings_title_timetable_card_title_alpha">Card title opacity</string>
+    <string name="settings_title_timetable_card_subtitle_alpha">Card subtitle opacity</string>
+    <string name="settings_title_timetable_preset">Preset styles</string>
+    <string name="settings_summary_timetable_preset">use preset configuration</string>
+    <string name="settings_title_timetable_card_icon_color">Little dot icon color</string>
+    <string name="menu_timetable_style">Timetable style</string>
+    <string name="preference_tabs_basic">Basic</string>
+    <string name="preference_tabs_appearance">Appearance</string>
+    <string name="preference_tabs_others">Others</string>
+
+    <string-array name="preference_dark_mode">
+        <item>Manual switch</item>
+        <item>Follow the system</item>
+    </string-array>
+    <string-array name="preference_card_title_gravity">
+        <item>Center</item>
+        <item>Top</item>
+        <item>Bottom</item>
+    </string-array>
+
+    <string-array name="preference_card_background">
+        <item>Theme Gradient</item>
+        <item>Theme Color Primary</item>
+        <item>Theme Color Accent</item>
+    </string-array>
+    <string-array name="preference_card_title_color">
+        <item>Subject Color</item>
+        <item>White</item>
+        <item>Black</item>
+        <item>Theme Color Primary</item>
+        <item>Theme Color Accent</item>
+    </string-array>
+    <string-array name="preference_card_title_color_subject_disabled">
+        <item>White</item>
+        <item>Black</item>
+        <item>Theme Color Primary</item>
+        <item>Theme Color Accent</item>
+    </string-array>
+    <string-array name="preference_timetable_preset">
+        <item>Default</item>
+        <item>Subject-color-on</item>
+        <item>Theme-color-light</item>
+        <item>Subject-color-light</item>
+    </string-array>
 </resources>

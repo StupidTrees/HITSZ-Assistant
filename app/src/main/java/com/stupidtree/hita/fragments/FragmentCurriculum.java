@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
@@ -52,6 +54,7 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 public class FragmentCurriculum extends BaseFragment {
     private Curriculum curriculum;
@@ -152,7 +155,7 @@ public class FragmentCurriculum extends BaseFragment {
             }
         });
 
-        boolean colorfulOn = defaultSP.getBoolean("timetable_colorful_mode", true);
+        boolean colorfulOn = defaultSP.getBoolean("subjects_color_enable", false);
         enable_color.setChecked(colorfulOn);
         if (colorfulOn) expandableLayout.expand();
         else expandableLayout.collapse();
@@ -274,6 +277,8 @@ public class FragmentCurriculum extends BaseFragment {
             } else {
                 Toast.makeText(HContext, "删除失败！", Toast.LENGTH_SHORT).show();
             }
+            Intent i = new Intent(TIMETABLE_CHANGED);
+            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
             mListener.onFragmentInteraction();
         }
     }
@@ -333,7 +338,7 @@ public class FragmentCurriculum extends BaseFragment {
         @SuppressLint("ApplySharedPref")
         @Override
         protected Object doInBackground(Object[] objects) {
-            defaultSP.edit().putBoolean("timetable_colorful_mode", enable).commit();
+            defaultSP.edit().putBoolean("subjects_color_enable", enable).commit();
             return null;
         }
 
@@ -393,6 +398,8 @@ public class FragmentCurriculum extends BaseFragment {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             Refresh();
+            Intent i = new Intent(TIMETABLE_CHANGED);
+            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
             Toast.makeText(getContext(), R.string.curriculum_updated, Toast.LENGTH_SHORT).show();
         }
     }

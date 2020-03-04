@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -47,6 +48,7 @@ import com.stupidtree.hita.diy.PickCourseTimeDialog;
 import com.stupidtree.hita.diy.PickInfoDialog;
 import com.stupidtree.hita.diy.PickSingleTimeDialog;
 import com.stupidtree.hita.diy.PickTimePeriodDialog;
+import com.stupidtree.hita.timetable.timetable.TimePeriod;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -57,9 +59,13 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.activities.ActivityMain.app_task_enabled;
+
+import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
+import static com.stupidtree.hita.timetable.TimeWatcherService.WATCHER_REFRESH;
 import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_COURSE;
 import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_EXAM;
 import static com.stupidtree.hita.timetable.TimetableCore.contains_integer;
+import static com.stupidtree.hita.timetable.TimetableCore.getNumberAtTime;
 
 @SuppressLint("ValidFragment")
 public class FragmentAddEvent extends BottomSheetDialogFragment {
@@ -98,6 +104,7 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
     TextView pickLocationText;
     ImageView pickLocationCancel;
     OnFragmentInteractionListener onFragmentInteractionListener;
+    boolean hasInitialData = false;
     public FragmentAddEvent() {
 
     }
@@ -125,8 +132,6 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fromT = new HTime(now);
-        toT = new HTime(now);
     }
 
     @Override
@@ -135,9 +140,13 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         View view = View.inflate(getContext(), R.layout.fragment_add_event, null);
         dialog.setContentView(view);
         ((View) view.getParent()).setBackgroundColor(Color.TRANSPARENT);
-        timeSet = false;
-        subjectSet = false;
-        taskSet = false;
+        if(!hasInitialData){
+            fromT = new HTime(now);
+            toT = new HTime(now);
+            timeSet = false;
+            subjectSet = false;
+            taskSet = false;
+        }
         initViews(view);
         int initCheckedId = R.id.ade_arrange;
         switch(initIndex){
@@ -145,15 +154,11 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             case 1:initCheckedId = R.id.ade_ddl;break;
             case 2:initCheckedId = R.id.ade_exam;break;
         }
-       mRadioGroup.check(initCheckedId);
+        mRadioGroup.check(initCheckedId);
+        refreshTimeBlock();
         return dialog;
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 
     private void initViews(View v) {
         mRadioGroup = v.findViewById(R.id.ade_radiogroup);
@@ -476,13 +481,29 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
 
     }
 
+
+    public FragmentAddEvent setInitialData(int week, int dow, TimePeriod tp){
+        this.week = week;
+        weeks.add(week);
+        this.dow = dow;
+        timeSet = true;
+        timeSet_course = true;
+        fromT = tp.start;
+        toT = tp.end;
+        begin = getNumberAtTime(tp.start);
+        int end = getNumberAtTime(tp.end);
+       // Log.e("begin,end",begin+"-"+end);
+        last = end-begin+1;
+        hasInitialData = true;
+        return this;
+    }
     @SuppressLint("SetTextI18n")
     private void refreshTimeBlock(){
         if(mRadioGroup.getCheckedRadioButtonId()==R.id.ade_course){
             if(timeSet_course){
-                pickTime.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
-                pickTimeIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
-                pickTimeText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+                pickTime.setCardBackgroundColor(((BaseActivity)getActivity()).getColorAccent());
+                pickTimeIcon.setColorFilter(((BaseActivity)getActivity()).getColorAccent());
+                pickTimeText.setTextColor(((BaseActivity)getActivity()).getColorAccent());
                 pickTimeText.setText(getResources().getStringArray(R.array.dow1)[dow-1]+" "+begin+"-"+(begin+last-1));
             }else{
                 pickTimeText.setText(getString(R.string.ade_set_time_period));
@@ -494,10 +515,10 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             return;
         }
         if(timeSet){
-            pickTime.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
-            pickTimeIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
-            pickTimeText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
-           // pickTimeBG.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
+            pickTime.setCardBackgroundColor(((BaseActivity)getActivity()).getColorAccent());
+            pickTimeIcon.setColorFilter(((BaseActivity)getActivity()).getColorAccent());
+            pickTimeText.setTextColor(((BaseActivity)getActivity()).getColorAccent());
+           // pickTimeBG.setColorFilter(((BaseActivity)getActivity()).getColorAccent());
             String weekTempl = getString(R.string.week);
             String[] dows = getResources().getStringArray(R.array.dow1);
             if(wholeDaySwitch.isChecked()){
@@ -524,9 +545,9 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
     private void refreshTaskBlock(){
         if(taskSet&&task!=null){
 
-            pickTaskIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
-            pickTaskText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
-            pickTask.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
+            pickTaskIcon.setColorFilter(((BaseActivity)getActivity()).getColorAccent());
+            pickTaskText.setTextColor(((BaseActivity)getActivity()).getColorAccent());
+            pickTask.setCardBackgroundColor(((BaseActivity)getActivity()).getColorAccent());
             pickTaskText.setText(task.name);
             pickTaskCancel.setVisibility(View.VISIBLE);
         }else{
@@ -540,9 +561,9 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
     }
     private void refreshLocationBlock(){
         if(locationSet){
-            pickLocationIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
-            pickLocationText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
-            pickLocation.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
+            pickLocationIcon.setColorFilter(((BaseActivity)getActivity()).getColorAccent());
+            pickLocationText.setTextColor(((BaseActivity)getActivity()).getColorAccent());
+            pickLocation.setCardBackgroundColor(((BaseActivity)getActivity()).getColorAccent());
             pickLocationText.setText(locationStr);
             pickLocationCancel.setVisibility(View.VISIBLE);
         }else{
@@ -557,9 +578,9 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
     }
     private void refreshExamBlock(){
         if(subjectSet&&subjectName!=null){
-            pickSubjectIcon.setColorFilter(((BaseActivity)getActivity()).getColorPrimary());
-            pickSubjectText.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
-            pickSubject.setCardBackgroundColor(((BaseActivity)getActivity()).getColorPrimary());
+            pickSubjectIcon.setColorFilter(((BaseActivity)getActivity()).getColorAccent());
+            pickSubjectText.setTextColor(((BaseActivity)getActivity()).getColorAccent());
+            pickSubject.setCardBackgroundColor(((BaseActivity)getActivity()).getColorAccent());
             pickSubjectText.setText(subjectName);
         }else{
             pickTaskText.setText(getString(R.string.ade_pick_subject));
@@ -575,10 +596,14 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
         toT.minute = minute;
     }
     private void sendRefreshMessages() {
-        Intent tlr = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(tlr);
-        Intent tlr2 = new Intent("COM.STUPIDTREE.HITA.TASK_REFRESH");
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(tlr2);
+        Intent tlr = new Intent(TIMETABLE_CHANGED);
+//        Intent tlr = new Intent(TIMELINE_REFRESH);
+//        Intent tlr2 = new Intent(TASK_REFRESH);
+//        Intent tlr3 = new Intent(WATCHER_REFRESH);
+        LocalBroadcastManager lm = LocalBroadcastManager.getInstance(getContext());
+        lm.sendBroadcast(tlr);
+//        lm.sendBroadcast(tlr2);
+//        lm.sendBroadcast(tlr3);
         if(onFragmentInteractionListener!=null){
             onFragmentInteractionListener.onCalledRefresh();
         }
@@ -728,6 +753,11 @@ public class FragmentAddEvent extends BottomSheetDialogFragment {
             int[] types_length = new int[]{TimetableCore.TIMETABLE_EVENT_TYPE_EXAM
                     ,TimetableCore.TIMETABLE_EVENT_TYPE_COURSE,TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT,TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC};
             List<EventItem> overlapEvents = timeTableCore.getEventFrom_typeLimit(week,dow,start,week,dow,end,types_length);
+            List<EventItem> toRemove = new ArrayList<>();
+            for(EventItem ei:overlapEvents){
+                if(!ei.hasCross_Strict(end)&&!ei.hasCross(start)) toRemove.add(ei);
+            }
+            overlapEvents.removeAll(toRemove);
             if(!isWholeDay&&contains_integer(types_length,type)&&overlapEvents.size()>0){
                 return overlapEvents;
             }else{

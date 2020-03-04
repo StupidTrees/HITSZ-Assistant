@@ -3,6 +3,7 @@ package com.stupidtree.hita.activities;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -100,11 +101,10 @@ public class ActivitySearch extends BaseActivity {
         super.onCreate(savedInstanceState);
         setWindowParams(true, true, false);
         setContentView(R.layout.activity_search);
+        //getWindow().getDecorView().setBackgroundColor(Color.TRANSPARENT);
         initToolbar();
         rootLayout = findViewById(R.id.rootlayout);
-
         mRevealAnimation = new RevealAnimation(rootLayout, getIntent(), this);
-
         initList();
         initPager();
         onAnimateLayout(savedInstanceState, getIntent());

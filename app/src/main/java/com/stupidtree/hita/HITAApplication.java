@@ -2,18 +2,23 @@ package com.stupidtree.hita;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatDelegate;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.stupidtree.hita.timetable.HITADBHelper;
+import com.stupidtree.hita.timetable.TimeWatcherService;
 import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.jw.JWCore;
 import com.stupidtree.hita.online.HITAUser;
@@ -26,7 +31,6 @@ import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -36,6 +40,8 @@ import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobUser;
 
+import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
+
 /**
  * 全局Application类，生命周期和整个应用相同
  */
@@ -43,16 +49,11 @@ public class HITAApplication extends Application {
 
     //一个全局的Context变量
     public static Context HContext;
-    public static TimeWatcher timeWatcher;
-    public static int themeID;
     public static Calendar now;
     public static HITADBHelper mDBHelper;
+    public static AppThemeCore themeCore;
     public static JWCore jwCore;
     public static TimetableCore timeTableCore;
-    public static HashMap<String, String> cookies_ut = new HashMap<>();
-    public static HashMap<String,String> cookies_ut_card = new HashMap<>();
-    public static String ut_username;
-    public static boolean login_ut = false;
     public static SharedPreferences defaultSP;
     public static List<ChatBotMessageItem> ChatBotListRes;//聊天机器人的聊天记录
     public static List<BmobObject> SearchResultList;
@@ -62,24 +63,28 @@ public class HITAApplication extends Application {
     public static Handler ToastHander;
     public static ThreadPoolExecutor TPE;
 
+    public static TimeWatcherService.TimeServiceBinder timeServiceBinder;
+
 
     @SuppressLint("HandlerLeak")
     @Override
     public void onCreate() {
         super.onCreate();
+        //初始化顺序不可乱
         now = Calendar.getInstance();
         TPE = new ThreadPoolExecutor(0,Integer.MAX_VALUE,60L, TimeUnit.SECONDS,new SynchronousQueue<Runnable>());
-        HContext = getApplicationContext();
+        HContext = getBaseContext();
         mDBHelper = new HITADBHelper(HContext);
         defaultSP = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        themeCore = new AppThemeCore();
+        timeTableCore = new TimetableCore();
         ChatBotListRes = new ArrayList<>();
         SearchResultList = new ArrayList<>();
         jwCore = new JWCore();
-        timeTableCore = new TimetableCore();
-        timeWatcher = new TimeWatcher(this);
-
+       // timeWatcher = new TimeWatcher(this);
         initUpgradeDialog();
-        new InitTask(this).executeOnExecutor(HITAApplication.TPE);
+        initServices();
+        //initLanguage();
         ToastHander = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -87,13 +92,31 @@ public class HITAApplication extends Application {
                 Toast.makeText(HContext,msg.getData().getString("msg"),Toast.LENGTH_LONG).show();
             }
         };
-
         Bugly.init(this, "7c0e87536a", false);//务必最后再init
         Bmob.initialize(this, "9c9c53cd53b3c7f02c37b7a3e6fd9145");
         CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
-        getThemeID();
+        themeCore.initAppTheme();
     }
 
+
+
+
+    private void initServices(){
+        ServiceConnection conn = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                timeServiceBinder = (TimeWatcherService.TimeServiceBinder) service;
+                new InitTask(HITAApplication.this).executeOnExecutor(HITAApplication.TPE);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                timeServiceBinder = null;
+            }
+        };
+        Intent i = new Intent(this, TimeWatcherService.class);
+        bindService(i,conn, Service.BIND_AUTO_CREATE);
+    }
 
 
 
@@ -184,57 +207,6 @@ public class HITAApplication extends Application {
 
     }
 
-    public static void getThemeID() {
-        String mode = defaultSP.getString("dark_mode_mode","dark_mode_normal");
-        if(mode.equals("dark_mode_normal")){
-            if(defaultSP.getBoolean("is_dark_mode",false)) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            else  AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }else if(mode.equals("dark_mode_follow")){
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        }else{
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        }
-
-        switch (defaultSP.getInt("theme_id", 3)) {
-            case 0:
-                themeID = R.style.RedTheme;
-                break;
-            case 1:
-                themeID = R.style.PinkTheme;
-                break;
-            case 2:
-                themeID = R.style.BrownTheme;
-                break;
-            case 3:
-                themeID = R.style.BlueTheme;
-                break;
-            case 4:
-                themeID = R.style.BlueGreyTheme;
-                break;
-            case 5:
-                themeID = R.style.TealTheme;
-                break;
-            case 6:
-                themeID = R.style.DeepPurpleTheme;
-                break;
-            case 7:
-                themeID = R.style.GreenTheme;
-                break;
-            case 8:
-                themeID = R.style.DeepOrangeTheme;
-                break;
-            case 9:
-                themeID = R.style.IndigoTheme;
-                break;
-            case 10:
-                themeID = R.style.CyanTheme;
-                break;
-            case 11:
-                themeID = R.style.AmberTheme;
-                break;
-        }
-    }
-
 
 
 
@@ -245,8 +217,13 @@ public class HITAApplication extends Application {
     }
 
 
+    //    private void initLanguage(){
+//        String lan = defaultSP.getString("app_language","ch");
+//        changeAppLanguage(getResources(),lan);
+//    }
 
-    static class InitTask extends AsyncTask {
+
+    class InitTask extends AsyncTask {
 
         @SuppressLint("StaticFieldLeak")
         Context context;
@@ -264,13 +241,20 @@ public class HITAApplication extends Application {
         @Override
         protected Object doInBackground(Object[] objects) {
             timeTableCore.initCoreData();
-            timeWatcher.refreshProgress(true, true);
+
+           // timeServiceBinder.refreshProgress();
             //Log.e("time_test","initialize:end");
-            Intent i = new Intent();
-            i.setAction("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
-            context.sendBroadcast(i);
             return null;
         }
 
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+//            Intent i = new Intent(WATCHER_REFRESH);
+//            i.putExtra("call_everyone",true);
+//            HITAApplication.this.sendBroadcast(i);
+            Intent i2 = new Intent(TIMETABLE_CHANGED);
+            LocalBroadcastManager.getInstance(HITAApplication.this).sendBroadcast(i2);
+        }
     }
 }

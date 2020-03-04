@@ -15,7 +15,7 @@ import static com.stupidtree.hita.HITAApplication.mDBHelper;
 
 public class HITADBHelper extends SQLiteOpenHelper {
 
-    public static final int DB_VERSION = 36;
+    public static final int DB_VERSION = 44;
     private static final String CREATE_TABLE_TIMETABLE  =
             "create table timetable("
             + "name text  not null,"
@@ -49,7 +49,8 @@ public class HITADBHelper extends SQLiteOpenHelper {
                     +"code text,"
                     +"curriculum_code text  not null,"
                     +"scores text,"
-                    +"rates text"
+                    +"rates text,"
+                    +"id text"
                     + ");";
 
     private static final String CREATE_TABLE_TASK  =
@@ -131,7 +132,14 @@ public class HITADBHelper extends SQLiteOpenHelper {
             db.delete("timetable","type=?",new String[]{TimetableCore.TIMETABLE_EVENT_TYPE_REMIND+""});
             db.delete("timetable","type=?",new String[]{TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE+""});
             db.delete("timetable","type=?",new String[]{TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC+""});
-        }
+        }else if(oldVersion<=43){
+            //db.execSQL("DROP TABLE IF EXISTS timetable");
+            //db.execSQL("DROP TABLE IF EXISTS task");
+            //db.execSQL(CREATE_TABLE_TIMETABLE);
+            //db.execSQL(CREATE_TABLE_TASK);
+            db.execSQL("alter table subject add column id text;");
+
+           }
     }
 
 

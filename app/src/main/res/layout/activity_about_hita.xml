@@ -34,6 +34,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    app:cardBackgroundColor="@color/material_text_icon_white"
                     app:cardCornerRadius="60dp"
                     app:cardElevation="16dp">
 
@@ -108,7 +109,7 @@
                     android:layout_margin="4dp"
                     android:gravity="center|start"
                     android:text="@string/new_version_available"
-                    android:textColor="?attr/text_color_secondary" />
+                    android:textColor="@color/material_secondary_text" />
 
                 <TextView
                     android:id="@+id/update_title"
@@ -119,7 +120,7 @@
                     android:fontFamily="sans-serif-black"
                     android:gravity="center|start"
                     android:text="古娜拉黑暗之神 升级魔法"
-                    android:textColor="?attr/text_color_primary"
+                    android:textColor="@color/material_primary_text"
                     android:textSize="18sp" />
 
                 <ImageView
@@ -143,7 +144,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="4dp"
                         android:text="时间：2019年5月25日"
-                        android:textColor="?attr/text_color_secondary"
+                        android:textColor="@color/material_secondary_text"
                         android:textSize="14sp" />
 
                     <TextView
@@ -153,7 +154,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="4dp"
                         android:text="大小：40m"
-                        android:textColor="?attr/text_color_secondary"
+                        android:textColor="@color/material_secondary_text"
                         android:textSize="14sp" />
 
                     <TextView
@@ -163,7 +164,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="4dp"
                         android:text="版本：2.3"
-                        android:textColor="?attr/text_color_secondary"
+                        android:textColor="@color/material_secondary_text"
                         android:textSize="14sp" />
 
                     <TextView
@@ -177,7 +178,7 @@
                         android:layout_marginBottom="16dp"
                         android:lineSpacingExtra="8sp"
                         android:text="新增：主题\nUI优化\n课程表优化"
-                        android:textColor="?attr/text_color_secondary"
+                        android:textColor="@color/material_secondary_text"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -236,8 +237,8 @@
         android:layout_margin="16dp"
         android:foregroundGravity="center"
         app:BL_backgroundColor="@color/transparent_none"
-        app:BL_circleColor="?attr/colorPrimary"
-        app:BL_circleColorSecond="?attr/colorFade"
+        app:BL_circleColor="?attr/colorAccent"
+        app:BL_circleColorSecond="?attr/colorPrimary"
         app:BL_enable="true"
         app:BL_stateShow="normal"
         app:BL_text="@string/check_for_update"

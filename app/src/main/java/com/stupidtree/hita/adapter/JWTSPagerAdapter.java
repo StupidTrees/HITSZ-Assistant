@@ -13,11 +13,9 @@ import java.util.List;
 
 public class JWTSPagerAdapter extends FragmentPagerAdapter {
     List<JWFragment> mBeans;
-    String[] titles;
-    public JWTSPagerAdapter(FragmentManager fm, List<JWFragment> res, String[] titles) {
-        super(fm);
+    public JWTSPagerAdapter(FragmentManager fm, List<JWFragment> res) {
+        super(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mBeans = res;
-        this.titles = titles;
     }
 
     @Override
@@ -38,7 +36,7 @@ public class JWTSPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return titles[position];
+        return mBeans.get(position).getTitle();
     }
 
     @Override

@@ -222,10 +222,10 @@
                         android:layout_marginRight="16dp"
                         android:alpha="0.8"
                         android:gravity="center"
-                        android:maxEms="8"
+                        android:maxEms="12"
                         android:singleLine="true"
                         android:textColor="?attr/text_color_secondary"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -237,12 +237,12 @@
                             android:layout_height="80dp"
                             android:layout_gravity="center"
                             android:layout_marginBottom="4dp"
-                            android:background="@drawable/radius_primay_round_icon_bg"
-                            android:backgroundTint="@color/background_bottom_color_as_tint"
+                            android:background="@drawable/radius_accent_round_icon_bg"
+                            android:backgroundTint="?attr/background_color_bottom_as_tint"
                             android:backgroundTintMode="src_over"
                             android:padding="8dp"
                             android:scaleType="centerCrop"
-                            android:tint="?attr/colorPrimary"
+                            android:tint="?attr/colorAccent"
                             android:tintMode="src_in"
                             android:visibility="visible"
                             app:srcCompat="@drawable/ic_access_alarm_black_24dp" />

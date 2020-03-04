@@ -3,6 +3,7 @@ package com.stupidtree.hita.diy;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.themeID;
+import static com.stupidtree.hita.HITAApplication.themeCore;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
@@ -51,7 +52,7 @@ public class PickCourseTimeDialog extends AlertDialog{
         super(context);
         mOnDialogConformListener = onDialogConformListener;
         this.context = context;
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context,themeID);// your app theme here
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context,themeCore.getCurrentThemeID());// your app theme here
         View view = getLayoutInflater().cloneInContext(contextThemeWrapper).inflate(R.layout.dialog_pick_course_time,null,false);
         setView(view);
         initViews(view);
@@ -71,6 +72,7 @@ public class PickCourseTimeDialog extends AlertDialog{
         hasInit = true;
         this.begin = begin;
         this.end = begin+last-1;
+        //Log.e("begun-end",this.begin+","+end);
         this.dow = dow;
     }
 
@@ -157,8 +159,8 @@ public class PickCourseTimeDialog extends AlertDialog{
             end = 2;
         }
         pickDow.setCurrentIndex(dow-1);
-        pickFromT.setCurrentIndex(begin-1);
         pickToT.setCurrentIndex(end-1);
+        pickFromT.setCurrentIndex(begin-1);
         timeSet = true;
     }
 

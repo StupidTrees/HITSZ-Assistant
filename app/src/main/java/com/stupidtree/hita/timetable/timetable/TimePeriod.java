@@ -34,6 +34,23 @@ public class TimePeriod implements Comparable {
         return ((TimePeriod)o).getLength()-this.getLength();
     }
 
+
+    public HTime getStart() {
+        return start;
+    }
+
+    public void setStart(HTime start) {
+        this.start.setTime(start.hour,start.minute);
+    }
+
+    public HTime getEnd() {
+        return end;
+    }
+
+    public void setEnd(HTime end) {
+        this.end.setTime(end.hour,end.hour);
+    }
+
     @Override
     public String toString() {
         return start.tellTime()+"~"+end.tellTime();

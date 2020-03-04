@@ -26,7 +26,7 @@
             <ImageView
                 android:id="@+id/usercenter_appbar_image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="match_parent"
                 android:fadingEdge="vertical"
                 android:fadingEdgeLength="40dp"
                 android:foreground="@color/user_center_scrim_color"
@@ -36,12 +36,20 @@
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.6" />
 
+            <View
+                android:id="@+id/view5"
+                android:layout_width="wrap_content"
+                android:layout_height="160dp"
+                android:layout_gravity="bottom"
+                android:background="?attr/background_color_bottom"
+                app:layout_collapseMode="none" />
+
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                app:layout_collapseMode="parallax"
+                app:layout_collapseMode="none"
                 app:layout_collapseParallaxMultiplier="0.67">
 
                 <ImageView
@@ -79,7 +87,7 @@
                 android:layout_gravity="bottom|center"
                 android:layout_marginBottom="56dp"
                 android:orientation="vertical"
-                app:layout_collapseMode="parallax"
+                app:layout_collapseMode="none"
                 app:layout_collapseParallaxMultiplier="0.5">
 
                 <TextView
@@ -118,15 +126,37 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/usercenter_tablayout"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="36dp"
                 android:layout_marginRight="36dp"
-                app:layout_collapseMode="pin"
-                app:tabIndicatorColor="?attr/colorPrimary"
-                app:tabSelectedTextColor="?attr/text_color_primary"
+                app:layout_collapseMode="none"
+                app:tabIndicatorColor="?attr/colorAccent"
+                app:tabPaddingBottom="4dp"
+                app:tabRippleColor="?attr/colorAccent"
+                app:tabSelectedTextColor="?attr/colorAccent"
                 app:tabTextColor="?attr/text_color_secondary"
-                app:theme="@style/button_ripple_primary" />
+                app:tabUnboundedRipple="true"
+                app:theme="@style/button_ripple_primary">
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabItem2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tab2" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabItem3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tab2" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabItem4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tab2" />
+            </com.google.android.material.tabs.TabLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

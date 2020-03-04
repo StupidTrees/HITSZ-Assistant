@@ -4,6 +4,8 @@ import androidx.fragment.app.Fragment;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import android.content.Context;
 import android.util.SparseArray;
 import android.util.StringBuilderPrinter;
 
@@ -21,9 +23,11 @@ public class TimeTablePagerAdapter extends FragmentPagerAdapter {
     //保存每个Fragment的Tag，刷新页面的依据
     protected SparseArray<String> tags = new SparseArray<>();
     List<FragmentTimeTablePage> framents;
+    Context context;
 
-    public TimeTablePagerAdapter(FragmentManager fm,int count) {
-        super(fm);
+    public TimeTablePagerAdapter(Context context,FragmentManager fm,int count) {
+        super(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        this.context = context;
         pageCount = count;
         mFragmentManager = fm;
         framents = new ArrayList<>();
@@ -35,7 +39,7 @@ public class TimeTablePagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        String title = String.format(HContext.getString(R.string.timetable_tab_title),position+1);
+        String title = String.format(context.getString(R.string.timetable_tab_title),position+1);
 
         return title;
 

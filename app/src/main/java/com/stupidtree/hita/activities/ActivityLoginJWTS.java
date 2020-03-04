@@ -185,6 +185,7 @@ public class ActivityLoginJWTS extends BaseActivity {
             super.onPostExecute(o);
             login.setProgress(false);
             if(o instanceof JWException){
+                ((JWException)o).printStackTrace();;
                 JWException jwe = (JWException) o;
                 AlertDialog ad = new AlertDialog.Builder(ActivityLoginJWTS.this).create();
                 ad.setTitle("提示");

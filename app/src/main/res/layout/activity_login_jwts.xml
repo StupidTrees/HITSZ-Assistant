@@ -146,7 +146,7 @@
                     android:layout_gravity="center"
                     android:foregroundGravity="center"
                     app:BL_backgroundColor="@color/transparent_none"
-                    app:BL_circleColor="?attr/colorPrimary"
+                    app:BL_circleColor="?attr/colorAccent"
                     app:BL_circleColorSecond="?attr/colorFade"
                     app:BL_enable="true"
                     app:BL_stateShow="normal"

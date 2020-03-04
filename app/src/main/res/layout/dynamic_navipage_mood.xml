@@ -109,10 +109,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-black"
             android:text="@string/navi_mood_title"
             android:textColor="?attr/text_color_primary"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <View
             android:id="@+id/view"

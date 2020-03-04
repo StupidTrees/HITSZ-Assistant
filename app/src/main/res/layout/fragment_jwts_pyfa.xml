@@ -15,7 +15,7 @@
         app:tabIndicatorColor="#00000000"
         app:tabIndicatorFullWidth="false"
         app:tabMode="scrollable"
-        app:tabSelectedTextColor="?attr/colorPrimary"
+        app:tabSelectedTextColor="?attr/colorAccent"
         app:tabTextColor="?attr/text_color_primary"
         app:tabUnboundedRipple="true">
 

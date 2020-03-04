@@ -7,6 +7,7 @@
     <string name="nav_header_subtitle">HITSZ Assistant</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="app_notification_channel_id">hita_channel</string>
+    <string name="app_notification_channel_name">HITSZ助手channel</string>
     <string name="app_notification_channel_id_learning">"hita_learning_channel"</string>
     <!-- Example defaultSP for Notifications -->
 
@@ -175,18 +176,7 @@
     <string name="add_laf_location">不设置地点</string>
     <string name="add_laf_anonymous">匿名发布</string>
     <string name="button_post">发布</string>
-    <string name="theme_name_red">浓烈红</string>
-    <string name="theme_name_pink">Lover粉</string>
-    <string name="theme_name_brown">高端棕</string>
-    <string name="theme_name_blue">哈工蓝</string>
-    <string name="theme_name_grey">谷歌灰</string>
-    <string name="theme_name_android">安卓绿</string>
-    <string name="theme_name_purple">直男紫</string>
-    <string name="theme_name_green">原谅绿</string>
-    <string name="theme_name_deep_orange">百香橙橙</string>
-    <string name="theme_name_indigo">Indigo</string>
-    <string name="theme_name_cyan">蛇精青</string>
-    <string name="theme_name_amber">琥珀</string>
+
     <string name="usercenter_sync_autoupload">自动保存数据到服务器</string>
     <string name="usercenter_sync_autoupload_hint">自动保存将频繁进行，这会消耗性能及流量，但可以及时保存数据变更</string>
     <string name="usercenter_sync_download">下载云端数据到本地</string>
@@ -259,6 +249,7 @@
     <string name="user_center_you_have_punched">累计签到%d天</string>
     <string name="date_day">%d日</string>
     <string name="week">第%d周</string>
+    <string name="count_week">%d周</string>
     <string name="navi_semister_not_begun">学期未开始</string>
     <string name="navi_semister_no_data">无学期数据</string>
     <string name="add_laf_no_location">不设置地点</string>
@@ -363,14 +354,14 @@
     <string name="settings_title_darkmode">深色模式选项</string>
     <string name="settings_summary_darkmode">设置大可莫得开启时机</string>
     <string name="settings_category_timetable">课程表设置</string>
-    <string name="settings_summary_colormode">在课表和科目管理页面为不同科目着色</string>
-    <string name="settings_title_colormode">启用科目颜色（多彩模式）</string>
+    <string name="settings_summary_colormode">为不同科目着色，关闭则显示主题渐变色</string>
+    <string name="settings_title_colormode">启用科目颜色</string>
     <string name="settings_category_app">应用设置</string>
     <string name="settings_summary_auto_check_update">建议开启</string>
     <string name="settings_title_auto_check_update">进入app自动检查更新</string>
     <string name="settings_summary_auto_download_wifi">建议开启</string>
     <string name="settings_title_auto_download_wifi">Wifi自动下载更新</string>
-    <string name="setting_summary_always_on_notifi">重启后生效</string>
+    <string name="setting_summary_always_on_notifi">其实挺方便哒</string>
     <string name="setting_title_always_on_notifi">常驻通知栏</string>
     <string name="settings_category_hita">希塔设置</string>
     <string name="settings_title_auto_read">自动播放回复</string>
@@ -407,7 +398,7 @@
     <string name="subject_code">课程代码</string>
     <string name="subject_xnxq">学年学期</string>
     <string name="subject_type">课程类别</string>
-    <string name="subject_school">开设院系</string>
+    <string name="subject_school">开设部门</string>
     <string name="subject_title_all_courses">所有课时</string>
     <string name="subject_progress_text">进度</string>
     <string name="subject_self_rate">自评点数</string>
@@ -523,13 +514,109 @@
     <string name="location_total_searched">共找到%d个地点</string>
     <string name="time_format_1">%d小时%d分钟</string>
     <string name="time_format_2">%d分钟</string>
+    <string name="theme_name_red">鲜艳红</string>
+    <string name="theme_name_pink">爱人粉</string>
+    <string name="theme_name_brown">低调棕</string>
+    <string name="theme_name_blue">晴空蓝</string>
+    <string name="theme_name_grey">谷歌灰</string>
+    <string name="theme_name_android">安卓绿</string>
+    <string name="theme_name_purple">直男紫</string>
+    <string name="theme_name_green">原谅绿</string>
+    <string name="theme_name_deep_orange">百香橙</string>
+    <string name="theme_name_indigo">靛青</string>
+    <string name="theme_name_cyan">光亮青</string>
+    <string name="theme_name_amber">琥珀</string>
+    <string name="theme_name_rose">俺高贵</string>
+    <string name="theme_name_vice">罪恶都市</string>
+    <string name="theme_name_mild">温和绿</string>
+    <string name="theme_name_morning">晨光</string>
+    <string name="theme_name_ph">仅深色-没有证据</string>
+    <string name="theme_name_p30">天空之镜</string>
+    <string name="theme_name_hit">哈工大蓝</string>
+    <string name="theme_name_cruelsummer">残酷夏日</string>
+    <string name="theme_name_mi">50度灰</string>
+    <string name="theme_name_diechilan" translatable="false">古风色-蝶翅蓝</string>
+    <string name="theme_name_tan" translatable="false">古风色-檀</string>
+    <string name="theme_name_yadinglv" translatable="false">古风色-亚丁绿</string>
+    <string name="theme_name_manjianghong" translatable="false">古风色-满江红</string>
+    <string name="theme_name_cyberpunk">仅深色-赛博朋克</string>
+    <string name="xsxk_xnxq">选择学期</string>
+    <string name="xsxk_type">选课类别</string>
+    <string name="jw_xk_tabs_bx">必修</string>
+    <string name="jw_xk_tabs_xx">限选</string>
+    <string name="jw_xk_tabs_cxyx">创新研修</string>
+    <string name="jw_xk_tabs_cxsy">创新实验</string>
+    <string name="jw_xk_tabs_ty">体育</string>
+    <string name="jw_xk_tabs_fankzy">方案内跨专业</string>
+    <string name="jw_xk_tabs_kzy">跨专业</string>
+    <string name="subject_name">课程中文名称</string>
+    <string name="subject_lang">授课语言</string>
+    <string name="subject_name_en">课程英文名称</string>
+    <string name="subject_tag">备注</string>
+    <string name="subject_descrip">课程简介</string>
+    <string name="subject_descrip_en">课程英文简介</string>
+    <string name="subject_guideline">课程大纲附件</string>
+    <string name="subject_guideline_en">课程大纲英文附件</string>
+    <string name="subject_teacher_name">教师姓名</string>
+    <string name="subject_teacher_responsible">是否负责人</string>
+    <string name="subject_teacher_files">教学资料</string>
+    <string name="subject_jw_title">教务课程详情</string>
+    <string name="download_fail">下载出错</string>
+    <string name="download_paused">下载暂停</string>
+    <string name="download_canceld">下载已取消</string>
+    <string name="download_success">文件下载完成</string>
+    <string name="downloading">下载中....</string>
+    <string name="download_open_folder">点击打开文件目录</string>
+    <string name="subject_jw_download_begin">开始下载，通知栏查看进度</string>
+    <string name="jw_xk_tabs_yx">已选课程</string>
+    <string name="download_file_progress_pattern">还有%d个文件</string>
+    <string name="xk_view_subject_detail">查看课程详情</string>
+    <string name="xk_opoup_subject_detail">课程详情</string>
+    <string name="xk_opoup_click_jump">点击查看</string>
+    <string name="jw_tabs_xk">选课</string>
+    <string name="jw_tabs_frkb">课表导入</string>
+    <string name="jw_tabs_cj">成绩管理</string>
+    <string name="jw_tabs_grcj">个人成绩</string>
+    <string name="subjet_jw_detail_click_jump">点击进入</string>
+    <string name="subject_jw_detail">教务网课程详情页</string>
+    <string name="subject_nothing">课程数据空，请尝试重新导入课表</string>
+    <string name="jw_xk_tabs_mooc">MOOC</string>
+    <string name="jw_xk_tabs_wlts">文理通识</string>
+    <string name="jw_xk_tabs_cx">重修</string>
+    <string name="app_notification_channel2_id">hita_channel2</string>
+    <string name="notifi_import_first">请登录导入课表后使用</string>
+    <string name="app_notification_channel3_id">hita_channel3</string>
+    <string name="settings_title_app_language">APP语言</string>
+    <string name="settings_summary_timetable_back">点击按钮快速回到本周</string>
+    <string name="settings_title_timetable_back">显示“回到本周”浮动按钮</string>
+    <string name="settings_title_timetable_card_height">事件卡片高度（像素/小时）</string>
+    <string name="settings_summary_timetable_card_height">点击恢复默认</string>
+    <string name="settings_title_timetable_card_opacity">卡片背景不透明度</string>
+    <string name="settings_title_timetable_card_text_bold">卡片字体加粗</string>
+    <string name="settings_summary_timetable_card_text_bold">有时挺好看的</string>
+    <string name="settings_title_timetable_card_icon_enable">卡片显示小圆圈</string>
+    <string name="settings_summary_timetable_card_icon_enable">关闭则文字上移</string>
+    <string name="settings_title_timetable_card_title_gravity">标题对齐方式</string>
+    <string name="settings_summary_timetable_card_title_gravity">仅设置事件名称的显示方式</string>
+    <string name="settings_title_timetable_card_background">卡片背景</string>
+    <string name="settings_title_timetable_card_title_color">卡片标题颜色</string>
+    <string name="settings_title_timetable_card_subtitle_color">卡片副标题颜色</string>
+    <string name="settings_title_timetable_card_title_alpha">标题不透明度</string>
+    <string name="settings_title_timetable_card_subtitle_alpha">副标题不透明度</string>
+    <string name="settings_title_timetable_preset">预设样式配置</string>
+    <string name="settings_summary_timetable_preset">使用预设配置下面的选项</string>
+    <string name="settings_title_timetable_card_icon_color">小圆圈颜色</string>
+    <string name="menu_timetable_style">时间表样式</string>
+    <string name="preference_tabs_basic">基本设置</string>
+    <string name="preference_tabs_appearance">外观设置</string>
+    <string name="preference_tabs_others">其他设置</string>
     <string-array name="curriculum_tabs">
         <item>科目</item>
         <item>教师</item>
     </string-array>
     <string-array name="user_center_tabs">
-        <item>校园</item>
         <item>个人资料</item>
+        <item>校园</item>
         <item>同步</item>
     </string-array>
     <string-array name="months">
@@ -593,10 +680,44 @@
         <item>食堂排行</item>
     </string-array>
     <string-array name="news_tabs">
-        <item>通知公告</item>
-        <item>讲座信息</item>
         <item>校区要闻</item>
+        <item>讲座信息</item>
+        <item>通知公告</item>
+
         <item>校园动态</item>
         <item>综合新闻</item>
+    </string-array>
+    <string-array name="preference_dark_mode">
+        <item>手动开关</item>
+        <item>跟随系统（仅测试原生和MIUI11）</item>
+    </string-array>
+    <string-array name="preference_card_title_gravity">
+        <item>居中</item>
+        <item>顶部</item>
+        <item>底部</item>
+    </string-array>
+    <string-array name="preference_card_background">
+        <item>主题渐变色</item>
+        <item>主题色Primary</item>
+        <item>主题色Accent</item>
+    </string-array>
+    <string-array name="preference_card_title_color">
+        <item>科目颜色</item>
+        <item>白色</item>
+        <item>黑色</item>
+        <item>主题色Primary</item>
+        <item>主题色Accent</item>
+    </string-array>
+    <string-array name="preference_card_title_color_subject_disabled">
+        <item>白色</item>
+        <item>黑色</item>
+        <item>主题色Primary</item>
+        <item>主题色Accent</item>
+    </string-array>
+    <string-array name="preference_timetable_preset">
+        <item>默认</item>
+        <item>科目色</item>
+        <item>主题色-淡</item>
+        <item>科目色-淡</item>
     </string-array>
 </resources>

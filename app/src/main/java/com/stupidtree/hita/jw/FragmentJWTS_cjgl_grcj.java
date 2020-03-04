@@ -5,14 +5,16 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
@@ -37,12 +40,11 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
     RecyclerView qmcj_list;
     CJXXListAdapter qmcj_adapter;
     List<String> xnxqPickerName;
-    List<Map<String,String>> xnxqPickerData;
+   // List<Map<String,String>> xnxqPickerData;
 
     List<Map<String,String>> qzcj_listRes,qmcj_listRes;
     Spinner xnxqPicker;
     ArrayAdapter xnxqAdapter;
-    ProgressBar loadingView_qmcj;
     Set<AsyncTask> taskSet;
 
     public FragmentJWTS_cjgl_grcj() {
@@ -50,6 +52,11 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        taskSet = new HashSet<>();
+    }
 
     public static FragmentJWTS_cjgl_grcj newInstance() {
         FragmentJWTS_cjgl_grcj fragment = new FragmentJWTS_cjgl_grcj();
@@ -62,24 +69,19 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        taskSet = new HashSet<>();
+
         View v = inflater.inflate(R.layout.fragment_jwts_cjgl_grcj, container, false);
         initPage(v);
         initLists(v);
+        initRefresh(v);
         return v;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Refresh(null,null);
-    }
 
     void initPage(View v){
         xnxqPickerName = new ArrayList<>();
-        xnxqPickerData = new ArrayList<>();
+        //xnxqPickerData = new ArrayList<>();
         xnxqPicker = v.findViewById(R.id.xnxq_picker);
-        loadingView_qmcj = v.findViewById(R.id.qmcj_loading);
         xnxqAdapter = new ArrayAdapter(getContext(),R.layout.dynamic_xnxq_spinner_item,xnxqPickerName);
         xnxqPicker.setAdapter(xnxqAdapter);
         xnxqAdapter.setDropDownViewResource(R.layout.dynamic_xnxq_spinner_dropdown_item);
@@ -97,8 +99,15 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
         xnxqPicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Map<String,String> dt = xnxqPickerData.get(i);
-                new refreshQMCJListTask(null,null,dt.get("xn"),dt.get("xq")).executeOnExecutor(TPE);
+               if(i==0){
+                   new refreshQMCJListTask(null,null).executeOnExecutor(TPE);
+
+               }else{
+                   Map<String,String> dt = jwRoot.getXNXQItems().get(i);
+
+                   new refreshQMCJListTask(dt.get("xn"),dt.get("xq")).executeOnExecutor(TPE);
+
+               }
 
             }
 
@@ -121,79 +130,94 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
         for(AsyncTask at:taskSet) if(at!=null&&at.getStatus()!=AsyncTask.Status.FINISHED) at.cancel(true);
     }
 
+
     @Override
-    public void Refresh(OnRefreshStartListener start, OnRefreshFinishListener finish) {
-        new refreshXNXQSpinnerTask(start,finish).executeOnExecutor(HITAApplication.TPE);
+    public void onResume() {
+        Log.e("grcj_refresh","will="+willRefreshOnResume);
+        super.onResume();
+
+    }
+
+    @Override
+    public String getTitle() {
+        return HContext.getString(R.string.jw_tabs_grcj);
+    }
+
+    @Override
+    public void Refresh() {
+        Log.e("refresh",jwRoot.getXNXQItems().toString());
+      //  taskSet.remove(this);
+        xnxqPickerName.clear();
+        qmcj_list.setVisibility(View.VISIBLE);
+        for (Map<String, String> item : jwRoot.getXNXQItems()) {
+            xnxqPickerName.add(item.get("xnmc") + item.get("xqmc"));
+        }
+        xnxqPickerName.add(0,"全部");
+        // Map<String,String> all = new HashMap<>();
+        // all.put("xn",null);
+        //all.put("xq",null);
+        //xnxqPickerData.add(0,all);
+        xnxqAdapter.notifyDataSetChanged();
+        xnxqPicker.setSelection(0);
+        refresh.setRefreshing(false);
+       // if(isVisible()) new refreshXNXQSpinnerTask().executeOnExecutor(HITAApplication.TPE);
     }
 
 
 
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
 
-
-
-
-    class refreshXNXQSpinnerTask extends RefreshJWPageTask{
-
-
-        public refreshXNXQSpinnerTask(OnRefreshStartListener refreshStartListener, OnRefreshFinishListener refreshFinishListener) {
-            super(refreshStartListener, refreshFinishListener);
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            try {
-                List<Map<String, String>> xnxqList = jwCore.getXNXQ();
-                xnxqPickerData.clear();
-                xnxqPickerData.addAll(xnxqList);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            taskSet.add(this);
-            super.onPreExecute();
-            qmcj_list.setVisibility(View.GONE);
-            loadingView_qmcj.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            taskSet.remove(this);
-            xnxqPickerName.clear();
-            qmcj_list.setVisibility(View.VISIBLE);
-            loadingView_qmcj.setVisibility(View.GONE);
-            for (Map<String, String> item : xnxqPickerData) {
-                xnxqPickerName.add(item.get("xnmc") + item.get("xqmc"));
-            }
-            xnxqPickerName.add(0,"全部");
-            Map<String,String> all = new HashMap<>();
-            all.put("xn",null);
-            all.put("xq",null);
-            xnxqPickerData.add(0,all);
-            xnxqAdapter.notifyDataSetChanged();
-            xnxqPicker.setSelection(0);
-        }
-
-
-    }
+//    class refreshXNXQSpinnerTask extends RefreshJWPageTask{
+//
+//
+//
+//        @Override
+//        protected Object doInBackground(Object[] objects) {
+//            try {
+//                List<Map<String, String>> xnxqList = jwCore.getXNXQ();
+//                xnxqPickerData.clear();
+//                xnxqPickerData.addAll(xnxqList);
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            taskSet.add(this);
+//            super.onPreExecute();
+//            qmcj_list.setVisibility(View.GONE);
+//             }
+//
+//        @Override
+//        protected void onPostExecute(Object o) {
+//            super.onPostExecute(o);
+//            taskSet.remove(this);
+//            xnxqPickerName.clear();
+//            qmcj_list.setVisibility(View.VISIBLE);
+//            for (Map<String, String> item : xnxqPickerData) {
+//                xnxqPickerName.add(item.get("xnmc") + item.get("xqmc"));
+//            }
+//            xnxqPickerName.add(0,"全部");
+//            Map<String,String> all = new HashMap<>();
+//            all.put("xn",null);
+//            all.put("xq",null);
+//            xnxqPickerData.add(0,all);
+//            xnxqAdapter.notifyDataSetChanged();
+//            xnxqPicker.setSelection(0);
+//        }
+//
+//
+//    }
 
     class refreshQMCJListTask extends  RefreshJWPageTask{
 
         String xn,xq;
 
-        public refreshQMCJListTask(OnRefreshStartListener refreshStartListener, OnRefreshFinishListener refreshFinishListener
-        ,String xn,String xq
+        public refreshQMCJListTask(String xn,String xq
         ) {
-            super(refreshStartListener, refreshFinishListener);
                 this.xn = xn;
                 this.xq = xq;
         }
@@ -203,9 +227,8 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
         protected void onPreExecute() {
             taskSet.add(this);
             super.onPreExecute();
-            qmcj_list.setVisibility(View.GONE);
-            loadingView_qmcj.setVisibility(View.VISIBLE);
-        }
+           // qmcj_list.setVisibility(View.GONE);
+            }
 
         @Override
         protected Object doInBackground(Object... strings) {
@@ -230,8 +253,7 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             taskSet.remove(this);
-            qmcj_list.setVisibility(View.VISIBLE);
-            loadingView_qmcj.setVisibility(View.GONE);
+           // qmcj_list.setVisibility(View.VISIBLE);
             qmcj_adapter.notifyDataSetChanged();
         }
     }
@@ -257,14 +279,14 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
         @NonNull
         @Override
         public CJXXListAdapter.cjxxItemHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            View v = mInflater.inflate(R.layout.dynamic_jwts_cjxx_item,viewGroup,false);
+            View v = mInflater.inflate(R.layout.dynamic_jw_cjxx_item,viewGroup,false);
             return new  CJXXListAdapter.cjxxItemHolder(v);
         }
 
         @Override
         public void onBindViewHolder(@NonNull  CJXXListAdapter.cjxxItemHolder cjxxItemHolder, final int i) {
             cjxxItemHolder.name.setText(mBeans.get(i).get("name"));
-            cjxxItemHolder.info.setText(mBeans.get(i).get("exam"));
+            cjxxItemHolder.info.setText(mBeans.get(i).get("exam")+"课 "+mBeans.get(i).get("credit")+"学分");
             cjxxItemHolder.point.setText(mBeans.get(i).get("credit"));
             cjxxItemHolder.type.setText(mBeans.get(i).get("type"));
             cjxxItemHolder.final_score.setText(mBeans.get(i).get("final_score"));

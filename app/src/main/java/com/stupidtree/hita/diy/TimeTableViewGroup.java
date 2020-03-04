@@ -1,20 +1,22 @@
 package com.stupidtree.hita.diy;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
+import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.timetable.EventItem;
 import com.stupidtree.hita.timetable.timetable.HTime;
+import com.stupidtree.hita.timetable.timetable.TimePeriod;
 import com.stupidtree.hita.util.TimeTableNowLine;
 
 
@@ -29,13 +31,15 @@ import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_D
 import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_REMIND;
 import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialog;
 
-public class TimeTableViewGroup extends ViewGroup {
+public class TimeTableViewGroup extends ViewGroup{
     int week;
     int width,height;
     int sectionWidth, sectionHeight = 180;
-    boolean colorfulMode;
+
     HTime startTime = new HTime(0, 0);
-    Activity activityContext;
+    BaseActivity activityContext;
+    TimeTableBlockAddView addButton = null;
+    TimeTableBlockView.TimeTablePreferenceRoot root;
 
     public TimeTableViewGroup(Context context) {
         super(context);
@@ -50,19 +54,43 @@ public class TimeTableViewGroup extends ViewGroup {
     }
 
 
-    public void init(Activity activity,int week,int blockHeight, HTime startTime,int todayBakgroundColor,boolean colorfulMode) {
+    public void init(BaseActivity activity, int week, TimeTableBlockView.TimeTablePreferenceRoot root) {
         this.week = week;
         this.activityContext = activity;
-        this.sectionHeight = blockHeight;
-        this.startTime = startTime;
-        this.colorfulMode = colorfulMode;
+        this.root = root;
+        this.sectionHeight = root.getCardHeight();
+        this.startTime = root.getStartTime();
+        setClickable(true); //设置为可点击，否则onTouchEvent只返回DOWN
         if(timeTableCore.isThisTerm()&&week==timeTableCore.getThisWeekOfTerm()){
             View v = new View(getContext());
-            v.setBackgroundColor(todayBakgroundColor);
+            v.setBackgroundColor(root.getTodayBGColor());
            // v.setAlpha(0.3f);
             addView(v);
         }
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //
+       // Log.e("action", String.valueOf(event.getAction()));
+       if(event.getAction()==MotionEvent.ACTION_UP){
+           removeView(addButton);
+           int dow = (int)event.getX()/sectionWidth+1;
+           HTime time = startTime.getAdded((int)(event.getY()/sectionHeight*60f));
+           TimePeriod period = timeTableCore.getClassSimplfiedTimeByTimeContainedIn(time);
+           if(period!=null){
+               if(period.start.before(startTime)) period.setStart(startTime);
+               addButton = new TimeTableBlockAddView(activityContext,week,dow,
+                       period
+               );
+               addView(addButton);
+
+           }
+       }else{
+           removeView(addButton);
+       }
+        return super.onTouchEvent(event);
     }
 
     @Override
@@ -88,6 +116,10 @@ public class TimeTableViewGroup extends ViewGroup {
             }else if(child instanceof TimeTableNowLine) {
                 int cw = MeasureSpec.makeMeasureSpec(sectionWidth, MeasureSpec.EXACTLY);
                 int cH = MeasureSpec.makeMeasureSpec(4, MeasureSpec.EXACTLY);
+                child.measure(cw, cH);
+            }else if(child instanceof TimeTableBlockAddView) {
+                int cw = MeasureSpec.makeMeasureSpec(sectionWidth, MeasureSpec.EXACTLY);
+                int cH = MeasureSpec.makeMeasureSpec((int) ((((TimeTableBlockAddView) child).getDuration() / 60f) * sectionHeight), MeasureSpec.EXACTLY);
                 child.measure(cw, cH);
             }else {
                 this.measureChild(child, widthMeasureSpec, heightMeasureSpec);
@@ -124,11 +156,19 @@ public class TimeTableViewGroup extends ViewGroup {
             }else if(child instanceof TimeTableNowLine){
                 View nowL = child;
                 int left = sectionWidth* (TimetableCore.getDOW(now)-1);
-                int right = (left + sectionWidth);
                 float startTimeFromBeginning = startTime.getDuration(new HTime(now));
                 int top = (int) ((startTimeFromBeginning / 60f) * sectionHeight);
                 nowL.layout(0, top,width,top+4);
-            }else if(child != null){
+            }else if(child instanceof TimeTableBlockAddView){
+                TimeTableBlockAddView add = (TimeTableBlockAddView) child;
+                int left = sectionWidth*(add.getDow()-1);
+                int right = (left + sectionWidth);
+                float startTimeFromBeginning = startTime.getDuration(add.getTimePeriod().start);
+                int top = (int) ((startTimeFromBeginning / 60f) * sectionHeight);
+                int bottom = top + (int) ((add.getDuration() / 60f) * sectionHeight);
+                //Log.e("pos",top+","+bottom+","+left+","+right);
+                add.layout(left, top, right,bottom);
+            } else if(child != null){
                 View today = child;
                 int left = sectionWidth* (TimetableCore.getDOW(now)-1);
                 int right = (left + sectionWidth);
@@ -150,7 +190,7 @@ public class TimeTableViewGroup extends ViewGroup {
     public void addBlock(Object o){
         if(o instanceof EventItem){
 
-            TimeTableBlockView timeTableBlockView = new TimeTableBlockView(getContext(), o,colorfulMode);
+            TimeTableBlockView timeTableBlockView = new TimeTableBlockView(getContext(), o,root);
             timeTableBlockView.setOnCardClickListener(new TimeTableBlockView.OnCardClickListener() {
                 @Override
                 public void OnClick(View v, EventItem ei) {
@@ -196,7 +236,7 @@ public class TimeTableViewGroup extends ViewGroup {
             });
             addView(timeTableBlockView);
         }else if(o instanceof List){
-            TimeTableBlockView timeTableBlockView = new TimeTableBlockView(getContext(), o,colorfulMode);
+            TimeTableBlockView timeTableBlockView = new TimeTableBlockView(getContext(), o,root);
             timeTableBlockView.setOnDuplicateCardClickListener(new TimeTableBlockView.OnDuplicateCardClickListener() {
                 @Override
                 public void OnDuplicateClick(View v, final List<EventItem> list) {
@@ -217,4 +257,6 @@ public class TimeTableViewGroup extends ViewGroup {
         }
 
     }
+
+
 }

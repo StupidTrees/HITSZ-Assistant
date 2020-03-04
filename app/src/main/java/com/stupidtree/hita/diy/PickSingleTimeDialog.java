@@ -24,7 +24,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.HITAApplication.themeID;
+import static com.stupidtree.hita.HITAApplication.themeCore;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
@@ -53,7 +53,7 @@ public class PickSingleTimeDialog extends AlertDialog{
         super(context);
         mOnDialogConformListener = onDialogConformListener;
         this.context = context;
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context,themeID);// your app theme here
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context,themeCore.getCurrentThemeID());// your app theme here
         View view = getLayoutInflater().cloneInContext(contextThemeWrapper).inflate(R.layout.dialog_pick_single_time,null,false);
         setView(view);
         initViews(view);

@@ -107,6 +107,9 @@ public class EventItem implements Serializable, Comparable {
     public boolean hasCross(HTime t) {
         return startTime.compareTo(t) <= 0 && endTime.compareTo(t) >= 0;
     }
+    public boolean hasCross_Strict(HTime t) {
+        return startTime.compareTo(t) < 0 && endTime.compareTo(t) > 0;
+    }
     public boolean hasPassed(Calendar c){
         Curriculum x = null;
         for(Curriculum cr:timeTableCore.getAllCurriculum()){

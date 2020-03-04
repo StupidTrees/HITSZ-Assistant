@@ -1,0 +1,47 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:layout_width="match_parent"
+        android:title="@string/settings_category_functions"
+        app:allowDividerAbove="false"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="app_events_enabled"
+            android:summary="@string/settings_summary_mainthirdpage"
+            android:textColor="?attr/text_color_primary"
+            android:textColorHint="?attr/text_color_secondary"
+            android:title="@string/settings_title_mainthirdpage"
+            app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="app_task_enabled"
+            android:summary="@string/settings_summary_task"
+            android:textColor="?attr/text_color_primary"
+            android:textColorHint="?attr/text_color_secondary"
+            android:title="@string/settings_title_task"
+            app:iconSpaceReserved="false" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:allowDividerAbove="false"
+        android:title="@string/settings_category_auto_login"
+        app:iconSpaceReserved="false">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="jwts_autologin"
+            android:summary="@string/settings_summary_autologin"
+            android:title="@string/settings_title_autologin"
+            app:iconSpaceReserved="false" />
+        <EditTextPreference
+            android:inputType="textPassword"
+            android:key="jwts_password"
+            android:summary="@string/settings_summary_jwpassword"
+            android:title="@string/settings_title_jwpassword"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

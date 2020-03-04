@@ -32,7 +32,7 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class ActivityTasks extends BaseActivity implements
-FragmentAddTask.AddTaskDoneListener{
+        FragmentAddTask.AddTaskDoneListener {
 
 
     RecyclerView tasksList_now;
@@ -50,10 +50,10 @@ FragmentAddTask.AddTaskDoneListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
-        setWindowParams(true,true,false);
+        setWindowParams(true, true, false);
         fat = new FragmentAddTask();
         initToolbar();
-       // initReceiver();
+        // initReceiver();
         initList();
         fab = findViewById(R.id.task_fab);
         none = findViewById(R.id.none_img1);
@@ -61,14 +61,15 @@ FragmentAddTask.AddTaskDoneListener{
             @Override
             public void onClick(View v) {
                 if (timeTableCore.isDataAvailable()) showAddTaskDialog();
-                else Snackbar.make(v, getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
+                else
+                    Snackbar.make(v, getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
             }
         });
         hasInit = true;
     }
 
 
-    void initToolbar(){
+    void initToolbar() {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.label_activity_tasks));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -88,13 +89,13 @@ FragmentAddTask.AddTaskDoneListener{
         tasksList_now.setItemViewCacheSize(Integer.MAX_VALUE);
         //taskList_done = findViewById(R.id.task_recycler_done);
         listRes_now = new ArrayList<>();
-       // listRes_done = new ArrayList<>();
+        // listRes_done = new ArrayList<>();
         listRes_notyet = new ArrayList<>();
-      listAdapter_now = new TaskListAdapter(this, listRes_now);
+        listAdapter_now = new TaskListAdapter(this, listRes_now);
         tasksList_now.setLayoutManager(new WrapContentLinearLayoutManager(this, RecyclerView.VERTICAL, false));
         //taskList_done.setLayoutManager(new WrapContentLinearLayoutManager(this, RecyclerView.VERTICAL, false));
         tasksList_now.setAdapter(listAdapter_now);
-         //taskList_done.setAdapter(listAdapter_done);
+        //taskList_done.setAdapter(listAdapter_done);
         listAdapter_now.setmOnItemLongClickListener(new TaskListAdapter.OnItemLongClickListener() {
             @Override
             public boolean OnClick(View v, int position) {
@@ -110,7 +111,7 @@ FragmentAddTask.AddTaskDoneListener{
         listAdapter_now.setmOnFinishClickListener(new TaskListAdapter.OnFinishClickListener() {
             @Override
             public boolean OnClick(View v, Task t, int position) {
-                new finishTask(t,!t.isFinished(), position, listRes_now, listAdapter_now).execute();
+                new finishTask(t, !t.isFinished(), position, listRes_now, listAdapter_now).execute();
                 return true;
             }
 
@@ -188,7 +189,7 @@ FragmentAddTask.AddTaskDoneListener{
     }
 
     public void Refresh() {
-        Log.e("refresh","tasks");
+       // Log.e("refresh", "tasks");
         if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
             pageTask.cancel(true);
         pageTask = new refreshListTask();
@@ -212,10 +213,10 @@ FragmentAddTask.AddTaskDoneListener{
 
         @Override
         protected Object doInBackground(Object[] objects) {
-           // listRes_done.clear();
+            // listRes_done.clear();
             listRes_now.clear();
             listRes_notyet.clear();
-           // listRes_done.addAll(timeTableCore.getfinishedTasks());
+            // listRes_done.addAll(timeTableCore.getfinishedTasks());
             List<Task> tasks = timeTableCore.getUnfinishedTasks();
 
             for (Task t : tasks) {
@@ -286,9 +287,9 @@ FragmentAddTask.AddTaskDoneListener{
         TaskListAdapter listAdapter;
         boolean finished;
 
-        public finishTask(Task t,boolean finished, int position, List<Task> listRes, TaskListAdapter listAdapter) {
+        public finishTask(Task t, boolean finished, int position, List<Task> listRes, TaskListAdapter listAdapter) {
             this.t = t;
-            Log.e("finishTask:",listRes.get(position).name);
+            Log.e("finishTask:", listRes.get(position).name);
             this.position = position;
             this.listRes = listRes;
             this.listAdapter = listAdapter;
@@ -300,7 +301,7 @@ FragmentAddTask.AddTaskDoneListener{
             if (t.isHas_length() && t.getProgress() < 100) {
                 return "dialog";
             } else {
-                return  timeTableCore.setFinishTask(t,finished) ;
+                return timeTableCore.setFinishTask(t, finished);
             }
         }
 
@@ -314,16 +315,20 @@ FragmentAddTask.AddTaskDoneListener{
             } else {
                 if ((Boolean) o) {
                     int detPos;
-                    if(finished) for(detPos  = listRes.size()-1;detPos>0&&listRes.get(detPos).isFinished()&&detPos!=position;detPos--);
-                    else for(detPos  = 0;detPos<listRes.size()-1&&!listRes.get(detPos).isFinished()&&detPos!=position;detPos++);
-                    listRes.add(detPos,listRes.remove(position));
+                    if (finished)
+                        for (detPos = listRes.size() - 1; detPos > 0 && listRes.get(detPos).isFinished() && detPos != position; detPos--)
+                            ;
+                    else
+                        for (detPos = 0; detPos < listRes.size() - 1 && !listRes.get(detPos).isFinished() && detPos != position; detPos++)
+                            ;
+                    listRes.add(detPos, listRes.remove(position));
                     //Collections.swap(listRes,position,detPos);
-                    listAdapter.notifyItemMoved(position,detPos);
-                    int rangeFrom = Math.min(position,detPos);
-                    listAdapter.notifyItemRangeChanged(rangeFrom,listRes.size()-rangeFrom);
+                    listAdapter.notifyItemMoved(position, detPos);
+                    int rangeFrom = Math.min(position, detPos);
+                    listAdapter.notifyItemRangeChanged(rangeFrom, listRes.size() - rangeFrom);
                     refreshText();
                 } else Toast.makeText(HContext, "操作失败!", Toast.LENGTH_SHORT).show();
-               // ActivityMain.saveData();
+                // ActivityMain.saveData();
                 // if(ftl!=null&&ftl.hasInit) ftl.Refresh(FragmentTimeLine.TL_REFRESH_FROM_UNHIDE);
             }
 

@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +21,10 @@ import com.stupidtree.hita.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentJWTS_cjgl.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentJWTS_cjgl#newInstance} factory method to
- * create an instance of this fragment.
- */
+import static com.stupidtree.hita.HITAApplication.HContext;
+
 public class FragmentJWTS_cjgl extends JWFragment {
 
-    private OnFragmentInteractionListener mListener;
 
     ViewPager pager;
     TabLayout tabs;
@@ -53,7 +48,6 @@ public class FragmentJWTS_cjgl extends JWFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_jwts_cjgl, container, false);
         initViews(v);
         return v;
@@ -63,32 +57,14 @@ public class FragmentJWTS_cjgl extends JWFragment {
         pager = v.findViewById(R.id.cjgl_pager);
         tabs = v.findViewById(R.id.cjgl_tabs);
        fragments = new ArrayList<>();
-       // fragments.add(new FragmentJWTS_cjgl_xxjd());
         fragments.add(new FragmentJWTS_cjgl_grcj());
-     //   android.R.layout.simple_spinner_item;
-     //   fragments.add(new FragmentJWTS_cjgl_xfj());
         pager.setAdapter(new pagerAdapter(getFragmentManager(),fragments,new String[]{"学习进度","个人成绩","学分绩"}));
         tabs.setupWithViewPager(pager);
     }
 
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     @Override
     protected void stopTasks() {
@@ -96,22 +72,43 @@ public class FragmentJWTS_cjgl extends JWFragment {
     }
 
     @Override
-    public void Refresh(OnRefreshStartListener start, OnRefreshFinishListener finish) {
-        fragments.get(pager.getCurrentItem()).Refresh(start,finish);
+    public void onResume() {
+        Log.e("cjgl_refresh","will="+willRefreshOnResume);
+        super.onResume();
     }
 
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    @Override
+    public String getTitle() {
+        return HContext.getString(R.string.jw_tabs_cj);
     }
+
+    @Override
+    public void Refresh() {
+        for(int i=0;i<fragments.size();i++){
+            if(i==pager.getCurrentItem()){
+                JWFragment current = fragments.get(i);
+                if(current.isResumed()) {
+                    current.Refresh();
+                    Log.e("refresh","method1");
+                }
+                else {
+                    current.setWillRefreshOnResume(true);
+                    Log.e("refresh","method1");
+                }
+            }else{
+                fragments.get(i).setWillRefreshOnResume(true);
+            }
+        }
+        //fragments.get(pager.getCurrentItem()).setWillRefreshOnResume(true);
+    }
+
 
     private class pagerAdapter extends FragmentPagerAdapter{
 
         List<JWFragment> mBeans;
         String[] title;
         public pagerAdapter(FragmentManager fm,List<JWFragment> res,String[] title) {
-            super(fm);
+            super(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             this.title = title;
             mBeans = res;
         }

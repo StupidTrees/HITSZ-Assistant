@@ -78,7 +78,7 @@
                         android:layout_gravity="center|start"
                         android:layout_marginLeft="8dp"
                         android:background="@drawable/radius_grey_lgiht_button_bg"
-                        android:backgroundTint="@color/background_bottom_color_as_tint"
+                        android:backgroundTint="?attr/background_color_bottom_as_tint"
                         android:backgroundTintMode="src_over"
                         android:paddingStart="8dp"
                         android:paddingTop="4dp"
@@ -115,8 +115,8 @@
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginRight="8dp"
-                    android:background="@drawable/radius_primay_lgiht_button_bg"
-                    android:backgroundTint="@color/background_bottom_color_as_tint"
+                    android:background="@drawable/radius_accent_lgiht_button_bg"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
                     android:backgroundTintMode="src_over"
                     android:maxEms="18"
                     android:paddingStart="8dp"
@@ -124,7 +124,7 @@
                     android:paddingEnd="8dp"
                     android:paddingBottom="4dp"
                     android:singleLine="true"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="?attr/colorAccent"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -140,7 +140,7 @@
             app:tabMode="scrollable"
             app:tabPaddingEnd="24dp"
             app:tabPaddingStart="24dp"
-            app:tabSelectedTextColor="?attr/colorPrimary"
+            app:tabSelectedTextColor="?attr/colorAccent"
             app:tabUnboundedRipple="true">
 
             <com.google.android.material.tabs.TabItem
@@ -209,7 +209,11 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
-                android:tint="?attr/background_icon_color_bottom"
+                android:background="@drawable/radius_accent_round_icon_bg"
+                android:backgroundTint="?attr/background_color_bottom_as_tint"
+                android:backgroundTintMode="src_over"
+                android:padding="18dp"
+                android:tint="?attr/colorAccent"
                 app:srcCompat="@drawable/ic_empty" />
 
             <TextView
@@ -218,7 +222,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:alpha="0.8"
-                android:text="@string/teacher_no_page" />
+                android:text="@string/teacher_no_page"
+                android:textColor="?attr/colorAccent" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

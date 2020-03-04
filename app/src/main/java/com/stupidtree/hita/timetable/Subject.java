@@ -26,6 +26,7 @@ import static com.stupidtree.hita.HITAApplication.mDBHelper;
 
 public class Subject implements Comparable{
     private String code;
+    private String id;
     private String name;
     private String teacher;
     private HashMap<Integer, Double> ratingMap;
@@ -74,6 +75,7 @@ public class Subject implements Comparable{
         compulsory = c.getString(c.getColumnIndex("compulsory"));
         totalCourses = c.getString(c.getColumnIndex("total_courses"));
         code = c.getString(c.getColumnIndex("code"));
+        id = c.getString(c.getColumnIndex("id"));
         curriculumCode = c.getString(c.getColumnIndex("curriculum_code"));
         if(defaultSP.getInt("color:"+name,-1)==-1){
             defaultSP.edit().putInt("color:"+name, ColorBox.getRandomColor_Material()).apply();
@@ -95,6 +97,7 @@ public class Subject implements Comparable{
         compulsory = jo.get("compulsory").getAsString();
         totalCourses = jo.get("total_courses").getAsString();
         code = jo.get("code")==null?null:jo.get("code").getAsString();
+        id = jo.get("id")==null?null:jo.get("id").getAsString();
         curriculumCode = jo.get("curriculum_code").getAsString();
         getScroesFromString(jo.get("scores").toString());
         getRatesFromString(jo.get("rates").toString());
@@ -131,6 +134,7 @@ public class Subject implements Comparable{
         jo.addProperty("total_courses",totalCourses);
         jo.addProperty("code", code);
         jo.addProperty("curriculum_code",curriculumCode);
+        jo.addProperty("id",id);
         Gson gson = new Gson();
         jo.add("scores",gson.toJsonTree(Scores));
         jo.add("rates",gson.toJsonTree(ratingMap));
@@ -187,6 +191,7 @@ public class Subject implements Comparable{
         cv.put("curriculum_code", curriculumCode);
         cv.put("scores", scoresToString());
         cv.put("rates", ratesToString());
+        cv.put("id",id);
         return cv;
     }
 
@@ -277,6 +282,10 @@ public class Subject implements Comparable{
 //        Log.e("rate", String.valueOf(ratingMap));
 //        Gson gson = new Gson();
 //        ratingMap = gson.fromJson(s,HashMap.class);
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getCode() {
@@ -399,7 +408,9 @@ public class Subject implements Comparable{
     public HashMap<Integer, Double> getRatingMap() {
         return ratingMap;
     }
-
+    public void setId(String id) {
+        this.id = id;
+    }
     public float getPriority(){
         float creditF,rate;
         try {
@@ -429,4 +440,6 @@ public class Subject implements Comparable{
     public int compareTo(Object o) {
         return (int) (getPriority()-((Subject)o).getPriority());
     }
+
+
 }

@@ -3,9 +3,11 @@ package com.stupidtree.hita.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -56,14 +58,16 @@ import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.NormalPagerAdapter;
+import com.stupidtree.hita.online.errorTableText;
 import com.stupidtree.hita.timetable.Curriculum;
 import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
 import com.stupidtree.hita.fragments.main.FragmentNavi;
 import com.stupidtree.hita.fragments.main.FragmentTasks;
-import com.stupidtree.hita.fragments.FragmentTheme;
+import com.stupidtree.hita.fragments.popup.FragmentTheme;
 import com.stupidtree.hita.fragments.main.FragmentTimeLine;
 import com.stupidtree.hita.fragments.FragmentTimeTablePage;
 import com.stupidtree.hita.jw.JWException;
+import com.stupidtree.hita.timetable.TimeWatcherService;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.FileOperator;
 import com.tencent.bugly.beta.Beta;
@@ -82,17 +86,15 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
 import static com.stupidtree.hita.HITAApplication.*;
-import static com.stupidtree.hita.activities.ActivityLoginUT.UT_login_url;
 import static com.stupidtree.hita.util.UpdateManager.checkUpdate;
 
 public class ActivityMain extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener
         , FragmentTimeLine.OnFragmentInteractionListener
         , FragmentAddEvent.OnFragmentInteractionListener
-        , FragmentTimeTablePage.OnFragmentInteractionListener
         , FragmentNavi.OnFragmentInteractionListener {
 
-
+    public static final String MAIN_RECREATE = "COM.STUPIDTREE.HITA.MAIN_ACTIVITY_RECREATE";
     public static boolean app_task_enabled;
     FragmentTimeLine tlf;
     FragmentNavi nvf;
@@ -112,8 +114,9 @@ public class ActivityMain extends BaseActivity
     ImageView drawer_bg, drawer_bt_settings;
     MenuItem dark_mode_menu;
     boolean isFirst;
+    boolean willRecreateOnResume = false;
 
-    //boolean upDateNoti1202;
+
     @Override
     protected void stopTasks() {
 
@@ -124,12 +127,14 @@ public class ActivityMain extends BaseActivity
         super.onCreate(savedInstanceState);
         setWindowParams(true, true, false);
         isFirst = defaultSP.getBoolean("firstOpen", true);
+        willRecreateOnResume = false;
         app_task_enabled = defaultSP.getBoolean("app_events_enabled", true);
        // upDateNoti1202 = defaultSP.getBoolean("update_noti_1202",true);
         tlf = FragmentTimeLine.newInstance(isFirst);
         nvf = new FragmentNavi();
         if (app_task_enabled) tskf = new FragmentTasks();
         checkAPPPermission();
+        initBroadcast();
         setContentView(R.layout.activity_main);
         fabmain = findViewById(R.id.fab_main);
         fabmain.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +145,7 @@ public class ActivityMain extends BaseActivity
                     Intent i = new Intent(ActivityMain.this, ActivityTimeTable.class);
                     startActivity(i);
                 }else{
-                    Snackbar.make(v,HContext.getString(R.string.notif_importdatafirst),Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(v,getString(R.string.notif_importdatafirst),Snackbar.LENGTH_SHORT).show();
                 }
 
 
@@ -159,12 +164,33 @@ public class ActivityMain extends BaseActivity
         }
     }
 
+
+    void initBroadcast(){
+        BroadcastReceiver br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(MAIN_RECREATE)){
+                    try{
+                        recreate();
+                        willRecreateOnResume = false;
+                    }catch (Exception e){
+                        willRecreateOnResume = true;
+                    }
+
+
+                }
+            }
+        };
+        IntentFilter iF = new IntentFilter();
+        iF.addAction(MAIN_RECREATE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(br,iF);
+    }
     public static void autoLogin() {
-        String ut_un = defaultSP.getString("ut_username",null);
-        if(ut_un!=null){
-            String ut_pw = defaultSP.getString(ut_un+".password",null);
-            if(ut_pw!=null) new loginUTInBackgroundTask(ut_un,ut_pw).executeOnExecutor(HITAApplication.TPE);
-        }
+//        String ut_un = defaultSP.getString("ut_username",null);
+//        if(ut_un!=null){
+//            String ut_pw = defaultSP.getString(ut_un+".password",null);
+//            if(ut_pw!=null) new loginUTInBackgroundTask(ut_un,ut_pw).executeOnExecutor(HITAApplication.TPE);
+//        }
 
         if (!defaultSP.getBoolean("jwts_autologin", true)) return;
         if (CurrentUser != null) {
@@ -223,7 +249,7 @@ public class ActivityMain extends BaseActivity
         if (tskf != null & app_task_enabled) fragments.add(tskf);
         //mainTabs.setSelectedTabIndicatorColor(Color.parseColor("#00000000"));
         pagerAdapter = new NormalPagerAdapter(getSupportFragmentManager(), fragments,
-                new String[]{HContext.getString(R.string.maintab_navi), HContext.getString(R.string.maintab_today),HContext.getString(R.string.maintab_events)});
+                new String[]{getString(R.string.maintab_navi),getString(R.string.maintab_today),getString(R.string.maintab_events)});
         mainTabs.setupWithViewPager(mainPager);
 
         mainPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -266,7 +292,7 @@ public class ActivityMain extends BaseActivity
     public void Guide(){
         new TapTargetSequence(this)
                 .targets(
-                        TapTarget.forView(mainPager, HContext.getString(R.string.guide_1p), HContext.getString(R.string.guide_1s))
+                        TapTarget.forView(mainPager, getString(R.string.guide_1p), getString(R.string.guide_1s))
                                 .drawShadow(true)
                                 .cancelable(false)
                                 .tintTarget(true)
@@ -276,7 +302,7 @@ public class ActivityMain extends BaseActivity
                                 .id(1)
                                 .icon(getDrawable(R.drawable.ic_navigation))
                         ,
-                        TapTarget.forView(mainTabs, HContext.getString(R.string.guide_2p), HContext.getString(R.string.guide_2s))
+                        TapTarget.forView(mainTabs, getString(R.string.guide_2p), getString(R.string.guide_2s))
                                 .drawShadow(true)
                                 .cancelable(false)
                                 .tintTarget(true)
@@ -284,7 +310,7 @@ public class ActivityMain extends BaseActivity
                                 .outerCircleColor(R.color.blue_accent)
                                 .titleTextSize(24),
 
-                        TapTarget.forToolbarNavigationIcon(mToolbar, HContext.getString(R.string.guide_3p), HContext.getString(R.string.guide_3s))
+                        TapTarget.forToolbarNavigationIcon(mToolbar, getString(R.string.guide_3p), getString(R.string.guide_3s))
                                 .drawShadow(true)
                                 .cancelable(false)
                                 .tintTarget(true)
@@ -294,7 +320,7 @@ public class ActivityMain extends BaseActivity
                                 .targetCircleColor(R.color.white)
                                 .outerCircleColor(R.color.blue_accent)
                         ,
-                        TapTarget.forView(drawerUserAvatar, HContext.getString(R.string.guide_4p), HContext.getString(R.string.guide_4s))
+                        TapTarget.forView(drawerUserAvatar, getString(R.string.guide_4p), getString(R.string.guide_4s))
                                 .drawShadow(true)
                                 .cancelable(false)
                                 .tintTarget(true)
@@ -304,21 +330,21 @@ public class ActivityMain extends BaseActivity
                                 .targetCircleColor(R.color.white)
                                 .outerCircleColor(R.color.blue_accent),
 
-                        TapTarget.forView(fabmain, HContext.getString(R.string.guide_5p), HContext.getString(R.string.guide_5s))
+                        TapTarget.forView(fabmain, getString(R.string.guide_5p), getString(R.string.guide_5s))
                                 .drawShadow(true)
                                 .cancelable(false)
                                 .tintTarget(false)
                                 .transparentTarget(false)
                                 .targetCircleColor(R.color.white)
                                 .outerCircleColor(R.color.blue_accent),
-                        TapTarget.forToolbarMenuItem(mToolbar, R.id.action_search, HContext.getString(R.string.guide_6p), HContext.getString(R.string.guide_6s))
+                        TapTarget.forToolbarMenuItem(mToolbar, R.id.action_search, getString(R.string.guide_6p), getString(R.string.guide_6s))
                                 .drawShadow(true)
                                 .cancelable(false)
                                 .tintTarget(false)
                                 .transparentTarget(false)
                                 .targetCircleColor(R.color.white)
                                 .outerCircleColor(R.color.blue_accent),
-                        TapTarget.forView(mainPager, HContext.getString(R.string.guide_7p), HContext.getString(R.string.guide_7s))
+                        TapTarget.forView(mainPager, getString(R.string.guide_7p), getString(R.string.guide_7s))
                                 .drawShadow(true)
                                 .cancelable(false)
                                 .tintTarget(true)
@@ -426,15 +452,11 @@ public class ActivityMain extends BaseActivity
         dark_mode_menu = menu.findItem(R.id.drawer_nav_darkmode);
         dark_mode_menu.setActionView(R.layout.action_switch_darkmode);
         Switch switchA = dark_mode_menu.getActionView().findViewById(R.id.switch_darkmode);
-        switchA.setChecked(defaultSP.getBoolean("is_dark_mode", false));
+        switchA.setChecked(themeCore.isDarkModeOn());
         switchA.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                defaultSP.edit().putBoolean("is_dark_mode", isChecked).apply();
-                if (isChecked)
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                recreate();
+                themeCore.switchDarkMode(getThis(),isChecked);
             }
         });
 
@@ -515,7 +537,7 @@ public class ActivityMain extends BaseActivity
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(HContext,HContext.getString(R.string.notif_installQQ),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HContext,getString(R.string.notif_installQQ),Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -530,8 +552,8 @@ public class ActivityMain extends BaseActivity
             drawerUserAvatar.
                     setImageResource(R.drawable.ic_account);
             //drawer_bg.setImageResource(R.drawable.gradient_bg);
-            drawerUserName.setText(HContext.getString(R.string.drawer_username_null));
-            drawerSignature.setText(HContext.getString(R.string.drawer_signature_null));
+            drawerUserName.setText(getString(R.string.drawer_username_null));
+            drawerSignature.setText(getString(R.string.drawer_signature_null));
         } else {
             if (TextUtils.isEmpty(CurrentUser.getAvatarUri())) {
                 drawerUserAvatar.setImageResource(R.drawable.ic_account_activated);
@@ -552,10 +574,12 @@ public class ActivityMain extends BaseActivity
 //                        .into(drawer_bg);
             }
             drawerUserName.setText(CurrentUser.getNick());
-            drawerSignature.setText(TextUtils.isEmpty(CurrentUser.getSignature()) ?HContext.getString(R.string.drawer_signature_none) : CurrentUser.getSignature());
+            drawerSignature.setText(TextUtils.isEmpty(CurrentUser.getSignature()) ?getString(R.string.drawer_signature_none) : CurrentUser.getSignature());
         }
 
-        if (defaultSP.getString("dark_mode_mode", "dark_mode_normal").equals("dark_mode_normal")) {
+        if (themeCore.getCurrentThemeID()!=R.style.PHTheme
+                &&themeCore.getCurrentThemeID()!=R.style.CyberPunkTheme
+                &&defaultSP.getString("dark_mode_mode", "dark_mode_normal").equals("dark_mode_normal")) {
             dark_mode_menu.setVisible(true);
         } else {
             dark_mode_menu.setVisible(false);
@@ -580,11 +604,16 @@ public class ActivityMain extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
+        if(willRecreateOnResume){
+            willRecreateOnResume = false;
+            recreate();
+        }
+        refreshDrawerHeader();
         try {
             if(!jwCore.hasLogin()) autoLogin();
         } catch (Exception e) {
             e.printStackTrace();
-            new FileOperator.errorTableText("自动登录错误", e).save(new SaveListener<String>() {
+            new errorTableText("自动登录错误", e).save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
 
@@ -593,13 +622,14 @@ public class ActivityMain extends BaseActivity
         }
         //Glide.with(ActivityMain.this).load(userInfos.get("头像")).into(drawerUserAvatar);
         //if(tlf.hasInit) tlf.Refresh(FragmentTimeLine.TL_REFRESH_FROM_UNHIDE);
-        refreshDrawerHeader();
+
     }
 
     @Override
     public void onCalledRefresh() {
 
     }
+
 
 
     class onUserAvatarClickListener implements View.OnClickListener {
@@ -636,17 +666,17 @@ public class ActivityMain extends BaseActivity
 
     public static void showUpdateDialog(final Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(HContext.getString(R.string.update_dialog_title))
-                .setMessage(HContext.getString(R.string.update_dialog_mes1) + Beta.getUpgradeInfo().versionName + "\n" + HContext.getString(R.string.update_dialog_mes2) + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Beta.getUpgradeInfo().publishTime))
+        builder.setTitle(context.getString(R.string.update_dialog_title))
+                .setMessage(context.getString(R.string.update_dialog_mes1) + Beta.getUpgradeInfo().versionName + "\n" + context.getString(R.string.update_dialog_mes2) + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Beta.getUpgradeInfo().publishTime))
                 .setCancelable(false)
-                .setPositiveButton(HContext.getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
+                .setPositiveButton(context.getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent it = new Intent(context, ActivityAboutHITA.class);
                         context.startActivity(it);
                     }
                 })
-                .setNegativeButton(HContext.getString(R.string.button_cancel), null);
+                .setNegativeButton(context.getString(R.string.button_cancel), null);
         builder.create();
         builder.show();
     }
@@ -713,129 +743,129 @@ public class ActivityMain extends BaseActivity
             }
         }
     }
-    public static class loginUTInBackgroundTask extends AsyncTask {
-
-        String username, password;
-       // SwipeRefreshLayout refreshLayout = null;
-
-        loginUTInBackgroundTask(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-          //  if(refreshLayout!=null) refreshLayout.setRefreshing(true);
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            if(cookies_ut.isEmpty()){
-                String temped = defaultSP.getString("ut_cookies",null);
-                if(temped!=null){
-                    HashMap cookies = new Gson().fromJson(temped,HashMap.class);
-                    cookies_ut.putAll(cookies);
-                }
-            }
-            if (checkLogin_UT()) return true;
-            try {
-                Connection.Response response = Jsoup.connect(UT_login_url)
-                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-                        .header("Content-Type", "application/x-www-form-urlencoded")
-                        .timeout(5000).execute();
-                cookies_ut.clear();
-                cookies_ut.putAll(response.cookies());
-                Document d = Jsoup.connect(UT_login_url)
-                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-                        .header("Content-Type", "application/x-www-form-urlencoded")
-                        .cookies(cookies_ut).get();
-                //System.out.println(d);
-                String lt = d.getElementsByAttributeValue("name","lt").first().attr("value");
-
-                Document after =  Jsoup.connect(UT_login_url)
-                        .cookies(cookies_ut).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
-                        .data("username",username)
-                        .data("password", Base64.encodeToString(password.getBytes(),Base64.DEFAULT))
-                        .data("lt",lt)
-                        .data("Connection","keep-alive")
-                        .data("_eventId","submit").post();
-                //System.out.println(after);
-                //Log.e("cookies", String.valueOf(cookies_ut));
-                if (after.toString().contains("姓 名：")) return true;
-                else if(after.toString().contains("您已在别的终端登录"))
-                {
-                    Log.e("UT","多终端登录，改变链接");
-                    Document after2 =  Jsoup.connect(UT_login_url)
-                            .cookies(cookies_ut).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
-                            .data("username",username)
-                            .data("password", Base64.encodeToString(password.getBytes(),Base64.DEFAULT))
-                            .data("Connection","keep-alive")
-                            .data("lt",lt)
-                            .data("continueLogin","1")
-                            .data("_eventId","submit").post();
-                   if(after2.toString().contains("姓 名：")){
-                       ut_username = username;
-                       return true;
-                   }else return false;
-                }
-                else return false;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-          //  return !cookies_ut.isEmpty();
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-           // if(refreshLayout!=null) refreshLayout.setRefreshing(false);
-            if ((Boolean) o) {
-                login_ut = true;
-                ut_username = username;
-                Log.e("!", "UT登录成功");
-                Intent i = new Intent();
-                i.setAction("COM.STUPIDTREE.HITA.UT_AUTO_LOGIN_DONE");
-                LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
-            } else {
-                cookies_ut.clear();
-                login_ut = false;
-                Intent i = new Intent();
-                i.setAction("COM.STUPIDTREE.HITA.UT_LOGIN_FAIL");
-                LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
-            }
-        }
-    }
-
-
-
-    public static boolean checkLogin_UT(){
-        try {
-            //  HashMap tempC = new HashMap()
-            Connection.Response r = Jsoup.connect("http://10.64.1.15/sfrzwhlgportalHome.action")
-                    .data("errorcode","1")
-                    .header("Connection","keep-alive")
-                    .data("continueurl","http://ecard.utsz.edu.cn/accountcardUser.action")
-                    .data("ssoticketid",ut_username)
-                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36").header("Connection","keep-alive")
-                    .execute();
-            cookies_ut_card.clear();
-            cookies_ut_card.putAll(r.cookies());
-            Document d2 = Jsoup.connect("http://10.64.1.15/accountcardUser.action")
-                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-                    .header("Connection","keep-alive")
-                    .header("Host","10.64.1.15")
-                    .cookies(cookies_ut_card)
-                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .get();
-            return  d2.toString().contains("余额");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    public static class loginUTInBackgroundTask extends AsyncTask {
+//
+//        String username, password;
+//       // SwipeRefreshLayout refreshLayout = null;
+//
+//        loginUTInBackgroundTask(String username, String password) {
+//            this.username = username;
+//            this.password = password;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//          //  if(refreshLayout!=null) refreshLayout.setRefreshing(true);
+//        }
+//
+//        @Override
+//        protected Object doInBackground(Object[] objects) {
+//            if(cookies_ut.isEmpty()){
+//                String temped = defaultSP.getString("ut_cookies",null);
+//                if(temped!=null){
+//                    HashMap cookies = new Gson().fromJson(temped,HashMap.class);
+//                    cookies_ut.putAll(cookies);
+//                }
+//            }
+//            if (checkLogin_UT()) return true;
+//            try {
+//                Connection.Response response = Jsoup.connect(UT_login_url)
+//                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+//                        .header("Content-Type", "application/x-www-form-urlencoded")
+//                        .timeout(5000).execute();
+//                cookies_ut.clear();
+//                cookies_ut.putAll(response.cookies());
+//                Document d = Jsoup.connect(UT_login_url)
+//                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+//                        .header("Content-Type", "application/x-www-form-urlencoded")
+//                        .cookies(cookies_ut).get();
+//                //System.out.println(d);
+//                String lt = d.getElementsByAttributeValue("name","lt").first().attr("value");
+//
+//                Document after =  Jsoup.connect(UT_login_url)
+//                        .cookies(cookies_ut).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
+//                        .data("username",username)
+//                        .data("password", Base64.encodeToString(password.getBytes(),Base64.DEFAULT))
+//                        .data("lt",lt)
+//                        .data("Connection","keep-alive")
+//                        .data("_eventId","submit").post();
+//                //System.out.println(after);
+//                //Log.e("cookies", String.valueOf(cookies_ut));
+//                if (after.toString().contains("姓 名：")) return true;
+//                else if(after.toString().contains("您已在别的终端登录"))
+//                {
+//                    Log.e("UT","多终端登录，改变链接");
+//                    Document after2 =  Jsoup.connect(UT_login_url)
+//                            .cookies(cookies_ut).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
+//                            .data("username",username)
+//                            .data("password", Base64.encodeToString(password.getBytes(),Base64.DEFAULT))
+//                            .data("Connection","keep-alive")
+//                            .data("lt",lt)
+//                            .data("continueLogin","1")
+//                            .data("_eventId","submit").post();
+//                   if(after2.toString().contains("姓 名：")){
+//                       ut_username = username;
+//                       return true;
+//                   }else return false;
+//                }
+//                else return false;
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                return false;
+//            }
+//          //  return !cookies_ut.isEmpty();
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Object o) {
+//            super.onPostExecute(o);
+//           // if(refreshLayout!=null) refreshLayout.setRefreshing(false);
+//            if ((Boolean) o) {
+//                login_ut = true;
+//                ut_username = username;
+//                Log.e("!", "UT登录成功");
+//                Intent i = new Intent();
+//                i.setAction("COM.STUPIDTREE.HITA.UT_AUTO_LOGIN_DONE");
+//                LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
+//            } else {
+//                cookies_ut.clear();
+//                login_ut = false;
+//                Intent i = new Intent();
+//                i.setAction("COM.STUPIDTREE.HITA.UT_LOGIN_FAIL");
+//                LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
+//            }
+//        }
+//    }
+//
+//
+//
+//    public static boolean checkLogin_UT(){
+//        try {
+//            //  HashMap tempC = new HashMap()
+//            Connection.Response r = Jsoup.connect("http://10.64.1.15/sfrzwhlgportalHome.action")
+//                    .data("errorcode","1")
+//                    .header("Connection","keep-alive")
+//                    .data("continueurl","http://ecard.utsz.edu.cn/accountcardUser.action")
+//                    .data("ssoticketid",ut_username)
+//                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36").header("Connection","keep-alive")
+//                    .execute();
+//            cookies_ut_card.clear();
+//            cookies_ut_card.putAll(r.cookies());
+//            Document d2 = Jsoup.connect("http://10.64.1.15/accountcardUser.action")
+//                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+//                    .header("Connection","keep-alive")
+//                    .header("Host","10.64.1.15")
+//                    .cookies(cookies_ut_card)
+//                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+//                    .header("Content-Type", "application/x-www-form-urlencoded")
+//                    .get();
+//            return  d2.toString().contains("余额");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 }

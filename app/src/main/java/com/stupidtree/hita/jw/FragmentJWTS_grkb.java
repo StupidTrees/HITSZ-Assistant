@@ -2,12 +2,14 @@ package com.stupidtree.hita.jw;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +38,7 @@ import cn.bmob.v3.BmobQuery;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 
 public class FragmentJWTS_grkb extends JWFragment {
@@ -43,13 +46,12 @@ public class FragmentJWTS_grkb extends JWFragment {
     ButtonLoading bt_import_grkb;
     Switch uploadTeacher;
 
-    refreshPageTask pageTask;
+  //  refreshPageTask pageTask;
 
     //数据区
     List<String> spinnerItems;
-    List<Map<String, String>> xnxnData;
+   // List<Map<String, String>> xnxnData;
     ArrayAdapter xnxqAdapter;
-    private OnFragmentInteractionListener mListener;
 
     public FragmentJWTS_grkb() {
 
@@ -77,10 +79,12 @@ public class FragmentJWTS_grkb extends JWFragment {
         return v;
     }
 
+
     void initViews(View v) {
+        super.initRefresh(v);
         xnxq_picker = v.findViewById(R.id.xnxq_picker);
         spinnerItems = new ArrayList<>();
-        xnxnData = new ArrayList<>();
+        //xnxnData = new ArrayList<>();
         xnxqAdapter = new ArrayAdapter(getContext(),R.layout.dynamic_xnxq_spinner_item,spinnerItems);
         xnxqAdapter.setDropDownViewResource(R.layout.dynamic_xnxq_spinner_dropdown_item);
         xnxq_picker.setAdapter(xnxqAdapter);
@@ -89,8 +93,8 @@ public class FragmentJWTS_grkb extends JWFragment {
         bt_import_grkb.setOnButtonLoadingListener(new ButtonLoading.OnButtonLoadingListener() {
             @Override
             public void onClick() {
-                if (xnxnData.size() > 0) {
-                    Map<String, String> xnxq = xnxnData.get(xnxq_picker.getSelectedItemPosition());
+                if (jwRoot.getXNXQItems().size() > 0) {
+                    Map<String, String> xnxq = jwRoot.getXNXQItems().get(xnxq_picker.getSelectedItemPosition());
                     String xn = xnxq.get("xn");
                     String xq = xnxq.get("xq");
                     String name = xnxq.get("xnmc") + xnxq.get("xqmc") + "课表";
@@ -110,29 +114,8 @@ public class FragmentJWTS_grkb extends JWFragment {
         });
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     @WorkerThread
     protected void getSubjectsInfo(CurriculumCreator ci, String xn, String xq) throws JWException {
@@ -175,61 +158,74 @@ public class FragmentJWTS_grkb extends JWFragment {
     }
 
 
+    @Override
+    public String getTitle() {
+        return HContext.getString(R.string.jw_tabs_frkb);
+    }
 
     @Override
     protected void stopTasks() {
-        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask.cancel(true);
+//        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
+//            pageTask.cancel(true);
     }
+
 
     @Override
-    public void Refresh(OnRefreshStartListener start, OnRefreshFinishListener finish) {
+    public void Refresh() {
+        refresh.setRefreshing(false);
         stopTasks();
-        pageTask = new refreshPageTask(start,finish);
-        pageTask.executeOnExecutor(HITAApplication.TPE);
+        spinnerItems.clear();
+        int i = 0;
+        int now = 0;
+        for (Map<String, String> item : jwRoot.getXNXQItems()) {
+            if (item.get("sfdqxq").equals("1")) now = i;
+            spinnerItems.add(item.get("xnmc") + item.get("xqmc"));
+            i++;
+        }
+        xnxqAdapter.notifyDataSetChanged();
+        xnxq_picker.setSelection(now);
+//        pageTask = new refreshPageTask();
+//        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
 
-    class refreshPageTask extends RefreshJWPageTask {
-
-
-        public refreshPageTask(OnRefreshStartListener refreshStartListener, OnRefreshFinishListener refreshFinishListener) {
-            super(refreshStartListener, refreshFinishListener);
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            try {
-                return jwCore.getXNXQ();
-            } catch (JWException e) {
-                return e;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            if (o != null && o instanceof List) {
-                List<Map<String, String>> xnxqList = (List<Map<String, String>>) o;
-                spinnerItems.clear();
-                xnxnData.clear();
-                xnxnData.addAll(xnxqList);
-                int i = 0;
-                int now = 0;
-                for (Map<String, String> item : xnxqList) {
-                    if (item.get("sfdqxq").equals("1")) now = i;
-                    spinnerItems.add(item.get("xnmc") + item.get("xqmc"));
-                    i++;
-                }
-                xnxqAdapter.notifyDataSetChanged();
-                xnxq_picker.setSelection(now);
-                //spinner_grkb.setSelection(now);
-            } else if (o != null && o instanceof JWException) {
-
-            }
-
-        }
-    }
+//    class refreshPageTask extends RefreshJWPageTask {
+//
+//
+//
+//        @Override
+//        protected Object doInBackground(Object[] objects) {
+//            try {
+//                return jwCore.getXNXQ();
+//            } catch (JWException e) {
+//                return e;
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Object o) {
+//            super.onPostExecute(o);
+//            if (o != null && o instanceof List) {
+//                List<Map<String, String>> xnxqList = (List<Map<String, String>>) o;
+//                spinnerItems.clear();
+//                xnxnData.clear();
+//                xnxnData.addAll(xnxqList);
+//                int i = 0;
+//                int now = 0;
+//                for (Map<String, String> item : xnxqList) {
+//                    if (item.get("sfdqxq").equals("1")) now = i;
+//                    spinnerItems.add(item.get("xnmc") + item.get("xqmc"));
+//                    i++;
+//                }
+//                xnxqAdapter.notifyDataSetChanged();
+//                xnxq_picker.setSelection(now);
+//                //spinner_grkb.setSelection(now);
+//            } else if (o != null && o instanceof JWException) {
+//
+//            }
+//
+//        }
+//    }
 
     class importGRKBTask extends AsyncTask {
 
@@ -285,6 +281,8 @@ public class FragmentJWTS_grkb extends JWFragment {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             bt_import_grkb.setProgress(false);
+            Intent i = new Intent(TIMETABLE_CHANGED);
+            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
             if (o != null && o instanceof JWException) {
                 if (((JWException) o).getType() == JWException.DIALOG_MESSAGE) {
                     AlertDialog ad = new AlertDialog.Builder(FragmentJWTS_grkb.this.getActivity()).create();
@@ -309,7 +307,4 @@ public class FragmentJWTS_grkb extends JWFragment {
 
 
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
 }

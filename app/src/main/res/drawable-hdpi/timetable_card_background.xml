@@ -3,9 +3,12 @@
     android:shape="rectangle"
     >
 
-    <solid android:color="?attr/background_color_second"
+    <gradient android:startColor="?attr/colorPrimary"
+        android:endColor="?attr/colorFade"
+        android:angle="45"></gradient>
+<!--    <solid android:color="?attr/background_color_second"-->
 
-        />
+<!--        />-->
 
     <corners
         android:radius="12dp" />

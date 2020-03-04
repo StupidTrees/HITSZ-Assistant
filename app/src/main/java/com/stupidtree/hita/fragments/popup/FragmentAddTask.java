@@ -38,8 +38,13 @@ import com.stupidtree.hita.hita.TextTools;
 
 import java.util.Calendar;
 
+import cn.bmob.v3.http.I;
+
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
+import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
+import static com.stupidtree.hita.timetable.TimeWatcherService.WATCHER_REFRESH;
 
 @SuppressLint("ValidFragment")
 public class FragmentAddTask extends BottomSheetDialogFragment {
@@ -61,15 +66,7 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
     EditText name;
     LinearLayout arrangetime,arrangelength;
     AddTaskDoneListener addTaskDoneListener;
-   // FragmentTasks attachedFragment;
-//    @Nullable
-//    @Override
-//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this.getActivity(),themeID);// your app theme here
-//        View v = inflater.cloneInContext(contextThemeWrapper).inflate(R.layout.fragment_add_task,container,false);
-//
-//        return v;
-//    }
+
 
 
     @Override
@@ -238,10 +235,13 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                     t.setEvery_day(adt_switch3.isChecked());
                     timeTableCore.addTask(t);
                     dismiss();
-                    Intent mes = new Intent("COM.STUPIDTREE.HITA.TASK_REFRESH");
-                    Intent mes2 = new Intent("COM.STUPIDTREE.HITA.TIMELINE_REFRESH");
+                    Intent mes = new Intent(TIMETABLE_CHANGED);
+                    //Intent mes = new Intent(TASK_REFRESH);
+                    //Intent mes2 = new Intent(TIMELINE_REFRESH);
+                    //Intent mes3 = new Intent(WATCHER_REFRESH);
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes);
-                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes2);
+//                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes2);
+//                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes3);
                     ActivityMain.saveData();
                     if(addTaskDoneListener!=null)addTaskDoneListener.OnDone();
                 }

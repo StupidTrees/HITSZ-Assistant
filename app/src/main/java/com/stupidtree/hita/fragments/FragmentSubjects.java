@@ -36,7 +36,7 @@ public class FragmentSubjects extends BaseFragment {
     private RecyclerView subjectsList;
     ArrayList<Object> listRes;
     private refreshListTask pageTask;
-
+    View emptyView;
     private boolean firstResume = true;
 
     public FragmentSubjects() {
@@ -79,11 +79,12 @@ public class FragmentSubjects extends BaseFragment {
 
     private void initSubjects(View v) {
         listRes = new ArrayList<>();
+        emptyView = v.findViewById(R.id.empty_view);
         subjectsList = v.findViewById(R.id.usercenter_subjects_list);
         subjectsAdapter = new SubjectsListAdapter(this, listRes, 1);
         subjectsList.setLayoutManager(new LinearLayoutManager(getContext()));
         subjectsList.setAdapter(subjectsAdapter);
-        subjectsAdapter.setColorfulMode(defaultSP.getBoolean("timetable_colorful_mode",true));
+        subjectsAdapter.setColorfulMode(defaultSP.getBoolean("subjects_color_enable",false));
         subjectsAdapter.setmOnItemClickListener(new SubjectsListAdapter.OnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -132,7 +133,7 @@ public class FragmentSubjects extends BaseFragment {
         @Override
         protected Object doInBackground(Object[] objects) {
             listRes.clear();
-            color = defaultSP.getBoolean("timetable_colorful_mode",true);
+            color = defaultSP.getBoolean("subjects_color_enable",false);
             List<Subject> all = Curriculum.getSubjects(curriculumCode);
             //timeTableCore.getAllEvents();
             List<Subject> exam = new ArrayList<>();
@@ -156,6 +157,13 @@ public class FragmentSubjects extends BaseFragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            if(listRes.size()>0){
+                emptyView.setVisibility(View.GONE);
+                subjectsList.setVisibility(View.VISIBLE);
+            }else{
+                emptyView.setVisibility(View.VISIBLE);
+                subjectsList.setVisibility(View.GONE);
+            }
             subjectsAdapter.setColorfulMode(color);
             subjectsAdapter.notifyDataSetChanged();
             if(anim)subjectsList.scheduleLayoutAnimation();

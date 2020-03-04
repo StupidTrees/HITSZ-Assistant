@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp"
+    android:textSize="12sp"
+    tools:context=".activities.ActivityJWTS"
+    tools:ignore="HardcodedText">
+
+    <com.stupidtree.hita.diy.ButtonLoading
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:foregroundGravity="center"
+        app:BL_backgroundColor="#80ffffff"
+        app:BL_circleColor="?attr/colorAccent"
+        app:BL_circleColorSecond="?attr/colorPrimary"
+        app:BL_enable="true"
+        app:BL_text="选课"
+        app:BL_textColor="#FFFFFF"
+        app:BL_textSize="14sp" />
+
+</FrameLayout>

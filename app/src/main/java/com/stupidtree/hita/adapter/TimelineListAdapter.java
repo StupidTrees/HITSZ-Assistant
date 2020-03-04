@@ -24,19 +24,21 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.TimeWatcher.nowEvent;
-import static com.stupidtree.hita.TimeWatcher.nowProgress;
-
 
 public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapter.timelineHolder> {
     List<EventItem> mBeans;
     LayoutInflater mInflater;
     OnItemClickLitener mOnItemClickLitener;
     OnItemLongClickLitener mOnItemLongClickLitener;
-    //OnNaviClickListener mOnNaviClickListener;
     Context mContext;
     public static final int TIMELINE_EVENT_TYPE_PASSED = 13;
     DecimalFormat df = new DecimalFormat("#.##");
+    TimeLineSelf timeLineSelf;
+    public interface TimeLineSelf{
+        EventItem getNowEvent();
+        float getNowProgress();
+
+    }
 
     //设置回调接口
     public interface OnItemClickLitener{
@@ -57,8 +59,9 @@ public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapte
         this.mOnItemLongClickLitener = mOnItemLongClickLitener;
     }
 
-    public TimelineListAdapter(Context mContext, List<EventItem> res){
+    public TimelineListAdapter(Context mContext, TimeLineSelf timeLineSelf,List<EventItem> res){
         mBeans = res;
+        this.timeLineSelf = timeLineSelf;
         mInflater = LayoutInflater.from(mContext);
         //this.mBeanRoots = mBeanRoots;
         this.mContext = mContext;
@@ -123,9 +126,9 @@ public class TimelineListAdapter extends RecyclerView.Adapter<TimelineListAdapte
                 else  timelineHolder.tv_duration.setText(duration + "min");
             }
             if(timelineHolder.progressBar!=null) {
-                if (mBeans.get(position)==nowEvent) {
+                if (mBeans.get(position)==timeLineSelf.getNowEvent()) {
                     timelineHolder.progressBar.setVisibility(View.VISIBLE);
-                    timelineHolder.progressBar.setProgress((int) (nowProgress*100));
+                    timelineHolder.progressBar.setProgress((int) (timeLineSelf.getNowProgress()*100));
                     timelineHolder.timeline.setImageDrawable(mContext.getDrawable(R.drawable.ic_timelapse));
                 } else {
                     timelineHolder.progressBar.setVisibility(View.GONE);

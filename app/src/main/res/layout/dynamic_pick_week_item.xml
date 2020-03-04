@@ -5,7 +5,7 @@
     android:layout_width="36dp"
     android:layout_height="36dp"
     android:layout_margin="8dp"
-    android:backgroundTint="@color/background_bottom_color_as_tint"
+    android:backgroundTint="?attr/background_color_bottom_as_tint"
     android:backgroundTintMode="src_atop"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
