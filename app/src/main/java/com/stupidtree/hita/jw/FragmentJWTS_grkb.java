@@ -1,5 +1,6 @@
 package com.stupidtree.hita.jw;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -227,6 +228,7 @@ public class FragmentJWTS_grkb extends JWFragment {
 //        }
 //    }
 
+    @SuppressLint("StaticFieldLeak")
     class importGRKBTask extends AsyncTask {
 
         String xn;
@@ -251,15 +253,11 @@ public class FragmentJWTS_grkb extends JWFragment {
         @Override
         protected Object doInBackground(Object[] objects) {
             String code = xn + xq;
-            int sY, sM, sD;
             List<Map<String, String>> kbData = null;
             try {
                 kbData = jwCore.getGRKBData(xn, xq);
                 Calendar startDate = jwCore.getFirstDateOfCurriculum(xn, xq);
-                sY = startDate.get(Calendar.YEAR);
-                sM = startDate.get(Calendar.MONTH) + 1;
-                sD = startDate.get(Calendar.DAY_OF_MONTH);
-                CurriculumCreator s = FileOperator.loadCurriculumHelper(code, kbName, sY, sM, sD, kbData);
+                CurriculumCreator s = CurriculumCreator.create(code, kbName,startDate).loadCourse(kbData);
                 getSubjectsInfo(s, xn, xq);
                 if (uploadTeacher) {
                     uploadTeacherInfo(jwCore.getTeacherOfChosenSubjects(xn,xq));

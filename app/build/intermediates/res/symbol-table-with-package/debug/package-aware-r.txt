@@ -38,9 +38,12 @@ anim mtrl_bottom_sheet_slide_out
 anim mtrl_card_lowers_interpolator
 anim recycler_animation_fade
 anim recycler_animation_falls_down
+anim recycler_animation_float_up
+anim recycler_animation_slide_from_left
 anim recycler_animation_slide_from_right
 anim recycler_layout_animation_fade
 anim recycler_layout_animation_falls_down
+anim recycler_layout_animation_slide_from_left
 anim recycler_layout_animation_slide_from_right
 animator design_appbar_state_list_animator
 animator design_fab_hide_motion_spec
@@ -3073,6 +3076,7 @@ id subtitle
 id sun
 id switchWidget
 id switch_auto_mute
+id switch_class_notification
 id switch_darkmode
 id switch_mute_after
 id switch_skip_no_exam
@@ -3156,6 +3160,7 @@ id textView39
 id textView4
 id textView40
 id textView41
+id textView5
 id textView7
 id text_input_end_icon
 id text_input_start_icon
@@ -3549,6 +3554,7 @@ layout dynamic_navipage_jwts_fun
 layout dynamic_navipage_ksxx_item
 layout dynamic_navipage_mood
 layout dynamic_navipage_news
+layout dynamic_navipage_notification
 layout dynamic_navipage_ut_mood
 layout dynamic_notes_griditem
 layout dynamic_pick_week_item
@@ -3752,6 +3758,7 @@ mipmap ic_launcher
 mipmap ic_launcher_foreground
 mipmap ic_launcher_round
 plurals mtrl_badge_content_description
+string HITSZ_study_assistant
 string abc_action_bar_home_description
 string abc_action_bar_up_description
 string abc_action_menu_overflow_description
@@ -3867,6 +3874,7 @@ string cjgl_subject_name
 string cjgl_subject_total_score
 string cjgl_subject_type
 string cjgl_xnxq
+string class_assistant
 string clear_text_end_icon_content_description
 string confirm
 string confirm_format
@@ -3936,6 +3944,7 @@ string error_icon_content_description
 string error_incorrect_password
 string error_invalid_email
 string error_invalid_password
+string event_notify_soon
 string exam_card_cd
 string exam_card_noexam
 string expand_button_title
@@ -3943,6 +3952,7 @@ string exposed_dropdown_menu_content_description
 string fab_transformation_scrim_behavior
 string fab_transformation_sheet_behavior
 string found
+string give_me_notification_permission
 string give_me_that_permission
 string grkb_attention
 string grkb_attention_hint
@@ -4099,6 +4109,8 @@ string mute_assistant_tag2
 string mute_assistant_tag3
 string mute_assistant_tag4
 string mute_assistant_tag5
+string mute_off
+string mute_on
 string nav_header_desc
 string nav_header_subtitle
 string nav_header_title
@@ -4220,6 +4232,7 @@ string settings_summary_darkmode
 string settings_summary_jwpassword
 string settings_summary_mainthirdpage
 string settings_summary_task
+string settings_summary_timetable_animation
 string settings_summary_timetable_back
 string settings_summary_timetable_card_height
 string settings_summary_timetable_card_icon_enable
@@ -4237,6 +4250,7 @@ string settings_title_darkmode
 string settings_title_jwpassword
 string settings_title_mainthirdpage
 string settings_title_task
+string settings_title_timetable_animation
 string settings_title_timetable_back
 string settings_title_timetable_card_background
 string settings_title_timetable_card_height

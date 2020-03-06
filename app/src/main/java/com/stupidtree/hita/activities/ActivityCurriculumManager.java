@@ -202,7 +202,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
             pagerRes.clear();
             // curriculuManagerPagerAdapter.notifyDataSetChanged();
             for (Curriculum c : pagerData) {
-                pagerRes.add(FragmentCurriculum.newInstance(c));
+                pagerRes.add(new FragmentCurriculum(c));
             }
 
             curriculuManagerPagerAdapter.notifyDataSetChanged();

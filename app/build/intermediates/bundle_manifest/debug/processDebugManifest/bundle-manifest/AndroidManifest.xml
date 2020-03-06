@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stupidtree.hita"
-    android:versionCode="20200226"
-    android:versionName="2.26" >
+    android:versionCode="20200305"
+    android:versionName="3.05" >
 
     <uses-sdk
         android:minSdkVersion="23"

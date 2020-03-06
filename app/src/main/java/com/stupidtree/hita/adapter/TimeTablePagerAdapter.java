@@ -1,4 +1,5 @@
 package com.stupidtree.hita.adapter;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -8,8 +9,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import android.content.Context;
 import android.util.SparseArray;
 import android.util.StringBuilderPrinter;
+import android.view.ViewGroup;
 
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.diy.TimeTableBlockView;
 import com.stupidtree.hita.fragments.FragmentTimeTablePage;
 
 import java.util.ArrayList;
@@ -24,15 +27,16 @@ public class TimeTablePagerAdapter extends FragmentPagerAdapter {
     protected SparseArray<String> tags = new SparseArray<>();
     List<FragmentTimeTablePage> framents;
     Context context;
+    boolean destroyAll = false;
 
-    public TimeTablePagerAdapter(Context context,FragmentManager fm,int count) {
+    public TimeTablePagerAdapter(Context context, FragmentManager fm, int count, TimeTableBlockView.TimeTablePreferenceRoot root) {
         super(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.context = context;
         pageCount = count;
         mFragmentManager = fm;
         framents = new ArrayList<>();
         for(int i=1;i<=count;i++){
-            framents.add(FragmentTimeTablePage.newInstance(i));
+            framents.add(FragmentTimeTablePage.newInstance(i,root));
         }
     }
 
@@ -66,6 +70,11 @@ public class TimeTablePagerAdapter extends FragmentPagerAdapter {
 //        return POSITION_NONE;
 //    }
 
+
+//    @Override
+//    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+//        //super.destroyItem(container, position, object);
+//    }
 
     @Override
     public int getCount() {
@@ -108,7 +117,7 @@ public class TimeTablePagerAdapter extends FragmentPagerAdapter {
         for(Fragment d:framents){
             ((FragmentTimeTablePage)d).NotifyRefresh();
         }
-        notifyDataSetChanged();
+       // notifyDataSetChanged();
     }
 
 

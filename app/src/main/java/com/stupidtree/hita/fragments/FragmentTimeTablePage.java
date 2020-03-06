@@ -45,27 +45,16 @@ import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialo
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 
-public class FragmentTimeTablePage extends BaseFragment implements TimeTableBlockView.TimeTablePreferenceRoot {
+public class FragmentTimeTablePage extends BaseFragment {
 
     public boolean hasInit = false;
     private int pageWeek;
-    private boolean wholeday;
-    private boolean drawNowLine;
+
+    TimeTableBlockView.TimeTablePreferenceRoot root;
     private NestedScrollView scrollView;
     private TimeTableViewGroup timeTableView;
     private int start;
-    private String titleGravity;
-    private String cardBackground;
-    private String titleColor;
-    private String subTitleColor;
-    private String iconColor;
-    private boolean enableIcon;
-    private boolean colorfulMode;
-    private int bgOpacity;
-    private int titleAlpha;
-    private int subtitleAlpha;
-    private boolean boldText;
-    private int card_height;
+
     /*控件对象区*/
     private TextView[] tdays = new TextView[8]; //顶部日期文本
     private TextView[] tWholeDays = new TextView[7];
@@ -95,8 +84,12 @@ public class FragmentTimeTablePage extends BaseFragment implements TimeTableBloc
     }
 
 
-    public static FragmentTimeTablePage newInstance(int pageWeek) {
+    public void setRoot(TimeTableBlockView.TimeTablePreferenceRoot root){
+        this.root = root;
+    }
+    public static FragmentTimeTablePage newInstance(int pageWeek, TimeTableBlockView.TimeTablePreferenceRoot root) {
         FragmentTimeTablePage fragment = new FragmentTimeTablePage();
+        fragment.setRoot(root);
         Bundle args = new Bundle();
         args.putInt("week", pageWeek);
         fragment.setArguments(args);
@@ -109,26 +102,11 @@ public class FragmentTimeTablePage extends BaseFragment implements TimeTableBloc
         if (getArguments() != null) {
             pageWeek = getArguments().getInt("week");
         }
-        syncAllPreferences();
-        start = wholeday ? 0 : 8;
+      //  syncAllPreferences();
+        start = root.isWholeDay()? 0 : 8;
     }
 
-    private void syncAllPreferences(){
-        cardBackground = defaultSP.getString("timetable_card_background","gradient");
-        card_height = defaultSP.getInt("timetable_card_height", 160);//课程表卡片高度
-        titleGravity = defaultSP.getString("timetable_card_title_gravity","top");
-        bgOpacity = defaultSP.getInt("timetable_card_opacity",100);
-        enableIcon = defaultSP.getBoolean("timetable_card_icon_enable",true);
-        boldText = defaultSP.getBoolean("timetable_card_text_bold",false);
-        titleColor = defaultSP.getString("timetable_card_title_color","white");
-        subTitleColor = defaultSP.getString("timetable_card_subtitle_color","white");
-        iconColor = defaultSP.getString("timetable_card_icon_color","white");
-        colorfulMode = defaultSP.getBoolean("subjects_color_enable", false);
-        wholeday = defaultSP.getBoolean("timetable_wholeday", false);
-        drawNowLine = defaultSP.getBoolean("timetable_draw_now_line", true);
-        titleAlpha = defaultSP.getInt("timetable_card_title_alpha",100);
-        subtitleAlpha = defaultSP.getInt("timetable_card_subtitle_alpha",100);
-    }
+
 
 
     @Override
@@ -154,7 +132,7 @@ public class FragmentTimeTablePage extends BaseFragment implements TimeTableBloc
         TextView text;
         for (int i = start; i < 24; i++) {
             view = LayoutInflater.from(this.getContext()).inflate(R.layout.dynamic_timetable_left_time, null);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, card_height);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, root.getCardHeight());
             //params.setMargins(0, 0, 20, 0);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -227,8 +205,8 @@ public class FragmentTimeTablePage extends BaseFragment implements TimeTableBloc
 
     public void NotifyRefresh() {
         if (!hasInit) return;
-        syncAllPreferences();
-        start = wholeday ? 0 : 8;
+      //  syncAllPreferences();
+        start = root.isWholeDay() ? 0 : 8;
         createLeftView();
         RefreshPageView(pageWeek);
     }
@@ -308,14 +286,14 @@ public class FragmentTimeTablePage extends BaseFragment implements TimeTableBloc
                 if (!hasInit) return;
                 if (!timeTableCore.isDataAvailable()) return;
                 refreshDateViews();
-                if (wholeday) scrollView.post(new Runnable() {
+                if (root.isWholeDay()) scrollView.post(new Runnable() {
                     @Override
                     public void run() {
-                        scrollView.scrollTo(0, 8 * card_height);
+                        scrollView.scrollTo(0, 8 * root.getCardHeight());
                     }
                 });
                 timeTableView.removeAllViews();
-                timeTableView.init(getBaseActivity(), pageWeek,FragmentTimeTablePage.this);
+                timeTableView.init(getBaseActivity(), pageWeek,root);
                 for (CardView cv : tWholeDayCards) {
                     cv.setVisibility(View.GONE);
                 }
@@ -346,7 +324,7 @@ public class FragmentTimeTablePage extends BaseFragment implements TimeTableBloc
                 if (hasWholedayWholeWeek) wholedayLayout.setVisibility(View.VISIBLE);
                 else wholedayLayout.setVisibility(View.GONE);
 
-                if (pageWeek == timeTableCore.getThisWeekOfTerm() && drawNowLine && new HTime(now).after(new HTime(start, 0))) {
+                if (pageWeek == timeTableCore.getThisWeekOfTerm() && root.drawNowLine() && new HTime(now).after(new HTime(start, 0))) {
                     timeTableView.addView(new TimeTableNowLine(getContext(), getColorPrimary()));
                 }
 
@@ -356,78 +334,6 @@ public class FragmentTimeTablePage extends BaseFragment implements TimeTableBloc
                 e.printStackTrace();
             }
         }
-    }
-    @Override
-    public boolean isColorEnabled() {
-        return colorfulMode;
-    }
-
-    @Override
-    public String getTitleColor() {
-        return titleColor;
-    }
-
-    @Override
-    public String getSubTitleColor() {
-        return subTitleColor;
-    }
-
-    @Override
-    public String getIconColor() {
-        return iconColor;
-    }
-
-    @Override
-    public boolean willBoldText() {
-        return boldText;
-    }
-
-    @Override
-    public boolean cardIconEnabled() {
-        return enableIcon;
-    }
-
-    @Override
-    public int getCardOpacity() {
-        return bgOpacity;
-    }
-
-    @Override
-    public int getCardHeight() {
-        return card_height;
-    }
-
-    @Override
-    public HTime getStartTime(){
-        return new HTime(start, 0);
-    }
-
-    @Override
-    public int getTodayBGColor() {
-        return getBGIconColor();
-    }
-
-    @Override
-    public int getTitleGravity() {
-        if(titleGravity.equals("top")) return Gravity.TOP|Gravity.CENTER_HORIZONTAL;
-        else if(titleGravity.equals("center")) return Gravity.CENTER;
-        else return Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
-    }
-
-    @Override
-    public int getTitleAlpha() {
-        return titleAlpha;
-    }
-
-    @Override
-    public int getSubtitleAlpha() {
-        return subtitleAlpha;
-    }
-
-
-    @Override
-    public String getCardBackground() {
-        return cardBackground;
     }
 
 

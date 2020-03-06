@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stupidtree.hita"
     android:targetSandboxVersion="2"
-    android:versionCode="20200226"
-    android:versionName="2.26" >
+    android:versionCode="20200305"
+    android:versionName="3.05" >
 
     <uses-sdk
         android:minSdkVersion="23"
@@ -33,8 +33,7 @@
     <!-- android:name="IFLYTEK_APPKEY" -->
     <!-- android:value="5c4aa1d3" /> &lt;!&ndash; To auto-complete the email text field in the login_jwts form with the user's emails &ndash;&gt; -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <!-- 下载通知需要这个权限 -->
+    <uses-permission android:name="android.permission.READ_PROFILE" /> <!-- 下载通知需要这个权限 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
@@ -46,8 +45,13 @@
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true" >
-        <activity android:name="com.stupidtree.hita.activities.ActivitySubjectJW" />
-        <!-- androidQ要加上这句否则读文件失效 -->
+        <service
+            android:name="com.stupidtree.hita.timetable.TimeWatcherService"
+            android:enabled="true"
+            android:exported="false"
+            android:priority="1000" />
+
+        <activity android:name="com.stupidtree.hita.activities.ActivitySubjectJW" /> <!-- androidQ要加上这句否则读文件失效 -->
         <activity
             android:name="com.stupidtree.hita.activities.ActivityTasks"
             android:windowSoftInputMode="adjustPan" />
@@ -77,9 +81,7 @@
                 <action android:name="android.appwidget.action.APP_WIDGET_SERVICE" />
             </intent-filter>
         </service> <!-- <receiver android:name=".TimeLineWidget"> -->
-
-        <service android:name="com.stupidtree.hita.online.DownloadService" />
-        <!-- <intent-filter> -->
+        <service android:name="com.stupidtree.hita.online.DownloadService" /> <!-- <intent-filter> -->
         <!-- <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> -->
         <!-- <action android:name="com.stupidtree.hita.UPDATE_ALL" /> -->
         <!-- </intent-filter> -->

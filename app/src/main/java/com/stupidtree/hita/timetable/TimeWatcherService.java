@@ -317,7 +317,7 @@ public class TimeWatcherService extends Service {
         try {
             boolean next_on = false;
             boolean autoMute = defaultSP.getBoolean("auto_mute", false);
-            boolean eventNotify = defaultSP.getBoolean("event_notify",true);
+            boolean eventNotify = defaultSP.getBoolean("event_notify_enable",true);
             if (nowEvent != null) {
                 nowProgress = ((float) new HTime(now).getDuration(nowEvent.startTime)) / ((float) nowEvent.endTime.getDuration(nowEvent.startTime));
                 if (autoMute) {
@@ -325,16 +325,16 @@ public class TimeWatcherService extends Service {
                     if (nowEvent.eventType == TimetableCore.TIMETABLE_EVENT_TYPE_COURSE && (x == null || !nowEvent.equalsEvent(x))) {
                         startMute();
                         defaultSP.edit().putString("mute_course", nowEvent.getEventsIdStr()).apply();
-                        sendNotification("已开启静音", "HITSZ学习助手");
+                        sendNotification(getString(R.string.mute_on), getString(R.string.HITSZ_study_assistant));
                     }
                 }
 
             }
             if(nextEvent!=null&&eventNotify&&nextEvent.startTime.getDuration(nowTime) <= 15){
-                String x = defaultSP.getString("notify_course", null);
+                String x = defaultSP.getString("event_notify_course", null);
                 if(x==null||!nextEvent.equalsEvent(x)){
-                    defaultSP.edit().putString("notify_course", nextEvent.getEventsIdStr()).apply();
-                    sendNotification_Alarm(nextEvent.mainName, "马上开始啦！");
+                    defaultSP.edit().putString("event_notify_course", nextEvent.getEventsIdStr()).apply();
+                    sendNotification_Alarm(nextEvent.mainName, getString(R.string.event_notify_soon));
                 }
             }
             if (nextEvent != null && nextEvent.eventType == TimetableCore.TIMETABLE_EVENT_TYPE_COURSE) {
@@ -344,7 +344,7 @@ public class TimeWatcherService extends Service {
                         if (nextEvent.startTime.getDuration(nowTime) <= defaultSP.getInt("auto_mute_before", 15)) {
                             startMute();
                             defaultSP.edit().putString("mute_course", nextEvent.getEventsIdStr()).apply();
-                            sendNotification("已开启静音", "HITSZ学习助手");
+                            sendNotification(getString(R.string.mute_on), getString(R.string.HITSZ_study_assistant));
                             next_on = true;
                         }
                     }
@@ -364,7 +364,7 @@ public class TimeWatcherService extends Service {
                                 has = true;
                                 if (ei.endTime.before(nowTime)) {
                                     finishMute();
-                                    sendNotification("已关闭静音", "HITSZ学习助手");
+                                    sendNotification(getString(R.string.mute_off), getString(R.string.HITSZ_study_assistant));
                                     defaultSP.edit().putString("mute_course", null).apply();
                                     break;
                                 }
@@ -373,7 +373,7 @@ public class TimeWatcherService extends Service {
                         }
                         if (!has) {
                             finishMute();
-                            sendNotification("已关闭静音", "HITSZ学习助手");
+                            sendNotification(getString(R.string.mute_off), getString(R.string.HITSZ_study_assistant));
                             defaultSP.edit().putString("mute_course", null).apply();
 
                         }

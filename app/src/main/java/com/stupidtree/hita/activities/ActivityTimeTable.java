@@ -23,6 +23,7 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,9 +33,11 @@ import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.TimeTablePagerAdapter;
+import com.stupidtree.hita.diy.TimeTableBlockView;
 import com.stupidtree.hita.timetable.Subject;
 import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
 import com.stupidtree.hita.fragments.FragmentTimeTablePage;
+import com.stupidtree.hita.timetable.timetable.HTime;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.ColorBox;
 
@@ -49,7 +52,7 @@ import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeServiceBinder;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
-public class ActivityTimeTable extends BaseActivity implements FragmentAddEvent.OnFragmentInteractionListener {
+public class ActivityTimeTable extends BaseActivity implements TimeTableBlockView.TimeTablePreferenceRoot, FragmentAddEvent.OnFragmentInteractionListener {
 
     public static final String TIMETABLE_REFRESH = "COM.STUPIDTREE.HITA.TIMETABLE_ACTIVITY_REFRESH";
     int pageWeekOfTerm;
@@ -68,6 +71,22 @@ public class ActivityTimeTable extends BaseActivity implements FragmentAddEvent.
     RefreshTask pageTask;
     Menu popUpMenu;
 
+    /*个性化参数*/
+    private boolean wholeday;
+    private boolean drawNowLine;
+    private String titleGravity;
+    private String cardBackground;
+    private String titleColor;
+    private String subTitleColor;
+    private String iconColor;
+    private boolean enableIcon;
+    private boolean colorfulMode;
+    private boolean enableAnim;
+    private int bgOpacity;
+    private int titleAlpha;
+    private int subtitleAlpha;
+    private boolean boldText;
+    private int card_height;
 
 
     /*初始化_获取所有控件对象*/
@@ -97,12 +116,13 @@ public class ActivityTimeTable extends BaseActivity implements FragmentAddEvent.
 
     void initViewPager() {
         viewPager = findViewById(R.id.timetable_viewpager);
+      //  viewPager.setOffscreenPageLimit(2);
         tabs = findViewById(R.id.timetable_tabs);
        // tabs.setTabTextColors(Color.parseColor("#55000000"),getColorPrimary());
         tabs.setTabIndicatorFullWidth(false);
         if (timeTableCore.isDataAvailable())
-            pagerAdapter = new TimeTablePagerAdapter(this,getSupportFragmentManager(), timeTableCore.getCurrentCurriculum().getTotalWeeks());
-        else pagerAdapter = new TimeTablePagerAdapter(this,getSupportFragmentManager(), 0);
+            pagerAdapter = new TimeTablePagerAdapter(this,getSupportFragmentManager(), timeTableCore.getCurrentCurriculum().getTotalWeeks(),this);
+        else pagerAdapter = new TimeTablePagerAdapter(this,getSupportFragmentManager(), 0,this);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -189,7 +209,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentAddEvent.
                         menuItem.setChecked(isChecked);
                         defaultSP.edit().putBoolean("timetable_wholeday",isChecked).apply();
                         //Toast.makeText(ActivityTimeTable.this,"重新进入本页面生效",Toast.LENGTH_SHORT).show();
-                        pagerAdapter.notifyAllFragments();
+                        onCalledRefresh();
                         // Refresh(FROM_INIT);
                         break;
 
@@ -198,14 +218,14 @@ public class ActivityTimeTable extends BaseActivity implements FragmentAddEvent.
                         defaultSP.edit().putBoolean("subjects_color_enable",isChecked).apply();
                         popUpMenu.findItem(R.id.action_reset_color).setVisible(isChecked);
                         //Toast.makeText(ActivityTimeTable.this,"重新进入本页面生效",Toast.LENGTH_SHORT).show();
-                        pagerAdapter.notifyAllFragments();
+                        onCalledRefresh();
                         // Refresh(FROM_INIT);
                         break;
                     case R.id.action_draw_now_line:
                         menuItem.setChecked(isChecked);
                         defaultSP.edit().putBoolean("timetable_draw_now_line",isChecked).apply();
                         //Toast.makeText(ActivityTimeTable.this,"重新进入本页面生效",Toast.LENGTH_SHORT).show();
-                        pagerAdapter.notifyAllFragments();
+                        onCalledRefresh();
                         // Refresh(FROM_INIT);
                         break;
                     case R.id.action_reset_color:
@@ -257,12 +277,29 @@ public class ActivityTimeTable extends BaseActivity implements FragmentAddEvent.
         viewPager.setCurrentItem(pageWeekOfTerm - 1);
 
     }
-
+    private void syncAllPreferences(){
+        cardBackground = defaultSP.getString("timetable_card_background","gradient");
+        card_height = defaultSP.getInt("timetable_card_height", 160);//课程表卡片高度
+        titleGravity = defaultSP.getString("timetable_card_title_gravity","top");
+        bgOpacity = defaultSP.getInt("timetable_card_opacity",100);
+        enableIcon = defaultSP.getBoolean("timetable_card_icon_enable",true);
+        boldText = defaultSP.getBoolean("timetable_card_text_bold",false);
+        titleColor = defaultSP.getString("timetable_card_title_color","white");
+        subTitleColor = defaultSP.getString("timetable_card_subtitle_color","white");
+        iconColor = defaultSP.getString("timetable_card_icon_color","white");
+        colorfulMode = defaultSP.getBoolean("subjects_color_enable", false);
+        wholeday = defaultSP.getBoolean("timetable_wholeday", false);
+        enableAnim = defaultSP.getBoolean("timetable_animation_enable",true);
+        drawNowLine = defaultSP.getBoolean("timetable_draw_now_line", true);
+        titleAlpha = defaultSP.getInt("timetable_card_title_alpha",100);
+        subtitleAlpha = defaultSP.getInt("timetable_card_subtitle_alpha",100);
+    }
 
 
 
     @Override
     public void onCalledRefresh() {
+        syncAllPreferences();
         pagerAdapter.notifyAllFragments();
     }
 
@@ -275,7 +312,7 @@ public class ActivityTimeTable extends BaseActivity implements FragmentAddEvent.
         }
         @Override
         protected String doInBackground(String... strings) {
-
+            syncAllPreferences();
             if (timeTableCore.getThisWeekOfTerm() > 0) pageWeekOfTerm = timeTableCore.getThisWeekOfTerm();
             return null;
         }
@@ -390,7 +427,93 @@ public class ActivityTimeTable extends BaseActivity implements FragmentAddEvent.
         //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
     }
+    @Override
+    public boolean isColorEnabled() {
+        return colorfulMode;
+    }
 
+    @Override
+    public String getCardTitleColor() {
+        return titleColor;
+    }
+
+    @Override
+    public String getSubTitleColor() {
+        return subTitleColor;
+    }
+
+    @Override
+    public String getIconColor() {
+        return iconColor;
+    }
+
+    @Override
+    public boolean willBoldText() {
+        return boldText;
+    }
+
+    @Override
+    public boolean cardIconEnabled() {
+        return enableIcon;
+    }
+
+    @Override
+    public int getCardOpacity() {
+        return bgOpacity;
+    }
+
+    @Override
+    public int getCardHeight() {
+        return card_height;
+    }
+
+    @Override
+    public HTime getStartTime(){
+        return new HTime(wholeday?0:8, 0);
+    }
+
+    @Override
+    public int getTodayBGColor() {
+        return getBGIconColor();
+    }
+
+    @Override
+    public int getTitleGravity() {
+        if(titleGravity.equals("top")) return Gravity.TOP|Gravity.CENTER_HORIZONTAL;
+        else if(titleGravity.equals("center")) return Gravity.CENTER;
+        else return Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
+    }
+
+    @Override
+    public int getTitleAlpha() {
+        return titleAlpha;
+    }
+
+    @Override
+    public int getSubtitleAlpha() {
+        return subtitleAlpha;
+    }
+
+    @Override
+    public boolean isWholeDay() {
+        return wholeday;
+    }
+
+    @Override
+    public boolean animEnabled() {
+        return enableAnim;
+    }
+
+
+    @Override
+    public String getCardBackground() {
+        return cardBackground;
+    }
+
+    @Override
+    public boolean drawNowLine() {
+        return drawNowLine;
+    }
 
 
     @Override

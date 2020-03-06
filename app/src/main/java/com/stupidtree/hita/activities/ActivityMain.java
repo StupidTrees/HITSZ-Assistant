@@ -655,7 +655,7 @@ public class ActivityMain extends BaseActivity
                 for (Curriculum c : timeTableCore.getAllCurriculum()) {
                   c.saveToDB();
                 }
-                return timeTableCore.saveDataToCloud(false);
+                return timeTableCore.saveDataToCloud();
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;

@@ -458,7 +458,7 @@
     <string name="no_data_on_cloud">云端没有数据！</string>
     <string name="curriculum_updated">已更新课表参数</string>
     <string name="enter_name">输入名称...</string>
-    <string name="give_me_that_permission">请授予HITSZ助手相关权限</string>
+    <string name="give_me_that_permission">请授予HITSZ助手勿扰权限</string>
     <string name="mute_assistant">上课静音助手</string>
     <string name="mute_assistant_tag1">上课前</string>
     <string name="mute_assistant_tag2">分钟开启静音</string>
@@ -610,6 +610,14 @@
     <string name="preference_tabs_basic">基本设置</string>
     <string name="preference_tabs_appearance">外观设置</string>
     <string name="preference_tabs_others">其他设置</string>
+    <string name="settings_summary_timetable_animation">有可能造成卡顿</string>
+    <string name="settings_title_timetable_animation">启用卡片动画</string>
+    <string name="class_assistant">事件开始提醒</string>
+    <string name="give_me_notification_permission">请手动授予APP弹出悬浮通知的权限</string>
+    <string name="mute_on">已开启静音</string>
+    <string name="HITSZ_study_assistant">HITSZ学习助手</string>
+    <string name="event_notify_soon">马上开始啦！</string>
+    <string name="mute_off">已关闭静音</string>
     <string-array name="curriculum_tabs">
         <item>科目</item>
         <item>教师</item>
@@ -674,7 +682,6 @@
         <item>校园生活</item>
         <item>校园心情</item>
         <item>教务功能</item>
-        <item>校园卡管理（连接大学城内部网后显示）</item>
     </string-array>
     <string-array name="leaderboard_tabs">
         <item>食堂排行</item>

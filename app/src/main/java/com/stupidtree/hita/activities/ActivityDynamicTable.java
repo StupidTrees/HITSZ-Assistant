@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,14 +26,17 @@ import com.stupidtree.hita.R;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import cn.bmob.v3.http.I;
+
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.timeServiceBinder;
+import static com.stupidtree.hita.timetable.TimeWatcherService.WATCHER_REFRESH;
 
 public class ActivityDynamicTable extends BaseActivity {
 
     Toolbar toolbar;
-    Switch preViewPlan,preview_skip_no_exam,auto_mute,auto_mute_after,forced_mute;
+    Switch preViewPlan,preview_skip_no_exam,auto_mute,auto_mute_after,forced_mute,event_notify;
     NumberPicker preview_length_picker,auto_mute_before_picker;
     ExpandableLayout preview_expand,mute_expand;
     CollapsingToolbarLayout collapsingToolbarLayout;
@@ -68,10 +73,23 @@ public class ActivityDynamicTable extends BaseActivity {
 //            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 //             }
 //        });
+        initEventsNotify();
         initAutoMute();
         initPreview();
     }
 
+    void initEventsNotify(){
+        event_notify = findViewById(R.id.switch_class_notification);
+        event_notify.setChecked(defaultSP.getBoolean("event_notify_enable",true));
+        event_notify.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Intent i = new Intent(WATCHER_REFRESH);
+                LocalBroadcastManager.getInstance(getThis()).sendBroadcast(i);
+                defaultSP.edit().putBoolean("event_notify_enable",isChecked).apply();
+            }
+        });
+    }
     void initAutoMute(){
         mute_expand = findViewById(R.id.exand_mute);
         auto_mute = findViewById(R.id.switch_auto_mute);

@@ -38,6 +38,7 @@ anim mtrl_bottom_sheet_slide_out
 anim mtrl_card_lowers_interpolator
 anim recycler_animation_fade
 anim recycler_animation_falls_down
+anim recycler_animation_float_up
 anim recycler_animation_slide_from_right
 anim recycler_layout_animation_fade
 anim recycler_layout_animation_falls_down
@@ -66,8 +67,18 @@ array months
 array months_full
 array navi_setting_items
 array news_tabs
+array preference_card_background
+array preference_card_background_values
+array preference_card_title_color
+array preference_card_title_color_subject_disabled
+array preference_card_title_color_values
+array preference_card_title_color_values_subject_disabled
+array preference_card_title_gravity
+array preference_card_title_gravity_values
 array preference_dark_mode
 array preference_dark_mode_values
+array preference_timetable_preset
+array preference_timetable_preset_values
 array sentence_fun_canteen
 array sentence_fun_explore
 array sentence_fun_infos
@@ -1976,6 +1987,7 @@ drawable ic_edit_black_24dp
 drawable ic_email
 drawable ic_empty
 drawable ic_event
+drawable ic_event_note_black_24dp
 drawable ic_exit
 drawable ic_facility
 drawable ic_finish
@@ -1994,6 +2006,7 @@ drawable ic_lecture
 drawable ic_local_phone
 drawable ic_location
 drawable ic_location2
+drawable ic_location3
 drawable ic_lostandfound
 drawable ic_lunch
 drawable ic_map
@@ -2240,6 +2253,7 @@ id action_reset_color
 id action_search
 id action_subject_manager
 id action_text
+id action_timetable_style
 id action_website
 id action_whole_day
 id actions
@@ -2999,7 +3013,6 @@ id selected
 id set_start_date
 id set_total_weeks
 id setinfo_text
-id settingsLayout
 id shortcut
 id show
 id showCustom
@@ -3061,6 +3074,7 @@ id subtitle
 id sun
 id switchWidget
 id switch_auto_mute
+id switch_class_notification
 id switch_darkmode
 id switch_mute_after
 id switch_skip_no_exam
@@ -3144,6 +3158,7 @@ id textView39
 id textView4
 id textView40
 id textView41
+id textView5
 id textView7
 id text_input_end_icon
 id text_input_start_icon
@@ -3740,6 +3755,7 @@ mipmap ic_launcher
 mipmap ic_launcher_foreground
 mipmap ic_launcher_round
 plurals mtrl_badge_content_description
+string HITSZ_study_assistant
 string abc_action_bar_home_description
 string abc_action_bar_up_description
 string abc_action_menu_overflow_description
@@ -3820,6 +3836,8 @@ string ade_wholeday
 string all_images
 string already_up_to_date
 string app_name
+string app_notification_channel2_id
+string app_notification_channel3_id
 string app_notification_channel_id
 string app_notification_channel_id_learning
 string app_notification_channel_name
@@ -3853,11 +3871,13 @@ string cjgl_subject_name
 string cjgl_subject_total_score
 string cjgl_subject_type
 string cjgl_xnxq
+string class_assistant
 string clear_text_end_icon_content_description
 string confirm
 string confirm_format
 string continue_download
 string copy
+string count_week
 string curriculum_manager_enable_color
 string curriculum_manager_randomly_allocate_color
 string curriculum_manager_satrtat
@@ -3921,6 +3941,7 @@ string error_icon_content_description
 string error_incorrect_password
 string error_invalid_email
 string error_invalid_password
+string event_notify_soon
 string exam_card_cd
 string exam_card_noexam
 string expand_button_title
@@ -3928,6 +3949,7 @@ string exposed_dropdown_menu_content_description
 string fab_transformation_scrim_behavior
 string fab_transformation_sheet_behavior
 string found
+string give_me_notification_permission
 string give_me_that_permission
 string grkb_attention
 string grkb_attention_hint
@@ -4032,6 +4054,7 @@ string menu_timeable_draw_line
 string menu_timeable_from_zero
 string menu_timeable_random_allocate
 string menu_timeable_use_theme
+string menu_timetable_style
 string minnum
 string mood_0
 string mood_1
@@ -4083,6 +4106,8 @@ string mute_assistant_tag2
 string mute_assistant_tag3
 string mute_assistant_tag4
 string mute_assistant_tag5
+string mute_off
+string mute_on
 string nav_header_desc
 string nav_header_subtitle
 string nav_header_title
@@ -4135,6 +4160,7 @@ string notif_nick_updated
 string notif_set_nick
 string notif_signature_update_failed
 string notif_signature_updated
+string notifi_import_first
 string open_camera_failure
 string password
 string password_toggle_content_description
@@ -4157,6 +4183,9 @@ string pick_single_time_label3
 string pick_teacher
 string posted_in
 string preference_copied
+string preference_tabs_appearance
+string preference_tabs_basic
+string preference_tabs_others
 string preview_assistant_tag1
 string preview_assistant_tag2
 string preview_assistant_tag3
@@ -4200,7 +4229,15 @@ string settings_summary_darkmode
 string settings_summary_jwpassword
 string settings_summary_mainthirdpage
 string settings_summary_task
+string settings_summary_timetable_animation
+string settings_summary_timetable_back
+string settings_summary_timetable_card_height
+string settings_summary_timetable_card_icon_enable
+string settings_summary_timetable_card_text_bold
+string settings_summary_timetable_card_title_gravity
+string settings_summary_timetable_preset
 string settings_summary_use_keyboard
+string settings_title_app_language
 string settings_title_auto_check_update
 string settings_title_auto_download_wifi
 string settings_title_auto_read
@@ -4210,6 +4247,20 @@ string settings_title_darkmode
 string settings_title_jwpassword
 string settings_title_mainthirdpage
 string settings_title_task
+string settings_title_timetable_animation
+string settings_title_timetable_back
+string settings_title_timetable_card_background
+string settings_title_timetable_card_height
+string settings_title_timetable_card_icon_color
+string settings_title_timetable_card_icon_enable
+string settings_title_timetable_card_opacity
+string settings_title_timetable_card_subtitle_alpha
+string settings_title_timetable_card_subtitle_color
+string settings_title_timetable_card_text_bold
+string settings_title_timetable_card_title_alpha
+string settings_title_timetable_card_title_color
+string settings_title_timetable_card_title_gravity
+string settings_title_timetable_preset
 string settings_title_use_keyboard
 string shortcut_empty_classroom_long
 string shortcut_empty_classroom_short
@@ -5355,7 +5406,9 @@ styleable buttonLoading BL_backgroundColor BL_backgroundDisableColor BL_circleCo
 styleable pile displayCount interval scaleStep sizeRatio
 styleable scene layoutTextColor layoutTextSize leftDistance leftMargin rightDistance verticalDistance
 xml file_paths
-xml pref_general
+xml pref_appearence
+xml pref_basic
+xml pref_others
 xml provider_paths
 xml shortcuts
 xml standalone_badge

@@ -122,6 +122,12 @@
             android:summary="@string/settings_summary_timetable_back"
             android:title="@string/settings_title_timetable_back"
             app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="timetable_animation_enable"
+            android:summary="@string/settings_summary_timetable_animation"
+            android:title="@string/settings_title_timetable_animation"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
 

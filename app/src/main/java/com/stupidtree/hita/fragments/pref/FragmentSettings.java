@@ -195,6 +195,8 @@ public class FragmentSettings extends PreferenceFragmentCompat {
     }
 
     private void setTimetablePreference() {
+        findPreference("timetable_animation_enable")
+                .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
         findPreference("timetable_card_opacity")
                 .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
         findPreference("timetable_card_text_bold")

@@ -41,7 +41,6 @@ import com.stupidtree.hita.activities.ActivityLeaderBoard;
 
 import com.stupidtree.hita.adapter.NaviPageAdapter;
 import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
-import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.online.BannerItem;
 
 import com.stupidtree.hita.online.HITAUser;
@@ -53,8 +52,12 @@ import com.zhouwei.mzbanner.holder.MZViewHolder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -62,10 +65,10 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.FindListener;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_BOARD_JW;
@@ -75,27 +78,33 @@ import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_HITA;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_JWTS_FUN;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_MOOD;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_NEWS;
+import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_NOTIFICATION;
 import static com.stupidtree.hita.adapter.NaviPageAdapter.strToIntegerList;
 
 public class FragmentNavi extends BaseFragment {
 
-    public static final String ORDER_NAME = "navi_page_order_9";
-   MZBannerView<BannerItem> banner;
-    List<BannerItem> bannerItemList;
-    TextView title,subtitle;
-    ImageView settingButton;
-    BroadcastReceiver broadcastReceiver;
-    List<Integer> listRes;
-    RecyclerView list;
-    NaviPageAdapter listAdapter;
-    SwipeRefreshLayout refreshLayout;
+    //public static final String ORDER_NAME = "navi_page_order_9";
+    private MZBannerView<BannerItem> banner;
+    private List<BannerItem> bannerItemList;
+    private TextView title, subtitle;
+    private ImageView settingButton;
+    private BroadcastReceiver broadcastReceiver;
+    private List<Map<String, Object>> listRes;
+    private RecyclerView list;
+    private NaviPageAdapter listAdapter;
+    private SwipeRefreshLayout refreshLayout;
     boolean firstEnter = true;
     Gson gson;
-    HashMap<Integer,String> type_name_map = new HashMap();
+    // HashMap<Integer,String> type_name_map = new HashMap<>();
+    SharedPreferences naviPagePreference;
+    public static String[]  cardNames = new String[]{"news","life","mood","jw"};
+    public static Integer[] cardTyps = new Integer[]{TYPE_NEWS, TYPE_HITA, TYPE_MOOD, TYPE_BOARD_JW};
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_navi, container, false);
+        naviPagePreference = getActivity().getSharedPreferences("navi_page", Context.MODE_PRIVATE);
         //InitSearch(v);
         initViews(v);
         initBanner(v);
@@ -108,16 +117,10 @@ public class FragmentNavi extends BaseFragment {
     }
 
     void initList(View v) {
-        type_name_map.put(TYPE_MOOD,"navi_enabled_mood");
-        type_name_map.put(TYPE_NEWS,"navi_enabled_news");
-        type_name_map.put(TYPE_BOARD_JW,"navi_enabled_jw");
-        type_name_map.put(TYPE_JWTS_FUN,"navi_enabled_jw_sync");
-        type_name_map.put(TYPE_CARD,"navi_enabled_card");
-        type_name_map.put(TYPE_HITA,"navi_enabled_life");
         gson = new Gson();
         list = v.findViewById(R.id.navipage_list);
         listRes = new ArrayList<>();
-        listAdapter = new NaviPageAdapter(listRes, getContext());
+        listAdapter = new NaviPageAdapter(listRes, getContext(), naviPagePreference);
         list.setAdapter(listAdapter);
         list.setLayoutManager(new WrapContentLinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         NaviPageAdapter.mCallBack mCallBack = new NaviPageAdapter.mCallBack(listAdapter);
@@ -137,19 +140,22 @@ public class FragmentNavi extends BaseFragment {
 //                    Log.e("接受到广播：", "登录教务失效");
 //                    listAdapter.removeItems(new int[]{TYPE_JWTS_FUN});
 //                }
-
-                if (intent.getAction().equals("COM.STUPIDTREE.HITA.UT_AUTO_LOGIN_DONE")) {
-                    Log.e("接受到广播：", "登录大学城完成");
-                    int addIndex_ut_card = listRes.indexOf(defaultSP.getInt("navi_page_order_before_ut_card", TYPE_BOARD_JW))+1;
-                    if(PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("navi_enabled_card",true)) listAdapter.addItem(TYPE_CARD,addIndex_ut_card);
-                } else if (intent.getAction().equals("COM.STUPIDTREE.HITA.UT_LOGIN_FAIL")) {
-                    Log.e("接受到广播：", "登录大学城失效");
-                    listAdapter.removeItems(new int[]{TYPE_CARD});
-                }
-                if(intent.getAction().equals("COM.STUPIDTREE.HITA.USER_INFO_FETCHED")){
+//                if (intent.getAction().equals("COM.STUPIDTREE.HITA.UT_AUTO_LOGIN_DONE")) {
+//                    Log.e("接受到广播：", "登录大学城完成");
+//                    int addIndex_ut_card = listRes.indexOf(naviPagePreference.getInt("navi_page_order_before_ut_card", TYPE_BOARD_JW))+1;
+//                    if(PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean("navi_enabled_card",true)) listAdapter.addItem(TYPE_CARD,addIndex_ut_card);
+//                } else if (intent.getAction().equals("COM.STUPIDTREE.HITA.UT_LOGIN_FAIL")) {
+//                    Log.e("接受到广播：", "登录大学城失效");
+//                    listAdapter.removeItems(new int[]{TYPE_CARD});
+//                }
+                if (intent.getAction().equals("COM.STUPIDTREE.HITA.USER_INFO_FETCHED")) {
                     Log.e("接受到广播：", "用户信息同步完成");
-                    listAdapter.notifyItemChanged(listRes.indexOf(TYPE_MOOD));
-                   // list.scrollToPosition(0);
+                    int i;
+                    for (i = 0; i < listRes.size(); i++) {
+                        if (((Number) listRes.get(i).get("type")).intValue() == TYPE_MOOD) break;
+                    }
+                    listAdapter.notifyItemChanged(i);
+                    // list.scrollToPosition(0);
                 }
 
             }
@@ -163,49 +169,60 @@ public class FragmentNavi extends BaseFragment {
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, ifi);
     }
 
-    void initViews(View v) {
+    private void initViews(View v) {
         settingButton = v.findViewById(R.id.navi_setting);
         title = v.findViewById(R.id.navi_title);
         subtitle = v.findViewById(R.id.navi_subtitle);
         refreshLayout = v.findViewById(R.id.refresh);
-        refreshLayout.setColorSchemeColors(((BaseActivity)getActivity()).getColorPrimary(),((BaseActivity)getActivity()).getColorPrimaryDark());
+        refreshLayout.setColorSchemeColors(((BaseActivity) getActivity()).getColorPrimary(), ((BaseActivity) getActivity()).getColorPrimaryDark());
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-             Refresh(true,true);
+                Refresh(true, true);
             }
         });
         settingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final List<Integer> order = strToIntegerList(defaultSP.getString(ORDER_NAME,"[]"));
-                SharedPreferences sp =  PreferenceManager.getDefaultSharedPreferences(HContext);
                 String[] x = getResources().getStringArray(R.array.navi_setting_items);
-                final String[] preferenceIds = new String[]{"navi_enabled_news","navi_enabled_life","navi_enabled_mood","navi_enabled_jw","navi_enabled_card"};
-                final Integer[] preferenceTyps = new Integer[]{TYPE_NEWS,TYPE_HITA,TYPE_MOOD,TYPE_BOARD_JW,TYPE_CARD};
-                boolean[] y = new boolean[5];
-                for(int i=0;i<5;i++) y[i] = sp.getBoolean(preferenceIds[i],true);
-                final SharedPreferences.Editor edt = sp.edit();
-                final boolean[] changed = {false};
-                AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.navi_settings_title)).setMultiChoiceItems(x, y,new DialogInterface.OnMultiChoiceClickListener() {
+               // final Integer[] preferenceTyps = new Integer[]{TYPE_NEWS, TYPE_HITA, TYPE_MOOD, TYPE_BOARD_JW};
+                boolean[] checked = new boolean[4];
+                for (int i = 0; i < checked.length; i++) {
+                    checked[i] = naviPagePreference.getBoolean(cardNames[i]+"_enable",true);
+                }
+               final List<Map<String, Object>> toAdd = new ArrayList<>();
+                final List<Map<String, Object>> toRemove = new ArrayList<>();
+               final SharedPreferences.Editor edit = naviPagePreference.edit();
+                AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.navi_settings_title)).setMultiChoiceItems(x, checked, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                        changed[0] = true;
-                        edt.putBoolean(preferenceIds[i],b).commit();
-                        if(b&&!order.contains(preferenceTyps[i])) order.add(preferenceTyps[i]);
-                        listAdapter.saveOrders(order);
+                        edit.putBoolean(cardNames[i]+"_enable",b);
+//                        boolean notContains = true;
+//                        for(Map<String,Object> m:order){
+//                            if((int)m.get("type")==preferenceTyps[i]) notContains = false;
+//                        }
+//                        if(b&&notContains){
+//                            Map<String,Object> m = new HashMap();
+//                            m.put("type",preferenceTyps[i]);
+//                            order.add(m);
+//                        }
+//                        listAdapter.saveOrders(order);
                     }
-                }).setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Refresh(true,false);
-                    }
-                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        Refresh(changed[0],false);
-                    }
-                }).create();
+                })
+                        .setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                edit.commit();
+                                Refresh(true,false);
+                            }
+                        })
+//                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                    @Override
+//                    public void onDismiss(DialogInterface dialogInterface) {
+//                        Refresh(changed[0],false);
+//                    }
+//                })
+                        .create();
                 ad.show();
             }
         });
@@ -224,7 +241,7 @@ public class FragmentNavi extends BaseFragment {
 //        tab.setupWithViewPager(pager);
 //    }
 
-    void initBanner(View v) {
+    private void initBanner(View v) {
         bannerItemList = new ArrayList<>();
         banner = v.findViewById(R.id.navi_banner);
         banner.setDelayedTime(4000);
@@ -234,7 +251,6 @@ public class FragmentNavi extends BaseFragment {
 
 
     @SuppressLint("WrongConstant")
-
 
 
     @Override
@@ -248,9 +264,9 @@ public class FragmentNavi extends BaseFragment {
     }
 
 
-    public void Refresh(boolean animate,boolean swipe) {
-        refreshBanner();
-        new RefreshTask(animate,swipe).executeOnExecutor(TPE);
+    public void Refresh(boolean animate, boolean swipe) {
+        //refreshBanner();
+        new RefreshTask(animate, swipe).executeOnExecutor(TPE);
     }
 
 
@@ -259,65 +275,65 @@ public class FragmentNavi extends BaseFragment {
     }
 
 
-    void refreshBanner() {
-        BmobQuery<BannerItem> bq = new BmobQuery<>();
-        bq.findObjects(new FindListener<BannerItem>() {
-            @Override
-            public void done(List<BannerItem> list, BmobException e) {
-                if (e == null && list != null && list.size() > 0) {
-                    bannerItemList.clear();
-                    bannerItemList.addAll(list);
-                    if (list.size() == 1) banner.setCanLoop(false);
-                    else banner.setCanLoop(true);
-                    banner.setPages(bannerItemList, new MZHolderCreator<BannerViewHolder>() {
-                        @Override
-                        public BannerViewHolder createViewHolder() {
-                            return new BannerViewHolder();
-                        }
-                    });
-                    banner.start();
-                } else if (bannerItemList.size() == 0) {
-                    BannerItem temp = new BannerItem();
-                   // temp.setImageUri("https://bmob-cdn-26359.bmobpay.com/2019/08/10/23ab6917400d551a805267303f0f840a.jpg");
-                    temp.setTitle("同学们好");
-                    temp.setAction(new JsonObject().toString());
-                    temp.setSubtitle("加载banner失败");
-                    bannerItemList.add(temp);
-                    banner.setCanLoop(false);
-                    banner.setPages(bannerItemList, new MZHolderCreator<BannerViewHolder>() {
-                        @Override
-                        public BannerViewHolder createViewHolder() {
-                            return new BannerViewHolder();
-                        }
-                    });
-                    banner.start();
-                    //Toast.makeText(HContext,"加载banner出错！"+e.toString(),Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
+//    void refreshBanner() {
+//        BmobQuery<BannerItem> bq = new BmobQuery<>();
+//        bq.findObjects(new FindListener<BannerItem>() {
+//            @Override
+//            public void done(List<BannerItem> list, BmobException e) {
+//                if (e == null && list != null && list.size() > 0) {
+//                    bannerItemList.clear();
+//                    bannerItemList.addAll(list);
+//                    if (list.size() == 1) banner.setCanLoop(false);
+//                    else banner.setCanLoop(true);
+//                    banner.setPages(bannerItemList, new MZHolderCreator<BannerViewHolder>() {
+//                        @Override
+//                        public BannerViewHolder createViewHolder() {
+//                            return new BannerViewHolder();
+//                        }
+//                    });
+//                    banner.start();
+//                } else if (bannerItemList.size() == 0) {
+//                    BannerItem temp = new BannerItem();
+//                    // temp.setImageUri("https://bmob-cdn-26359.bmobpay.com/2019/08/10/23ab6917400d551a805267303f0f840a.jpg");
+//                    temp.setTitle("同学们好");
+//                    temp.setAction(new JsonObject().toString());
+//                    temp.setSubtitle("加载banner失败");
+//                    bannerItemList.add(temp);
+//                    banner.setCanLoop(false);
+//                    banner.setPages(bannerItemList, new MZHolderCreator<BannerViewHolder>() {
+//                        @Override
+//                        public BannerViewHolder createViewHolder() {
+//                            return new BannerViewHolder();
+//                        }
+//                    });
+//                    banner.start();
+//                    //Toast.makeText(HContext,"加载banner出错！"+e.toString(),Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
 
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onResume() {
         super.onResume();
-        title.setText(getResources().getStringArray(R.array.months_full)[now.get(Calendar.MONTH)]+String.format(getString(R.string.date_day),now.get(Calendar.DAY_OF_MONTH)));
-        if(timeTableCore.isDataAvailable()){
-            if(timeTableCore.isThisTerm())subtitle.setText(String.format(getString(R.string.week),timeTableCore.getCurrentCurriculum().getWeekOfTerm(now))+" "+
-                    getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(now)-1]);
-            else subtitle.setText(getString(R.string.navi_semister_not_begun)+" "+ getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(now)-1]);
+        title.setText(getResources().getStringArray(R.array.months_full)[now.get(Calendar.MONTH)] + String.format(getString(R.string.date_day), now.get(Calendar.DAY_OF_MONTH)));
+        if (timeTableCore.isDataAvailable()) {
+            if (timeTableCore.isThisTerm())
+                subtitle.setText(String.format(getString(R.string.week), timeTableCore.getCurrentCurriculum().getWeekOfTerm(now)) + " " +
+                        getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(now) - 1]);
+            else
+                subtitle.setText(getString(R.string.navi_semister_not_begun) + " " + getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(now) - 1]);
 
-        }else subtitle.setText(getString(R.string.navi_semister_no_data));
-                Refresh(firstEnter,false);
-        if(firstEnter)firstEnter = false;
+        } else subtitle.setText(getString(R.string.navi_semister_no_data));
+        Refresh(firstEnter, false);
+        if (firstEnter) firstEnter = false;
         //banner.start();
         //refreshBanner();
         //refreshCanteen();
         //banner.start();
     }
-
-
 
 
     @Override
@@ -388,103 +404,60 @@ public class FragmentNavi extends BaseFragment {
     }
 
 
-//    class refreshPageTask extends AsyncTask{
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            refreshLayout.setRefreshing(true);
-//            Refresh();
-//        }
-//
-//        @Override
-//        protected Object doInBackground(Object[] objects) {
-//            try {
-//
-//                BmobQuery<BannerItem> bq = new BmobQuery<>();
-//                List<BannerItem> result = bq.findObjectsSync(BannerItem.class);
-//                if(result.size()>0){
-//                    bannerItemList.clear();
-//                    bannerItemList.addAll(result);
-//                }
-//                ActivityMain.autoLogin();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @SuppressLint("SetTextI18n")
-//        @Override
-//        protected void onPostExecute(Object o) {
-//            super.onPostExecute(o);
-//            refreshLayout.setRefreshing(false);
-//            if (bannerItemList.size() > 0) {
-//                if (bannerItemList.size() == 1) banner.setCanLoop(false);
-//                else banner.setCanLoop(true);
-//                banner.setPages(bannerItemList, new MZHolderCreator<BannerViewHolder>() {
-//                    @Override
-//                    public BannerViewHolder createViewHolder() {
-//                        return new BannerViewHolder();
-//                    }
-//                });
-//                banner.start();
-//            } else if (bannerItemList.size() == 0) {
-//                BannerItem temp = new BannerItem();
-//                temp.setImageUri("https://bmob-cdn-26359.bmobpay.com/2019/08/10/23ab6917400d551a805267303f0f840a.jpg");
-//                temp.setTitle("同学们好");
-//                temp.setAction(new JsonObject().toString());
-//                temp.setSubtitle("加载banner失败");
-//                bannerItemList.add(temp);
-//                banner.setCanLoop(false);
-//                banner.setPages(bannerItemList, new MZHolderCreator<BannerViewHolder>() {
-//                    @Override
-//                    public BannerViewHolder createViewHolder() {
-//                        return new BannerViewHolder();
-//                    }
-//                });
-//                banner.start();
-//                //Toast.makeText(HContext,"加载banner出错！"+e.toString(),Toast.LENGTH_SHORT).show();
-//            }
-//            listAdapter.notifyDataSetChanged();
-//            list.scheduleLayoutAnimation();
-//        }
-//    }
-
-    class RefreshTask extends AsyncTask{
-        List<Integer> order;
+    class RefreshTask extends AsyncTask {
+        List<BannerItem> bannerResult;
         boolean animate;
         boolean swipeRefresh;
-        HashMap<Integer,Boolean> enabled;
-        RefreshTask(boolean animate,boolean swipeRefresh){
-            enabled = new HashMap<>();
+
+        RefreshTask(boolean animate, boolean swipeRefresh) {
             this.animate = animate;
             this.swipeRefresh = swipeRefresh;
         }
+
         boolean first_enter_drag_hint = false;
 
         @Override
         protected void onPreExecute() {
-            if(swipeRefresh)refreshLayout.setRefreshing(true);
+            if (swipeRefresh) refreshLayout.setRefreshing(true);
             super.onPreExecute();
         }
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            order = strToIntegerList(defaultSP.getString(ORDER_NAME,"[]"));
-            if(order.size()>0){
-                for(int i=0;i<order.size();i++){
-                    if(order.get(i)!=TYPE_JWTS_FUN&&order.get(i)!=TYPE_HINT&&order.get(i)!=TYPE_CARD
-                    ) {
-                        enabled.put(order.get(i),PreferenceManager.getDefaultSharedPreferences(HContext).getBoolean(type_name_map.get(order.get(i)),true));
-                    }
-                }
-
+            try {
+                BmobQuery<BannerItem> bq = new BmobQuery<>();
+                bannerResult = bq.findObjectsSync(BannerItem.class);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            first_enter_drag_hint = defaultSP.getBoolean("first_enter_navipage_hint_drag",true);
+            listRes.clear();
+            for(int i=0;i<cardNames.length;i++){
+                String card = cardNames[i];
+                int type = cardTyps[i];
+                boolean enable = naviPagePreference.getBoolean(card+"_enable",true);
+                int power = naviPagePreference.getInt(card+"_power",i);
+                if(enable){
+                    Map<String,Object> m = new HashMap();
+                    m.put("type",type);
+                    m.put("type_name",card);
+                    m.put("power",power);
+                    listRes.add(m);
+                }
+            }
+            Collections.sort(listRes, new Comparator<Map<String, Object>>() {
+                @Override
+                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                    int power1 = (int) o1.get("power");
+                    int power2 = (int)o2.get("power");
+                    return power1-power2;
+                }
+            });
+           // order = gson.fromJson(naviPagePreference.getString(ORDER_NAME, ""), List.class);
+            first_enter_drag_hint = naviPagePreference.getBoolean("first_enter_navipage_hint_drag", true);
             BmobUser.fetchUserInfo(new FetchUserInfoListener<BmobUser>() {
                 @Override
                 public void done(BmobUser bmobUser, BmobException e) {
-                    if(e==null){
+                    if (e == null) {
                         CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
                         Intent i = new Intent();
                         i.setAction("COM.STUPIDTREE.HITA.USER_INFO_FETCHED");
@@ -495,27 +468,50 @@ public class FragmentNavi extends BaseFragment {
             return null;
         }
 
+
+        private void addType(List<Map<String, Object>> list, int type, int position) {
+            Map<String, Object> m = new HashMap<>();
+            m.put("type", type);
+            list.add(position, m);
+        }
+
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            if(swipeRefresh)refreshLayout.setRefreshing(false);
-            listRes.clear();
-            if(order.size()>0){
-                for(int i=0;i<order.size();i++){
-                    if(order.get(i)!=TYPE_JWTS_FUN&&order.get(i)!=TYPE_HINT&&order.get(i)!=TYPE_CARD
-                    ) {
-                        if(enabled.get(order.get(i))&&!listRes.contains(order.get(i))) listRes.add(order.get(i));
+            listAdapter.notifyDataSetChanged();
+            if (swipeRefresh) refreshLayout.setRefreshing(false);
+            if (bannerResult != null && bannerResult.size() > 0) {
+                bannerItemList.clear();
+                for (BannerItem bi : bannerResult) {
+                    if (bi.getType() .equals("advertisement")) bannerItemList.add(bi);
+                    else if (bi.getType().equals("notification")) {
+                        if (!naviPagePreference.getBoolean("notifi_clicked:" + bi.getObjectId(), false)) {
+                            HashMap m = new HashMap();
+                            m.put("item", bi);
+                            listAdapter.addItem(TYPE_NOTIFICATION, 0, m);
+                        }
                     }
                 }
-                if(!order.contains(TYPE_HITA)) listRes.add(NaviPageAdapter.TYPE_HITA);
-            }else{
-                listRes.add(NaviPageAdapter.TYPE_MOOD);
-                listRes.add(NaviPageAdapter.TYPE_HITA);
-                listRes.add(NaviPageAdapter.TYPE_NEWS);
-                listRes.add(NaviPageAdapter.TYPE_BOARD_JW);
-            }
-            if(first_enter_drag_hint) listRes.add(0,NaviPageAdapter.TYPE_HINT);
-            if(animate)list.scheduleLayoutAnimation();
+                if (bannerResult.size() == 1) banner.setCanLoop(false);
+                else banner.setCanLoop(true);
+                banner.setPages(bannerItemList, new MZHolderCreator<BannerViewHolder>() {
+                    @Override
+                    public BannerViewHolder createViewHolder() {
+                        return new BannerViewHolder();
+                    }
+                });
+                if (bannerItemList.size() == 0) {
+                    banner.setVisibility(View.GONE);
+                } else {
+                    banner.setVisibility(View.VISIBLE);
+                    banner.start();
+                }
+            } else {
+                banner.setVisibility(View.GONE);    }
+
+            if (first_enter_drag_hint)
+                addType(listRes, TYPE_HINT, 0);//listRes.add(0,NaviPageAdapter.TYPE_HINT);
+            if (animate) list.scheduleLayoutAnimation();
         }
     }
 

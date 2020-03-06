@@ -17,7 +17,7 @@
             android:id="@+id/collapse"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:expandedTitleMarginStart="16dp"
+            app:expandedTitleMarginStart="24dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
@@ -43,32 +43,69 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:orientation="vertical"
             tools:context=".activities.ActivityDynamicTable">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
+                <Switch
+                    android:id="@+id/switch_class_notification"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_margin="16dp"
-                    android:gravity="center"
-                    android:text="@string/give_me_that_permission"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/class_assistant"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="center|start"
+                    android:text="@string/give_me_notification_permission"
                     android:textColor="?attr/text_color_secondary"
-                    android:textSize="15sp" />
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <Switch
                     android:id="@+id/switch_auto_mute"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
                     android:text="@string/mute_assistant"
                     android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="center|start"
+                    android:text="@string/give_me_that_permission"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="12sp" />
 
                 <net.cachapa.expandablelayout.ExpandableLayout
                     android:id="@+id/exand_mute"
@@ -85,6 +122,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
+                            android:layout_marginTop="8dp"
                             android:layout_marginRight="16dp"
                             android:orientation="horizontal">
 
@@ -213,7 +251,8 @@
                     android:gravity="center"
                     android:text="@string/preview_assistant_tag5"
                     android:textColor="?attr/text_color_secondary"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

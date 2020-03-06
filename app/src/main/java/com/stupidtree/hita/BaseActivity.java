@@ -109,6 +109,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         getTheme().resolveAttribute(R.attr.text_color_secondary, typedValue, true);
         return typedValue.data;
     }
+    public int getBGIconColor(){
+        TypedValue typedValue = new  TypedValue();
+        getTheme().resolveAttribute(R.attr.background_icon_color_bottom, typedValue, true);
+        return typedValue.data;
+    }
     public int getTextColorIconic(){
         TypedValue typedValue = new TypedValue();
         getTheme().resolveAttribute(R.attr.text_color_iconic, typedValue, true);

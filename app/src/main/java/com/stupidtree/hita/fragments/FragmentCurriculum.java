@@ -81,21 +81,24 @@ public class FragmentCurriculum extends BaseFragment {
     }
 
 
-    public static FragmentCurriculum newInstance(Curriculum curriculum) {
-        FragmentCurriculum fragment = new FragmentCurriculum();
-        Bundle args = new Bundle();
-        args.putSerializable("curriculum", curriculum);
-        fragment.setArguments(args);
-        return fragment;
+    public FragmentCurriculum(Curriculum curriculum){
+        this.curriculum = curriculum;
     }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            curriculum = (Curriculum) getArguments().getSerializable("curriculum");
-        }
-    }
+//    public static FragmentCurriculum newInstance() {
+//        FragmentCurriculum fragment = new FragmentCurriculum();
+//        Bundle args = new Bundle();
+//        args.putSerializable("curriculum", curriculum);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
+//
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (getArguments() != null) {
+//            curriculum = (Curriculum) getArguments().getSerializable("curriculum");
+//        }
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -191,7 +194,7 @@ public class FragmentCurriculum extends BaseFragment {
                         curriculum.setStartDate(date);
                         new saveCurriculumTask().executeOnExecutor(TPE);
                     }
-                }).setInitialValue(curriculum.getStart_year(), curriculum.getStart_month(), curriculum.getStart_day())
+                }).setInitialValue(curriculum.getStartDate())
                         .show();
             }
         });

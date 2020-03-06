@@ -335,7 +335,6 @@
         <item>Campus life</item>
         <item>Campus mood</item>
         <item>Student service</item>
-        <item>Campus card（displayed after connecting to UTSZ network）</item>
     </string-array>
 
     <string name="ade_exam_name">Exam name…</string>
@@ -547,7 +546,7 @@
     <string name="no_data_on_cloud">No data in the cloud!</string>
     <string name="curriculum_updated">Curriculum information updated</string>
     <string name="enter_name">enter name…</string>
-    <string name="give_me_that_permission">Please grant HITSZ Assistant relevant permissions</string>
+    <string name="give_me_that_permission">Please grant \'disturb\' permission</string>
     <string name="mute_assistant">Mute Assistant</string>
     <string name="mute_assistant_tag1"> </string>
     <string name="mute_assistant_tag2">before class enable mute</string>
@@ -683,6 +682,14 @@
     <string name="preference_tabs_basic">Basic</string>
     <string name="preference_tabs_appearance">Appearance</string>
     <string name="preference_tabs_others">Others</string>
+    <string name="settings_summary_timetable_animation">It may cause stuttering</string>
+    <string name="settings_title_timetable_animation">Enable card animation</string>
+    <string name="class_assistant">Notify before event starts</string>
+    <string name="give_me_notification_permission">Please grant APP notification permissions</string>
+    <string name="mute_on">Mute turned on</string>
+    <string name="HITSZ_study_assistant">HITSZ Learning Assistant</string>
+    <string name="event_notify_soon">Will start soon!</string>
+    <string name="mute_off">Mute turned off</string>
 
     <string-array name="preference_dark_mode">
         <item>Manual switch</item>

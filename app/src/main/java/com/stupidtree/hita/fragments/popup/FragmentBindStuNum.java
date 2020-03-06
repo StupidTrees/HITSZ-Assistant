@@ -22,7 +22,7 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.diy.ButtonLoading;
 import com.stupidtree.hita.jw.JWException;
-import com.stupidtree.hita.online.Bmob_User_Data;
+import com.stupidtree.hita.online.UserData;
 import com.stupidtree.hita.online.HITAUser;
 
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
@@ -189,16 +190,26 @@ public class FragmentBindStuNum extends BottomSheetDialogFragment {
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 if(userInfo!=null) getUserInfo(userInfo);
                                                 if(options[0]){
-                                                    BmobQuery<Bmob_User_Data> bq = new BmobQuery();
-                                                    bq.addWhereEqualTo("hitaUser",list.get(0).getObjectId());
-                                                    bq.findObjects(new FindListener<Bmob_User_Data>() {
+                                                    BmobQuery<UserData.UserDataCloud> bq = new BmobQuery();
+                                                    bq.addWhereEqualTo("user",list.get(0).getObjectId());
+                                                    bq.findObjects(new FindListener<UserData.UserDataCloud>() {
                                                         @Override
-                                                        public void done(List<Bmob_User_Data> list2, BmobException e) {
+                                                        public void done(List<UserData.UserDataCloud> list2, BmobException e) {
                                                             if(e==null&&list2!=null&&list2.size()>0){
                                                                 // Log.e("found!", String.valueOf(list2));
                                                                 // System.out.println(list2.get(0).getHitaUser());
-                                                                Bmob_User_Data bud = list2.get(0);
+                                                                UserData.UserDataCloud bud = list2.get(0);
                                                                 timeTableCore.loadDataFromCloud(bud);
+                                                                UserData.UserDataCloud newUD = bud.cloneWithNewUser(CurrentUser);
+                                                                newUD.setObjectId(bud.getObjectId());
+                                                                newUD.update(bud.getObjectId(),new UpdateListener() {
+                                                                    @Override
+                                                                    public void done(BmobException e) {
+                                                                        if(e!=null) e.printStackTrace();
+                                                                        Log.e("迁移账号数据","完成");
+                                                                    }
+                                                                });
+
                                                             }else{
                                                                 Log.e("error",e.toString());
                                                                 Toast.makeText(HContext, R.string.notif_migrate_data_failed,Toast.LENGTH_SHORT).show();

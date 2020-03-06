@@ -4,12 +4,19 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobRelation;
 
 public class BannerItem extends BmobObject {
-    String imageUri;
-    String title;
-    String subtitle;
-    String action;
+    private String imageUri;
+    private String title;
+    private String subtitle;
+    private String action;
+    private String type;
+    private BmobRelation clickUser;
+
+    BannerItem(){
+        clickUser = new BmobRelation();
+    }
 
     public String getImageUri() {
         return imageUri;
@@ -41,5 +48,17 @@ public class BannerItem extends BmobObject {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public BmobRelation getClickUser() {
+        return clickUser;
+    }
+
+    public void addClickUser(HITAUser user) {
+        clickUser.add(user);
+    }
+
+    public String getType() {
+        return type;
     }
 }

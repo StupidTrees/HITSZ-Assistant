@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.PopupMenu;
 
 import com.stupidtree.hita.BaseActivity;
@@ -61,13 +63,18 @@ public class TimeTableViewGroup extends ViewGroup{
         this.sectionHeight = root.getCardHeight();
         this.startTime = root.getStartTime();
         setClickable(true); //设置为可点击，否则onTouchEvent只返回DOWN
+        if(root.animEnabled()){
+            setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(
+                    getContext(), R.anim.recycler_animation_float_up), 0.06f));
+        }else{
+            setLayoutAnimation(null);
+        }
         if(timeTableCore.isThisTerm()&&week==timeTableCore.getThisWeekOfTerm()){
             View v = new View(getContext());
             v.setBackgroundColor(root.getTodayBGColor());
            // v.setAlpha(0.3f);
             addView(v);
         }
-
     }
 
     @Override
@@ -133,7 +140,6 @@ public class TimeTableViewGroup extends ViewGroup{
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int count = getChildCount();//获得子控件个数
         for (int i = 0; i < count; i++) {
-
             View child = getChildAt(i);
             if(child instanceof TimeTableBlockView ) {
                 TimeTableBlockView block = (TimeTableBlockView) child;

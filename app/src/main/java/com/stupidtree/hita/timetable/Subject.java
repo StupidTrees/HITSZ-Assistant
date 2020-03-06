@@ -41,13 +41,6 @@ public class Subject implements Comparable{
     private String totalCourses = "无数据";
     private String type = "无数据";
     private String curriculumCode;
-    private HITAUser hitaUser;
-
-    public void setHitaUser(HITAUser hitaUser) {
-        this.hitaUser = hitaUser;
-    }
-
-   
 
     public Subject(String curriculumCode, String name, String teacher) {
         ratingMap = new HashMap<>();
@@ -82,34 +75,34 @@ public class Subject implements Comparable{
         }
     }
 
-    public Subject(String x){
-        JsonObject jo = new JsonParser().parse(x).getAsJsonObject();
-        ratingMap = new HashMap<>();
-        Scores = new HashMap<>();
-        name = jo.get("name").getAsString();
-        type = jo.get("type").getAsString();
-        isMOOC = jo.get("is_mooc").getAsBoolean();
-        exam = jo.get("is_exam").getAsBoolean();
-        Default = jo.get("default").getAsBoolean();
-        xnxq = jo.get("xnxq").getAsString();
-        school = jo.get("school").getAsString();
-        credit = jo.get("credit").getAsString();
-        compulsory = jo.get("compulsory").getAsString();
-        totalCourses = jo.get("total_courses").getAsString();
-        code = jo.get("code")==null?null:jo.get("code").getAsString();
-        id = jo.get("id")==null?null:jo.get("id").getAsString();
-        curriculumCode = jo.get("curriculum_code").getAsString();
-        getScroesFromString(jo.get("scores").toString());
-        getRatesFromString(jo.get("rates").toString());
-        if(jo.get("color")!=null){
-            if(jo.get("color").getAsInt()!=-1){
-                defaultSP.edit().putInt("color:"+name,jo.get("color").getAsInt()).apply();
-            }else{
-                defaultSP.edit().putInt("color:"+name, ColorBox.getRandomColor_Material()).apply();
-            }
-        }
-
-    }
+//    public Subject(String x){
+//        JsonObject jo = new JsonParser().parse(x).getAsJsonObject();
+//        ratingMap = new HashMap<>();
+//        Scores = new HashMap<>();
+//        name = jo.get("name").getAsString();
+//        type = jo.get("type").getAsString();
+//        isMOOC = jo.get("is_mooc").getAsBoolean();
+//        exam = jo.get("is_exam").getAsBoolean();
+//        Default = jo.get("default").getAsBoolean();
+//        xnxq = jo.get("xnxq").getAsString();
+//        school = jo.get("school").getAsString();
+//        credit = jo.get("credit").getAsString();
+//        compulsory = jo.get("compulsory").getAsString();
+//        totalCourses = jo.get("total_courses").getAsString();
+//        code = jo.get("code")==null?null:jo.get("code").getAsString();
+//        id = jo.get("id")==null?null:jo.get("id").getAsString();
+//        curriculumCode = jo.get("curriculum_code").getAsString();
+//        getScroesFromString(jo.get("scores").toString());
+//        getRatesFromString(jo.get("rates").toString());
+//        if(jo.get("color")!=null){
+//            if(jo.get("color").getAsInt()!=-1){
+//                defaultSP.edit().putInt("color:"+name,jo.get("color").getAsInt()).apply();
+//            }else{
+//                defaultSP.edit().putInt("color:"+name, ColorBox.getRandomColor_Material()).apply();
+//            }
+//        }
+//
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -121,26 +114,27 @@ public class Subject implements Comparable{
 
     @Override
     public String toString() {
-        JsonObject jo = new JsonObject();
-        jo.addProperty("name", name);
-        jo.addProperty("type",type);
-        jo.addProperty("is_mooc",isMOOC);
-        jo.addProperty("is_exam", exam);
-        jo.addProperty("default" ,Default);
-        jo.addProperty("xnxq",xnxq);
-        jo.addProperty("school",school);
-        jo.addProperty("credit", credit);
-        jo.addProperty("compulsory",compulsory);
-        jo.addProperty("total_courses",totalCourses);
-        jo.addProperty("code", code);
-        jo.addProperty("curriculum_code",curriculumCode);
-        jo.addProperty("id",id);
         Gson gson = new Gson();
+        JsonObject jo = gson.toJsonTree(this,Subject.class).getAsJsonObject();
+//        JsonObject jo = new JsonObject();
+//        jo.addProperty("name", name);
+//        jo.addProperty("type",type);
+//        jo.addProperty("is_mooc",isMOOC);
+//        jo.addProperty("is_exam", exam);
+//        jo.addProperty("default" ,Default);
+//        jo.addProperty("xnxq",xnxq);
+//        jo.addProperty("school",school);
+//        jo.addProperty("credit", credit);
+//        jo.addProperty("compulsory",compulsory);
+//        jo.addProperty("total_courses",totalCourses);
+//        jo.addProperty("code", code);
+//        jo.addProperty("curriculum_code",curriculumCode);
+//        jo.addProperty("id",id);
+//        Gson gson = new Gson();
         jo.add("scores",gson.toJsonTree(Scores));
         jo.add("rates",gson.toJsonTree(ratingMap));
         jo.addProperty("color",defaultSP.getInt("color:"+name,-1));
-        //return name+"##"+type+"##"+isMOOC+"##"+exam+"##"+Default+"##"+xnxq+"##"+school+"##"+ credit +"##"+ compulsory +"##"+totalCourses+"##"+code+"##"+curriculumCode+"##"+scoresToString()+"##"+ratesToString();
-        return jo.toString();
+       return jo.toString();
     }
 
     @Override
@@ -432,9 +426,6 @@ public class Subject implements Comparable{
     }
 
 
-    public HITAUser getHitaUser() {
-        return hitaUser;
-    }
 
     @Override
     public int compareTo(Object o) {

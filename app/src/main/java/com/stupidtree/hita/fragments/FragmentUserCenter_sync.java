@@ -101,7 +101,7 @@ public class FragmentUserCenter_sync extends BaseFragment {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            return timeTableCore.saveDataToCloud(true);
+            return timeTableCore.saveDataToCloud();
         }
 
         @Override

@@ -47,6 +47,10 @@ public class PickSimpleDateDialog extends AlertDialog{
         return this;
     }
 
+    public PickSimpleDateDialog setInitialValue(Calendar date){
+        this.date.setTimeInMillis(date.getTimeInMillis());
+        return this;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

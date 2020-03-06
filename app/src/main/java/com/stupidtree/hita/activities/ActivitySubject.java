@@ -197,7 +197,7 @@ public class ActivitySubject extends BaseActivity {
     }
 
     void setInfos() {
-        Log.e("id",subject.getId());
+//        Log.e("id",subject.getId());
         name.setText(subject.getName());
         attr.setText(subject.getCompulsory());
         point.setText(subject.getCredit());
@@ -429,6 +429,8 @@ public class ActivitySubject extends BaseActivity {
                     jw_detail_entrance.setVisibility(View.VISIBLE);
                 }
 
+            }else{
+                finish();
             }
         }
     }

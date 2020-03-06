@@ -178,30 +178,26 @@ public class FileOperator {
 
 
 
-    public static CurriculumCreator loadCurriculumHelper(String curriculumCode, String name, int sY, int sM, int sD, List<Map<String,String>> data){
-        CurriculumCreator cl = new CurriculumCreator(curriculumCode, sY, sM, sD, name);
-        cl.setCurriculumText( new Gson().toJson(data));
-        for (Map<String, String> map : data) {
-//            int dow = TextTools.isNumber(map.get("dow"));
-            cl.CoursesGeneraor(Integer.parseInt(map.get("dow")), map.get("name"), map.get("teacher"), map.get("classroom"),Integer.parseInt(map.get("begin")), Integer.parseInt(map.get("last")), map.get("weeks").split(","));
-        }
-        return cl;
-    }
-
-    public static CurriculumCreator loadCurriculumHelperFromCurriculumText(Curriculum ci_bmob) {
-        CurriculumCreator cl = new CurriculumCreator(ci_bmob.getCurriculumCode(), ci_bmob.getStart_year(), ci_bmob.getStart_month(), ci_bmob.getStart_day(), ci_bmob.getName());
-        try {
-             List<Map<String,String>> data = new Gson().fromJson(ci_bmob.getCurriculumText(),List.class);
-            for (Map<String, String> map : data) {
-                cl.CoursesGeneraor(Integer.parseInt(map.get("dow")), map.get("name"), map.get("teacher"), map.get("classroom"),Integer.parseInt(map.get("begin")), Integer.parseInt(map.get("last")), map.get("weeks").split(","));
-            }
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        return cl;
-    }
+//    public static CurriculumCreator loadCurriculumHelper(String curriculumCode, String name, int sY, int sM, int sD, List<Map<String,String>> data){
+//        CurriculumCreator cl = new CurriculumCreator(curriculumCode, sY, sM, sD, name);
+//        cl.setCurriculumText( new Gson().toJson(data));
+//
+//        return cl;
+//    }
+//
+//    public static CurriculumCreator loadCurriculumHelperFromCurriculumText(Curriculum ci_bmob) {
+//        CurriculumCreator cl = new CurriculumCreator(ci_bmob.getCurriculumCode(), ci_bmob.getStart_year(), ci_bmob.getStart_month(), ci_bmob.getStart_day(), ci_bmob.getName());
+//        try {
+//               for (Map<String, String> map : data) {
+//                cl.CoursesGeneraor(Integer.parseInt(map.get("dow")), map.get("name"), map.get("teacher"), map.get("classroom"),Integer.parseInt(map.get("begin")), Integer.parseInt(map.get("last")), map.get("weeks").split(","));
+//            }
+//        } catch (JsonSyntaxException e) {
+//            e.printStackTrace();
+//        } catch (NumberFormatException e) {
+//            e.printStackTrace();
+//        }
+//        return cl;
+//    }
 
 
     public static boolean copyNotePhotosToFile(List<String> oldFile, File location, String curriculumName, String dateName, String number) {
@@ -552,123 +548,8 @@ public class FileOperator {
 //
 //    }
 
-    /*函数功能:从课表文字的时间部分中，抽取出周数的奥妙（返回这门课所有周的列表）
-     * 参数1：割出的时间文字*/
-    private static List<Integer> analyseTimeText(String text) {
-        List<Integer> result = new ArrayList<>();
-        String[] timeBlock = text.split("周，");
-        for (String x : timeBlock) {
-            if (x.contains("，")) {
-                if (x.contains("-")) {
-                    String[] singleBlocks = x.substring(x.indexOf("[") + 1, x.lastIndexOf("]")).split("，");
-                    for (String singleblock : singleBlocks) {
-                        if (singleblock.contains("-")) {
-
-                            if (singleblock.contains("单") || x.substring(x.lastIndexOf("]")).contains("单")) {
-                                singleblock = deleteCharString0(singleblock, '单');
-                                String[] fromTo = singleblock.split("-");
-                                int from = Integer.parseInt(fromTo[0]);
-                                int to = Integer.parseInt(fromTo[1]);
-                                for (int i = from; i <= to; i++) {
-                                    if (i % 2 != 0) result.add(i);
-                                }
-                            } else if (x.contains("双") || x.substring(x.lastIndexOf("]")).contains("双")) {
-                                singleblock = deleteCharString0(singleblock, '双');
-                                String[] fromTo = singleblock.split("-");
-                                int from = Integer.parseInt(fromTo[0]);
-                                int to = Integer.parseInt(fromTo[1]);
-                                for (int i = from; i <= to; i++) {
-                                    if (i % 2 == 0) result.add(i);
-                                }
-                            } else {
-                                String[] fromTo = singleblock.split("-");
-                                int from = Integer.parseInt(fromTo[0]);
-                                int to = Integer.parseInt(fromTo[1]);
-                                for (int i = from; i <= to; i++) {
-                                    result.add(i);
-                                }
-                            }
 
 
-                        } else {
-                            String[] singles = singleblock.split(",");
-                            for (String single : singles) {
-                                int temp = Integer.parseInt(single);
-                                result.add(temp);
-                            }
-                        }
-                    }
-
-                } else {
-                    String[] singles = x.substring(x.indexOf("[") + 1, x.lastIndexOf("]")).split("，");
-                    for (String s : singles) {
-                        int temp = Integer.parseInt(s);
-                        result.add(temp);
-                    }
-                }
-
-            } else {
-                if (x.contains("单")) {
-                    x = deleteCharString0(x, '单');
-                    String[] fromTo = x.substring(x.indexOf("[") + 1, x.lastIndexOf("]")).split("-");
-                    int from = Integer.parseInt(fromTo[0]);
-                    int to = Integer.parseInt(fromTo[1]);
-                    for (int i = from; i <= to; i++) {
-                        if (i % 2 != 0) result.add(i);
-                    }
-                } else if (x.contains("双")) {
-                    x = deleteCharString0(x, '双');
-                    String[] fromTo = x.substring(x.indexOf("[") + 1, x.lastIndexOf("]")).split("-");
-                    int from = Integer.parseInt(fromTo[0]);
-                    int to = Integer.parseInt(fromTo[1]);
-                    for (int i = from; i <= to; i++) {
-                        if (i % 2 == 0) result.add(i);
-                    }
-                } else {
-                    List<String> fromTo = Arrays.asList(x.substring(x.indexOf("[") + 1, x.lastIndexOf("]")).split("-"));
-                    if (fromTo.size() >= 2) {
-                        int from = Integer.parseInt(fromTo.get(0));
-                        int to = Integer.parseInt(fromTo.get(1));
-                        for (int i = from; i <= to; i++) {
-                            result.add(i);
-                        }
-                    } else {
-                        result.add(Integer.parseInt(fromTo.get(0)));
-                    }
-
-
-                }
-            }
-        }
-
-        return result;
-
-    }
-
-
-    private static String deleteCharString0(String sourceString, char chElemData) {
-        String deleteString = "";
-        for (int i = 0; i < sourceString.length(); i++) {
-            if (sourceString.charAt(i) != chElemData) {
-                deleteString += sourceString.charAt(i);
-            }
-        }
-        return deleteString;
-    }
-
-
-    /**
-     * 检查扩展名，得到图片格式的文件
-     */
-    private static boolean checkIsImageFile(String fName) {
-        boolean isImageFile = false;
-        // 获取扩展名
-        String FileEnd = fName.substring(fName.lastIndexOf(".") + 1
-        ).toLowerCase();
-        isImageFile = FileEnd.equals("jpg") || FileEnd.equals("png") || FileEnd.equals("gif")
-                || FileEnd.equals("jpeg") || FileEnd.equals("bmp");
-        return isImageFile;
-    }
 
     private static boolean copyFile(String oldPath$Name, String newPath$Name) {
         try {
@@ -694,142 +575,6 @@ public class FileOperator {
 
     }
 
-    static int countStrNum(String text, String str) {
-        String without = text.replaceAll(str, "");
-        return ((text.length() - without.length()) / str.length());
-    }
-
-    /**
-     * 根据URI获取文件真实路径（兼容多张机型）
-     * @param context
-     * @param uri
-     * @return
-     */
-    public static String getFilePathByUri(Context context, Uri uri) {
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
-
-            int sdkVersion = Build.VERSION.SDK_INT;
-            if (sdkVersion >= 19) { // api >= 19
-                return getRealPathFromUriAboveApi19(context, uri);
-            } else { // api < 19
-                return getRealPathFromUriBelowAPI19(context, uri);
-            }
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-        return null;
-    }
-
-    /**
-     * 适配api19及以上,根据uri获取图片的绝对路径
-     *
-     * @param context 上下文对象
-     * @param uri     图片的Uri
-     * @return 如果Uri对应的图片存在, 那么返回该图片的绝对路径, 否则返回null
-     */
-    @SuppressLint("NewApi")
-    private static String getRealPathFromUriAboveApi19(Context context, Uri uri) {
-        String filePath = null;
-        if (DocumentsContract.isDocumentUri(context, uri)) {
-            // 如果是document类型的 uri, 则通过document id来进行处理
-            String documentId = DocumentsContract.getDocumentId(uri);
-            if (isMediaDocument(uri)) { // MediaProvider
-                // 使用':'分割
-                String type = documentId.split(":")[0];
-                String id = documentId.split(":")[1];
-
-                String selection = MediaStore.Images.Media._ID + "=?";
-                String[] selectionArgs = {id};
-
-                //
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                filePath = getDataColumn(context, contentUri, selection, selectionArgs);
-            } else if (isDownloadsDocument(uri)) { // DownloadsProvider
-                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(documentId));
-                filePath = getDataColumn(context, contentUri, null, null);
-            }else if (isExternalStorageDocument(uri)) {
-                // ExternalStorageProvider
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-                if ("primary".equalsIgnoreCase(type)) {
-                    filePath = Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-            }else {
-                //Log.e("路径错误");
-            }
-        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            // 如果是 content 类型的 Uri
-            filePath = getDataColumn(context, uri, null, null);
-        } else if ("file".equals(uri.getScheme())) {
-            // 如果是 file 类型的 Uri,直接获取图片对应的路径
-            filePath = uri.getPath();
-        }
-        return filePath;
-    }
-
-    /**
-     * 适配api19以下(不包括api19),根据uri获取图片的绝对路径
-     *
-     * @param context 上下文对象
-     * @param uri     图片的Uri
-     * @return 如果Uri对应的图片存在, 那么返回该图片的绝对路径, 否则返回null
-     */
-    private static String getRealPathFromUriBelowAPI19(Context context, Uri uri) {
-        return getDataColumn(context, uri, null, null);
-    }
-
-    /**
-     * 获取数据库表中的 _data 列，即返回Uri对应的文件路径
-     *
-     * @return
-     */
-    private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
-        String path = null;
-
-        String[] projection = new String[]{MediaStore.Images.Media.DATA};
-        Cursor cursor = null;
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int columnIndex = cursor.getColumnIndexOrThrow(projection[0]);
-                path = cursor.getString(columnIndex);
-            }
-        } catch (Exception e) {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return path;
-    }
-
-    /**
-     * @param uri the Uri to check
-     * @return Whether the Uri authority is MediaProvider
-     */
-    private static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    private static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri the Uri to check
-     * @return Whether the Uri authority is DownloadsProvider
-     */
-    private static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
 
 
 }

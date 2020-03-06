@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.WorkerThread;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.stupidtree.hita.timetable.timetable.EventItem;
@@ -21,21 +22,16 @@ import cn.bmob.v3.BmobObject;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
 
 /*课表类*/
-public class Curriculum extends BmobObject {
-    private int start_year;
-    private int start_month;
-    private int start_day;
+public class Curriculum{
+    private Calendar startDate;
     private int totalWeeks; //最大周数
     private String name; //课表名称
     private String curriculumCode;
     private String curriculumText;
-    private String subjectsText;
 
-    public Curriculum(int sY, int sM, int sD, String name) {
+    public Curriculum(Calendar c, String name) {
         this.name = name;
-        int y, m, d;
-        Calendar c = Calendar.getInstance();
-        c.set(sY, sM - 1, sD);
+        startDate = Calendar.getInstance();
         switch (c.get(Calendar.DAY_OF_WEEK)) {
             case 1:
                 c.add(Calendar.DATE, -6);
@@ -58,35 +54,19 @@ public class Curriculum extends BmobObject {
                 c.add(Calendar.DATE, -5);
                 break;
         }
-        y = c.get(Calendar.YEAR);
-        m = c.get(Calendar.MONTH) + 1;
-        d = c.get(Calendar.DAY_OF_MONTH);
         totalWeeks = 0;
-        start_year = y;
-        start_month = m;
-        start_day = d;
+        startDate.setTimeInMillis(c.getTimeInMillis());
     }
-    public Curriculum(String CurriculumString) {
-//        String[] txts = CurriculumString.split("@@",-1);//-1表示支持空串
-//        start_year = Integer.parseInt(txts[0]);
-//        start_month = Integer.parseInt(txts[1]);
-//        start_day = Integer.parseInt(txts[2]);
-//        name =txts[4];
-//        curriculumCode = txts[5];
-//        curriculumText = txts[6];
-//        subjectsText = txts[7];
-//        totalWeeks = Integer.parseInt(txts[3]);
-
-        JsonObject jo= new JsonParser().parse(CurriculumString).getAsJsonObject();
-        start_year = jo.get("start_year").getAsInt();
-        start_month = jo.get("start_month").getAsInt();
-        start_day = jo.get("start_day").getAsInt();
-        totalWeeks = jo.get("total_week").getAsInt();
-        name = jo.get("name").getAsString();
-        curriculumCode = jo.get("curriculum_code").getAsString();
-        curriculumText  = jo.get("curriculum_text").getAsString();
-        subjectsText = jo.get("subjects").toString();
-    }
+//    public Curriculum(String CurriculumString) {
+//        JsonObject jo= new JsonParser().parse(CurriculumString).getAsJsonObject();
+//        startDate = Calendar.getInstance();
+//        startDate.set(jo.get("start_year").getAsInt(),jo.get("start_month").getAsInt()-1,jo.get("start_day").getAsInt());
+//        totalWeeks = jo.get("total_week").getAsInt();
+//        name = jo.get("name").getAsString();
+//        curriculumCode = jo.get("curriculum_code").getAsString();
+//        curriculumText  = jo.get("curriculum_text").getAsString();
+//       // subjectsText = jo.get("subjects").toString();
+//    }
     public Curriculum(Cursor cur) {
         int sY = cur.getInt(cur.getColumnIndex("start_year"));
         int sM = cur.getInt(cur.getColumnIndex("start_month"));
@@ -120,12 +100,7 @@ public class Curriculum extends BmobObject {
                 c.add(Calendar.DATE, -5);
                 break;
         }
-        y = c.get(Calendar.YEAR);
-        m = c.get(Calendar.MONTH) + 1;
-        d = c.get(Calendar.DAY_OF_MONTH);
-        start_day = d;
-        start_month = m;
-        start_year = y;
+        startDate = c;
     }
     public void setCurriculumCode(String code){
         curriculumCode = code;
@@ -323,13 +298,11 @@ public class Curriculum extends BmobObject {
         return res;
     }
     public int getWeekOfTerm(Calendar c) {
-        Calendar start = Calendar.getInstance();
-        start.set(start_year, start_month - 1, start_day, 0, 0, 0);
-        HDate temp = new HDate(c);
-        if (temp.compareTo(new HDate(start_year,start_month,start_day)) < 0 ) {
+         HDate temp = new HDate(c);
+        if (temp.compareTo(new HDate(startDate)) < 0 ) {
             return -1;
         }else {
-            double tempDay = (c.getTimeInMillis() - start.getTimeInMillis()) / (1000 * 3600 * 24);
+            double tempDay = (c.getTimeInMillis() - startDate.getTimeInMillis()) / (1000 * 3600 * 24);
             return (int) (tempDay / 7) + 1;
 
         }
@@ -341,7 +314,7 @@ public class Curriculum extends BmobObject {
         if(WeekOfTerm>totalWeeks) WeekOfTerm = totalWeeks;
         Calendar temp = Calendar.getInstance();
         int daysToPlus = (WeekOfTerm - 1) * 7;
-        temp.set(start_year, start_month - 1, start_day);
+        temp.setTimeInMillis(startDate.getTimeInMillis());
         temp.add(Calendar.DATE, daysToPlus);
         return temp;
     }
@@ -349,7 +322,7 @@ public class Curriculum extends BmobObject {
     public Calendar getDateAtWOT(int WeekOfTerm, int DOW) {
         Calendar temp = Calendar.getInstance();
         int daysToPlus = (WeekOfTerm - 1) * 7;
-        temp.set(start_year, start_month - 1,start_day);
+        temp.setTimeInMillis(startDate.getTimeInMillis());
         temp.add(Calendar.DATE, daysToPlus);
         temp.add(Calendar.DAY_OF_MONTH, DOW - 1);
         return temp;
@@ -357,7 +330,7 @@ public class Curriculum extends BmobObject {
     public Calendar getDateAt(int WeekOfTerm, int DOW, HTime time) {
         Calendar temp = Calendar.getInstance();
         int daysToPlus = (WeekOfTerm - 1) * 7;
-        temp.set(start_year, start_month - 1,start_day);
+        temp.setTimeInMillis(startDate.getTimeInMillis());
         temp.add(Calendar.DATE, daysToPlus);
         temp.add(Calendar.DAY_OF_MONTH, DOW - 1);
         temp.set(Calendar.HOUR_OF_DAY,time.hour);
@@ -367,12 +340,15 @@ public class Curriculum extends BmobObject {
 
     /*函数功能：判断某年某月某日是否在这个课表的时间范围内*/
     public boolean Within(int year, int month, int day) {
-        if (new HDate(year, month, day).compareTo(this.new HDate(start_year,start_month,start_day)) < 0) return false;
+        if (new HDate(year, month, day).compareTo(this.new HDate(startDate)) < 0) return false;
         return new HDate(year, month, day).weekOfTerm <= this.totalWeeks;
     }
 
     public String readStartDate(){
-        return start_year+"-"+start_month+"-"+start_day;
+        int y = startDate.get(Calendar.YEAR);
+        int m = startDate.get(Calendar.MONTH)+1;
+        int d = startDate.get(Calendar.DAY_OF_MONTH);
+        return y+"-"+m+"-"+d;
     }
 
 
@@ -388,9 +364,8 @@ public class Curriculum extends BmobObject {
         HDate(int year, int month, int dOM) {
             Calendar c = Calendar.getInstance();
             c.set(year, month - 1, dOM);
-            Calendar start = Calendar.getInstance();
-            start.set(start_year, start_month - 1, start_day);
-            long tempDay = (c.getTimeInMillis() - start.getTimeInMillis()) / (1000 * 3600 * 24);
+
+            long tempDay = (c.getTimeInMillis() - startDate.getTimeInMillis()) / (1000 * 3600 * 24);
             weekOfTerm = (int) (tempDay / 7) + 1;
             this.year = year;
             this.month = month;
@@ -401,13 +376,11 @@ public class Curriculum extends BmobObject {
         }
 
         HDate(Calendar c) {
-            Calendar start = Calendar.getInstance();
-            start.set(start_year, start_month - 1, start_day);
             year = c.get(Calendar.YEAR);
             month = c.get(Calendar.MONTH) + 1;
             dayOfWeek = c.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : c.get(Calendar.DAY_OF_WEEK) - 1;
             dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-            long tempDay = (c.getTimeInMillis() - start.getTimeInMillis()) / (1000 * 3600 * 24);
+            long tempDay = (c.getTimeInMillis() - startDate.getTimeInMillis()) / (1000 * 3600 * 24);
             weekOfTerm = (int) (tempDay / 7) + 1;
         }
 
@@ -455,68 +428,55 @@ public class Curriculum extends BmobObject {
     }
     public ContentValues getContentValues(){
         ContentValues cv = new ContentValues();
+        int y = startDate.get(Calendar.YEAR);
+        int m = startDate.get(Calendar.MONTH)+1;
+        int d = startDate.get(Calendar.DAY_OF_MONTH);
         cv.put("name",name);
         cv.put("curriculum_code",curriculumCode);
-        cv.put("start_year",start_year);
-        cv.put("start_month",start_month);
-        cv.put("start_day",start_day);
+        cv.put("start_year",y);
+        cv.put("start_month",m);
+        cv.put("start_day",d);
         cv.put("total_weeks",totalWeeks);
         cv.put("curriculum_text",curriculumText==null?"{}":curriculumText);
         return cv;
     }
 
-    public void setSubjectsText() {
-       // StringBuilder sb = new StringBuilder();
-        List<Subject> l = getSubjects();
-//        for(int i=0;i<l.size();i++){
-//            String rex = (i==l.size()-1)?"":"///";
-//            sb.append(l.get(i).toString()).append(rex); //不可以用+=拼接！！！
+//    public void setSubjectsText() {
+//        subjectList = new ArrayList<>();
+//        subjectList.addAll(getSubjects());
+//       // StringBuilder sb = new StringBuilder();
+////        List<Subject> l = getSubjects();
+//////        for(int i=0;i<l.size();i++){
+//////            String rex = (i==l.size()-1)?"":"///";
+//////            sb.append(l.get(i).toString()).append(rex); //不可以用+=拼接！！！
+//////        }
+////        JsonObject jo = new JsonObject();
+////        JsonParser jp = new JsonParser();
+////        for(Subject s:l){
+////            jo.add(s.getName(),jp.parse(s.toString()));
+////            //jo.addProperty(s.name,s.toString());
+////        }
+////        subjectsText = jo.toString();
+//    }
+//    public ArrayList<Subject> getSubjectsFromString(){
+//        ArrayList<Subject> res = new ArrayList<>();
+//        JsonObject jo = new JsonParser().parse(subjectsText).getAsJsonObject();
+//        for(Map.Entry e :jo.entrySet()){
+//            res.add(new Subject(e.getValue().toString()));
 //        }
-        JsonObject jo = new JsonObject();
-        JsonParser jp = new JsonParser();
-        for(Subject s:l){
-            jo.add(s.getName(),jp.parse(s.toString()));
-            //jo.addProperty(s.name,s.toString());
-        }
-        subjectsText = jo.toString();
-    }
-    public ArrayList<Subject> getSubjectsFromString(){
-        ArrayList<Subject> res = new ArrayList<>();
-        JsonObject jo = new JsonParser().parse(subjectsText).getAsJsonObject();
-        for(Map.Entry e :jo.entrySet()){
-            res.add(new Subject(e.getValue().toString()));
-        }
-        return res;
-    }
+//        return res;
+//    }
 
-    public int getStart_year() {
-        return start_year;
-    }
+   public Calendar getStartDate(){
+        return startDate;
+   }
 
-    public void setStart_year(int start_year) {
-        this.start_year = start_year;
-    }
     public void setStartDate(Calendar date){
-        start_year = date.get(Calendar.YEAR);
-        start_day = date.get(Calendar.DAY_OF_MONTH);
-        start_month = date.get(Calendar.MONTH)+1;
+        startDate.setTimeInMillis(date.getTimeInMillis());
     }
 
-    public int getStart_month() {
-        return start_month;
-    }
 
-    public void setStart_month(int start_month) {
-        this.start_month = start_month;
-    }
 
-    public int getStart_day() {
-        return start_day;
-    }
-
-    public void setStart_day(int start_day) {
-        this.start_day = start_day;
-    }
 
     public int getTotalWeeks() {
         return totalWeeks;
@@ -546,13 +506,6 @@ public class Curriculum extends BmobObject {
         this.curriculumText = curriculumText;
     }
 
-    public String getSubjectsText() {
-        return subjectsText;
-    }
-
-    public void setSubjectsText(String subjectsText) {
-        this.subjectsText = subjectsText;
-    }
 
     @WorkerThread
     public void saveToDB(){
@@ -563,17 +516,22 @@ public class Curriculum extends BmobObject {
     }
     @Override
     public String toString() {
-        JsonObject jo = new JsonObject();
-        JsonParser jp = new JsonParser();
-        jo.addProperty("start_year",start_year);
-        jo.addProperty("start_month",start_month);
-        jo.addProperty("start_day",start_day);
-        jo.addProperty("total_week",totalWeeks);
-        jo.addProperty("name",name);
-        jo.addProperty("curriculum_code",curriculumCode);
-        jo.addProperty("curriculum_text",curriculumText);
-        jo.add("subjects",jp.parse(subjectsText));
-        return jo.toString();
+        Gson gson = new Gson();
+        return  gson.toJson(this);
+//        JsonObject jo = new JsonObject();
+//        JsonParser jp = new JsonParser();
+//        int y = startDate.get(Calendar.YEAR);
+//        int m = startDate.get(Calendar.MONTH)+1;
+//        int d = startDate.get(Calendar.DAY_OF_MONTH);
+//        jo.addProperty("start_year",y);
+//        jo.addProperty("start_month",m);
+//        jo.addProperty("start_day",d);
+//        jo.addProperty("total_week",totalWeeks);
+//        jo.addProperty("name",name);
+//        jo.addProperty("curriculum_code",curriculumCode);
+//        jo.addProperty("curriculum_text",curriculumText);
+//        jo.add("subjects",jp.parse(subjectsText));
+//        return jo.toString();
        // return  start_year+"@@"+start_month+"@@"+start_day+"@@"+totalWeeks+"@@"+name+"@@"+curriculumCode+"@@"+curriculumText+"@@"+subjectsText;
     }
 }

@@ -3,6 +3,8 @@ package com.stupidtree.hita.timetable.timetable;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,17 +12,17 @@ import java.util.UUID;
 
 public class EventItemHolder  {
     public int DOW;
-    public HTime startTime = null;
-    public HTime endTime = null;
-    public int eventType = 0;
-    public String mainName = null;//名称
-    public String tag2 = null;     //地点
-    public String tag3 = null;     //教师（Exam为null）
-    public String tag4 = null;     //Exam为具体时间，Course为课程节数
-    public ArrayList<Integer> weeks = null;
+    public HTime startTime;
+    public HTime endTime;
+    public int eventType;
+    public String mainName;//名称
+    public String tag2;     //地点
+    public String tag3;     //教师（Exam为null）
+    public String tag4;     //Exam为具体时间，Course为课程节数
+    public ArrayList<Integer> weeks;
     public boolean isWholeDay;
-    String curriculumCode;
-    String uuid;
+    private String curriculumCode;
+    private String uuid;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,7 +55,9 @@ public class EventItemHolder  {
 
     @Override
     public String toString() {
-        return mainName+","+startTime.toString()+"-"+endTime.toString();
+        Gson gson = new Gson();
+        return gson.toJson(this);
+        //return mainName+","+startTime.toString()+"-"+endTime.toString();
     }
     public EventItemHolder(Cursor c) {
         String curriculumCode = c.getString(c.getColumnIndex("curriculum_code"));
@@ -75,6 +79,7 @@ public class EventItemHolder  {
         }
         eventType = type;
         this.startTime = start;
+        endTime = null;
         this.endTime = end;
         mainName = eventName;
         this.tag2 = tag2;
@@ -87,6 +92,7 @@ public class EventItemHolder  {
     public EventItemHolder(String curriculumCode,int type, String eventName, String tag2, String tag3, String tag4, HTime start, HTime end, int DOW,boolean isWholeDay) {
         eventType = type;
         this.startTime = start;
+        endTime = null;
         this.endTime = end;
         mainName = eventName;
         this.tag2 = tag2;
@@ -101,6 +107,7 @@ public class EventItemHolder  {
     public EventItemHolder(String curriculumCode,int type, String eventName, String tag2, String tag3, String tag4, HTime start, HTime end, int DOW, ArrayList<Integer> weeks,boolean isWholeDay) {
         eventType = type;
         this.startTime = start;
+        endTime = null;
         this.endTime = end;
         mainName = eventName;
         this.tag2 = tag2;
@@ -115,6 +122,7 @@ public class EventItemHolder  {
     public EventItemHolder(EventItem ei) {
         eventType = ei.eventType;
         this.startTime = ei.startTime;
+        endTime = null;
         this.endTime = ei.endTime;
         mainName = ei.mainName;
         this.tag2 = ei.tag2;

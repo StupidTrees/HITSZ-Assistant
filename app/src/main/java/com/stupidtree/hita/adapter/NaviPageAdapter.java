@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -27,6 +28,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -41,6 +44,7 @@ import com.stupidtree.hita.activities.ActivityLostAndFound;
 import com.stupidtree.hita.activities.ActivityLeaderBoard;
 import com.stupidtree.hita.activities.ActivityUTMood;
 import com.stupidtree.hita.activities.ActivitySchoolCalendar;
+import com.stupidtree.hita.online.BannerItem;
 import com.stupidtree.hita.online.Infos;
 import com.stupidtree.hita.util.ActivityUtils;
 
@@ -60,30 +64,35 @@ import java.util.List;
 import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.fragments.main.FragmentNavi.ORDER_NAME;
+import static com.stupidtree.hita.fragments.main.FragmentNavi.cardNames;
+import static com.stupidtree.hita.fragments.main.FragmentNavi.cardTyps;
 
 public class NaviPageAdapter extends RecyclerView.Adapter {
-    List<Integer> mBeans;
+    List<Map<String, Object>> mBeans;
     private LayoutInflater inflater;
     Context mContext;
-    public static final int TYPE_BANNER = 66;
-    public static final int TYPE_BOARD_JW = 331;
-    public static final int TYPE_BOARD_SERVICE = 691;
-    public static final int TYPE_NEWS = 724;
-    public static final int TYPE_HINT = 910;
-    public static final int TYPE_JWTS_FUN = 265;
-    public static final int TYPE_HITA = 590;
-    public static final int TYPE_CARD = 905;
-    public static final int TYPE_MOOD = 0;
-    public static final int TYPE_UT_MOOD = 756;
+    SharedPreferences naviSP;
+    public static final int TYPE_BANNER = 1;
+    public static final int TYPE_BOARD_JW = 2;
+    public static final int TYPE_BOARD_SERVICE = 3;
+    public static final int TYPE_NEWS = 4;
+    public static final int TYPE_HINT = 5;
+    public static final int TYPE_JWTS_FUN = 6;
+    public static final int TYPE_HITA = 7;
+    public static final int TYPE_CARD = 8;
+    public static final int TYPE_MOOD = 9;
+    public static final int TYPE_NOTIFICATION = 10;
+    public static final int TYPE_UT_MOOD = 11;
 
-    public NaviPageAdapter(List<Integer> res, Context c) {
+    public NaviPageAdapter(List<Map<String, Object>> res, Context c, SharedPreferences sp) {
+        this.naviSP = sp;
         mBeans = res;
         mContext = c;
         inflater = LayoutInflater.from(c);
@@ -102,14 +111,18 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
 //        }
         else if (viewType == TYPE_HINT) {
             return new ViewHolder_Hint(inflater.inflate(R.layout.dynamic_navipage_hint, parent, false));
+        } else if (viewType == TYPE_NOTIFICATION) {
+            return new ViewHolder_Notification(inflater.inflate(R.layout.dynamic_navipage_notification, parent, false));
         } else if (viewType == TYPE_HITA) {
             return new ViewHolder_Hita(inflater.inflate(R.layout.dynamic_navipage_hita, parent, false));
-        }else if (viewType == TYPE_CARD) {
-            return new ViewHolder_Card(inflater.inflate(R.layout.dynamic_navipage_card, parent, false));
-        }else if(viewType == TYPE_MOOD){
-            return new ViewHolder_Mood(inflater.inflate(R.layout.dynamic_navipage_mood,parent,false));
-        }else
-        return new ViewHolder_Hint(inflater.inflate(R.layout.dynamic_navipage_hint, parent, false));
+        }
+//        else if (viewType == TYPE_CARD) {
+//            return new ViewHolder_Card(inflater.inflate(R.layout.dynamic_navipage_card, parent, false));
+//        }
+        else if (viewType == TYPE_MOOD) {
+            return new ViewHolder_Mood(inflater.inflate(R.layout.dynamic_navipage_mood, parent, false));
+        } else
+            return new ViewHolder_Hint(inflater.inflate(R.layout.dynamic_navipage_hint, parent, false));
     }
 
     @Override
@@ -130,7 +143,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                     ActivityUtils.startJWTSActivity(mContext);
                 }
             });
-            ve.xk_nowCode = defaultSP.getString("navi_page_jwts_xk_now_code", "qxrx");
+            ve.xk_nowCode = naviSP.getString("navi_page_jwts_xk_now_code", "qxrx");
             int nowPosition = 0;
             for (int i = 0; i < ve.xk_spinnerOptions.size(); i++) {
                 if (ve.xk_spinnerOptions.get(i).get("value").equals(ve.xk_nowCode)) {
@@ -140,7 +153,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
             }
             ve.xk_type.setText(ve.xk_spinnerOptions.get(nowPosition).get("name"));
 
-           // new refreshXKInfoTask(ve.xk_nowCode, ve.xk_loading, ve.xk_top, ve.xk_second).executeOnExecutor(TPE);
+            // new refreshXKInfoTask(ve.xk_nowCode, ve.xk_loading, ve.xk_top, ve.xk_second).executeOnExecutor(TPE);
             //new refreshExamListTask(ve.examLayout,ve.exam_title, ve.exam_listRes, ve.exam_loading).executeOnExecutor(TPE);
             ve.xkLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -188,10 +201,10 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String newCode = ve.xk_spinnerOptions.get(selectedPosition).get("value");
-                                    defaultSP.edit().putString("navi_page_jwts_xk_now_code", newCode).apply();
+                                    naviSP.edit().putString("navi_page_jwts_xk_now_code", newCode).apply();
                                     ve.xk_nowCode = newCode;
                                     ve.xk_type.setText(ve.xk_spinnerOptions.get(selectedPosition).get("name"));
-                                  //  new refreshXKInfoTask(newCode, ve.xk_loading, ve.xk_top, ve.xk_second).executeOnExecutor(TPE);
+                                    //  new refreshXKInfoTask(newCode, ve.xk_loading, ve.xk_top, ve.xk_second).executeOnExecutor(TPE);
                                 }
                             }).setNegativeButton("取消", null).create();
                     ad.show();
@@ -238,7 +251,7 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                     mContext.startActivity(i);
                 }
             });
-        }else if(holder instanceof ViewHolder_Card){
+        } else if (holder instanceof ViewHolder_Card) {
             ViewHolder_Card vc = (ViewHolder_Card) holder;
             vc.card.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -246,16 +259,49 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                     ActivityUtils.startUTActivity(mContext);
                 }
             });
-          //  new refreshCardTask(vc.money,vc.loading).executeOnExecutor(TPE);
-        }
-        else if (holder instanceof ViewHolder_Hint) {
+            //  new refreshCardTask(vc.money,vc.loading).executeOnExecutor(TPE);
+        } else if (holder instanceof ViewHolder_Hint) {
             ViewHolder_Hint vh = (ViewHolder_Hint) holder;
             vh.button.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     removeItem_position(position);
-                    defaultSP.edit().putBoolean("first_enter_navipage_hint_drag", false).apply();
+                    naviSP.edit().putBoolean("first_enter_navipage_hint_drag", false).apply();
+                }
+            });
+        } else if (holder instanceof ViewHolder_Notification) {
+            ViewHolder_Notification vh = (ViewHolder_Notification) holder;
+            final BannerItem bi = (BannerItem) mBeans.get(position).get("item");
+            vh.title.setText(bi.getTitle());
+            vh.subtitle.setText(bi.getSubtitle());
+            Glide.with(mContext).load(bi.getImageUri()).into(vh.image);
+            vh.card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try{
+                        bannerAction(bi.getAction());
+                        if(CurrentUser!=null){
+                            bi.addClickUser(CurrentUser);
+                            bi.update(new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+
+                                }
+                            });
+                        }
+
+                    }catch (Exception e){
+
+                    }
+
+                }
+            });
+            vh.button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeItem_position(position);
+                    naviSP.edit().putBoolean("notifi_clicked:" + bi.getObjectId(), true).apply();
                 }
             });
         } else if (holder instanceof ViewHolder_Hita) {
@@ -269,8 +315,8 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
             };
             vb.card.setOnClickListener(ol);
             //vb.button.setOnClickListener(ol);
-           // vb.hint.setText(now.get(Calendar.MONTH) + 1 + "月" + now.get(Calendar.DAY_OF_MONTH) + "日");
-           // vb.hint_second.setText("希塔一直在这陪你");
+            // vb.hint.setText(now.get(Calendar.MONTH) + 1 + "月" + now.get(Calendar.DAY_OF_MONTH) + "日");
+            // vb.hint_second.setText("希塔一直在这陪你");
 //           vht.animationView.setAnimation("hita_animation/hita_normal.json");
 //           vht.animationView.playAnimation();
             vb.card_explore.setOnClickListener(new View.OnClickListener() {
@@ -310,16 +356,16 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
             vb.card_search.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(mContext instanceof ActivityMain){
-                        WindowManager manager = ((ActivityMain)mContext).getWindowManager();
+                    if (mContext instanceof ActivityMain) {
+                        WindowManager manager = ((ActivityMain) mContext).getWindowManager();
                         DisplayMetrics outMetrics = new DisplayMetrics();
                         manager.getDefaultDisplay().getMetrics(outMetrics);
                         int width = outMetrics.widthPixels;
-                        ((ActivityMain)mContext).presentActivity((ActivityMain)mContext,width,10);
+                        ((ActivityMain) mContext).presentActivity((ActivityMain) mContext, width, 10);
                     }
                 }
             });
-        }else if(holder instanceof ViewHolder_Mood){
+        } else if (holder instanceof ViewHolder_Mood) {
             final ViewHolder_Mood vm = (ViewHolder_Mood) holder;
             vm.card.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -328,34 +374,33 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                     mContext.startActivity(i);
                 }
             });
-            if(CurrentUser!=null&&!CurrentUser.hasPunch(now)){
+            if (CurrentUser != null && !CurrentUser.hasPunch(now)) {
                 vm.ut.setVisibility(View.GONE);
                 vm.vote.setVisibility(View.VISIBLE);
                 vm.normal.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new punchTask(1,mContext.getString(R.string.punch_success_normal),position).executeOnExecutor(TPE);
+                        new punchTask(1, mContext.getString(R.string.punch_success_normal), position).executeOnExecutor(TPE);
                     }
                 });
                 vm.happy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new punchTask(0,mContext.getString(R.string.punch_success_happy),position).executeOnExecutor(TPE);
+                        new punchTask(0, mContext.getString(R.string.punch_success_happy), position).executeOnExecutor(TPE);
                     }
                 });
                 vm.sad.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        new punchTask(2,mContext.getString(R.string.punch_success_sad),position).executeOnExecutor(TPE);
+                        new punchTask(2, mContext.getString(R.string.punch_success_sad), position).executeOnExecutor(TPE);
 
                     }
                 });
-            }else{
+            } else {
                 vm.ut.setVisibility(View.VISIBLE);
                 vm.vote.setVisibility(View.GONE);
                 new refreshUTMoodTask(vm).executeOnExecutor(TPE);
             }
-
 
 
         }
@@ -372,13 +417,10 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         saveOrders();
     }
 
-    public List<Integer> getSortedDataList() {
-        return this.mBeans;
-    }
 
     @Override
     public int getItemViewType(int position) {
-        return mBeans.get(position);
+        return ((Number) mBeans.get(position).get("type")).intValue();
     }
 
     @Override
@@ -386,9 +428,12 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         return mBeans.size();
     }
 
-    public void addItem(int type, int position) {
+    public void addItem(int type, int position, Map<String, Object> bundles) {
         if (mBeans.contains(type)) return;
-        mBeans.add(position, type);
+        Map<String, Object> item = new HashMap<>();
+        item.put("type", type);
+        item.putAll(bundles);
+        mBeans.add(position, item);
         notifyItemInserted(position);
         notifyItemRangeChanged(position, mBeans.size());
         if (type == TYPE_JWTS_FUN) {
@@ -396,13 +441,36 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public void removeItem(int type) {
-        int posToRemove = mBeans.indexOf(type);
-        if (posToRemove < 0) return;
-        mBeans.remove(posToRemove);
-        notifyItemRemoved(posToRemove);
-        notifyItemRangeChanged(posToRemove, mBeans.size());
-        saveOrders();
+    //    public void removeItem(int type) {
+//        int posToRemove = mBeans.indexOf(type);
+//        if (posToRemove < 0) return;
+//        mBeans.remove(posToRemove);
+//        notifyItemRemoved(posToRemove);
+//        notifyItemRangeChanged(posToRemove, mBeans.size());
+//        saveOrders();
+//    }
+    private void bannerAction(JsonObject action) {
+        try {
+            if (action == null) return;
+            if (action.has("intent")) {
+                if (action.get("intent").getAsString().equals("jwts")) {
+                    ActivityUtils.startJWTSActivity(mContext);
+                } else if (action.get("intent").getAsString().equals("rankboard")) {
+                    Intent i = new Intent(mContext, ActivityLeaderBoard.class);
+                    mContext.startActivity(i);
+                }
+            } else if (action.has("url")) {
+                Uri uri = Uri.parse(action.get("url").getAsString());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                mContext.startActivity(intent);
+            } else if (action.has("dialog_title") && action.has("dialog_message")) {
+                AlertDialog ad = new AlertDialog.Builder(mContext).setTitle(action.get("dialog_title").getAsString())
+                        .setMessage(action.get("dialog_message").getAsString()).setPositiveButton("好的", null).create();
+                ad.show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeItem_position(int posToRemove) {
@@ -434,36 +502,40 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         saveOrders();
     }
 
-    void saveOrders() {
-        int before_jw_fun = -1;
-        for (int i = mBeans.indexOf(TYPE_JWTS_FUN) - 1; i >= 0; i--) {
-            if (mBeans.get(i) != TYPE_CARD)
-                before_jw_fun = mBeans.get(i);
-            if (before_jw_fun != -1) break;
+    boolean arrayContains(Integer[] arr, int ele) {
+        for (int x : arr) {
+            if (ele == x) return true;
         }
-        if (before_jw_fun == -1) before_jw_fun = mBeans.indexOf(TYPE_BOARD_JW) + 1;
+        return false;
+    }
 
-        int before_ut_card = -1;
-        for (int i = mBeans.indexOf(TYPE_CARD) - 1; i >= 0; i--) {
-            if (mBeans.get(i) != TYPE_JWTS_FUN)
-                before_ut_card = mBeans.get(i);
-            if (before_ut_card != -1) break;
+    public void saveOrders() {
+        SharedPreferences.Editor editor = naviSP.edit();
+        for (int i = 0; i < mBeans.size(); i++) {
+            Map<String, Object> m = mBeans.get(i);
+            int type = (int) m.get("type");
+            if (arrayContains(cardTyps, type)) {
+                String name = (String) m.get("type_name");
+                editor.putInt(name + "_power", i);
+            }
+
         }
-        if (before_ut_card == -1) before_ut_card = mBeans.indexOf(TYPE_BOARD_JW) + 1;
+        editor.apply();
+//        for(int i=0;i<cardNames.length;i++){
+//            String card = cardNames[i];
+//            int type = cardTyps[i];
+//            boolean enable = naviSP.getBoolean(card+"_enable",true);
+//            if(enable){
+//
+//            }
+//        }
+//        List<Map<String,Object>> toWrite = new ArrayList<>();
+//        for(Map<String,Object> map:mBeans){
+//            if(((Number)map.get("type")).intValue()!=TYPE_NOTIFICATION) toWrite.add(map);
+//        }
+//        naviSP.edit().putString(ORDER_NAME,new Gson().toJson(toWrite)).apply();
+    }
 
-        SharedPreferences.Editor editor = defaultSP.edit();
-        if (mBeans.contains(TYPE_JWTS_FUN))
-            editor.putInt("navi_page_order_before_jwts", before_jw_fun);
-        if (mBeans.contains(TYPE_CARD))
-            editor.putInt("navi_page_order_before_ut_card", before_ut_card);
-        editor.putString(ORDER_NAME, integerToString(mBeans));
-        editor.apply();
-    }
-    public void saveOrders(List<Integer> orders) {
-        SharedPreferences.Editor editor = defaultSP.edit();
-        editor.putString(ORDER_NAME, integerToString(orders));
-        editor.apply();
-    }
     class NaviViewHolder extends RecyclerView.ViewHolder {
         CardView card;
 
@@ -475,8 +547,8 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
 
     class ViewHolder_Hita extends NaviViewHolder {
         TextView hint, hint_second;
-       // Button button;
-        LinearLayout card_explore, card_lostandfound, card_canteen,card_ut,card_hita,card_search;
+        // Button button;
+        LinearLayout card_explore, card_lostandfound, card_canteen, card_ut, card_hita, card_search;
         //card_locations;
 
         public ViewHolder_Hita(@NonNull View itemView) {
@@ -517,11 +589,12 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
             // image = itemView.findViewById(R.id.image);
         }
     }
+
     class ViewHolder_Mood extends NaviViewHolder {
-        ImageView happy,normal,sad;
-        LinearLayout vote,ut;
+        ImageView happy, normal, sad;
+        LinearLayout vote, ut;
         ImageView icon;
-        TextView percentage,text,score;
+        TextView percentage, text, score;
 
 
         public ViewHolder_Mood(@NonNull View itemView) {
@@ -603,6 +676,20 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         }
     }
 
+    class ViewHolder_Notification extends NaviViewHolder {
+        Button button;
+        TextView title, subtitle;
+        ImageView image;
+
+        public ViewHolder_Notification(@NonNull View itemView) {
+            super(itemView);
+            button = itemView.findViewById(R.id.button);
+            title = itemView.findViewById(R.id.title);
+            subtitle = itemView.findViewById(R.id.subtitle);
+            image = itemView.findViewById(R.id.image);
+        }
+    }
+
     class ViewHolder_JW extends NaviViewHolder {
         TextView xk_top, xk_second, xk_type;
         // CalendarView calendarView;
@@ -614,12 +701,12 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         List<Map<String, String>> exam_listRes;
         ProgressBar exam_loading;
         List<Map<String, String>> xk_spinnerOptions;
-        LinearLayout examLayout,xkLayout,xklbLayout;
+        LinearLayout examLayout, xkLayout, xklbLayout;
         //List<EventItem> exams;
 
         public ViewHolder_JW(@NonNull View itemView) {
             super(itemView);
-           // exams = new ArrayList<>();
+            // exams = new ArrayList<>();
             xk_top = itemView.findViewById(R.id.top);
             xk_second = itemView.findViewById(R.id.second);
             xk_loading = itemView.findViewById(R.id.loading_xk);
@@ -627,11 +714,11 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
             xklbLayout = itemView.findViewById(R.id.xklb_choose);
             xk_type = itemView.findViewById(R.id.type);
             exam_title = itemView.findViewById(R.id.title_exam);
-           // exam_list = itemView.findViewById(R.id.list_exam);
+            // exam_list = itemView.findViewById(R.id.list_exam);
             exam_loading = itemView.findViewById(R.id.loading_exam);
             examLayout = itemView.findViewById(R.id.layout_exam);
             exam_listRes = new ArrayList<>();
-           // exam_listAdapter = new KSXXListAdapter(mContext, exam_listRes,true);
+            // exam_listAdapter = new KSXXListAdapter(mContext, exam_listRes,true);
             //exam_list.setAdapter(exam_listAdapter);
             //exam_list.setLayoutManager(new WrapContentLinearLayoutManager(mContext, RecyclerView.VERTICAL, false));
 
@@ -892,14 +979,17 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
                 second.setVisibility(View.VISIBLE);
                 third.setVisibility(View.VISIBLE);
 
-                if (titleRes.get("news") == null) third.setText(HContext.getString(R.string.load_news_failed));
+                if (titleRes.get("news") == null)
+                    third.setText(HContext.getString(R.string.load_news_failed));
                 else third.setText(titleRes.get("news"));
 
-                if (titleRes.get("lecture") == null) second.setText(HContext.getString(R.string.load_lecture_failed));
+                if (titleRes.get("lecture") == null)
+                    second.setText(HContext.getString(R.string.load_lecture_failed));
                 else second.setText(titleRes.get("lecture"));
 
 
-                if (titleRes.get("announce") == null) first.setText(HContext.getString(R.string.load_annouce_failed));
+                if (titleRes.get("announce") == null)
+                    first.setText(HContext.getString(R.string.load_annouce_failed));
                 else first.setText(titleRes.get("announce"));
 
             } catch (Exception e) {
@@ -992,81 +1082,81 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
 //        }
 //    }
 
-     class punchTask extends AsyncTask{
+    class punchTask extends AsyncTask {
         int type;
         String hint;
         int position;
 
-         public punchTask(int type, String hint,int position) {
-             this.type = type;
-             this.hint = hint;
-             this.position = position;
-         }
+        public punchTask(int type, String hint, int position) {
+            this.type = type;
+            this.hint = hint;
+            this.position = position;
+        }
 
-         @Override
-         protected Object doInBackground(Object[] objects) {
-             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-             BmobQuery<Infos> bq = new BmobQuery<>();
-             bq.addWhereEqualTo("name","ut_mood_"+sdf.format(now.getTime()));
-             Infos utMood;
-             List<Infos> res =  bq.findObjectsSync(Infos.class);
-             if(res!=null&&res.size()>0) utMood = res.get(0);
-             else {
-                 JsonObject jx = new JsonObject();
-                 jx.addProperty("happy",0);
-                 jx.addProperty("normal",0);
-                 jx.addProperty("sad",0);
-                 Infos in = new Infos();
-                 in.setName("ut_mood_"+sdf.format(now.getTime()));
-                 in.setType("ut_mood");
-                 in.setJson(jx);
-                 in.saveSync();
-                 utMood = in;
-             }
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            BmobQuery<Infos> bq = new BmobQuery<>();
+            bq.addWhereEqualTo("name", "ut_mood_" + sdf.format(now.getTime()));
+            Infos utMood;
+            List<Infos> res = bq.findObjectsSync(Infos.class);
+            if (res != null && res.size() > 0) utMood = res.get(0);
+            else {
+                JsonObject jx = new JsonObject();
+                jx.addProperty("happy", 0);
+                jx.addProperty("normal", 0);
+                jx.addProperty("sad", 0);
+                Infos in = new Infos();
+                in.setName("ut_mood_" + sdf.format(now.getTime()));
+                in.setType("ut_mood");
+                in.setJson(jx);
+                in.saveSync();
+                utMood = in;
+            }
 
             // CurrentUser.Punch(now,type);
-             JsonObject JO = utMood.getJson();
+            JsonObject JO = utMood.getJson();
 
-             if(!JO.has("happy")) JO.addProperty("happy",0);
-             if(!JO.has("normal")) JO.addProperty("normal",0);
-             if(!JO.has("sad")) JO.addProperty("sad",0);
-             if(type==0) {
-                 int happy = JO.get("happy").getAsInt();
-                 JO.addProperty("happy",happy+1);
-             }else if(type==1) {
-                 int normal = JO.get("normal").getAsInt();
-                 JO.addProperty("normal",normal+1);
-             }else if(type==2) {
-                 int sad = JO.get("sad").getAsInt();
-                 JO.addProperty("sad",sad+1);
-             }
-             utMood.setJson(JO);
-             CurrentUser.Punch(now,type);
-             try {
-                 utMood.updateSync();
-                 CurrentUser.updateSync();
-                 return true;
-             } catch (Exception e) {
-                 e.printStackTrace();
-                 return false;
-             }
-         }
+            if (!JO.has("happy")) JO.addProperty("happy", 0);
+            if (!JO.has("normal")) JO.addProperty("normal", 0);
+            if (!JO.has("sad")) JO.addProperty("sad", 0);
+            if (type == 0) {
+                int happy = JO.get("happy").getAsInt();
+                JO.addProperty("happy", happy + 1);
+            } else if (type == 1) {
+                int normal = JO.get("normal").getAsInt();
+                JO.addProperty("normal", normal + 1);
+            } else if (type == 2) {
+                int sad = JO.get("sad").getAsInt();
+                JO.addProperty("sad", sad + 1);
+            }
+            utMood.setJson(JO);
+            CurrentUser.Punch(now, type);
+            try {
+                utMood.updateSync();
+                CurrentUser.updateSync();
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
 
-         @Override
-         protected void onPostExecute(Object o) {
-             super.onPostExecute(o);
-             if((boolean)o){
-                 Toast.makeText(mContext,hint,Toast.LENGTH_SHORT).show();
-                 notifyItemChanged(position);
-                 //removeItem(TYPE_MOOD);
-             }else{
-                 Toast.makeText(mContext,HContext.getString(R.string.punch_failed),Toast.LENGTH_SHORT).show();
-             }
-         }
-     }
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if ((boolean) o) {
+                Toast.makeText(mContext, hint, Toast.LENGTH_SHORT).show();
+                notifyItemChanged(position);
+                //removeItem(TYPE_MOOD);
+            } else {
+                Toast.makeText(mContext, HContext.getString(R.string.punch_failed), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
 
-     class refreshUTMoodTask extends AsyncTask{
+    class refreshUTMoodTask extends AsyncTask {
         ViewHolder_Mood holder;
         int maxNumber;
         int totalNumber;
@@ -1074,90 +1164,91 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         int iconID;
         float score;
 
-         public refreshUTMoodTask(ViewHolder_Mood holder) {
-             this.holder = holder;
-         }
+        public refreshUTMoodTask(ViewHolder_Mood holder) {
+            this.holder = holder;
+        }
 
-         @Override
-         protected Object doInBackground(Object[] objects) {
-             try {
-                 @SuppressLint("SimpleDateFormat") String today = new SimpleDateFormat("yyyy-MM-dd").format(now.getTime());
-                 BmobQuery<Infos> bq = new BmobQuery<>();
-                 bq.addWhereEqualTo("name","ut_mood_"+today);
-                 List<Infos> resu =   bq.findObjectsSync(Infos.class);
-                 Infos utMood;
-                 if(resu!=null&&resu.size()>0){
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            try {
+                @SuppressLint("SimpleDateFormat") String today = new SimpleDateFormat("yyyy-MM-dd").format(now.getTime());
+                BmobQuery<Infos> bq = new BmobQuery<>();
+                bq.addWhereEqualTo("name", "ut_mood_" + today);
+                List<Infos> resu = bq.findObjectsSync(Infos.class);
+                Infos utMood;
+                if (resu != null && resu.size() > 0) {
                     utMood = resu.get(0);
-                 }else{
-                         JsonObject jx = new JsonObject();
-                         jx.addProperty("happy",0);
-                         jx.addProperty("normal",0);
-                         jx.addProperty("sad",0);
-                         Infos in = new Infos();
-                         in.setName("ut_mood_"+today);
-                         in.setType("ut_mood");
-                         in.setJson(jx);
-                         in.saveSync();
-                         utMood = in;
-                 }
+                } else {
+                    JsonObject jx = new JsonObject();
+                    jx.addProperty("happy", 0);
+                    jx.addProperty("normal", 0);
+                    jx.addProperty("sad", 0);
+                    Infos in = new Infos();
+                    in.setName("ut_mood_" + today);
+                    in.setType("ut_mood");
+                    in.setJson(jx);
+                    in.saveSync();
+                    utMood = in;
+                }
 
-                 JsonObject JO = utMood.getJson();
-                 if(!JO.has("happy")) JO.addProperty("happy",0);
-                 if(!JO.has("normal")) JO.addProperty("normal",0);
-                 if(!JO.has("sad")) JO.addProperty("sad",0);
-                 int happy = JO.get("happy").getAsInt();
-                 int normal = JO.get("normal").getAsInt();
-                 int sad = JO.get("sad").getAsInt();
-                 Log.e("t",happy+","+normal+","+sad);
-                 int[] t = {happy, normal, sad};
-                 maxNumber = happy;
-                 int maxIndex = 0;
-                 for(int i=0;i<3;i++){
-                     if(t[i]>maxNumber){
-                         maxNumber = t[i];
-                         maxIndex = i;
-                     }
+                JsonObject JO = utMood.getJson();
+                if (!JO.has("happy")) JO.addProperty("happy", 0);
+                if (!JO.has("normal")) JO.addProperty("normal", 0);
+                if (!JO.has("sad")) JO.addProperty("sad", 0);
+                int happy = JO.get("happy").getAsInt();
+                int normal = JO.get("normal").getAsInt();
+                int sad = JO.get("sad").getAsInt();
+                Log.e("t", happy + "," + normal + "," + sad);
+                int[] t = {happy, normal, sad};
+                maxNumber = happy;
+                int maxIndex = 0;
+                for (int i = 0; i < 3; i++) {
+                    if (t[i] > maxNumber) {
+                        maxNumber = t[i];
+                        maxIndex = i;
+                    }
 
-                 }
-                 if(maxIndex==0) {
-                     maxTitle=HContext.getString(R.string.max_title_happy);
-                     iconID = R.drawable.ic_mood_happy;
-                 } else if(maxIndex == 1){
-                     maxTitle=HContext.getString(R.string.max_title_normal);
-                     iconID = R.drawable.ic_mood_normal;
-                 } else {
-                     maxTitle=HContext.getString(R.string.max_title_sad);
-                     iconID = R.drawable.ic_mood_sad;
-                 }
-                 totalNumber = normal+happy+sad;
-                 float haP = 100f*(float)happy/totalNumber;
-                 float nP = 100f*(float)normal/totalNumber;
-                 score =  (float) (haP*0.5+nP*0.2+50);
-                 return true;
-             } catch (Exception e) {
-                 e.printStackTrace();
-                 return false;
+                }
+                if (maxIndex == 0) {
+                    maxTitle = HContext.getString(R.string.max_title_happy);
+                    iconID = R.drawable.ic_mood_happy;
+                } else if (maxIndex == 1) {
+                    maxTitle = HContext.getString(R.string.max_title_normal);
+                    iconID = R.drawable.ic_mood_normal;
+                } else {
+                    maxTitle = HContext.getString(R.string.max_title_sad);
+                    iconID = R.drawable.ic_mood_sad;
+                }
+                totalNumber = normal + happy + sad;
+                float haP = 100f * (float) happy / totalNumber;
+                float nP = 100f * (float) normal / totalNumber;
+                score = (float) (haP * 0.5 + nP * 0.2 + 50);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
 
-             }
-         }
-         @SuppressLint("SetTextI18n")
-         @Override
-         protected void onPostExecute(Object o) {
-             super.onPostExecute(o);
-             if((boolean)o){
-                 DecimalFormat df = new DecimalFormat("#.0");
-                 holder.score.setText(df.format(score));
+            }
+        }
 
-                 holder.percentage.setText(df.format((float)maxNumber/totalNumber*100)+"%");
-                 holder.text.setText(maxTitle);
-                 holder.icon.setImageResource(iconID);
-             }else{
-                 holder.percentage.setText("-");
-                 holder.icon.setImageResource(R.drawable.ic_mood_happy);
-                 holder.text.setText(maxTitle);
-             }
-         }
-     }
+        @SuppressLint("SetTextI18n")
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if ((boolean) o) {
+                DecimalFormat df = new DecimalFormat("#.0");
+                holder.score.setText(df.format(score));
+
+                holder.percentage.setText(df.format((float) maxNumber / totalNumber * 100) + "%");
+                holder.text.setText(maxTitle);
+                holder.icon.setImageResource(iconID);
+            } else {
+                holder.percentage.setText("-");
+                holder.icon.setImageResource(R.drawable.ic_mood_happy);
+                holder.text.setText(maxTitle);
+            }
+        }
+    }
 //    class refreshBulletinListTask extends AsyncTask {
 //
 //        TextView first;

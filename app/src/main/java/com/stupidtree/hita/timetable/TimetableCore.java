@@ -3,13 +3,11 @@ package com.stupidtree.hita.timetable;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseArray;
 import android.widget.Toast;
 
 import androidx.annotation.WorkerThread;
@@ -17,14 +15,12 @@ import androidx.annotation.WorkerThread;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.hita.TextTools;
-import com.stupidtree.hita.online.Bmob_User_Data;
-import com.stupidtree.hita.online.TimeTable_upload_helper;
+import com.stupidtree.hita.online.UserData;
 import com.stupidtree.hita.timetable.timetable.EventItem;
 import com.stupidtree.hita.timetable.timetable.EventItemHolder;
 import com.stupidtree.hita.timetable.timetable.HTime;
 import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.timetable.timetable.TimePeriod;
-import com.stupidtree.hita.util.FileOperator;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,7 +42,6 @@ import static com.stupidtree.hita.HITAApplication.timeServiceBinder;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.activities.ActivityMain.saveData;
 import static com.stupidtree.hita.timetable.CurriculumCreator.CURRICULUM_TYPE_COURSE;
-import static com.stupidtree.hita.timetable.TimeWatcherService.WATCHER_REFRESH;
 
 public class TimetableCore {
     public final static int TIMETABLE_EVENT_TYPE_COURSE = 1;
@@ -171,76 +166,35 @@ public class TimetableCore {
     }
 
     @WorkerThread
-    public boolean saveDataToCloud(final boolean showToast) {
+    public boolean saveDataToCloud() {
         if (CurrentUser == null) return false;
-        List<Curriculum> allCurriculums = getAllCurriculum();
         Log.e("开始上传数据", "尝试");
-        for (final Curriculum ci : allCurriculums) {
-            ci.setSubjectsText();
-        }
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        ArrayList<TimeTable_upload_helper> TUHs = new ArrayList<>();
-        final Cursor c = sd.query("timetable", null, null, null, null, null, null);
-        while (c.moveToNext()) {
-            TimeTable_upload_helper bc = new TimeTable_upload_helper(c);
-            if (bc.type == TIMETABLE_EVENT_TYPE_COURSE || bc.type == TIMETABLE_EVENT_TYPE_DYNAMIC)
-                continue;
-            else TUHs.add(bc);
-        }
-        c.close();
-        ArrayList<Task> tasks = new ArrayList<>();
-        Cursor c2 = sd.query("task", null, null, null, null, null, null);
-        while (c2.moveToNext()) {
-            Task t = new Task(c2);
-            if (!t.isFinished() && t.getType() != Task.TYPE_DYNAMIC) tasks.add(t);
-        }
-        c2.close();
-        final Bmob_User_Data BUD = new Bmob_User_Data(allCurriculums, TUHs, tasks);
-        BUD.setHitaUser(CurrentUser);
-        BmobQuery<Bmob_User_Data> bq = new BmobQuery<>();
-        bq.addWhereEqualTo("hitaUser", CurrentUser);
-        bq.findObjects(new FindListener<Bmob_User_Data>() {
-            @Override
-            public void done(List<Bmob_User_Data> list, BmobException e) {
-                Log.e("found:", e == null ? "null" : e.toString());
-                if (e != null || list == null || list.size() == 0) {
-                    BUD.save(new SaveListener<String>() {
-                        @Override
-                        public void done(String s, BmobException e) {
-                            if (showToast)
-                                Toast.makeText(HContext, R.string.uploaded_success, Toast.LENGTH_SHORT).show();
-                            if (e == null) Log.e("新增用户数据", "成功");
-                            else Log.e("新增用户数据", e.toString());
-                        }
-                    });
-                } else {
-                    if (list != null && list.size() > 0) {
-                        BUD.setObjectId(list.get(0).getObjectId());
-                        BUD.update(new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if (showToast)
-                                    Toast.makeText(HContext, R.string.uploaded_success, Toast.LENGTH_SHORT).show();
-                                if (e == null) Log.e("更新用户数据", "成功");
-                                else Log.e("更新用户数据", e.toString());
-                            }
-                        });
-                    }
-                }
+        UserData data = UserData.create(mDBHelper.getReadableDatabase());
+        data.loadTaskData().loadTimetableData().loadSubjectData().loadCurriculumData(getAllCurriculum());
+        final UserData.UserDataCloud userDataCloud = data.getPreparedCloudData(CurrentUser);
+        BmobQuery<UserData.UserDataCloud> bq = new BmobQuery<>();
+        bq.addWhereEqualTo("user", CurrentUser);
+        try{
+            List<UserData.UserDataCloud> list = bq.findObjectsSync(UserData.UserDataCloud.class);
+            if (list == null || list.size() == 0) userDataCloud.saveSync();
+            else if(list!=null&& list.size()>0){
+                userDataCloud.setObjectId(list.get(0).getObjectId());
+                userDataCloud.updateSync();
             }
-        });
+        }catch (Exception e){
+            return false;
+        }
         return true;
     }
 
 
     public boolean loadDataFromCloud() {
         if (CurrentUser == null) return false;
-        clearData();
-        BmobQuery<Bmob_User_Data> query = new BmobQuery<>();
-        query.addWhereEqualTo("hitaUser", CurrentUser);
-        query.findObjects(new FindListener<Bmob_User_Data>() {
+        BmobQuery<UserData.UserDataCloud> query = new BmobQuery<>();
+        query.addWhereEqualTo("user", CurrentUser);
+        query.findObjects(new FindListener<UserData.UserDataCloud>() {
             @Override
-            public void done(List<Bmob_User_Data> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
+            public void done(List<UserData.UserDataCloud> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
                 Log.e("下载", "done");
                 if (e == null && list != null && list.size() > 0) {
                     new writeDataToLocalTask(list.get(0)).executeOnExecutor(HITAApplication.TPE);
@@ -255,21 +209,19 @@ public class TimetableCore {
         return true;
     }
 
-    public boolean loadDataFromCloud(Bmob_User_Data bud) {
+    public boolean loadDataFromCloud(UserData.UserDataCloud bud) {
         if (CurrentUser == null) return false;
-        clearData();
         new writeDataToLocalTask(bud).executeOnExecutor(HITAApplication.TPE);
         return true;
     }
 
     public boolean loadDataFromCloud(final Activity toFinish) {
         if (CurrentUser == null) return false;
-        clearData();
-        BmobQuery<Bmob_User_Data> query = new BmobQuery<>();
-        query.addWhereEqualTo("hitaUser", CurrentUser);
-        query.findObjects(new FindListener<Bmob_User_Data>() {
+        BmobQuery<UserData.UserDataCloud> query = new BmobQuery<>();
+        query.addWhereEqualTo("user", CurrentUser);
+        query.findObjects(new FindListener<UserData.UserDataCloud>() {
             @Override
-            public void done(List<Bmob_User_Data> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
+            public void done(List<UserData.UserDataCloud> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
                 Log.e("下载", "done");
                 if (e == null && list != null && list.size() > 0) {
                     new writeDataToLocalTask(list.get(0), toFinish).executeOnExecutor(HITAApplication.TPE);
@@ -279,8 +231,6 @@ public class TimetableCore {
                 }
             }
         });
-
-
         return true;
     }
 
@@ -294,15 +244,15 @@ public class TimetableCore {
 
     class writeDataToLocalTask extends AsyncTask {
 
-        Bmob_User_Data user_data;
+        UserData.UserDataCloud user_data;
         Activity tofinish;
 
-        writeDataToLocalTask(Bmob_User_Data bmob_user_data, Activity tofinish) {
+        writeDataToLocalTask(UserData.UserDataCloud bmob_user_data, Activity tofinish) {
             this.user_data = bmob_user_data;
             this.tofinish = tofinish;
         }
 
-        writeDataToLocalTask(Bmob_User_Data bmob_user_data) {
+        writeDataToLocalTask(UserData.UserDataCloud bmob_user_data) {
             this.user_data = bmob_user_data;
             this.tofinish = null;
         }
@@ -311,20 +261,28 @@ public class TimetableCore {
         protected Object doInBackground(Object[] objects) {
             try {
                 SQLiteDatabase sqd = mDBHelper.getWritableDatabase();
-                for (Curriculum ci : user_data.getCurriculumsFromText()) {
+                UserData data  = UserData.create(sqd).loadData(user_data);
+               // clearData();
+                sqd.delete("curriculum", null,null);
+                sqd.delete("timetable", null,null);
+                for (Curriculum ci : data.getCurriculum()) {
                     sqd.insert("curriculum", null, ci.getContentValues());
-                    addCurriculumToTimeTable(FileOperator.loadCurriculumHelperFromCurriculumText(ci));
-                    sqd.delete("subject", "curriculum_code=?", new String[]{ci.getCurriculumCode()});
-                    for (Subject s : ci.getSubjectsFromString()) {
-                        sqd.insert("subject", null, s.getContentValues());
-                    }
+                    CurriculumCreator curriculumCreator = CurriculumCreator.create(ci.getCurriculumCode(),ci.getName(),ci.getStartDate());
+                    curriculumCreator.loadCourse(ci.getCurriculumText());
+                    addCurriculumToTimeTable(curriculumCreator);
                 }
-                for (TimeTable_upload_helper tuh : user_data.getTimeTableHelpersFromString()) {
-                    sqd.insert("timetable", null, tuh.getContentValues());
+                sqd.delete("subject", null,null);
+                for (Subject s :data.getSubjects()) {
+                    sqd.insert("subject", null, s.getContentValues());
                 }
-                for (Task t : user_data.getTasksFromText()) {
+                 for (EventItemHolder eih:data.getEvents()) {
+                    sqd.insert("timetable", null, eih.getContentValues());
+                }
+                sqd.delete("task", null,null);
+                for (Task t : data.getTasks()) {
                     sqd.insert("task", null, t.getContentValues());
                 }
+
 
                 initCoreData();
                 return true;
@@ -1052,7 +1010,7 @@ public class TimetableCore {
 
     public List<EventItem> getOneDayEvents(int week, int DOW) {
         List<EventItem> result = new ArrayList<>();
-        if (week <= 0 || week > getCurrentCurriculum().getTotalWeeks()) return result;
+        if (week <= 0 ||!timeTableCore.isDataAvailable()|| week > getCurrentCurriculum().getTotalWeeks()) return result;
         for (EventItem ei : getEventsWithinWeeks(week, week)) {
             if (ei.DOW == DOW) result.add(ei);
         }

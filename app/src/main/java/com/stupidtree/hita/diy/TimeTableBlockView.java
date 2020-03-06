@@ -6,7 +6,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -51,7 +50,7 @@ public class TimeTableBlockView extends FrameLayout {
     public interface TimeTablePreferenceRoot {
         boolean isColorEnabled();
 
-        String getTitleColor();
+        String getCardTitleColor();
 
         String getSubTitleColor();
 
@@ -79,7 +78,11 @@ public class TimeTableBlockView extends FrameLayout {
 
         int getSubtitleAlpha();
 
+        boolean isWholeDay();
+        boolean animEnabled();
         String getCardBackground();
+
+        boolean drawNowLine();
     }
 
     public void setOnDuplicateCardClickListener(OnDuplicateCardClickListener onDuplicateCardClickListener) {
@@ -94,6 +97,7 @@ public class TimeTableBlockView extends FrameLayout {
         this.onCardClickListener = onCardClickListener;
 
     }
+
 
 
     @SuppressLint("ResourceAsColor")
@@ -146,7 +150,7 @@ public class TimeTableBlockView extends FrameLayout {
             }
 
         }
-        switch (root.getTitleColor()) {
+        switch (root.getCardTitleColor()) {
             case "subject":
                 if (root.isColorEnabled() &&
                         (ei.eventType == TimetableCore.TIMETABLE_EVENT_TYPE_COURSE ||
@@ -281,7 +285,7 @@ public class TimeTableBlockView extends FrameLayout {
             } else {
                 card.setBackgroundTintList(ColorStateList.valueOf(getC));
             }
-            switch (root.getTitleColor()) {
+            switch (root.getCardTitleColor()) {
                 case "subject":
                     title.setTextColor(getC);
                     break;
@@ -321,7 +325,7 @@ public class TimeTableBlockView extends FrameLayout {
             } else if (root.getCardBackground().equals("accent")) {
                 card.setBackgroundTintList(ColorStateList.valueOf(root.getColorAccent()));
             }
-            switch (root.getTitleColor()) {
+            switch (root.getCardTitleColor()) {
                 case "white":
                     title.setTextColor(Color.WHITE);
                     break;
