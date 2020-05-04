@@ -3,6 +3,7 @@ package com.stupidtree.hita.timetable;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -12,20 +13,22 @@ import android.widget.Toast;
 
 import androidx.annotation.WorkerThread;
 
-import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.online.UserData;
-import com.stupidtree.hita.timetable.timetable.EventItem;
-import com.stupidtree.hita.timetable.timetable.EventItemHolder;
-import com.stupidtree.hita.timetable.timetable.HTime;
-import com.stupidtree.hita.timetable.timetable.Task;
-import com.stupidtree.hita.timetable.timetable.TimePeriod;
+import com.stupidtree.hita.timetable.packable.Curriculum;
+import com.stupidtree.hita.timetable.packable.EventItem;
+import com.stupidtree.hita.timetable.packable.EventItemHolder;
+import com.stupidtree.hita.timetable.packable.HTime;
+import com.stupidtree.hita.timetable.packable.Subject;
+import com.stupidtree.hita.timetable.packable.Task;
+import com.stupidtree.hita.timetable.packable.TimePeriod;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
@@ -35,30 +38,46 @@ import cn.bmob.v3.listener.UpdateListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.mDBHelper;
-import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeServiceBinder;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
-import static com.stupidtree.hita.activities.ActivityMain.saveData;
 import static com.stupidtree.hita.timetable.CurriculumCreator.CURRICULUM_TYPE_COURSE;
 
 public class TimetableCore {
-    public final static int TIMETABLE_EVENT_TYPE_COURSE = 1;
-    public final static int TIMETABLE_EVENT_TYPE_EXAM = 2;
-    public final static int TIMETABLE_EVENT_TYPE_ARRANGEMENT = 3;
-    public final static int TIMETABLE_EVENT_TYPE_REMIND = 4;
-    public final static int TIMETABLE_EVENT_TYPE_DEADLINE = 5;
-    public final static int TIMETABLE_EVENT_TYPE_DYNAMIC = 6;
+    public final static int COURSE = 1;
+    public final static int EXAM = 2;
+    public final static int ARRANGEMENT = 3;
+    public final static int DDL = 5;
+    public final static int DYNAMIC = 6;
     private Curriculum currentCurriculum = null;
     private String currentCurriculumId = null;
     private boolean isThisTerm = true;
     private int thisWeekOfTerm = -1;
+    private Calendar now;
 
     public TimetableCore() {
-
+        now = Calendar.getInstance();
     }
 
+    public static List<HTime> getTimeAtNumber(int begin, int last) {
+        int[] startDots = {830, 930, 1030, 1130, 1345, 1440, 1545, 1640, 1830, 1925, 2030, 2125, 2230};
+        int[] endDots = {920, 1015, 1120, 1215, 1435, 1530, 1635, 1730, 1920, 2015, 2120, 2215, 2320};
+        List<HTime> temp = new ArrayList<>();
+        HTime startTime, endTime;
+        int sH = 0, sM = 0, eH = 0, eM = 0;
+        sH = startDots[begin - 1] / 100;
+        sM = startDots[begin - 1] % 100;
+        eH = endDots[(begin - 1) + last - 1] / 100;
+        eM = endDots[(begin - 1) + last - 1] % 100;
+        startTime = new HTime(sH, sM);
+        endTime = new HTime(eH, eM);
+        temp.add(startTime);
+        temp.add(endTime);
+        return temp;
+
+    }
     public void onTerminate() {
         mDBHelper.getWritableDatabase().close();
     }
@@ -90,128 +109,84 @@ public class TimetableCore {
         return true;
     }
 
-    @SuppressLint("ApplySharedPref")
-    @WorkerThread
-    public boolean addCurriculumToTimeTable(CurriculumCreator il) {
-        if (il == null) return false;
-        Curriculum cur = il.getCurriculum();
-        SQLiteDatabase sdb = mDBHelper.getWritableDatabase();
-        if (cur.getWeekOfTerm(now) > cur.getTotalWeeks()) cur.setTotalWeeks(cur.getWeekOfTerm(now));
-        sdb.delete("curriculum","curriculum_code=?",new String[]{il.getCurriculumCode()});
-        sdb.insert("curriculum",null,cur.getContentValues());
-        currentCurriculumId = cur.getCurriculumCode();
-        currentCurriculum = cur;
-        // timeTablegetCurrentCurriculum().getMainTimeTable().clearCurriculum(il.getCurriculumId());
-        addCurriculum(il);
-        addSubjects(il);
-        defaultSP.edit().putString("current_curriculum", currentCurriculumId).commit();
-        return true;
+    public static int getNumberAtTime(HTime to) {
+
+        TimePeriod[] dots = new TimePeriod[]{
+                new TimePeriod(new HTime(8, 30), new HTime(9, 20)),
+                new TimePeriod(new HTime(9, 30), new HTime(10, 15)),
+                new TimePeriod(new HTime(10, 30), new HTime(11, 20)),
+                new TimePeriod(new HTime(11, 30), new HTime(12, 15)),
+                new TimePeriod(new HTime(13, 45), new HTime(14, 35)),
+                new TimePeriod(new HTime(14, 40), new HTime(15, 30)),
+                new TimePeriod(new HTime(15, 45), new HTime(16, 35)),
+                new TimePeriod(new HTime(16, 30), new HTime(17, 30)),
+                new TimePeriod(new HTime(18, 30), new HTime(19, 20)),
+                new TimePeriod(new HTime(19, 25), new HTime(20, 15)),
+                new TimePeriod(new HTime(20, 30), new HTime(21, 20)),
+                new TimePeriod(new HTime(21, 25), new HTime(22, 15)),
+        };
+        for (int i = 0; i < dots.length; i++) {
+            if (to.during(dots[i])) return i + 1;
+            else if (to.before(dots[i].start)) return i;
+        }
+        return -1;
     }
 
-
-    public void addSubjects(CurriculumCreator ch) {
-        // Log.e("subjects:", String.valueOf(ch.Subjects));
-        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-
-        //sd.delete("subject","curriculum_code=?",new String[]{ch.getCurriculumId()});
-        for (Subject s : ch.getSubjects()) {
-            String ratesText = null;
-            String scoresText = null;
-            Cursor c = sd.query("subject", new String[]{"rates,scores"}, "curriculum_code =? AND name=?",
-                    new String[]{ch.getCurriculumCode(), s.getName()}, null, null, null);
-            if (c.moveToNext()) {
-                ratesText = c.getString(0);
-                scoresText = c.getString(1);
-            }
-            c.close();
-            ContentValues cv = s.getContentValues();
-            if (ratesText != null) cv.put("rates", ratesText);
-            if (scoresText != null) cv.put("scores", scoresText);
-//            sd.delete("subject","name=? and curriculum_code=? and code=?",
-//                    new String[]{s.getName(),s.getCurriculumId(),s.code});
-            sd.replace("subject", null, cv);
-//            if (sd.update("subject", s.getContentValues(), "name=? and curriculum_code=? and code=?",
-//                    new String[]{s.getName(),s.getCurriculumId(),s.code}) == 0) {
-//                sd.insert("subject", null, s.getContentValues());
-//            }
+    public static TimePeriod getClassTimeByTimeContainedIn(HTime time) {
+        TimePeriod[] dots = new TimePeriod[]{
+                new TimePeriod(new HTime(8, 30), new HTime(9, 20)),
+                new TimePeriod(new HTime(9, 30), new HTime(10, 15)),
+                new TimePeriod(new HTime(10, 30), new HTime(11, 20)),
+                new TimePeriod(new HTime(11, 30), new HTime(12, 15)),
+                new TimePeriod(new HTime(13, 45), new HTime(14, 35)),
+                new TimePeriod(new HTime(14, 40), new HTime(15, 30)),
+                new TimePeriod(new HTime(15, 45), new HTime(16, 35)),
+                new TimePeriod(new HTime(16, 30), new HTime(17, 30)),
+                new TimePeriod(new HTime(18, 30), new HTime(19, 20)),
+                new TimePeriod(new HTime(19, 25), new HTime(20, 15)),
+                new TimePeriod(new HTime(20, 30), new HTime(21, 20)),
+                new TimePeriod(new HTime(21, 25), new HTime(22, 15)),
+        };
+        for (int i = 0; i < dots.length; i++) {
+            if (time.during(dots[i])) return dots[i];
         }
+        return null;
     }
 
-    @SuppressLint("ApplySharedPref")
-    @WorkerThread
-    public void initCoreData() {
-        currentCurriculumId = defaultSP.getString("current_curriculum", null);
-        if (currentCurriculumId == null) {
-            List<Curriculum> all = getAllCurriculum();
-            if (all.size() > 0) {
-                currentCurriculum = all.get(all.size() - 1);
-                currentCurriculumId = currentCurriculum.getCurriculumCode();
-                thisWeekOfTerm = currentCurriculum.getWeekOfTerm(now);
-                if (isDataAvailable() && thisWeekOfTerm > getCurrentCurriculum().getTotalWeeks())
-                    getCurrentCurriculum().setTotalWeeks(thisWeekOfTerm);
-                defaultSP.edit().putString("current_curriculum", currentCurriculumId).commit();
-            }
-        } else {
-            currentCurriculum = mDBHelper.getCurriculumAtId(currentCurriculumId);
-            if (currentCurriculum != null)
-                thisWeekOfTerm = getCurrentCurriculum().getWeekOfTerm(now);
-            if (isDataAvailable() && thisWeekOfTerm > getCurrentCurriculum().getTotalWeeks())
-                getCurrentCurriculum().setTotalWeeks(thisWeekOfTerm);
+    public static TimePeriod getClassSimplifiedTimeByTimeContainedIn(HTime time) {
+        TimePeriod[] dots = new TimePeriod[]{
+                new TimePeriod(new HTime(0, 0), new HTime(8, 30)),
+                new TimePeriod(new HTime(8, 30), new HTime(10, 15)),
+                new TimePeriod(new HTime(10, 15), new HTime(10, 30)),
+                new TimePeriod(new HTime(10, 30), new HTime(12, 15)),
+                new TimePeriod(new HTime(12, 15), new HTime(13, 45)),
+                new TimePeriod(new HTime(13, 45), new HTime(15, 30)),
+                new TimePeriod(new HTime(15, 30), new HTime(15, 45)),
+                new TimePeriod(new HTime(15, 45), new HTime(17, 30)),
+                new TimePeriod(new HTime(17, 30), new HTime(18, 30)),
+                new TimePeriod(new HTime(18, 30), new HTime(20, 15)),
+                new TimePeriod(new HTime(20, 15), new HTime(20, 30)),
+                new TimePeriod(new HTime(20, 30), new HTime(22, 15)),
+                new TimePeriod(new HTime(22, 15), new HTime(23, 59))
+        };
+        for (int i = 0; i < dots.length; i++) {
+            if (time.during(dots[i])) return dots[i];
         }
-       // Log.e("cur_text",currentCurriculum.getCurriculumText());
+        return null;
+    }
+
+    public Calendar getNow() {
+        now.setTimeInMillis(System.currentTimeMillis());
+        return now;
     }
 
     public boolean isDataAvailable() {
         return currentCurriculum != null;
     }
 
-    @WorkerThread
-    public boolean saveDataToCloud() {
-        if (CurrentUser == null) return false;
-        Log.e("开始上传数据", "尝试");
-        UserData data = UserData.create(mDBHelper.getReadableDatabase());
-        data.loadTaskData().loadTimetableData().loadSubjectData().loadCurriculumData(getAllCurriculum());
-        final UserData.UserDataCloud userDataCloud = data.getPreparedCloudData(CurrentUser);
-        BmobQuery<UserData.UserDataCloud> bq = new BmobQuery<>();
-        bq.addWhereEqualTo("user", CurrentUser);
-        try{
-            List<UserData.UserDataCloud> list = bq.findObjectsSync(UserData.UserDataCloud.class);
-            if (list == null || list.size() == 0) userDataCloud.saveSync();
-            else if(list!=null&& list.size()>0){
-                userDataCloud.setObjectId(list.get(0).getObjectId());
-                userDataCloud.updateSync();
-            }
-        }catch (Exception e){
-            return false;
-        }
-        return true;
-    }
-
-
-    public boolean loadDataFromCloud() {
-        if (CurrentUser == null) return false;
-        BmobQuery<UserData.UserDataCloud> query = new BmobQuery<>();
-        query.addWhereEqualTo("user", CurrentUser);
-        query.findObjects(new FindListener<UserData.UserDataCloud>() {
-            @Override
-            public void done(List<UserData.UserDataCloud> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
-                Log.e("下载", "done");
-                if (e == null && list != null && list.size() > 0) {
-                    new writeDataToLocalTask(list.get(0)).executeOnExecutor(HITAApplication.TPE);
-                } else {
-                    Toast.makeText(HContext, R.string.no_data_on_cloud, Toast.LENGTH_SHORT).show();
-                    Log.e("下载失败", e == null ? "空结果" : e.toString());
-                }
-            }
-        });
-
-
-        return true;
-    }
-
     public boolean loadDataFromCloud(UserData.UserDataCloud bud) {
         if (CurrentUser == null) return false;
-        new writeDataToLocalTask(bud).executeOnExecutor(HITAApplication.TPE);
+        new writeDataToLocalTask(bud).executeOnExecutor(TPE);
         return true;
     }
 
@@ -224,7 +199,7 @@ public class TimetableCore {
             public void done(List<UserData.UserDataCloud> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
                 Log.e("下载", "done");
                 if (e == null && list != null && list.size() > 0) {
-                    new writeDataToLocalTask(list.get(0), toFinish).executeOnExecutor(HITAApplication.TPE);
+                    new writeDataToLocalTask(list.get(0), toFinish).executeOnExecutor(TPE);
                 } else {
                     if (toFinish != null) toFinish.finish();
                     Log.e("下载失败", e == null ? "空结果" : e.toString());
@@ -241,73 +216,74 @@ public class TimetableCore {
         currentCurriculumId = null;
     }
 
-
-    class writeDataToLocalTask extends AsyncTask {
-
-        UserData.UserDataCloud user_data;
-        Activity tofinish;
-
-        writeDataToLocalTask(UserData.UserDataCloud bmob_user_data, Activity tofinish) {
-            this.user_data = bmob_user_data;
-            this.tofinish = tofinish;
-        }
-
-        writeDataToLocalTask(UserData.UserDataCloud bmob_user_data) {
-            this.user_data = bmob_user_data;
-            this.tofinish = null;
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            try {
-                SQLiteDatabase sqd = mDBHelper.getWritableDatabase();
-                UserData data  = UserData.create(sqd).loadData(user_data);
-               // clearData();
-                sqd.delete("curriculum", null,null);
-                sqd.delete("timetable", null,null);
-                for (Curriculum ci : data.getCurriculum()) {
-                    sqd.insert("curriculum", null, ci.getContentValues());
-                    CurriculumCreator curriculumCreator = CurriculumCreator.create(ci.getCurriculumCode(),ci.getName(),ci.getStartDate());
-                    curriculumCreator.loadCourse(ci.getCurriculumText());
-                    addCurriculumToTimeTable(curriculumCreator);
+    @SuppressLint("ApplySharedPref")
+    @WorkerThread
+    public boolean addCurriculum(CurriculumCreator il, boolean coverSubject) {
+        if (il == null) return false;
+        Curriculum cur = il.getCurriculum();
+        SQLiteDatabase sdb = mDBHelper.getWritableDatabase();
+        if (cur.getWeekOfTerm(timeTableCore.getNow()) > cur.getTotalWeeks())
+            cur.setTotalWeeks(cur.getWeekOfTerm(timeTableCore.getNow()));
+        sdb.delete("curriculum", "curriculum_code=?", new String[]{il.getCurriculumCode()});
+        sdb.insert("curriculum", null, cur.getContentValues());
+        //if(clearSubject)sdb.delete("subject", "curriculum_code=?", new String[]{il.getCurriculumCode()});
+        sdb.delete("timetable", "curriculum_code=? and type=?", new String[]{il.getCurriculumCode(), TimetableCore.COURSE + ""});
+        for (CurriculumCreator.CurriculumItem ci : il.getCurriculumList()) {
+            if (ci.type == CURRICULUM_TYPE_COURSE) {
+                String tag4 = ci.begin + "";
+                for (int i = 1; i < ci.last; i++) {
+                    tag4 = tag4 + "," + (ci.begin + i);
                 }
-                sqd.delete("subject", null,null);
-                for (Subject s :data.getSubjects()) {
-                    sqd.insert("subject", null, s.getContentValues());
-                }
-                 for (EventItemHolder eih:data.getEvents()) {
-                    sqd.insert("timetable", null, eih.getContentValues());
-                }
-                sqd.delete("task", null,null);
-                for (Task t : data.getTasks()) {
-                    sqd.insert("task", null, t.getContentValues());
-                }
-
-
-                initCoreData();
-                return true;
-
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                return false;
-            }
-
-
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            if (tofinish != null) {
-                tofinish.finish();
-            }
-            if ((Boolean) o) {
-                Toast.makeText(HContext, R.string.sync_success, Toast.LENGTH_SHORT).show();
-                if (isDataAvailable()) timeServiceBinder.refreshNowAndNextEvent();
+                EventItemHolder eih = new EventItemHolder(il.getCurriculumCode(), COURSE, ci.name, ci.place, ci.tag, tag4, getTimeAtNumber(ci.begin, ci.last).get(0), getTimeAtNumber(ci.begin, ci.last).get(1), ci.DOW, ci.weeks, false
+                );
+                sdb.insert("timetable", null, eih.getContentValues());
             } else {
-                Toast.makeText(HContext, R.string.sync_error, Toast.LENGTH_SHORT).show();
+                addEvent(ci.weeks.get(0), ci.DOW, EXAM, ci.name, ci.place, ci.name, ci.tag, ci.begin, ci.last, false);
             }
         }
+
+        for (Subject s : il.getSubjects()) {
+            String ratesText = null;
+            String scoresText = null;
+            Cursor c = sdb.query("subject", null, "curriculum_code =? AND name=?",
+                    new String[]{il.getCurriculumCode(), s.getName()}, null, null, null);
+            if (c.moveToNext()) {
+                ratesText = c.getString(c.getColumnIndex("rates"));
+                scoresText = c.getString(c.getColumnIndex("scores"));
+                ContentValues cv = s.getContentValues();
+                cv.put("rates", ratesText);
+                cv.put("scores", scoresText);
+                String uuid = c.getString(c.getColumnIndex("uuid"));
+                if (TextUtils.isEmpty(uuid)) {
+                    if (coverSubject) {
+                        cv.put("uuid", UUID.randomUUID().toString());
+                        sdb.update("subject", cv, "name=? AND curriculum_code=?", new String[]{il.getCurriculumCode(), s.getName()});
+                    } else {
+                        Subject temp = new Subject(c);
+                        temp.setUUID(UUID.randomUUID().toString());
+                        sdb.update("subject", temp.getContentValues(), "name=? AND curriculum_code=?", new String[]{il.getCurriculumCode(), s.getName()});
+                    }
+                } else {
+                    if (coverSubject) {
+                        cv.put("uuid", uuid);
+                        sdb.update("subject", cv, "uuid=?", new String[]{uuid});
+                    }
+                }
+            } else {
+                if (TextUtils.isEmpty(s.getUUID())) {
+                    s.setUUID(UUID.randomUUID().toString());
+                }
+                sdb.insert("subject", null, s.getContentValues());
+            }
+            c.close();
+
+        }
+
+        currentCurriculumId = cur.getCurriculumCode();
+        currentCurriculum = cur;
+        defaultSP.edit().putString("current_curriculum", currentCurriculumId).commit();
+
+        return true;
     }
 
 
@@ -315,20 +291,68 @@ public class TimetableCore {
         return isThisTerm;
     }
 
-    public void setThisTerm(boolean thisTerm) {
-        isThisTerm = thisTerm;
-    }
 
     public int getThisWeekOfTerm() {
         return thisWeekOfTerm;
     }
 
-    public void setThisWeekOfTerm(int thisWeekOfTerm) {
-        this.thisWeekOfTerm = thisWeekOfTerm;
+
+    public void syncTimeFlags() {
+
+        if (isDataAvailable()) {
+            thisWeekOfTerm = currentCurriculum.getWeekOfTerm(timeTableCore.getNow());
+            isThisTerm = thisWeekOfTerm > 0;
+            if (thisWeekOfTerm > currentCurriculum.getTotalWeeks()) {
+                currentCurriculum.setTotalWeeks(thisWeekOfTerm);
+            }
+        } else {
+            thisWeekOfTerm = -1;
+            isThisTerm = false;
+        }
+
     }
+
 
     public Curriculum getCurrentCurriculum() {
         return currentCurriculum;
+    }
+
+    @SuppressLint("ApplySharedPref")
+    @WorkerThread
+    public void initCoreData() {
+        currentCurriculumId = defaultSP.getString("current_curriculum", null);
+        if (currentCurriculumId == null) {
+            List<Curriculum> all = getAllCurriculum();
+            // Log.e("init_size", String.valueOf(all));
+            if (all.size() > 0) {
+                currentCurriculum = all.get(all.size() - 1);
+                currentCurriculumId = currentCurriculum.getCurriculumCode();
+                syncTimeFlags();
+                if (isDataAvailable() && thisWeekOfTerm > getCurrentCurriculum().getTotalWeeks()) {
+                    getCurrentCurriculum().setTotalWeeks(thisWeekOfTerm);
+                }
+                defaultSP.edit().putString("current_curriculum", currentCurriculumId).commit();
+            }
+        } else {
+            List<Curriculum> all = getAllCurriculum();
+            currentCurriculum = mDBHelper.getCurriculumAtId(currentCurriculumId);
+            // Log.e("init_id", String.valueOf(currentCurriculum));
+            syncTimeFlags();
+            if (currentCurriculum != null) {
+                if (thisWeekOfTerm > getCurrentCurriculum().getTotalWeeks())
+                    getCurrentCurriculum().setTotalWeeks(thisWeekOfTerm);
+            } else if (all.size() > 0) {
+                currentCurriculum = all.get(all.size() - 1);
+                currentCurriculumId = currentCurriculum.getCurriculumCode();
+                if (isDataAvailable() && thisWeekOfTerm > getCurrentCurriculum().getTotalWeeks())
+                    getCurrentCurriculum().setTotalWeeks(thisWeekOfTerm);
+                defaultSP.edit().putString("current_curriculum", currentCurriculumId).commit();
+            }
+
+
+        }
+        syncTimeFlags();
+        // Log.e("cur_text",currentCurriculum.getCurriculumText());
     }
 
     @WorkerThread
@@ -343,63 +367,134 @@ public class TimetableCore {
         return result;
     }
 
+    @WorkerThread
+    public boolean saveDataToCloud() {
+        if (CurrentUser == null) return false;
+        Log.e("开始上传数据", "尝试");
+        UserData data = UserData.create(mDBHelper.getReadableDatabase());
+        data.loadTaskData().loadTimetableData().loadSubjectData().loadCurriculumData(getAllCurriculum());
+        final UserData.UserDataCloud userDataCloud = data.getPreparedCloudData(CurrentUser);
+        BmobQuery<UserData.UserDataCloud> bq = new BmobQuery<>();
+        bq.addWhereEqualTo("user", CurrentUser);
+        try {
+            List<UserData.UserDataCloud> list = bq.findObjectsSync(UserData.UserDataCloud.class);
+            if (list == null || list.size() == 0) userDataCloud.saveSync();
+            else if (list != null && list.size() > 0) {
+                Log.e("data", userDataCloud + "");
+                // userDataCloud.setObjectId();
+                userDataCloud.updateSync(list.get(0).getObjectId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public void saveDataToCloud(final OnDoneListener listener) {
+        packUp(new OnPackDoneListener() {
+            @Override
+            public void onDone(final UserData.UserDataCloud data) {
+                BmobQuery<UserData.UserDataCloud> bq = new BmobQuery<>();
+                bq.addWhereEqualTo("user", CurrentUser);
+                bq.findObjects(new FindListener<UserData.UserDataCloud>() {
+                    @Override
+                    public void done(final List<UserData.UserDataCloud> list, BmobException e) {
+                        if (list == null || list.size() == 0) {
+                            data.save(new SaveListener<String>() {
+                                @Override
+                                public void done(String s, BmobException e) {
+                                    if (e == null) listener.onSuccess();
+                                    else listener.onFailed(e);
+                                }
+                            });
+                        } else {
+                            data.setObjectId(list.get(0).getObjectId());
+                            data.update(new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if (e != null) listener.onFailed(e);
+                                    else listener.onSuccess();
+                                }
+                            });
+
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                listener.onFailed(e);
+            }
+        });
+
+    }
+
+    private void packUp(OnPackDoneListener listener) {
+        new packUpTask(listener).executeOnExecutor(TPE);
+    }
+
+    public boolean loadDataFromCloud() {
+        if (CurrentUser == null) return false;
+        BmobQuery<UserData.UserDataCloud> query = new BmobQuery<>();
+        query.addWhereEqualTo("user", CurrentUser);
+        query.findObjects(new FindListener<UserData.UserDataCloud>() {
+            @Override
+            public void done(List<UserData.UserDataCloud> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
+                Log.e("下载", "done");
+                if (e == null && list != null && list.size() > 0) {
+                    new writeDataToLocalTask(list.get(0)).execute();
+                } else {
+                    Toast.makeText(HContext, R.string.no_data_on_cloud, Toast.LENGTH_SHORT).show();
+                    Log.e("下载失败", e == null ? "空结果" : e.toString());
+                }
+            }
+        });
+
+
+        return true;
+    }
+
+    public void updateCurrentCurriculumInfo(Curriculum other) {
+        if (other == null || !currentCurriculum.getCurriculumCode().equals(other.getCurriculumCode()))
+            return;
+        currentCurriculum.setName(other.getName());
+        currentCurriculum.setTotalWeeks(other.getTotalWeeks());
+        currentCurriculum.setCurriculumText(other.getCurriculumText());
+        currentCurriculum.setStartDate(other.getStartDate());
+    }
+
     @SuppressLint("ApplySharedPref")
     @WorkerThread
-    public void changeCurrentCurriculum(String newId) {
+    public boolean changeCurrentCurriculum(String newId) {
         Curriculum newC = mDBHelper.getCurriculumAtId(newId);
         if (newC != null) {
             currentCurriculumId = newId;
             currentCurriculum = newC;
-            setThisWeekOfTerm(newC.getWeekOfTerm(now));
+            syncTimeFlags();
+            //setThisWeekOfTerm(newC.getWeekOfTerm(timeTableCore.getNow()));
             if (getThisWeekOfTerm() > newC.getTotalWeeks()) {
                 newC.setTotalWeeks(timeTableCore.getThisWeekOfTerm());
             }
             defaultSP.edit().putString("current_curriculum", newId).commit();
-            saveData();
-//            Intent i = new Intent(WATCHER_REFRESH);
-//            HContext.sendBroadcast(i);
-            timeServiceBinder.refreshProgress();
+            //saveData();
+//            timeServiceBinder.refreshProgress();
+            return true;
         }
+        return false;
     }
 
-
     @WorkerThread
-    public void addCurriculum(CurriculumCreator cl) {
-        SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
-        mDatabase.delete("timetable", "curriculum_code=? and type=?", new String[]{cl.getCurriculumCode(), TimetableCore.TIMETABLE_EVENT_TYPE_COURSE + ""});
-        for (CurriculumCreator.CurriculumItem ci : cl.getCurriculumList()) {
-            if (ci.type == CURRICULUM_TYPE_COURSE) {
-                String tag4 = ci.begin + "";
-                for (int i = 1; i < ci.last; i++) {
-                    tag4 = tag4 + "," + (ci.begin + i);
-                }
-                EventItemHolder eih = new EventItemHolder(cl.getCurriculumCode(), TIMETABLE_EVENT_TYPE_COURSE, ci.name, ci.place, ci.tag, tag4, getTimeAtNumber(ci.begin, ci.last).get(0), getTimeAtNumber(ci.begin, ci.last).get(1), ci.DOW, ci.weeks, false
-                );
-                mDatabase.insert("timetable", null, eih.getContentValues());
-                //EventHolders.add();
-            } else {
-                addEvent(ci.weeks.get(0), ci.DOW, TIMETABLE_EVENT_TYPE_EXAM, ci.name, ci.place, ci.name, ci.tag, ci.begin, ci.last, false);
-                //EventHolders.add(new EventItemHolder(1,ci.name,ci.place,null,ci.tag,getTimeAtNumber(ci.begin,ci.last).get(0),getTimeAtNumber(ci.begin,ci.last).get(1),ci.DOW,ci.weeks));
-            }
+    public Subject getSubjectByCourseCode(String code) {
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        Cursor c = sd.query("subject", null, "code=?", new String[]{code}, null, null, null);
+        while (c.moveToNext()) {
+            Subject s = new Subject(c);
+            c.close();
+            return s;
         }
-         }
-
-    public static List<HTime> getTimeAtNumber(int begin, int last) {
-        int[] startDots = {830, 930, 1030, 1130, 1345, 1440, 1545, 1640, 1830, 1925, 2030, 2125,2230};
-        int[] endDots = {920, 1015, 1120, 1215, 1435, 1530, 1635, 1730, 1920, 2015, 2120, 2215,2320};
-        List<HTime> temp = new ArrayList<>();
-        HTime startTime, endTime;
-        int sH = 0, sM = 0, eH = 0, eM = 0;
-        sH = startDots[begin - 1] / 100;
-        sM = startDots[begin - 1] % 100;
-        eH = endDots[(begin - 1) + last - 1] / 100;
-        eM = endDots[(begin - 1) + last - 1] % 100;
-        startTime = new HTime(sH, sM);
-        endTime = new HTime(eH, eM);
-        temp.add(startTime);
-        temp.add(endTime);
-        return temp;
-
+        return null;
     }
 
     public static int getNumberAtTime(Calendar time) {
@@ -425,104 +520,31 @@ public class TimetableCore {
         }
         return -1;
     }
-    public static int getNumberAtTime(HTime to) {
 
-        TimePeriod[] dots = new TimePeriod[]{
-                new TimePeriod(new HTime(8, 30), new HTime(9, 20)),
-                new TimePeriod(new HTime(9, 30), new HTime(10, 15)),
-                new TimePeriod(new HTime(10, 30), new HTime(11, 20)),
-                new TimePeriod(new HTime(11, 30), new HTime(12, 15)),
-                new TimePeriod(new HTime(13, 45), new HTime(14, 35)),
-                new TimePeriod(new HTime(14, 40), new HTime(15, 30)),
-                new TimePeriod(new HTime(15, 45), new HTime(16, 35)),
-                new TimePeriod(new HTime(16, 30), new HTime(17, 30)),
-                new TimePeriod(new HTime(18, 30), new HTime(19, 20)),
-                new TimePeriod(new HTime(19, 25), new HTime(20, 15)),
-                new TimePeriod(new HTime(20, 30), new HTime(21, 20)),
-                new TimePeriod(new HTime(21, 25), new HTime(22, 15)),
-        };
-        for (int i = 0; i < dots.length; i++) {
-            if (to.during(dots[i])) return i + 1;
-            else if(to.before(dots[i].start)) return i;
-        }
-        return -1;
-    }
-    public static TimePeriod getClassTimeByTimeContainedIn(HTime time) {
-        TimePeriod[] dots = new TimePeriod[]{
-                new TimePeriod(new HTime(8, 30), new HTime(9, 20)),
-                new TimePeriod(new HTime(9, 30), new HTime(10, 15)),
-                new TimePeriod(new HTime(10, 30), new HTime(11, 20)),
-                new TimePeriod(new HTime(11, 30), new HTime(12, 15)),
-                new TimePeriod(new HTime(13, 45), new HTime(14, 35)),
-                new TimePeriod(new HTime(14, 40), new HTime(15, 30)),
-                new TimePeriod(new HTime(15, 45), new HTime(16, 35)),
-                new TimePeriod(new HTime(16, 30), new HTime(17, 30)),
-                new TimePeriod(new HTime(18, 30), new HTime(19, 20)),
-                new TimePeriod(new HTime(19, 25), new HTime(20, 15)),
-                new TimePeriod(new HTime(20, 30), new HTime(21, 20)),
-                new TimePeriod(new HTime(21, 25), new HTime(22, 15)),
-        };
-        for (int i = 0; i < dots.length; i++) {
-            if (time.during(dots[i]))  return dots[i];
-        }
-        return null;
-    }
-
-    public static TimePeriod getClassSimplfiedTimeByTimeContainedIn(HTime time) {
-        TimePeriod[] dots = new TimePeriod[]{
-                new TimePeriod(new HTime(0, 0), new HTime(8, 30)),
-                new TimePeriod(new HTime(8, 30), new HTime(10, 15)),
-                new TimePeriod(new HTime(10, 15), new HTime(10, 30)),
-                new TimePeriod(new HTime(10, 30), new HTime(12, 15)),
-                new TimePeriod(new HTime(12, 15), new HTime(13, 45)),
-                new TimePeriod(new HTime(13, 45), new HTime(15, 30)),
-                new TimePeriod(new HTime(15, 30), new HTime(15, 45)),
-                new TimePeriod(new HTime(15, 45), new HTime(17, 30)),
-                new TimePeriod(new HTime(17, 30), new HTime(18, 30)),
-                new TimePeriod(new HTime(18, 30), new HTime(20, 15)),
-                new TimePeriod(new HTime(20, 15), new HTime(20, 30)),
-                new TimePeriod(new HTime(20, 30), new HTime(22, 15)),
-                new TimePeriod(new HTime(22, 15), new HTime(23, 59))
-        };
-        for (int i = 0; i < dots.length; i++) {
-            if (time.during(dots[i]))  return dots[i];
-        }
-        return null;
-    }
-
-    /*函数功能：添加事件*/
-    public String addEvent(int week, int DOW, int type, String eventName, String tag2, String tag3, String tag4, int begin, int last, boolean isWholeDay) {
-        SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
-        if (week > getCurrentCurriculum().getTotalWeeks())
-            getCurrentCurriculum().setTotalWeeks(week);
-        EventItemHolder temp = new EventItemHolder(getCurrentCurriculum().getCurriculumCode(), type, eventName, tag2, tag3, tag4, getTimeAtNumber(begin, last).get(0), getTimeAtNumber(begin, last).get(1), DOW, isWholeDay);
-        temp.weeks.add(week);
-        Cursor c = mDatabase.query("timetable", null, EventItemHolder.QUERY_SELECTION, temp.getQueryParams(), null, null, null);
-        String uuid = temp.getUuid();
+    @WorkerThread
+    public Subject getSubjectByName(String name) {
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        Cursor c = sd.query("subject", null, "name=?", new String[]{name}, null, null, null);
         if (c.moveToNext()) {
-            List<Integer> weeks = new ArrayList<>();
-            String[] strs = c.getString(2).split(",");
-            for (int i = 0; i < strs.length; i++) {
-                if (!strs[i].isEmpty()) weeks.add(Integer.parseInt(strs[i]));
-            }
-            if (!weeks.contains(week)) {
-                weeks.add(week);
-            }
-            String newWeeks = getWeeksText(weeks);
-            ContentValues cv = new ContentValues();
-            uuid = c.getString(c.getColumnIndex("uuid"));
-            cv.put("weeks", newWeeks);
-            cv.put("uuid", uuid);
-            mDatabase.update("timetable", cv, EventItemHolder.QUERY_SELECTION, temp.getQueryParams());
-        } else {
-            mDatabase.insert("timetable", null, temp.getContentValues());
+            Subject s = new Subject(c);
+            c.close();
+            return s;
         }
-        c.close();
-        return uuid;
+        return null;
+    }
+
+    @WorkerThread
+    public void deleteSubject(String name, String curriculumId) {
+        SQLiteDatabase sld = mDBHelper.getWritableDatabase();
+        sld.delete("subject", "name=? AND curriculum_code=?", new String[]{name, curriculumId});
+        sld.delete("timetable", "name=? AND curriculum_code=? AND type=?",
+                new String[]{name, curriculumId, String.valueOf(COURSE)}
+        );
+        return;
     }
 
     public String addEvents(List<Integer> weeks, int DOW, int type, String eventName, String tag2, String tag3, String tag4, int begin, int last, boolean isWholeDay) {
-        Log.e("add", weeks + ",dow:" + DOW + ",event:" + eventName + ",from:" + begin + ",last:" + last);
+        // Log.e("add", weeks + ",dow:" + DOW + ",event:" + eventName + ",from:" + begin + ",last:" + last);
         for (int i : weeks)
             if (i > getCurrentCurriculum().getTotalWeeks()) getCurrentCurriculum().setTotalWeeks(i);
         SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
@@ -530,36 +552,6 @@ public class TimetableCore {
         temp.weeks.addAll(weeks);
         mDatabase.insert("timetable", null, temp.getContentValues());
         return temp.getUuid();
-    }
-
-    public String addEvent(int week, int DOW, int type, String eventName, String tag2, String tag3, String tag4, HTime start, HTime end, boolean isWholeDay) {
-        SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
-        if (week > getCurrentCurriculum().getTotalWeeks())
-            getCurrentCurriculum().setTotalWeeks(week);
-        EventItemHolder temp = new EventItemHolder(getCurrentCurriculum().getCurriculumCode(), type, eventName, tag2, tag3, tag4, start, end, DOW, isWholeDay);
-        temp.weeks.add(week);
-        String uuid = temp.getUuid();
-        Cursor c = mDatabase.query("timetable", null, EventItemHolder.QUERY_SELECTION, temp.getQueryParams(), null, null, null);
-        if (c.moveToNext()) {
-            List<Integer> weeks = new ArrayList<>();
-            String[] strs = c.getString(2).split(",");
-            for (int i = 0; i < strs.length; i++) {
-                if (!strs[i].isEmpty()) weeks.add(Integer.parseInt(strs[i]));
-            }
-            if (!weeks.contains(week)) {
-                weeks.add(week);
-            }
-            String newWeeks = getWeeksText(weeks);
-            ContentValues cv = new ContentValues();
-            uuid = c.getString(c.getColumnIndex("uuid"));
-            cv.put("weeks", newWeeks);
-            cv.put("uuid", uuid);
-            mDatabase.update("timetable", cv, EventItemHolder.QUERY_SELECTION, temp.getQueryParams());
-        } else {
-            mDatabase.insert("timetable", null, temp.getContentValues());
-        }
-        c.close();
-        return uuid;
     }
 
     public String addEvent(EventItem ei) {
@@ -578,16 +570,17 @@ public class TimetableCore {
         end = ei.endTime;
         if (week > getCurrentCurriculum().getTotalWeeks())
             getCurrentCurriculum().setTotalWeeks(week);
-        EventItemHolder temp = new EventItemHolder(ei.getCurriculumCode(), type, eventName, tag2, tag3, tag4, start, end, DOW, ei.isWholeDay);
+        EventItemHolder temp = new EventItemHolder(ei.getCurriculumCode(), type, eventName, tag2, tag3, tag4, start, end, DOW, ei.isWholeDay());
         temp.weeks.add(week);
-        ei.setUuid(temp.getUuid());
+        if (!TextUtils.isEmpty(ei.getUuid())) temp.setUuid(ei.getUuid());
+        else ei.setUuid(temp.getUuid());
         Cursor c = mDatabase.query("timetable", null, EventItemHolder.QUERY_SELECTION, temp.getQueryParams(), null, null, null);
         String uuid = temp.getUuid();
         if (c.moveToNext()) {
             List<Integer> weeks = new ArrayList<>();
             String[] strs = c.getString(2).split(",");
-            for (int i = 0; i < strs.length; i++) {
-                weeks.add(Integer.parseInt(strs[i]));
+            for (String str : strs) {
+                weeks.add(Integer.parseInt(str));
             }
             if (!weeks.contains(week)) {
                 weeks.add(week);
@@ -622,7 +615,7 @@ public class TimetableCore {
                 if (!strs[i].isEmpty()) weeks.add(Integer.parseInt(strs[i]));
             }
             if (!weeks.contains(ei.week)) return false;
-            else weeks.remove((Object) ei.week);
+            else weeks.remove((Integer) ei.week);
             if (weeks.size() == 0) {
                 mSQLiteDatabase.delete("timetable", "uuid=?", new String[]{ei.getUuid()});
             } else {
@@ -644,6 +637,37 @@ public class TimetableCore {
         return true;
     }
 
+    /*函数功能：添加事件*/
+    public String addEvent(int week, int DOW, int type, String eventName, String tag2, String tag3, String tag4, int begin, int last, boolean isWholeDay) {
+        SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
+        if (week > getCurrentCurriculum().getTotalWeeks())
+            getCurrentCurriculum().setTotalWeeks(week);
+        EventItemHolder temp = new EventItemHolder(getCurrentCurriculum().getCurriculumCode(), type, eventName, tag2, tag3, tag4, getTimeAtNumber(begin, last).get(0), getTimeAtNumber(begin, last).get(1), DOW, isWholeDay);
+        temp.weeks.add(week);
+        Cursor c = mDatabase.query("timetable", null, EventItemHolder.QUERY_SELECTION, temp.getQueryParams(), null, null, null);
+        String uuid = temp.getUuid();
+        if (c.moveToNext()) {
+            List<Integer> weeks = new ArrayList<>();
+            String[] strs = c.getString(2).split(",");
+            for (int i = 0; i < strs.length; i++) {
+                if (!strs[i].isEmpty()) weeks.add(Integer.parseInt(strs[i]));
+            }
+            if (!weeks.contains(week)) {
+                weeks.add(week);
+            }
+            String newWeeks = getWeeksText(weeks);
+            ContentValues cv = new ContentValues();
+            uuid = c.getString(c.getColumnIndex("uuid"));
+            cv.put("weeks", newWeeks);
+            cv.put("uuid", uuid);
+            mDatabase.update("timetable", cv, EventItemHolder.QUERY_SELECTION, temp.getQueryParams());
+        } else {
+            mDatabase.insert("timetable", null, temp.getContentValues());
+        }
+        c.close();
+        return uuid;
+    }
+
     @WorkerThread
     public boolean deleteEvent(String uuid, int week) {
         SQLiteDatabase mSQLiteDatabase = mDBHelper.getWritableDatabase();
@@ -656,7 +680,7 @@ public class TimetableCore {
                 if (!strs[i].isEmpty()) weeks.add(Integer.parseInt(strs[i]));
             }
             if (!weeks.contains(week)) return false;
-            else weeks.remove((Object) week);
+            else weeks.remove((Integer) week);
             if (weeks.size() == 0) {
                 mSQLiteDatabase.delete("timetable", "uuid=?",
                         new String[]{uuid});
@@ -675,6 +699,100 @@ public class TimetableCore {
         return true;
     }
 
+    public String addEvent(int week, int DOW, int type, String eventName, String tag2, String tag3, String tag4, HTime start, HTime end, boolean isWholeDay) {
+        SQLiteDatabase mDatabase = mDBHelper.getWritableDatabase();
+        if (week > getCurrentCurriculum().getTotalWeeks())
+            getCurrentCurriculum().setTotalWeeks(week);
+        EventItemHolder temp = new EventItemHolder(getCurrentCurriculum().getCurriculumCode(), type, eventName, tag2, tag3, tag4, start, end, DOW, isWholeDay);
+        temp.weeks.add(week);
+        String uuid = temp.getUuid();
+        Cursor c = mDatabase.query("timetable", null, EventItemHolder.QUERY_SELECTION, temp.getQueryParams(), null, null, null);
+        if (c.moveToNext()) {
+            List<Integer> weeks = new ArrayList<>();
+            String[] strs = c.getString(2).split(",");
+            for (int i = 0; i < strs.length; i++) {
+                if (!strs[i].isEmpty()) weeks.add(Integer.parseInt(strs[i]));
+            }
+            if (!weeks.contains(week)) {
+                weeks.add(week);
+            }
+            String newWeeks = getWeeksText(weeks);
+            ContentValues cv = new ContentValues();
+            uuid = c.getString(c.getColumnIndex("uuid"));
+            cv.put("weeks", newWeeks);
+            cv.put("uuid", uuid);
+            mDatabase.update("timetable", cv, EventItemHolder.QUERY_SELECTION, temp.getQueryParams());
+        } else {
+            mDatabase.insert("timetable", null, temp.getContentValues());
+        }
+        c.close();
+        return uuid;
+    }
+
+    @WorkerThread
+    public void clearCurriculum(String curriculumCode) {
+        SQLiteDatabase mSQLiteDatabase = mDBHelper.getWritableDatabase();
+        mSQLiteDatabase.delete("timetable", "curriculum_code=? AND type=?", new String[]{curriculumCode + "", COURSE + ""});
+    }
+
+    @WorkerThread
+    public List<EventItem> getEventWithInfoContainsAll(List<String> texts) {
+        List<EventItem> res = new ArrayList<>();
+        List<EventItem> UnderTimeCondition = getEventWithInfoContains(texts.get(0));
+        for (EventItem ei : UnderTimeCondition) {
+            boolean allMatched = true;
+            Log.e("course", String.valueOf(ei));
+            for (String cdt : texts) {
+                Log.e("cdt", cdt);
+                boolean match = TextTools.likeWithContain(ei.getMainName(), cdt)
+                        || TextTools.likeWithContain(ei.getTag2(), cdt)
+                        || TextTools.likeWithContain(ei.getTag3(), cdt)
+                        || TextTools.likeWithContain(ei.getTag4(), cdt);
+                if (!match) {
+                    allMatched = false;
+                    break;
+                }
+            }
+            Log.e("all_mat", String.valueOf(allMatched));
+            if (allMatched) res.add(ei);
+        }
+        return res;
+    }
+
+    @WorkerThread
+    /*函数功能：获取从从某周某天某点到某周某天某点内的所有事件列表*/
+    public List<EventItem> getEventFrom_typeLimit(int f_week, int f_dayOfWeek, HTime start, int t_week, int t_dayOfWeek, HTime end, int[] types) {
+        // System.out.println("开始查询,共有事件"+getEventsWithinWeeks(f_week,t_week).size()+"个");
+        if (t_dayOfWeek == -1) t_dayOfWeek = getCurrentCurriculum().getTotalWeeks();
+        if (f_week > t_week) return null;
+        else if (f_week == t_week) {
+            if (f_dayOfWeek > t_dayOfWeek) return null;
+            else if (f_dayOfWeek == t_dayOfWeek) {
+                if (start.compareTo(end) > 0) return null;
+            }
+        }
+        List<EventItem> result = new ArrayList<>();
+        if (f_week > getCurrentCurriculum().getTotalWeeks() || t_week > getCurrentCurriculum().getTotalWeeks() || f_week <= 0 || t_week <= 0)
+            return null;
+        for (EventItem ei : getEventsWithinWeeks(f_week, t_week)) {
+            if ((types != null && types.length != 0 && !contains_integer(types, ei.eventType)) || (ei.week == f_week && ei.DOW < f_dayOfWeek) || (ei.week == t_week && ei.DOW > t_dayOfWeek))
+                continue;
+            if ((ei.week == f_week && ei.DOW == f_dayOfWeek)) {
+                if (f_dayOfWeek == t_dayOfWeek) {
+                    if (ei.hasCross(start) || (ei.startTime.compareTo(start) >= 0 && ei.startTime.compareTo(end) <= 0))
+                        result.add(ei);
+                } else {
+                    if (ei.hasCross(start) || (ei.startTime.compareTo(start) >= 0)) result.add(ei);
+                }
+            } else if (ei.week == t_week && ei.DOW == t_dayOfWeek) {
+                if ((ei.endTime.compareTo(end) <= 0) || ei.hasCross(end)) result.add(ei);
+            } else {
+                result.add(ei);
+            }
+        }
+        return result;
+    }//type<0表示所有类型
+
     @WorkerThread
     public boolean deleteEvent(Calendar from, Calendar to, int type) {
         List<EventItem> temp = getEventFrom(from, to, type);
@@ -683,6 +801,23 @@ public class TimetableCore {
             deleteEvent(e, true);
         }
         return temp.size() > 0;
+    }
+
+    @WorkerThread
+    public List<EventItem> getUnfinishedEvent(Calendar time, int type) {
+        List<EventItem> result = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        Cursor c = sd.query("timetable", null, "type=? and curriculum_code=?", new String[]{type + "", currentCurriculumId}, null, null, null);
+        while (c.moveToNext()) {
+            result.addAll(new EventItemHolder(c).getAllEvents());
+        }
+        c.close();
+        List<EventItem> toRemove = new ArrayList<>();
+        for (EventItem ei : result) {
+            if (ei.hasPassed(time)) toRemove.add(ei);
+        }
+        result.removeAll(toRemove);
+        return result;
     }
 
     @WorkerThread
@@ -737,7 +872,6 @@ public class TimetableCore {
 
     @WorkerThread
     public boolean setFinishTask(Task ta, boolean finished) {
-        Log.e("finishe:", ta.name);
         try {
             if (ta.has_deadline && !ta.ddlName.equals("null")) {
                 String ddlUUID = ta.ddlName.split(":::")[0];
@@ -783,9 +917,21 @@ public class TimetableCore {
     }
 
     @WorkerThread
-    public void clearCurriculum(String curriculumCode) {
-        SQLiteDatabase mSQLiteDatabase = mDBHelper.getWritableDatabase();
-        mSQLiteDatabase.delete("timetable", "curriculum_code=? AND type=?", new String[]{curriculumCode + "", TIMETABLE_EVENT_TYPE_COURSE + ""});
+    public List<EventItem> getOneDayEvents(int week, int DOW) {
+        List<EventItem> result = new ArrayList<>();
+        if (week <= 0 || !timeTableCore.isDataAvailable() || week > getCurrentCurriculum().getTotalWeeks())
+            return result;
+        SQLiteDatabase mSQLiteDatabase = mDBHelper.getReadableDatabase();
+        Cursor c = mSQLiteDatabase.query("timetable", null, "curriculum_code=? and dow=? and weeks like?",
+                new String[]{getCurrentCurriculum().getCurriculumCode() + ""
+                        , DOW + "", "%" + week + "%"
+                }, null, null, null);
+        while (c.moveToNext()) {
+            EventItemHolder eih = new EventItemHolder(c);
+            result.addAll(eih.getEventsWithinWeeks(week, week));
+        }
+        c.close();
+        return result;
     }
 
     public static boolean contains_integer(int[] array, int object) {
@@ -793,40 +939,17 @@ public class TimetableCore {
         return false;
     }
 
-
     @WorkerThread
-    /*函数功能：获取从从某周某天某点到某周某天某点内的所有事件列表*/
-    public List<EventItem> getEventFrom_typeLimit(int f_week, int f_dayOfWeek, HTime start, int t_week, int t_dayOfWeek, HTime end, int[] types) {
-        // System.out.println("开始查询,共有事件"+getEventsWithinWeeks(f_week,t_week).size()+"个");
-        if (t_dayOfWeek == -1) t_dayOfWeek = getCurrentCurriculum().getTotalWeeks();
-        if (f_week > t_week) return null;
-        else if (f_week == t_week) {
-            if (f_dayOfWeek > t_dayOfWeek) return null;
-            else if (f_dayOfWeek == t_dayOfWeek) {
-                if (start.compareTo(end) > 0) return null;
-            }
+    List<EventItem> getAllEvents() {
+        List<EventItem> result = new ArrayList<>();
+        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
+        Cursor c = sd.query("timetable", null, "curriculum_code=?", new String[]{getCurrentCurriculum().getCurriculumCode()}, null, null, null);
+        while (c.moveToNext()) {
+            result.addAll(new EventItemHolder(c).getAllEvents());
         }
-        List<EventItem> result = new ArrayList<EventItem>();
-        if (f_week > getCurrentCurriculum().getTotalWeeks() || t_week > getCurrentCurriculum().getTotalWeeks() || f_week <= 0 || t_week <= 0)
-            return null;
-        for (EventItem ei : getEventsWithinWeeks(f_week, t_week)) {
-            if ((types != null && types.length != 0 && !contains_integer(types, ei.eventType)) || (ei.week == f_week && ei.DOW < f_dayOfWeek) || (ei.week == t_week && ei.DOW > t_dayOfWeek))
-                continue;
-            if ((ei.week == f_week && ei.DOW == f_dayOfWeek)) {
-                if (f_dayOfWeek == t_dayOfWeek) {
-                    if (ei.hasCross(start) || (ei.startTime.compareTo(start) >= 0 && ei.startTime.compareTo(end) <= 0))
-                        result.add(ei);
-                } else {
-                    if (ei.hasCross(start) || (ei.startTime.compareTo(start) >= 0)) result.add(ei);
-                }
-            } else if (ei.week == t_week && ei.DOW == t_dayOfWeek) {
-                if ((ei.endTime.compareTo(end) <= 0) || ei.hasCross(end)) result.add(ei);
-            } else {
-                result.add(ei);
-            }
-        }
+        c.close();
         return result;
-    }//type<0表示所有类型
+    }
 
     @WorkerThread
     public List<EventItem> getEventFrom(int f_week, int f_dayOfWeek, HTime start, int t_week, int t_dayOfWeek, HTime end, int type) {
@@ -895,20 +1018,14 @@ public class TimetableCore {
     }
 
     @WorkerThread
-    public List<EventItem> getUnfinishedEvent(Calendar time, int type) {
+    public List<EventItem> getAllEvents(int type) {
         List<EventItem> result = new ArrayList<>();
         SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        Cursor c = sd.query("timetable", null, "type=?", new String[]{type + ""}, null, null, null);
+        Cursor c = sd.query("timetable", null, "curriculum_code=? and type=?", new String[]{getCurrentCurriculum().getCurriculumCode(), type + ""}, null, null, null);
         while (c.moveToNext()) {
             result.addAll(new EventItemHolder(c).getAllEvents());
         }
         c.close();
-        Log.e("getUnfinishedDDL", String.valueOf(result));
-        List<EventItem> toRemove = new ArrayList<>();
-        for (EventItem ei : result) {
-            if (ei.hasPassed(time)) toRemove.add(ei);
-        }
-        result.removeAll(toRemove);
         return result;
     }
 
@@ -927,29 +1044,17 @@ public class TimetableCore {
     }
 
     @WorkerThread
-    public List<EventItem> getEventWithInfoContainsAll(List<String> texts) {
-        List<EventItem> res = new ArrayList<>();
-        List<EventItem> UnderTimeCondition = getEventWithInfoContains(texts.get(0));
-        for (EventItem ei : UnderTimeCondition) {
-            boolean allMatched = true;
-            Log.e("course", String.valueOf(ei));
-            for (String cdt : texts) {
-                Log.e("cdt",cdt);
-                boolean match = TextTools.likeWithContain(ei.getMainName(), cdt)
-                        || TextTools.likeWithContain(ei.getTag2(), cdt)
-                        || TextTools.likeWithContain(ei.getTag3(), cdt)
-                        || TextTools.likeWithContain(ei.getTag4(), cdt);
-                if (!match) {
-                    allMatched = false;
-                    break;
-                }
+    public EventItem getCourseAt(int week, int dow, int start, int last) {
+        for (EventItem ei : getEventsWithinWeeks(week, week)) {
+            if (ei.DOW == dow
+                    && ei.startTime.equals(getTimeAtNumber(start, last).get(0))
+                    && ei.endTime.equals(getTimeAtNumber(start, last).get(1))
+                    && ei.eventType == COURSE) {
+                return ei;
             }
-            Log.e("all_mat", String.valueOf(allMatched));
-            if (allMatched) res.add(ei);
         }
-        return res;
+        return null;
     }
-
 
     @WorkerThread
     public List<EventItem> getEventFrom(Calendar from, Calendar to, int type) {
@@ -962,9 +1067,6 @@ public class TimetableCore {
         int tempDOW2 = to.get(Calendar.DAY_OF_WEEK);
         int t_dayOfWeek = tempDOW2 == 1 ? 7 : tempDOW2 - 1;
         HTime end = new HTime(to);
-        //System.out.println("开始查询,共有事件"+getEventsWithinWeeks(f_week,t_week).size()+"个");
-
-        // Log.e("getEventFrom",f_week+","+f_dayOfWeek+","+start.tellTime()+",,,"+t_week+","+t_dayOfWeek+","+end.tellTime());
         if (t_dayOfWeek == -1) t_dayOfWeek = getCurrentCurriculum().getTotalWeeks();
         if (f_week > t_week) return null;
         else if (f_week == t_week) {
@@ -995,26 +1097,59 @@ public class TimetableCore {
         return result;
     } //type<0表示所有类型
 
+    @WorkerThread
+    public ArrayList<Task> getFinishedTasks() {
+        ArrayList<Task> res = new ArrayList<>();
+        if (!isDataAvailable()) return res;
+        SQLiteDatabase sld = mDBHelper.getReadableDatabase();
+        Cursor c = sld.query("task", null, "curriculum_code=? and finished=?", new String[]{getCurrentCurriculum().getCurriculumCode(), 1 + ""}, null, null, null);
+        while (c.moveToNext()) {
+            res.add(new Task(c));
+        }
+        c.close();
+        return res;
+    }
 
     @WorkerThread
-    public List<EventItem> getAllEvents() {
+    public List<EventItem> getEventsWithinWeeks(int fromW, int toW) {
+        SQLiteDatabase mSQLiteDatabase = mDBHelper.getReadableDatabase();
         List<EventItem> result = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        Cursor c = sd.query("timetable", null, "curriculum_code=?", new String[]{getCurrentCurriculum().getCurriculumCode()}, null, null, null);
+        Cursor c = mSQLiteDatabase.query("timetable", null, "curriculum_code=?", new String[]{getCurrentCurriculum().getCurriculumCode() + ""}, null, null, null);
         while (c.moveToNext()) {
-            result.addAll(new EventItemHolder(c).getAllEvents());
+            EventItemHolder eih = new EventItemHolder(c);
+            result.addAll(eih.getEventsWithinWeeks(fromW, toW));
         }
         c.close();
         return result;
     }
 
-    public List<EventItem> getOneDayEvents(int week, int DOW) {
-        List<EventItem> result = new ArrayList<>();
-        if (week <= 0 ||!timeTableCore.isDataAvailable()|| week > getCurrentCurriculum().getTotalWeeks()) return result;
-        for (EventItem ei : getEventsWithinWeeks(week, week)) {
-            if (ei.DOW == DOW) result.add(ei);
+    public String itWillStartIn(Context context, Calendar from, EventItem ei) {
+        long minutes = ei.getInWhatTimeWillItHappen(currentCurriculum, from);
+        int weeks = (int) (minutes / 10080);
+        minutes %= 10080;
+        int days = (int) (minutes / 1440);
+        minutes %= 1440;
+        int hours = (int) (minutes / 60);
+        minutes %= 60;
+        String weekS = weeks > 0 ? String.format(context.getString(R.string.count_week), weeks) : "";
+        String dayS = days > 0 ? String.format(context.getString(R.string.days), days) : "";
+        String hourS, minuteS;
+        if (!TextUtils.isEmpty(weekS)) {
+            hourS = minuteS = "";
+        } else if (!TextUtils.isEmpty(dayS)) {
+            minuteS = "";
+            hourS = hours > 0 ? hours + "h" : "";
+        } else {
+            hourS = hours > 0 ? hours + "h" : "";
+            minuteS = minutes > 0 ? minutes + "min" : "";
         }
-        return result;
+        if (ei.isWholeDay()) {
+            if (weeks == 0 && days == 0) return context.getString(R.string.right_today);
+            else return weekS + dayS;
+        }
+        if (TextUtils.isEmpty(weekS + dayS + hourS + minuteS))
+            return context.getString(R.string.timeline_head_ongoing_subtitle);
+        else return weekS + dayS + hourS + minuteS;
     }
 
     @WorkerThread
@@ -1083,135 +1218,7 @@ public class TimetableCore {
         return res;
     }
 
-    @WorkerThread
-    public ArrayList<Task> getfinishedTasks() {
-        ArrayList<Task> res = new ArrayList<>();
-        if (!isDataAvailable()) return res;
-        SQLiteDatabase sld = mDBHelper.getReadableDatabase();
-        Cursor c = sld.query("task", null, "curriculum_code=? and finished=?", new String[]{getCurrentCurriculum().getCurriculumCode(), 1 + ""}, null, null, null);
-        while (c.moveToNext()) {
-            res.add(new Task(c));
-        }
-        c.close();
-        return res;
-    }
-
-    @WorkerThread
-    public ArrayList<Task> getUnfinishedTaskWithLength() {
-        ArrayList<Task> res = new ArrayList<>();
-        if (!isDataAvailable()) return res;
-        SQLiteDatabase sld = mDBHelper.getReadableDatabase();
-        Cursor c = sld.query("task", null, "curriculum_code=? and has_length=? and finished=?", new String[]{getCurrentCurriculum().getCurriculumCode(), 1 + "", 0 + ""}, null, null, null);
-        while (c.moveToNext()) {
-            res.add(new Task(c));
-        }
-        c.close();
-        return res;
-    }
-
-    public static int getDOW(Calendar c) {
-        int tempDOW1 = c.get(Calendar.DAY_OF_WEEK);
-        return tempDOW1 == 1 ? 7 : tempDOW1 - 1;
-    }
-
-    @WorkerThread
-    public EventItem getCourseAt(int week, int dow, int start, int last) {
-        for (EventItem ei : getEventsWithinWeeks(week, week)) {
-            if (ei.DOW == dow
-                    && ei.startTime.equals(getTimeAtNumber(start, last).get(0))
-                    && ei.endTime.equals(getTimeAtNumber(start, last).get(1))
-                    && ei.eventType == TIMETABLE_EVENT_TYPE_COURSE) {
-                return ei;
-            }
-        }
-        return null;
-    }
-
-    public boolean hasOverLapping(int week, int dayOfWeek, EventItem ei) {
-        for (EventItem e : getEventsWithinWeeks(week, week)) {
-            if (e.DOW != dayOfWeek) continue;
-            if (ei.hasOverLapping(e)) return true;
-        }
-        return false;
-    }
-
-    @WorkerThread
-    public List<EventItem> getEventsWithinWeeks(int fromW, int toW) {
-        SQLiteDatabase mSQLiteDatabase = mDBHelper.getReadableDatabase();
-        List<EventItem> result = new ArrayList<>();
-        Cursor c = mSQLiteDatabase.query("timetable", null, "curriculum_code=?", new String[]{getCurrentCurriculum().getCurriculumCode() + ""}, null, null, null);
-        while (c.moveToNext()) {
-            EventItemHolder eih = new EventItemHolder(c);
-            //Log.e("!!!",c.getString(0)+"|"+c.getString(2));
-            result.addAll(eih.getEventsWithinWeeks(fromW, toW));
-        }
-        c.close();
-
-        return result;
-    }
-
-    public List<TimePeriod> getSpaces(Calendar from, Calendar to, int minDurationMinute, int type) {
-        if (from.after(to) || from.get(Calendar.DAY_OF_MONTH) != to.get(Calendar.DAY_OF_MONTH))
-            return null;
-        List<TimePeriod> result = new ArrayList<>();
-        List<EventItem> temp = getEventFrom(from, to, type);
-        Collections.sort(temp);
-        Log.e("!!!the temp is:", String.valueOf(temp));
-        if (temp == null || temp.size() == 0) {
-            TimePeriod m = new TimePeriod();
-            m.start = new HTime(from);
-            m.end = new HTime(to);
-            result.add(m);
-        } else if (temp.size() == 1) {
-            if (temp.get(0).startTime.after(new HTime(from)) && temp.get(0).startTime.getDuration(new HTime(from)) >= minDurationMinute) {
-                TimePeriod m = new TimePeriod();
-                m.start = new HTime(from);
-                m.end = temp.get(0).startTime;
-                result.add(m);
-            }
-            if (temp.get(0).endTime.before(new HTime(to)) && temp.get(0).endTime.getDuration(new HTime(to)) >= minDurationMinute) {
-                TimePeriod m2 = new TimePeriod();
-                m2.end = new HTime(to);
-                m2.start = temp.get(0).endTime;
-                result.add(m2);
-            }
-        } else {
-            for (int i = 0; i < temp.size(); i++) {
-                TimePeriod m = new TimePeriod();
-                Log.e("event:", temp.get(i).toString());
-                if (i == 0) {
-                    if (temp.get(i).startTime.after(new HTime(from)) && temp.get(i).startTime.getDuration(new HTime(from)) >= minDurationMinute) {
-                        m.start = new HTime(from);
-                        m.end = temp.get(0).startTime;
-                        Log.e("add:first", m.toString());
-                        result.add(m);
-                    }
-                } else if (i == temp.size() - 1) {
-                    if (temp.get(i).endTime.before(new HTime(to)) && temp.get(i).endTime.getDuration(new HTime(to)) >= minDurationMinute) {
-                        m.end = new HTime(to);
-                        m.start = temp.get(i).endTime;
-                        result.add(m);
-                        Log.e("add:last", m.toString());
-                    }
-                }
-
-                if (i + 1 < temp.size() && temp.get(i).endTime.getDuration(temp.get(i + 1).startTime) >= minDurationMinute) {
-                    TimePeriod m3 = new TimePeriod();
-                    m3.start = temp.get(i).endTime;
-                    m3.end = temp.get(i + 1).startTime;
-                    Log.e("add:normal", m3.toString());
-                    result.add(m3);
-
-                }
-
-            }
-
-        }
-        Collections.sort(result);
-        return result;
-    }
-
-    public List<TimePeriod> getSpaces(List<EventItem> breakT, Calendar from, Calendar to, int minDurationMinute, int type) {
+    List<TimePeriod> getSpaces(List<EventItem> breakT, Calendar from, Calendar to, int minDurationMinute, int type) {
         if (from.after(to) || from.get(Calendar.DAY_OF_MONTH) != to.get(Calendar.DAY_OF_MONTH))
             return null;
         List<TimePeriod> result = new ArrayList<>();
@@ -1285,6 +1292,209 @@ public class TimetableCore {
         return result;
     }
 
+    @WorkerThread
+    public ArrayList<Task> getUnfinishedTaskWithLength() {
+        ArrayList<Task> res = new ArrayList<>();
+        if (!isDataAvailable()) return res;
+        SQLiteDatabase sld = mDBHelper.getReadableDatabase();
+        Cursor c = sld.query("task", null, "curriculum_code=? and has_length=? and finished=?", new String[]{getCurrentCurriculum().getCurriculumCode(), 1 + "", 0 + ""}, null, null, null);
+        while (c.moveToNext()) {
+            res.add(new Task(c));
+        }
+        c.close();
+        return res;
+    }
+
+    public static int getDOW(Calendar c) {
+        int tempDOW1 = c.get(Calendar.DAY_OF_WEEK);
+        return tempDOW1 == 1 ? 7 : tempDOW1 - 1;
+    }
+
+    public interface OnDoneListener {
+        void onSuccess();
+
+        void onFailed(Exception e);
+    }
+
+    public boolean hasOverLapping(int week, int dayOfWeek, EventItem ei) {
+        for (EventItem e : getEventsWithinWeeks(week, week)) {
+            if (e.DOW != dayOfWeek) continue;
+            if (ei.hasOverLapping(e)) return true;
+        }
+        return false;
+    }
+
+    private interface OnPackDoneListener {
+        void onDone(UserData.UserDataCloud data);
+
+        void onFailed(Exception e);
+    }
+
+    public List<TimePeriod> getSpaces(Calendar from, Calendar to, int minDurationMinute, int type) {
+        if (from.after(to) || from.get(Calendar.DAY_OF_MONTH) != to.get(Calendar.DAY_OF_MONTH))
+            return null;
+        List<TimePeriod> result = new ArrayList<>();
+        List<EventItem> temp = getEventFrom(from, to, type);
+        Collections.sort(temp);
+        Log.e("!!!the temp is:", String.valueOf(temp));
+        if (temp == null || temp.size() == 0) {
+            TimePeriod m = new TimePeriod();
+            m.start = new HTime(from);
+            m.end = new HTime(to);
+            result.add(m);
+        } else if (temp.size() == 1) {
+            if (temp.get(0).startTime.after(new HTime(from)) && temp.get(0).startTime.getDuration(new HTime(from)) >= minDurationMinute) {
+                TimePeriod m = new TimePeriod();
+                m.start = new HTime(from);
+                m.end = temp.get(0).startTime;
+                result.add(m);
+            }
+            if (temp.get(0).endTime.before(new HTime(to)) && temp.get(0).endTime.getDuration(new HTime(to)) >= minDurationMinute) {
+                TimePeriod m2 = new TimePeriod();
+                m2.end = new HTime(to);
+                m2.start = temp.get(0).endTime;
+                result.add(m2);
+            }
+        } else {
+            for (int i = 0; i < temp.size(); i++) {
+                TimePeriod m = new TimePeriod();
+                Log.e("event:", temp.get(i).toString());
+                if (i == 0) {
+                    if (temp.get(i).startTime.after(new HTime(from)) && temp.get(i).startTime.getDuration(new HTime(from)) >= minDurationMinute) {
+                        m.start = new HTime(from);
+                        m.end = temp.get(0).startTime;
+                        Log.e("add:first", m.toString());
+                        result.add(m);
+                    }
+                } else if (i == temp.size() - 1) {
+                    if (temp.get(i).endTime.before(new HTime(to)) && temp.get(i).endTime.getDuration(new HTime(to)) >= minDurationMinute) {
+                        m.end = new HTime(to);
+                        m.start = temp.get(i).endTime;
+                        result.add(m);
+                        Log.e("add:last", m.toString());
+                    }
+                }
+
+                if (i + 1 < temp.size() && temp.get(i).endTime.getDuration(temp.get(i + 1).startTime) >= minDurationMinute) {
+                    TimePeriod m3 = new TimePeriod();
+                    m3.start = temp.get(i).endTime;
+                    m3.end = temp.get(i + 1).startTime;
+                    Log.e("add:normal", m3.toString());
+                    result.add(m3);
+
+                }
+
+            }
+
+        }
+        Collections.sort(result);
+        return result;
+    }
+
+    private class packUpTask extends AsyncTask {
+
+        OnPackDoneListener listener;
+
+        packUpTask(OnPackDoneListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            try {
+                for (Curriculum c : timeTableCore.getAllCurriculum()) {
+                    c.saveToDB();
+                }
+                UserData data = UserData.create(mDBHelper.getReadableDatabase());
+                data.loadTaskData().loadTimetableData().loadSubjectData().loadCurriculumData(getAllCurriculum());
+                final UserData.UserDataCloud userDataCloud = data.getPreparedCloudData(CurrentUser);
+                return userDataCloud;
+            } catch (Exception e) {
+                return e;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if (o instanceof Exception) {
+                listener.onFailed((Exception) o);
+            } else {
+                listener.onDone((UserData.UserDataCloud) o);
+            }
+        }
+    }
+
+    class writeDataToLocalTask extends AsyncTask {
+
+        UserData.UserDataCloud user_data;
+        Activity tofinish;
+
+        writeDataToLocalTask(UserData.UserDataCloud bmob_user_data, Activity tofinish) {
+            this.user_data = bmob_user_data;
+            this.tofinish = tofinish;
+        }
+
+        writeDataToLocalTask(UserData.UserDataCloud bmob_user_data) {
+            this.user_data = bmob_user_data;
+            this.tofinish = null;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            try {
+                System.out.println(user_data);
+                SQLiteDatabase sqd = mDBHelper.getWritableDatabase();
+                UserData data = UserData.create(sqd).loadData(user_data);
+                // clearData();
+                sqd.delete("curriculum", null, null);
+                sqd.delete("timetable", null, null);
+                for (Curriculum ci : data.getCurriculum()) {
+                    if (TextUtils.isEmpty(ci.getCurriculumCode()) || TextUtils.isEmpty(ci.getName()))
+                        continue;
+                    sqd.insert("curriculum", null, ci.getContentValues());
+                    CurriculumCreator curriculumCreator = CurriculumCreator.create(ci.getCurriculumCode(), ci.getName(), ci.getStartDate());
+                    curriculumCreator.loadCourse(ci.getCurriculumText());
+                    addCurriculum(curriculumCreator, true);
+                }
+                sqd.delete("subject", null, null);
+                for (Subject s : data.getSubjects()) {
+                    if (TextUtils.isEmpty(s.getCurriculumId())) continue;
+                    sqd.insert("subject", null, s.getContentValues());
+                }
+                for (EventItemHolder eih : data.getEvents()) {
+                    sqd.insert("timetable", null, eih.getContentValues());
+                }
+                sqd.delete("task", null, null);
+                for (Task t : data.getTasks()) {
+                    sqd.insert("task", null, t.getContentValues());
+                }
+                initCoreData();
+                return true;
+
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                return false;
+            }
+
+
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if (tofinish != null) {
+                tofinish.finish();
+            }
+            if ((Boolean) o) {
+                Toast.makeText(HContext, R.string.sync_success, Toast.LENGTH_SHORT).show();
+                if (isDataAvailable()) timeServiceBinder.refreshNowAndNextEvent();
+            } else {
+                Toast.makeText(HContext, R.string.sync_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private String getWeeksText(List<Integer> weeks) {
         String res = "";
         for (Integer x : weeks) {
@@ -1293,4 +1503,5 @@ public class TimetableCore {
         if (res.endsWith(",")) res = res.substring(0, res.length() - 1);
         return res;
     }
+
 }

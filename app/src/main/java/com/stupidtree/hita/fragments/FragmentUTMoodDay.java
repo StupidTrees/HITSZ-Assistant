@@ -1,96 +1,88 @@
 package com.stupidtree.hita.fragments;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.res.ColorStateList;
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
+import java.util.Comparator;
 import java.util.List;
-
-import static com.stupidtree.hita.HITAApplication.HContext;
+import java.util.Locale;
+import java.util.Objects;
 
 
 public class FragmentUTMoodDay extends BaseFragment {
 
-    JsonObject info;
-    String date;
+    private JsonObject info;
+    private String date;
 
-    TextView title;
-    ProgressBar firstPr,secondPr,thirdPr;
-    TextView firstP,secondP,thirdP,score,score_comment;
-    ImageView firstI,secondI,thirdI;
-    TextView[] percentages;
-    ImageView[] icons;
-    ProgressBar[] progressBars;
+    private TextView title, subtitle;
+    private TextView score;
+    private TextView score_comment;
+    private TextView[] percentages;
+    private ImageView[] icons;
+    private ProgressBar[] progressBars;
+
     public FragmentUTMoodDay() {
         // Required empty public constructor
     }
 
 
-
     public static FragmentUTMoodDay newInstance(JsonObject info, String date) {
         FragmentUTMoodDay fragment = new FragmentUTMoodDay();
         Bundle args = new Bundle();
-        args.putString("info",info.toString());
-        args.putString("date",date);
+        args.putString("info", info.toString());
+        args.putString("date", date);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public float getMoodScore(){
+    private float getMoodScore() {
         int happy = info.get("happy").getAsInt();
         int normal = info.get("normal").getAsInt();
         int sad = info.get("sad").getAsInt();
-        float haP = 100f*(float)happy/(happy+normal+sad);
-        float nP = 100f*(float)normal/(happy+normal+sad);
-        return (float) (haP*0.5+nP*0.2+50);
+        float haP = 100f * (float) happy / (happy + normal + sad);
+        float nP = 100f * (float) normal / (happy + normal + sad);
+        return (float) (haP * 0.5 + nP * 0.2 + 50);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            info = new JsonParser().parse(getArguments().getString("info")).getAsJsonObject();
+            info = new JsonParser().parse(Objects.requireNonNull(requireArguments().getString("info"))).getAsJsonObject();
             date = getArguments().getString("date");
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-      View v = inflater.inflate(R.layout.fragment_utmood_day, container, false);
+    protected int getLayoutId() {
+        return R.layout.fragment_utmood_day;
+    }
 
-      initViews(v);
-      return v;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViews(view);
     }
 
     @Override
@@ -99,25 +91,26 @@ public class FragmentUTMoodDay extends BaseFragment {
         Refresh();
     }
 
-    void initViews(View v){
+    private void initViews(View v) {
         title = v.findViewById(R.id.title);
+        subtitle = v.findViewById(R.id.subtitle);
         score_comment = v.findViewById(R.id.score_comment);
         score = v.findViewById(R.id.score);
-        firstI = v.findViewById(R.id.first_icon);
-        firstPr = v.findViewById(R.id.first_progress);
-        firstP = v.findViewById(R.id.first_percentage);
+        ImageView firstI = v.findViewById(R.id.first_icon);
+        ProgressBar firstPr = v.findViewById(R.id.first_progress);
+        TextView firstP = v.findViewById(R.id.first_percentage);
 
-        secondI = v.findViewById(R.id.second_icon);
-        secondPr = v.findViewById(R.id.second_progress);
-        secondP = v.findViewById(R.id.second_percentage);
+        ImageView secondI = v.findViewById(R.id.second_icon);
+        ProgressBar secondPr = v.findViewById(R.id.second_progress);
+        TextView secondP = v.findViewById(R.id.second_percentage);
 
-        thirdI = v.findViewById(R.id.third_icon);
-        thirdP = v.findViewById(R.id.third_percentage);
-        thirdPr = v.findViewById(R.id.third_progress);
+        ImageView thirdI = v.findViewById(R.id.third_icon);
+        TextView thirdP = v.findViewById(R.id.third_percentage);
+        ProgressBar thirdPr = v.findViewById(R.id.third_progress);
 
         progressBars = new ProgressBar[]{firstPr, secondPr, thirdPr};
-        percentages = new TextView[]{firstP,secondP,thirdP};
-        icons = new ImageView[]{firstI,secondI,thirdI};
+        percentages = new TextView[]{firstP, secondP, thirdP};
+        icons = new ImageView[]{firstI, secondI, thirdI};
     }
 
 
@@ -130,88 +123,107 @@ public class FragmentUTMoodDay extends BaseFragment {
     @Override
     public void Refresh() {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(sdf.parse(date).getTime());
-            title.setText(c.get(Calendar.YEAR)+" "+ getResources().getStringArray(R.array.months_full)[c.get(Calendar.MONTH)]+
-                    String.format(getString(R.string.date_day),c.get(Calendar.DAY_OF_MONTH)));
+            c.setTimeInMillis(Objects.requireNonNull(sdf.parse(date)).getTime());
+            title.setText(getResources().getStringArray(R.array.months_full)[c.get(Calendar.MONTH)] +
+                    String.format(getString(R.string.date_day), c.get(Calendar.DAY_OF_MONTH)));
+            subtitle.setText(c.get(Calendar.YEAR) + "");
             int happy = info.get("happy").getAsInt();
             int normal = info.get("normal").getAsInt();
             int sad = info.get("sad").getAsInt();
             List<Temp> l = new ArrayList<>();
-            l.add(new Temp("happy",happy));
-            l.add(new Temp("normal",normal));
-            l.add(new Temp("sad",sad));
-            Collections.sort(l);
-            int all = happy+normal+sad;
-            DecimalFormat sf = new DecimalFormat("#0.00");
-            float moodScore = getMoodScore();
-            score_comment.setText(getScoreComment(moodScore));
-            score.setText(sf.format(moodScore));
-            for(int i=0;i<3;i++){
-                int iconID;
-                int colorID;
-                int tintID;
-                DecimalFormat df = new DecimalFormat("#.00");
-                if(l.get(i).type.equals("happy")){
-                    iconID = R.drawable.ic_mood_happy;
-                    colorID = R.drawable.style_progressbar_mood_happy;
-                    tintID = R.color.green_primary;
-                    percentages[i].setText(df.format(100*(float)happy/all)+"%");
-                    progressBars[i].setProgress((int) (100*(float)happy/all));
-                }else if(l.get(i).type.equals("normal")){
-                    iconID = R.drawable.ic_mood_normal;
-                    colorID = R.drawable.style_progressbar_mood_normal;
-                    tintID = R.color.blue_primary;
-                    percentages[i].setText(df.format(100*(float)normal/all)+"%");
-                    progressBars[i].setProgress((int) (100*(float)normal/all));
-                }else{
-                    iconID = R.drawable.ic_mood_sad;
-                    colorID = R.drawable.style_progressbar_mood_sad;
-                    tintID = R.color.red_primary;
-                    percentages[i].setText(df.format(100*(float)sad/all)+"%");
-                    progressBars[i].setProgress((int) (100*(float)sad/all));
+            l.add(new Temp("happy", happy));
+            l.add(new Temp("normal", normal));
+            l.add(new Temp("sad", sad));
+            Collections.sort(l, new Comparator<Temp>() {
+                @Override
+                public int compare(Temp o1, Temp o2) {
+                    return o1.compareTo(o2);
                 }
-                progressBars[i].setProgressDrawable(HContext.getDrawable(colorID));
+            });
+            int all = happy + normal + sad;
+            final DecimalFormat sf = new DecimalFormat("#0.0");
+            final float moodScore = getMoodScore();
+            score_comment.setText(getScoreComment(moodScore));
+            ValueAnimator vs = ValueAnimator.ofFloat(0, moodScore);
+            vs.setDuration(800);
+            vs.setInterpolator(new DecelerateInterpolator());
+            vs.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float vslue = (float) animation.getAnimatedValue();
+                    score.setText(sf.format(vslue));
+                }
+            });
+            vs.start();
+            //icons[i].setImageTintList(ColorStateList.valueOf(HContext.getColor(tintID)));
+
+
+            for (int i = 0; i < 3; i++) {
+                int iconID;
+                final DecimalFormat df = new DecimalFormat("#0.00");
+                int targetValue;
+                if (l.get(i).type.equals("happy")) {
+                    iconID = R.drawable.ic_mood_happy;
+                    targetValue = happy;
+                } else if (l.get(i).type.equals("normal")) {
+                    iconID = R.drawable.ic_mood_normal;
+                    targetValue = normal;
+                } else {
+                    iconID = R.drawable.ic_mood_sad;
+                    targetValue = sad;
+                }
+                final ValueAnimator va = ValueAnimator.ofInt(progressBars[i].getProgress(), (int) (100 * (float) targetValue / all));
+                va.setDuration(500);
+                va.setStartDelay(i * 60);
+                va.setInterpolator(new DecelerateInterpolator());
+                final int finalI = i;
+                va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int value = (int) animation.getAnimatedValue();
+                        percentages[finalI].setText(df.format(value) + "%");
+                        progressBars[finalI].setProgress(value);
+                    }
+                });
+                va.start();
                 icons[i].setImageResource(iconID);
-                icons[i].setImageTintList(ColorStateList.valueOf(HContext.getColor(tintID)));
+                //icons[i].setImageTintList(ColorStateList.valueOf(HContext.getColor(tintID)));
 
             }
 
 
-
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (JsonIOException e) {
+        } catch (ParseException | JsonIOException e) {
             e.printStackTrace();
         }
     }
 
-    private String getScoreComment(float score){
-        if(score<60) return getString(R.string.mood_0);
-        else if(score<70) return getString(R.string.mood_1);
-        else if(score<73) return getString(R.string.mood_2);
-        else if(score<75) return getString(R.string.mood_3);
-        else if(score<78) return getString(R.string.mood_4);
-        else if(score<83) return getString(R.string.mood_5);
-        else if(score<85) return getString(R.string.mood_6);
-        else if(score<90) return getString(R.string.mood_7);
+    private String getScoreComment(float score) {
+        if (score < 60) return getString(R.string.mood_0);
+        else if (score < 70) return getString(R.string.mood_1);
+        else if (score < 73) return getString(R.string.mood_2);
+        else if (score < 75) return getString(R.string.mood_3);
+        else if (score < 78) return getString(R.string.mood_4);
+        else if (score < 83) return getString(R.string.mood_5);
+        else if (score < 85) return getString(R.string.mood_6);
+        else if (score < 90) return getString(R.string.mood_7);
         else return getString(R.string.mood_8);
 
     }
 
-    private class Temp implements Comparable{
+    public static class Temp implements Comparable {
         String type;
         int number;
-        Temp(String type,int number){
+
+        Temp(String type, int number) {
             this.type = type;
             this.number = number;
         }
 
         @Override
-        public int compareTo(Object o) {
-            return -(this.number-((Temp)o).number);
+        public int compareTo(@NonNull Object o) {
+            return -(this.number - ((Temp) o).number);
         }
     }
 }

@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/color_primary_fade_background">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00000000"
+        android:background="?attr/color_primary_fade_background"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="360dp"
+            android:layout_height="380dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlwaysCollapsed"
             app:title=" "
             app:toolbarId="@+id/toolbar">
@@ -37,11 +35,11 @@
                     app:cardElevation="10dp">
 
                     <ImageView
-                        android:id="@+id/imageView13"
                         android:layout_width="120dp"
                         android:layout_height="120dp"
                         android:layout_gravity="center|center_horizontal"
-                        app:srcCompat="@mipmap/ic_launcher_foreground" />
+                        android:padding="24dp"
+                        app:srcCompat="@drawable/logo" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView
@@ -49,6 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
+                    android:fontFamily="sans-serif-black"
                     android:text="@string/hita_account"
                     android:textColor="@color/material_background_white"
                     android:textSize="30sp"
@@ -61,7 +60,50 @@
                     android:gravity="center"
                     android:text="@string/app_slogan"
                     android:textColor="@color/material_background_white"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/privacy_protocol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/radius_white_lgiht_button_bg"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/name_privacy_agreement"
+                        android:textColor="@color/material_text_icon_white"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/user_protocol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/radius_white_lgiht_button_bg"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/name_user_agreement"
+                        android:textColor="@color/material_text_icon_white"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -77,15 +119,17 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/login_tabs"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginLeft="48dp"
-                android:layout_marginRight="48dp"
+                android:background="@drawable/jw_radius_bg_bottom"
                 app:tabIndicatorColor="#00000000"
                 app:tabIndicatorFullWidth="false"
-                app:tabRippleColor="@color/material_text_icon_white"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="#66FFFFFF">
+                app:tabPaddingEnd="24dp"
+                app:tabPaddingStart="24dp"
+                app:tabPaddingTop="24dp"
+                app:tabSelectedTextColor="?attr/colorAccent"
+                app:tabTextColor="?attr/text_color_secondary"
+                app:tabUnboundedRipple="true">
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
@@ -99,6 +143,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/background_color_bottom"
         android:fillViewport="true"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
@@ -106,6 +151,7 @@
             android:id="@+id/login_pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:overScrollMode="never"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
     </androidx.core.widget.NestedScrollView>
 

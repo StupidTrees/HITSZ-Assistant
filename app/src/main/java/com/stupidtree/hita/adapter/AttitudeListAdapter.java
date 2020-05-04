@@ -1,11 +1,14 @@
 package com.stupidtree.hita.adapter;
 
+import android.animation.TypeEvaluator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.util.Pair;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,9 +20,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BasicOperationTask;
 import com.stupidtree.hita.fragments.popup.FragmentAddAttitude;
 import com.stupidtree.hita.online.Attitude;
 import com.stupidtree.hita.online.HITAUser;
+
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
 
@@ -29,31 +35,27 @@ import cn.bmob.v3.listener.UpdateListener;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.TPE;
 
-public class AttitudeListAdapter extends RecyclerView.Adapter<AttitudeListAdapter.ViewH> {
+public class AttitudeListAdapter extends BaseListAdapter<Attitude, AttitudeListAdapter.ViewH>
+        implements BasicOperationTask.OperationListener<Pair<String, AttitudeListAdapter.ViewH>> {
 
-    List<Attitude> mBeans;
-    LayoutInflater mInflater;
-    Context mContext;
-
-    FragmentAddAttitude.AttachedActivity attachedActivity;
+    private FragmentAddAttitude.AttachedActivity attachedActivity;
 
     public AttitudeListAdapter(Context mContext, List<Attitude> mBeans) {
+        super(mContext, mBeans);
         if(mContext instanceof FragmentAddAttitude.AttachedActivity) attachedActivity = (FragmentAddAttitude.AttachedActivity) mContext;
         this.mBeans = mBeans;
         this.mContext = mContext;
         this.mInflater = LayoutInflater.from(mContext);
     }
 
-    @NonNull
     @Override
-    public ViewH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = mInflater.inflate(R.layout.dynamic_attitute_item,parent,false);
-        return new ViewH(v);
+    protected int getLayoutId(int viewType) {
+        return R.layout.dynamic_attitute_item;
     }
 
     @Override
-    public int getItemCount() {
-        return mBeans.size();
+    public ViewH createViewHolder(View v, int viewType) {
+        return new ViewH(v);
     }
 
     @SuppressLint("SetTextI18n")
@@ -62,24 +64,131 @@ public class AttitudeListAdapter extends RecyclerView.Adapter<AttitudeListAdapte
         final Attitude attitude = mBeans.get(position);
         holder.title.setText(attitude.getTitle().replaceAll("\n"," "));
         holder.time.setText(attitude.getCreatedAt());
+        holder.attitude = attitude;
         holder.result.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(mContext,"您已表过态啦",Toast.LENGTH_SHORT).show();
             }
         });
-        new refreshItemTask(holder,position,attitude,CurrentUser).executeOnExecutor(TPE);
+        new refreshItemTask(AttitudeListAdapter.this, holder, attitude, CurrentUser).executeOnExecutor(TPE);
     }
 
-    class ViewH extends RecyclerView.ViewHolder {
-        TextView title,upT,downT,time;
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+
+    }
+
+    @Override
+    public void onOperationDone(String id, Boolean[] params, Pair<String, ViewH> result) {
+        final ViewH holder = result.second;
+        final Attitude attitude = holder.attitude;
+        final String str = result.first;
+        ValueAnimator vo = ValueAnimator.ofFloat(1f, 0f);
+        vo.setDuration(200);
+        vo.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float f = (float) animation.getAnimatedValue();
+                boolean voted = !str.equals("none");
+                holder.voted.setAlpha(voted ? 1f - f : f);
+                holder.voting.setAlpha(voted ? f : 1f - f);
+                if (f == 1f) {
+                    holder.voted.setVisibility(voted ? View.VISIBLE : View.GONE);
+                    holder.voting.setVisibility(voted ? View.GONE : View.VISIBLE);
+                }
+            }
+        });
+        if (holder.voting.getVisibility() != View.VISIBLE && str.equals("none")
+                || holder.voted.getVisibility() != View.VISIBLE && !str.equals("none")
+        ) vo.start();
+        if (!str.equals("none")) {
+            if (str.equals("up")) {
+                holder.chosen_up.setVisibility(View.VISIBLE);
+                holder.chosen_down.setVisibility(View.GONE);
+            } else if (str.equals("down")) {
+                holder.chosen_down.setVisibility(View.VISIBLE);
+                holder.chosen_up.setVisibility(View.GONE);
+            }
+            final ValueAnimator va = ValueAnimator.ofObject(new TypeEvaluator<Triple<Integer, Integer, Integer>>() {
+                                                                @Override
+                                                                public Triple<Integer, Integer, Integer> evaluate(float fraction, Triple<Integer, Integer, Integer> startValue, Triple<Integer, Integer, Integer> endValue) {
+                                                                    final int curUp = (int) (endValue.getRight() * fraction + startValue.getRight() * (1 - fraction));
+                                                                    final int curDown = (int) (endValue.getLeft() * fraction + startValue.getLeft() * (1 - fraction));
+                                                                    final int curProgress = (int) ((float) endValue.getMiddle() * fraction + (float) startValue.getMiddle() * (1.0 - fraction));
+                                                                    return Triple.of(curDown, curProgress, curUp);
+                                                                }
+                                                            }, Triple.of(0, 50, 0)
+                    , Triple.of(attitude.getDown(), (int) ((float) attitude.getDown() / (attitude.getUp() + attitude.getDown()) * 100), attitude.getUp())
+            );
+            va.setInterpolator(new DecelerateInterpolator());
+            va.setDuration(400);
+            va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    Triple<Integer, Integer, Integer> t = (Triple<Integer, Integer, Integer>) animation.getAnimatedValue();
+                    holder.upT.setText(t.getRight() + "");
+                    holder.downT.setText(t.getLeft() + "");
+                    holder.result.setProgress(t.getMiddle());
+                }
+            });
+            va.start();
+
+
+        } else {
+            holder.up.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                    attitude.thumUp(CurrentUser);
+                    final Attitude a = new Attitude(attitude);
+                    a.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e != null)
+                                Toast.makeText(mContext, "表态失败", Toast.LENGTH_SHORT).show();
+                            if (attachedActivity != null) attachedActivity.refreshOthers();
+                            if (attachedActivity != null)
+                                attachedActivity.notifyItem(a.getObjectId());
+                        }
+                    });
+                }
+            });
+            holder.down.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                    attitude.thumDown(CurrentUser);
+                    final Attitude a = new Attitude(attitude);
+                    a.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e != null) {
+                                e.printStackTrace();
+                                Toast.makeText(mContext, "表态失败" + e.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                            if (attachedActivity != null) attachedActivity.refreshOthers();
+                            if (attachedActivity != null)
+                                attachedActivity.notifyItem(a.getObjectId());
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+
+    static class ViewH extends RecyclerView.ViewHolder {
+        TextView title, upT, downT, time;
         FrameLayout voted;
         LinearLayout voting;
-        ImageView up,down,chosen_up,chosen_down;
+        ImageView up, down, chosen_up, chosen_down;
         ProgressBar result;
+        Attitude attitude;
 
 
-        public ViewH(@NonNull View itemView) {
+        ViewH(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             time = itemView.findViewById(R.id.time);
@@ -95,89 +204,23 @@ public class AttitudeListAdapter extends RecyclerView.Adapter<AttitudeListAdapte
         }
     }
 
-    class refreshItemTask extends AsyncTask{
+    static class refreshItemTask extends BasicOperationTask<Pair<String, ViewH>> {
 
         ViewH holder;
-        int position;
         Attitude attitude;
         HITAUser user;
 
-        public refreshItemTask(ViewH holder, int position, Attitude attitude, HITAUser user) {
+        refreshItemTask(OperationListener<? extends Pair<String, ViewH>> listRefreshedListener, ViewH holder, Attitude attitude, HITAUser user) {
+            super(listRefreshedListener);
             this.holder = holder;
-            this.position = position;
             this.attitude = attitude;
             this.user = user;
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            holder.voted.setVisibility(View.GONE);
-            holder.voting.setVisibility(View.INVISIBLE
-            );
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            if(user==null) return true;
-           return attitude.voted(CurrentUser);
-        }
-
-        @SuppressLint("SetTextI18n")
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            if(!o.toString().equals("none")){
-                if(o.toString().equals("up")){
-                    holder.chosen_up.setVisibility(View.VISIBLE);
-                    holder.chosen_down.setVisibility(View.GONE);
-                }else if(o.toString().equals("down")){
-                    holder.chosen_down.setVisibility(View.VISIBLE);
-                    holder.chosen_up.setVisibility(View.GONE);
-                }
-                holder.voted.setVisibility(View.VISIBLE);
-                holder.voting.setVisibility(View.GONE);
-                holder.upT.setText(attitude.getUp()+"");
-                holder.downT.setText(attitude.getDown()+"");
-                holder.result.setProgress((int) ((float) attitude.getDown()/(attitude.getUp()+ attitude.getDown())*100));
-            }else {
-                holder.voted.setVisibility(View.GONE);
-                holder.voting.setVisibility(View.VISIBLE);
-                holder.up.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        attitude.thumUp(CurrentUser);
-                        Attitude a = new Attitude(attitude);
-                        a.update(new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if(e==null) Toast.makeText(mContext,"表态成功！",Toast.LENGTH_SHORT).show();
-                                else Toast.makeText(mContext,"表态失败",Toast.LENGTH_SHORT).show();
-                                notifyItemChanged(position);
-                            }
-                        });
-                    }
-                });
-                holder.down.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        attitude.thumDown(CurrentUser);
-                        Attitude a = new Attitude(attitude);
-                        a.update(new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if(e==null) Toast.makeText(mContext,"表态成功！",Toast.LENGTH_SHORT).show();
-                                else {
-                                    e.printStackTrace();
-                                    Toast.makeText(mContext,"表态失败"+e.toString(),Toast.LENGTH_SHORT).show();
-                                }
-                                if(attachedActivity!=null) attachedActivity.refreshOthers();
-                                notifyItemChanged(position);
-                            }
-                        });
-                    }
-                });
-            }
+        protected Pair<String, ViewH> doInBackground(OperationListener<Pair<String, ViewH>> listRefreshedListener, Boolean... booleans) {
+            if (user == null) return null;
+            return new Pair<>(attitude.voted(CurrentUser), holder);
         }
     }
 

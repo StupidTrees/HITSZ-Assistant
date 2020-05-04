@@ -44,8 +44,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".activities.ActivityYX_FDY"></activity>
-        <activity android:name=".activities.ActivityYX_ToSchool" />
+
         <activity android:name=".activities.ActivityEmptyClassroomDetail" />
         <activity android:name=".activities.ActivityEmptyClassroom" />
         <activity android:name=".activities.ActivityPostDetail" />
@@ -55,7 +54,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.ActivityLocation" />
 
-        <service android:name=".WidgetService">
+        <service android:name=".widget.WidgetService">
             <action-filter>
 
                 <!-- 用来启动服务 -->
@@ -63,17 +62,16 @@
             </action-filter>
         </service>
 
-        <receiver android:name=".TimeLineWidget">
-            <action-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.stupidtree.hita.UPDATE_ALL" />
-            </action-filter>
+        <!--        <receiver android:name=".TimeLineWidget">-->
+        <!--            <action-filter>-->
+        <!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
+        <!--                <action android:name="com.stupidtree.hita.UPDATE_ALL" />-->
+        <!--            </action-filter>-->
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/time_line_widget_info" />
-        </receiver>
-        <receiver android:name=".NotificationClickReceiver" />
+        <!--            <meta-data-->
+        <!--                android:name="android.appwidget.provider"-->
+        <!--                android:resource="@xml/time_line_widget_info" />-->
+        <!--        </receiver>-->
 
         <activity android:name=".activities.ActivitySetting" />
 
@@ -90,15 +88,10 @@
         <activity
             android:name=".activities.ActivityTeacher"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.ActivitySubjectManager"
-            android:theme="@style/AppTheme" />
+
         <activity android:name=".activities.ActivityDynamicTable" />
         <activity android:name=".fragments.popup.FragmentTheme" />
-        <activity
-            android:name=".activities.ActivityCourse"
-            android:label="@string/title_activity_couse"
-            android:theme="@style/AppTheme" />
+
         <activity
             android:name=".activities.ActivityJWTS"
             android:theme="@style/AppTheme" />
@@ -111,9 +104,6 @@
             android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".activities.ActivityNewsDetail"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.ActivityLostAndFound"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityLoginJWTS"
@@ -135,18 +125,13 @@
         <activity
             android:name=".activities.ActivityPhotoDetail"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.ActivityNotes"
-            android:label="@string/title_activity_notes"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.ActivityUniversity"
-            android:theme="@style/AppTheme" />
+
+
         <activity
             android:name=".activities.ActivityMain"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.ActivityCampusLocations" />
+
         <activity
             android:name=".activities.ActivityCurriculumManager"
             android:label="@string/title_activity_import_data"

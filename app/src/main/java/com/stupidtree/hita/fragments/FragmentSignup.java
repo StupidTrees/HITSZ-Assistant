@@ -1,31 +1,30 @@
 package com.stupidtree.hita.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.textfield.TextInputLayout;
-
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.stupidtree.hita.BaseFragment;
-import com.stupidtree.hita.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.android.material.textfield.TextInputLayout;
+import com.stupidtree.hita.R;
 import com.stupidtree.hita.online.HITAUser;
-import com.stupidtree.hita.diy.ButtonLoading;
+import com.stupidtree.hita.views.ButtonLoading;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
-import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.timetable.TimeWatcherService.USER_CHANGED;
 
 public class FragmentSignup extends BaseFragment {
     
@@ -33,13 +32,18 @@ public class FragmentSignup extends BaseFragment {
     ButtonLoading signup;
     TextInputLayout usernameLayout,passwordLayout,confirmPasswordLayout;
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_signup,container,false);
-        initViews(v);
-        return v;
+    protected int getLayoutId() {
+        return R.layout.fragment_signup;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViews(view);
+    }
+
     
     void initViews(View v){
         username = v.findViewById(R.id.username);
@@ -89,6 +93,8 @@ public class FragmentSignup extends BaseFragment {
                                     public void done(HITAUser hitaUser, BmobException e) {
                                         CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
                                         timeTableCore.clearData();
+                                        Intent i = new Intent(USER_CHANGED);
+                                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(i);
                                         getActivity().finish();
                                     }
                                 });

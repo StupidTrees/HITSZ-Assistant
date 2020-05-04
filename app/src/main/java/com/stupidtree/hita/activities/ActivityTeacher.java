@@ -5,12 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import com.google.android.material.appbar.AppBarLayout;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -21,10 +15,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
-import com.stupidtree.hita.BaseActivity;
+import com.google.android.material.appbar.AppBarLayout;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.online.Teacher;
@@ -35,7 +33,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,6 +192,12 @@ public class ActivityTeacher extends BaseActivity {
         Glide.with(this).load(teacher.getPhotoLink())
                 .placeholder(R.drawable.ic_account_activated).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(teacherAvatar);
 
+        teacherAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityUtils.showOneImage(getThis(), teacher.getPhotoLink());
+            }
+        });
     }
 
     @Override

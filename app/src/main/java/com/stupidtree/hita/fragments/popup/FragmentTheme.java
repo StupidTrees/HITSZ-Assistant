@@ -1,67 +1,54 @@
 package com.stupidtree.hita.fragments.popup;
 
-import android.app.Dialog;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
-
 import android.os.Bundle;
-
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.view.HapticFeedbackConstants;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.stupidtree.hita.AppThemeCore;
 import com.stupidtree.hita.R;
-
+import com.stupidtree.hita.cores.AppThemeCore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-
 import static com.stupidtree.hita.HITAApplication.themeCore;
 
-public class FragmentTheme extends BottomSheetDialogFragment {
+public class FragmentTheme extends FragmentRadiusPopup {
 
 //    private RadioGroup radioGroup;
 //    private CardView demoCard;
     private CardView demoFab;
     private FloatingActionButton change;
     private ImageView demoBG;
-    List<AppThemeCore.ThemeItem> listRes;
-    int chosenIndex = 0;
-    RecyclerView list;
-    listAdapter listAdapter;
-    
+    private List<AppThemeCore.ThemeItem> listRes;
+    private int chosenIndex = 0;
+    private RecyclerView list;
+    private listAdapter listAdapter;
 
+
+    @Nullable
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.fragment_theme, null);
-        dialog.setContentView(view);
-        ((View) view.getParent()).setBackgroundColor(Color.TRANSPARENT);
         initViews(view);
         initList(view);
         loadThemes();
 
-
-        return dialog;
-
+        return view;
     }
 
     @Override
@@ -78,6 +65,7 @@ public class FragmentTheme extends BottomSheetDialogFragment {
         change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 dismiss();
                 themeCore.changeTheme(getActivity(),chosenIndex);
             }

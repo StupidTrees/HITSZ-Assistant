@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
+    android:layout_width="wrap_content"
+    android:layout_height="72dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="48dp"
+    android:background="@drawable/radius_white_lgiht_button_bg"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="24dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxEms="6"
+            android:singleLine="true"
+            android:text="荔园一食堂"
+            android:textColor="@color/material_text_icon_white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:layout_marginTop="2dp"
+            android:singleLine="true"
+            android:text="开始于2020-3-2"
+            android:textColor="@color/material_text_icon_white"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="24dp"
+        android:buttonTint="@color/material_text_icon_white"
+        android:saveEnabled="false" />
+
+    <ImageView
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:backgroundTintMode="src_over"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="16dp"
+        android:tint="@color/material_text_icon_white"
+        android:tintMode="src_in"
+        app:srcCompat="@drawable/ic_delete"
+        app:theme="@style/button_ripple_white" />
+
+</LinearLayout>

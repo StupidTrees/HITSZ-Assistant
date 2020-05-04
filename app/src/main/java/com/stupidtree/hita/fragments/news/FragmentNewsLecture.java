@@ -1,27 +1,21 @@
 package com.stupidtree.hita.fragments.news;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-
-import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityExplore;
-import com.stupidtree.hita.activities.ActivityNewsDetail;
 import com.stupidtree.hita.adapter.NewsLectureListAdapter;
-import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
+import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.util.ActivityUtils;
+import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,23 +27,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FragmentNewsLecture extends BaseFragment  {
+public class FragmentNewsLecture extends BaseFragment {
     RecyclerView list;
     int offset = 0;
-    List<Map<String, String>> listRes;
-    NewsLectureListAdapter listAdapter;
-    SwipeRefreshLayout pullRefreshLayout;
+    private List<Map<String, String>> listRes;
+    private NewsLectureListAdapter listAdapter;
+    private SwipeRefreshLayout pullRefreshLayout;
     boolean first = true;
     LoadTask pageTask;
 
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_news, container, false);
-        initList(v);
 
-        return v;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initList(view);
     }
 
     @Override
@@ -64,11 +56,12 @@ public class FragmentNewsLecture extends BaseFragment  {
 
     void initList(View v) {
         pullRefreshLayout = v.findViewById(R.id.pullrefresh);
+        pullRefreshLayout.setColorSchemeColors(getColorAccent(), getColorAccent());
         list = v.findViewById(R.id.list);
         listRes = new ArrayList<>();
         listAdapter = new NewsLectureListAdapter(this.getContext(), listRes);
         list.setAdapter(listAdapter);
-        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext(),RecyclerView.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false);
         list.setLayoutManager(layoutManager);
         list.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -91,16 +84,14 @@ public class FragmentNewsLecture extends BaseFragment  {
             @Override
             public void OnClick(View v, int pos) {
                 //ActivityOptionsCompat op = ActivityOptionsCompat.makeSceneTransitionAnimation(FragmentNewsLecture.this.getActivity(),v,"cardview");
-                ActivityUtils.startNewsActivity(getActivity(),listRes.get(pos).get("link"),listRes.get(pos).get("title"));
+                ActivityUtils.startNewsActivity(getActivity(), listRes.get(pos).get("link"), listRes.get(pos).get("title"));
             }
         });
         listAdapter.setmOnNaviClickListener(new NewsLectureListAdapter.OnNaviClickListener() {
 
             @Override
             public void OnClick(View v, String termial) {
-                Intent i = new Intent(FragmentNewsLecture.this.getActivity(), ActivityExplore.class);
-                i.putExtra("terminal", termial);
-                startActivity(i);
+                ActivityUtils.startExploreActivity_forNavi(getActivity(), termial);
             }
         });
         pullRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -115,14 +106,21 @@ public class FragmentNewsLecture extends BaseFragment  {
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
+            pageTask.cancel(true);
     }
 
     @Override
     public void Refresh() {
-        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
+        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
+            pageTask.cancel(true);
         pageTask = new LoadTask(false);
         pageTask.executeOnExecutor(HITAApplication.TPE);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_news;
     }
 
 

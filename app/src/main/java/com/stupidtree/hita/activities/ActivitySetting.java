@@ -2,6 +2,7 @@ package com.stupidtree.hita.activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,11 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.view.View;
-
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.pref.FragmentSettings;
 

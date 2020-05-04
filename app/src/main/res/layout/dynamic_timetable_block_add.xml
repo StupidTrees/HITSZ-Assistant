@@ -16,7 +16,9 @@
             android:layout_height="match_parent"
             android:alpha="0.2"
             android:clickable="true"
-
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:theme="@style/button_ripple_accent_large"
             app:srcCompat="@drawable/timetable_block_add_background" />
 <!--        android:tint="?attr/background_icon_color_bottom"-->
 <!--        android:tintMode="src_over"-->
@@ -30,7 +32,7 @@
             android:clickable="true"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:padding="4dp"
-            app:theme="@style/button_ripple_primary_small"
+            android:theme="@style/button_ripple_accent_small"
             android:tint="?attr/colorAccent"
             android:tintMode="src_in"
             app:srcCompat="@drawable/fab_add" />

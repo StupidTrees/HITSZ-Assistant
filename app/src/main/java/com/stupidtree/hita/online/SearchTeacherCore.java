@@ -3,13 +3,10 @@ package com.stupidtree.hita.online;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
-import androidx.annotation.WorkerThread;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.stupidtree.hita.util.JsonUtils;
 
 import org.jsoup.Jsoup;
@@ -20,40 +17,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SearchTeacherCore {
+import cn.bmob.v3.BmobQuery;
+
+public class SearchTeacherCore extends SearchCore<Object> {
     public static final int NAME = 0;
     public static final int DEPARTMENT = 1;
     public static final int ID = 2;
     public static final int URL = 3;
     private HashMap<String, String> cookies;
 
-    private String lastKeyword;
-
     public SearchTeacherCore() {
         this.cookies = new HashMap<>();
     }
 
-    public void reset() {
-        lastKeyword = "";
+
+    @Override
+    public int getPageSize() {
+        return 100;
     }
 
-    public String getLastKeyword() {
-        return lastKeyword;
-    }
-
-    @WorkerThread
-    public List<SparseArray<String>> searchForResult(String text) throws SearchException{
-        if (text == null) text = "";
-        lastKeyword = text;
+    @Override
+    protected List<Object> reloadResult(String text) throws SearchException {
         text = text.replaceAll("老师", "").replaceAll("教师", "").replaceAll("教室", "")
                 .replaceAll("teacher", "").replaceAll("Teacher", "").replaceAll("先生", "")
                 .replaceAll("女士", "");
-        List<SparseArray<String>> res = new ArrayList<>();
-
-        if(!TextUtils.isEmpty(text)){
-            text = text.replaceAll(" ",",").replaceAll("，",",");
+        List<Object> res = new ArrayList<>();
+        if (!TextUtils.isEmpty(text)) {
+            text = text.replaceAll(" ", ",").replaceAll("，", ",");
             String[] keys = text.split(",");
-            for(String k:keys){
+            for (String k : keys) {
                 Document d = null;
                 try {
                     d = Jsoup.connect("http://faculty.hitsz.edu.cn/hompage/findTeachersByName.do").
@@ -81,10 +73,26 @@ public class SearchTeacherCore {
                 } catch (Exception e) {
                     throw SearchException.newResolveError();
                 }
-
+                try {
+                    BmobQuery<Teacher> bq = new BmobQuery<>();
+                    bq.addWhereEqualTo("name", text);
+                    res.addAll(bq.findObjectsSync(Teacher.class));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
         return res;
     }
+
+    @Override
+    protected List<Object> loadMoreResult(String text) throws SearchException {
+        return new ArrayList<>();
+    }
+
+
+
+
+
 }

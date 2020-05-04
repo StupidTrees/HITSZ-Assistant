@@ -17,6 +17,294 @@
         android:paddingBottom="16dp">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|start"
+                android:text="@string/usercenter_info_username"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/text_username"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|right"
+                android:text=""
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_nick"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|start"
+                android:text="@string/usercenter_info_nick"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="16sp"
+                tools:ignore="NestedWeights" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/text_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|right"
+                android:text=""
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:tint="?attr/colorAccent"
+                app:srcCompat="@drawable/bt_edit" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_signature"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|start"
+                android:text="@string/usercenter_info_signature"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="16sp"
+                tools:ignore="NestedWeights" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/text_signature"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|right"
+                android:text=""
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:tint="?attr/colorAccent"
+                app:srcCompat="@drawable/bt_edit" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_grade"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|start"
+                android:text="@string/usercenter_info_grade"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="16sp"
+                tools:ignore="NestedWeights" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/text_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|right"
+                android:text=""
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:tint="?attr/colorAccent"
+                app:srcCompat="@drawable/ic_date_range" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_profile"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|start"
+                android:text="@string/usercenter_info_profile"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="16sp"
+                tools:ignore="NestedWeights" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/text_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|right"
+                android:text=""
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:tint="?attr/colorAccent"
+                app:srcCompat="@drawable/ic_settings" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            android:alpha="0.8"
+            android:text="@string/privacy_hint"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|start"
+                android:text="@string/usercenter_info_realname"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp"
+                tools:ignore="NestedWeights" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/text_realname"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|right"
+                android:text=""
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|start"
+                android:text="@string/usercenter_info_school"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp"
+                tools:ignore="NestedWeights" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/text_school"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|right"
+                android:text=""
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp"
+                tools:ignore="RtlHardcoded" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/item_studensnumber"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -27,209 +315,35 @@
             android:paddingRight="16dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:gravity="center|start"
                 android:text="@string/usercenter_info_bind"
                 android:textColor="?attr/text_color_primary"
                 android:textSize="16sp"
                 tools:ignore="NestedWeights" />
 
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
             <TextView
                 android:id="@+id/text_studentnumber"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:gravity="center|right"
                 android:textColor="?attr/text_color_primary"
                 android:textSize="16sp"
                 tools:ignore="RtlHardcoded" />
 
             <ImageView
-                android:id="@+id/imageView21"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="8dp"
-                android:tint="?attr/colorPrimary"
-                app:srcCompat="@drawable/ic_bind" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/item_nick"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:focusable="true">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="@string/usercenter_info_nick"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="16sp"
-                tools:ignore="NestedWeights" />
-
-            <TextView
-                android:id="@+id/text_nick"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|right"
-                android:text=""
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp"
-                tools:ignore="RtlHardcoded" />
-
-            <ImageView
-                android:id="@+id/imageView7"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:tint="?attr/colorPrimary"
-                app:srcCompat="@drawable/bt_edit" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/item_signature"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:focusable="true">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="@string/usercenter_info_signature"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="16sp"
-                tools:ignore="NestedWeights" />
-
-            <TextView
-                android:id="@+id/text_signature"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|right"
-                android:text=""
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp"
-                tools:ignore="RtlHardcoded" />
-
-            <ImageView
-                android:id="@+id/imageView14"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:tint="?attr/colorPrimary"
-                app:srcCompat="@drawable/bt_edit" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="@string/usercenter_info_username"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/text_username"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|right"
-                android:text=""
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp"
-                tools:ignore="RtlHardcoded" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/item_school"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="@string/usercenter_info_school"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp"
-                tools:ignore="NestedWeights" />
-
-            <TextView
-                android:id="@+id/text_school"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|right"
-                android:text=""
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp"
-                tools:ignore="RtlHardcoded" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/item_realname"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|start"
-                android:text="@string/usercenter_info_realname"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp"
-                tools:ignore="NestedWeights" />
-
-            <TextView
-                android:id="@+id/text_realname"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|right"
-                android:text=""
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp"
-                tools:ignore="RtlHardcoded" />
+                android:tint="?attr/colorAccent"
+                app:srcCompat="@drawable/ic_menu_jwts" />
         </LinearLayout>
     </LinearLayout>
 

@@ -1,29 +1,12 @@
 package com.stupidtree.hita.activities;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
-import androidx.appcompat.widget.Toolbar;
-
+import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,58 +14,64 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
-import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.BaseFragment;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.R;
-
-import com.stupidtree.hita.diy.MaterialCircleAnimator;
-import com.stupidtree.hita.adapter.UserCenterPagerAdapter;
-import com.stupidtree.hita.diy.mBlurTransformation;
-import com.stupidtree.hita.fragments.FragmentUserCenter_ut;
-import com.stupidtree.hita.fragments.FragmentUserCenter_Info;
-import com.stupidtree.hita.fragments.FragmentSubjects;
-import com.stupidtree.hita.fragments.FragmentUserCenter_sync;
+import com.stupidtree.hita.adapter.BaseTabAdapter;
+import com.stupidtree.hita.community.UserRelationHelper;
+import com.stupidtree.hita.fragments.BaseFragment;
+import com.stupidtree.hita.fragments.popup.FragmentLoading;
+import com.stupidtree.hita.fragments.popup.FragmentRelatedUsers;
+import com.stupidtree.hita.fragments.timetable_manager.FragmentSubjects;
+import com.stupidtree.hita.fragments.user_center.FragmentUserCenter_Info;
+import com.stupidtree.hita.fragments.user_center.FragmentUserCenter_sync;
+import com.stupidtree.hita.fragments.user_center.FragmentUserCenter_ut;
 import com.stupidtree.hita.online.HITAUser;
-import com.stupidtree.hita.util.FileOperator;
-import com.stupidtree.hita.util.GalleryPickerUtils;
-import com.yuyh.library.imgsel.ISNav;
-import com.yuyh.library.imgsel.common.ImageLoader;
-import com.yuyh.library.imgsel.config.ISListConfig;
+import com.stupidtree.hita.util.FileProviderUtils;
+import com.stupidtree.hita.util.GalleryPicker;
+import com.stupidtree.hita.views.MaterialCircleAnimator;
+import com.stupidtree.hita.views.mBlurTransformation;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
+import java.util.Objects;
+import java.util.UUID;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FetchUserInfoListener;
-import cn.bmob.v3.listener.ProgressCallback;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.TPE;
+import static com.stupidtree.hita.HITAApplication.bmobCacheHelper;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
-import static com.stupidtree.hita.util.GalleryPickerUtils.REQUEST_CROP_PHOTO;
-import static com.stupidtree.hita.util.GalleryPickerUtils.REQUEST_PICK_ONE_PHOTO;
+import static com.stupidtree.hita.community.ActivityCreatePost.RC_CHOOSE_PHOTO;
+import static com.stupidtree.hita.community.ActivityCreatePost.RC_CROP_PHOTO;
+import static com.stupidtree.hita.timetable.TimeWatcherService.USER_CHANGED;
 
 public class ActivityUserCenter extends BaseActivity implements FragmentSubjects.OnFragmentInteractionListener
         //, FragmentJWTS_info.OnListFragmentInteractionListener
 {
-    private static final int REQUEST_LIST_CODE = 0;
-    private static final int REQUEST_CAMERA_CODE = 1;
+
     ViewPager viewpager;
-    UserCenterPagerAdapter pagerAdapter;
-    List<BaseFragment> fragments;
     TabLayout tabLayout;
     ImageView appbarBg;
     CollapsingToolbarLayout mToolbarLayout;
@@ -90,6 +79,10 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     TextView name, signature;
     AppBarLayout appBarLayout;
     CardView change_avatar;
+    int fansNum = 0, followingNum = 0;
+    TextView fans, following, newFansNum;
+    Uri cropImgUri;
+
 
     @Override
     protected void stopTasks() {
@@ -109,23 +102,30 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
             public void done(BmobUser user, BmobException e) {
                 if (e == null) {
                     CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
-                } else {
-                    Log.e("同步用户出错", e.getMessage());
                 }
 
-                for (BaseFragment bf : fragments) {
-                    bf.Refresh();
+                for (Fragment bf : getSupportFragmentManager().getFragments()) {
+                    if (bf instanceof BaseFragment) {
+                        ((BaseFragment) bf).Refresh();
+                    }
                 }
             }
         });
+        if (CurrentUser != null) {
+            cropImgUri = Uri.parse("file:///" + Environment.getExternalStorageDirectory() + "/avatar_" + CurrentUser.getUsername() + ".jpg");
+        } else {
+            cropImgUri = null;
+        }
+        RefreshFansAndFollowingNum();
+        bmobCacheHelper.callMyFollowingsToRefresh();
     }
 
     void initToolbar() {
         appBarLayout = findViewById(R.id.appbar);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle(getString(R.string.label_activity_user_center));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +144,8 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             BmobUser.logOut();
+                            Intent i = new Intent(USER_CHANGED);
+                            LocalBroadcastManager.getInstance(getThis()).sendBroadcast(i);
                             timeTableCore.clearData();
                             jwCore.logOut();
                             CurrentUser = null;
@@ -172,13 +174,13 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
             }
         });
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            private float mHeadImgScale = 0;
 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 float scale = 1.0f + (verticalOffset) / ((float) appBarLayout.getHeight());
                 avatar.setScaleX(scale);
                 avatar.setScaleY(scale);
+                float mHeadImgScale = 0;
                 avatar.setTranslationY(mHeadImgScale * verticalOffset);
 
                 change_avatar.setScaleX(scale);
@@ -189,6 +191,9 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     }
 
     void initUserView() {
+        fans = findViewById(R.id.fans);
+        newFansNum = findViewById(R.id.new_fans_num);
+        following = findViewById(R.id.following);
         name = findViewById(R.id.usercenter_name);
         signature = findViewById(R.id.usercenter_signature);
         avatar = findViewById(R.id.usercenter_avatar);
@@ -197,40 +202,118 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
         name.setText(CurrentUser.getNick());
         signature.setText(CurrentUser.getSignature());
         loadAvatar();
+        following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (followingNum == 0) return;
+
+                new FragmentRelatedUsers(true, getString(R.string.my_following), new FragmentRelatedUsers.DataFetcher() {
+                    @Override
+                    public void fetchData(boolean anim, final FragmentRelatedUsers.OnFetchListener listener) {
+                        new UserRelationHelper(CurrentUser).QueryFollowingBasicInfo(
+                                bmobCacheHelper.willMyFollowingBasicUseCache(), new UserRelationHelper.QueryFollowingInfoListener() {
+                                    @Override
+                                    public void onResult(List<HITAUser> result) {
+                                        listener.OnFetchDone(result);
+                                        bmobCacheHelper.MyFollowingBasicRelease();
+                                    }
+
+                                    @Override
+                                    public void onFailed(Exception e) {
+                                        listener.OnFailed();
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void fetchCurrentFollowingData(boolean cache, final FragmentRelatedUsers.OnFollowingFetchListener listener) {
+                        listener.OnFetchDone(null);
+                    }
+
+                }).setOnChangeDataListener(new FragmentRelatedUsers.OnChangeDataListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onMyFollowingNumberFetched(int count) {
+                        followingNum = count;
+                        following.setText(getString(R.string.following) + " " + count);
+                    }
+
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onNumberFetched(int count) {
+                        followingNum = count;
+                        following.setText(getString(R.string.following) + " " + count);
+                    }
+                }).show(getSupportFragmentManager(), "related_user");
+            }
+        });
+        fans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fansNum == 0) return;
+                new FragmentRelatedUsers(false, getString(R.string.my_fans), new FragmentRelatedUsers.DataFetcher() {
+                    @Override
+                    public void fetchData(boolean anim, final FragmentRelatedUsers.OnFetchListener listener) {
+                        new UserRelationHelper(CurrentUser).QueryFansBasicInfo(false, new UserRelationHelper.QueryFansInfoListener() {
+                            @Override
+                            public void onResult(List<HITAUser> result) {
+                                listener.OnFetchDone(result);
+                            }
+
+                            @Override
+                            public void onFailed(Exception e) {
+                                listener.OnFailed();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void fetchCurrentFollowingData(boolean cache, final FragmentRelatedUsers.OnFollowingFetchListener listener) {
+                        new UserRelationHelper(CurrentUser).QueryFollowingObjectId(cache, new UserRelationHelper.QueryFollowingObjectIdListener() {
+                            @Override
+                            public void onResult(List<String> result) {
+                                listener.OnFetchDone(result);
+                            }
+
+                            @Override
+                            public void onFailed(Exception e) {
+                                listener.OnFailed();
+                            }
+                        });
+                    }
+
+
+                }).setOnChangeDataListener(new FragmentRelatedUsers.OnChangeDataListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onMyFollowingNumberFetched(int count) {
+                        followingNum = count;
+
+                        following.setText(getString(R.string.following) + " " + count);
+                    }
+
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onNumberFetched(int number) {
+                        fansNum = number;
+                        int last = defaultSP.getInt("last_fans_num", 0);
+                        if (fansNum > last) {
+                            newFansNum.setVisibility(View.VISIBLE);
+                            newFansNum.setText("+" + (fansNum - last));
+                        } else {
+                            newFansNum.setVisibility(View.GONE);
+                        }
+                        defaultSP.edit().putInt("last_fans_num", fansNum).apply();
+                        fans.setText(getString(R.string.fans) + " " + number);
+                    }
+                })
+                        .show(getSupportFragmentManager(), "related_user");
+            }
+        });
         change_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //GalleryPickerUtils.pickFromGallery(getThis());
-                ISListConfig config = new ISListConfig.Builder()
-                        // 是否多选, 默认true
-                        .multiSelect(false)
-                        // 是否记住上次选中记录, 仅当multiSelect为true的时候配置，默认为true
-                        .rememberSelected(false)
-                        // 使用沉浸式状态栏
-                       // .statusBarColor(getColorPrimaryDark())
-                        // 返回图标ResId
-                        .backResId(R.drawable.bt_notes_toolbar_back)
-                        // 标题
-                        .title("图片")
-                        // 标题文字颜色
-                        .titleColor(Color.WHITE)
-                        // TitleBar背景色
-                        .titleBgColor(getColorPrimary())
-                        // 裁剪大小。needCrop为true的时候配置
-                        .cropSize(1, 1, 200, 200)
-                        .needCrop(true)
-                        // 第一个是否显示相机，默认true
-                        .needCamera(false)
-                        .build();
-                ISNav x = ISNav.getInstance();
-                x.init(new ImageLoader() {
-                    @Override
-                    public void displayImage(Context context, String path, ImageView imageView) {
-                        Glide.with(context).load(path).into(imageView);
-                    }
-                });
-                // 跳转到图片选择器
-                x.toListActivity(ActivityUserCenter.this, config, REQUEST_LIST_CODE);
+                GalleryPicker.choosePhoto(getThis(), false);
             }
         });
     }
@@ -238,13 +321,29 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     void initPager() {
         tabLayout = findViewById(R.id.usercenter_tablayout);
         viewpager = findViewById(R.id.usercenter_viewpager);
-        String[] titles = getResources().getStringArray(R.array.user_center_tabs);
-        fragments = new ArrayList<>();
-        fragments.add(new FragmentUserCenter_Info());
-        fragments.add(FragmentUserCenter_ut.newInstance());
-        fragments.add(new FragmentUserCenter_sync());
-        pagerAdapter = new UserCenterPagerAdapter(getSupportFragmentManager(), fragments, Arrays.asList(titles));
-        viewpager.setAdapter(pagerAdapter);
+        final String[] titles = getResources().getStringArray(R.array.user_center_tabs);
+        viewpager.setAdapter(new BaseTabAdapter(getSupportFragmentManager(), 3) {
+
+            @Override
+            protected Fragment initItem(int position) {
+                switch (position) {
+                    case 0:
+                        return FragmentUserCenter_ut.newInstance();
+                    case 1:
+                        return new FragmentUserCenter_Info();
+                    case 2:
+                        return new FragmentUserCenter_sync();
+                }
+                return null;
+            }
+
+
+            @Nullable
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return titles[position];
+            }
+        }.setDestroyFragment(false));
         tabLayout.setupWithViewPager(viewpager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setTabIndicatorFullWidth(false);
@@ -254,28 +353,29 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        switch (requestCode) {
-//            case REQUEST_PICK_ONE_PHOTO:
-//                Uri uri = data.getData();
-//                String filePath = FileOperator.getFilePathByUri(this, uri);
-////                if (!TextUtils.isEmpty(filePath)) {
-////                    new saveAvatarTask(filePath).executeOnExecutor(TPE); }
-////
-//                File output = new File(String.valueOf(getThis().getCacheDir()));//+"/avatar_temp.png");
-//                GalleryPickerUtils.cropPhoto(getThis(),uri,Uri.fromFile(output),200,200);
-//                break;
-//            case REQUEST_CROP_PHOTO:
-//                try {
-//                    Log.e("haha", String.valueOf(data.getData()));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                break;
-//        }
-        if (requestCode == REQUEST_LIST_CODE && resultCode == RESULT_OK && data != null) {
-            List<String> pathList = data.getStringArrayListExtra("result");
-            new saveAvatarTask(pathList.get(0)).executeOnExecutor(
-                    TPE);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        switch (requestCode) {
+            case RC_CHOOSE_PHOTO:
+                if (null == data) {
+                    Toast.makeText(this, R.string.no_image_fetched, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Uri uri = data.getData();
+                if (null == uri) { //如果单个Uri为空，则可能是1:多个数据 2:没有数据
+                    Toast.makeText(this, R.string.no_image_selected, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // 剪裁图片
+                GalleryPicker.cropPhoto(getThis(), FileProviderUtils.getFilePathByUri(this, uri), cropImgUri, 200);
+                break;
+            case RC_CROP_PHOTO:
+                if (cropImgUri != null) {
+                    changeAvatar(FileProviderUtils.getFilePathByUri(this, cropImgUri));
+                }
+
+                break;
         }
     }
 
@@ -286,74 +386,107 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     }
 
     void loadAvatar() {
-        if (TextUtils.isEmpty(CurrentUser.getAvatarUri())) {
-            avatar.setImageResource(R.drawable.ic_account_activated);
-            //appbarBg.setImageResource(R.drawable.gradient_bg);
-        } else {
-            if (this.isDestroyed()) return;
-            Glide.with(ActivityUserCenter.this).load(CurrentUser.getAvatarUri())
-                    //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
-                    //.placeholder(R.drawable.ic_account_activated)
-                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                    .into(avatar);
-            Glide.with(ActivityUserCenter.this).load(CurrentUser.getAvatarUri())
-                    //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
-                    //.placeholder(R.drawable.ic_account_activated)
-                    .apply(RequestOptions.bitmapTransform(new mBlurTransformation(this, 15, 4)))
-                    .into(appbarBg);
-        }
+        if (this.isDestroyed()) return;
+        Glide.with(ActivityUserCenter.this).load(CurrentUser.getAvatarUri())
+                //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
+                .placeholder(R.drawable.ic_account_activated)
+                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                .into(avatar);
+        Glide.with(ActivityUserCenter.this).load(CurrentUser.getAvatarUri())
+                .placeholder(R.drawable.ic_account_activated)
+                .apply(RequestOptions.bitmapTransform(new mBlurTransformation(this, 15, 4)))
+                .into(appbarBg);
+
 
     }
 
-    class saveAvatarTask extends AsyncTask {
 
-        String path;
+    void RefreshFansAndFollowingNum() {
+        fans.setText(R.string.fans);
+        following.setText(R.string.following);
+        new UserRelationHelper(CurrentUser)
+                .QueryFansAndFollowingNum(false, new UserRelationHelper.QueryFansAndFollowingNumListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onFansResult(int count) {
+                        fansNum = count;
+                        int last = defaultSP.getInt("last_fans_num", 0);
+                        if (fansNum > last) {
+                            newFansNum.setVisibility(View.VISIBLE);
+                            newFansNum.setText("+" + (fansNum - last));
+                        } else {
+                            newFansNum.setVisibility(View.GONE);
+                        }
+                        defaultSP.edit().putInt("last_fans_num", fansNum).apply();
+                        fans.setText(getString(R.string.fans) + " " + count);
+                    }
 
-        saveAvatarTask(String s) {
-            path = s;
-        }
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onFollowingResult(int count) {
+                        followingNum = count;
+                        following.setText(getString(R.string.following) + " " + count);
+                    }
 
-        @Override
-        protected Boolean doInBackground(Object[] objects) {
-            Bitmap img = BitmapFactory.decodeFile(path);
-            FileOperator.saveByteImageToFile(ActivityUserCenter.this.getFilesDir() + "/avatar_" + CurrentUser.getNick() + ".png", img);
-            final BmobFile file = new BmobFile(new File(ActivityUserCenter.this.getFilesDir() + "/" + "avatar_" + CurrentUser.getNick() + ".png"));
-            file.upload(new UploadFileListener() {
-                @Override
-                public void done(BmobException e) {
-                    if (e == null) {
+                    @Override
+                    public void onFailed(Exception e) {
+                        e.printStackTrace();
+                        fans.setText(R.string.fans);
+                        following.setText(R.string.following);
+                    }
+                });
+    }
+
+    void changeAvatar(String path) {
+        final FragmentLoading fragmentLoading = FragmentLoading.newInstance(getString(R.string.changing));
+        fragmentLoading.show(getSupportFragmentManager(), UUID.randomUUID().toString());
+        final BmobFile file = new BmobFile(new File(path));
+
+        file.upload(new UploadFileListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    if (!TextUtils.isEmpty(CurrentUser.getAvatarUri())) {
                         BmobFile bf = new BmobFile();
                         bf.setUrl(CurrentUser.getAvatarUri());
-                        CurrentUser.setAvatarUri(file.getFileUrl());
-                        CurrentUser.update(new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if (e == null) {
-                                    Toast.makeText(HContext, "更换头像成功", Toast.LENGTH_SHORT).show();
-                                    defaultSP.edit().putString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())).commit();
-                                    loadAvatar();
-                                } else {
-                                    Toast.makeText(HContext, "更换头像失败", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
                         bf.delete(new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
-
+//                                if (e == null) Log.e("删除原头像成功", "!");
+//                                else e.printStackTrace();
                             }
                         });
+                    }
+                    CurrentUser.setAvatarUri(file.getFileUrl());
+                    CurrentUser.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            try {
+                                fragmentLoading.dismiss();
+                            } catch (Exception ignored) {
 
-                    } else Toast.makeText(HContext, e.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                            if (e == null) {
+                                Toast.makeText(HContext, R.string.avatar_changed_success, Toast.LENGTH_SHORT).show();
+                                defaultSP.edit().putString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())).apply();
+                                loadAvatar();
+                            } else {
+                                Toast.makeText(HContext, R.string.avatar_changed_failed, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+
+                } else {
+                    try {
+                        fragmentLoading.dismiss();
+                    } catch (Exception ignored) {
+
+                    }
+                    Toast.makeText(HContext, R.string.avatar_changed_failed, Toast.LENGTH_SHORT).show();
                 }
-            });
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-
-        }
+            }
+        });
     }
+
 }

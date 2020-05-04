@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
@@ -373,7 +372,7 @@ public class JWCore {
                 throw JWException.newDialogMessageExpection("导入错误！已上传错误报告" + e.toString());
             }
             return result;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw JWException.getConnectErrorExpection();
         }
@@ -631,7 +630,6 @@ public class JWCore {
                         for (JsonElement ma : zh.getAsJsonArray()) {
                             if (!ma.isJsonObject() || !ma.getAsJsonObject().has("key") || !ma.getAsJsonObject().has("title"))
                                 continue;
-                            ;
                             Matcher m2 = Pattern.compile("\\s*|\t|\r|\n").matcher(ma.getAsJsonObject().get("key").getAsString());
                             valueToTitleMap.put(
                                     m2.replaceAll(""),

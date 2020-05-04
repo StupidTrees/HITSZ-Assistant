@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,21 +11,121 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00000000"
+        android:layout_height="200dp"
+        android:background="?attr/color_primary_fade_background"
+        android:fitsSystemWindows="true"
         app:elevation="0dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
+            android:id="@+id/collapse"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:fitsSystemWindows="true"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            app:theme="?attr/toolbarStyle" />
+            android:layout_height="match_parent"
+            android:minHeight="56dp"
+            app:collapsedTitleGravity="left|center"
+            app:expandedTitleGravity="left|bottom|center"
+            app:expandedTitleMarginEnd="36dp"
+            app:expandedTitleMarginStart="24dp"
+
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:maxLines="4"
+            app:scrimAnimationDuration="200"
+            app:statusBarScrim="#00000000"
+            app:titleEnabled="true"
+            app:toolbarId="@+id/toolbar">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:theme="@style/ToolBarTheme_Light"
+                app:contentInsetStartWithNavigation="0dp"
+                app:layout_collapseMode="pin" />
+
+            <LinearLayout
+                android:id="@+id/edit_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:orientation="horizontal"
+                app:layout_collapseMode="pin">
+
+                <ImageView
+                    android:id="@+id/cancel"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:padding="20dp"
+                    android:theme="@style/button_ripple_control"
+                    android:tint="@color/material_text_icon_white"
+                    android:tintMode="src_in"
+                    app:srcCompat="@drawable/bt_addevent_cancel" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:padding="16dp"
+                    android:theme="@style/button_ripple_control"
+                    android:tint="@color/material_text_icon_white"
+                    android:tintMode="src_in"
+                    app:srcCompat="@drawable/ic_delete" />
+
+                <ImageView
+                    android:id="@+id/select_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:padding="16dp"
+                    android:theme="@style/button_ripple_control"
+                    android:tint="@color/material_text_icon_white"
+                    android:tintMode="src_in"
+                    app:srcCompat="@drawable/ic_format_list_bulleted_black_24dp" />
+
+            </LinearLayout>
+
+        </net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout>
+
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <ImageView
+        android:id="@+id/none_img1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_margin="32dp"
+        android:background="@drawable/radius_accent_round_icon_bg"
+        android:padding="16dp"
+        android:tint="?attr/colorAccent"
+        android:tintMode="src_in"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:srcCompat="@drawable/bt_timeline_toolbar_task" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/task_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:overScrollMode="never"
+        android:visibility="visible"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/task_fab"
@@ -37,43 +136,8 @@
         android:clickable="false"
         android:transitionName="fab"
         android:visibility="visible"
-        app:layout_behavior=".diy.mBottomHideBehavior"
         app:backgroundTint="?attr/colorAccent"
+        app:layout_behavior=".views.mBottomHideBehavior"
         app:srcCompat="@drawable/fab_add" />
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:overScrollMode="never"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/task_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:overScrollMode="never"
-                android:visibility="visible">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <ImageView
-                android:id="@+id/none_img1"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:tint="?attr/background_icon_color_bottom"
-                android:tintMode="src_in"
-                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-                app:srcCompat="@drawable/ic_task" />
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

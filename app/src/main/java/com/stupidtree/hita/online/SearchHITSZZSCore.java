@@ -2,14 +2,10 @@ package com.stupidtree.hita.online;
 
 import android.util.SparseArray;
 
-import androidx.annotation.WorkerThread;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.stupidtree.hita.R;
 import com.stupidtree.hita.util.JsonUtils;
 
 import org.jsoup.Jsoup;
@@ -19,36 +15,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.HContext;
-
-public class SearchHITSZZSCore {
+public class SearchHITSZZSCore extends SearchCore<SparseArray<String>> {
     public static final int TITLE = 0;
     public static final int SUBTITLE = 1;
     public static final int TIME = 2;
     public static final int ID = 3;
-    // private String token;
-    private int totalResult = 0;
-    private String lastKeyword;
 
-    public String getLastKeyword() {
-        return lastKeyword;
+    @Override
+    public int getPageSize() {
+        return 10;
     }
 
-
-    public void reset() {
-
-        lastKeyword = null;
-    }
-
-    public int getTotalResult() {
-        return totalResult;
-    }
-
-    @WorkerThread
-    public List<SparseArray<String>> searchForResult(String text) throws SearchException {
-        if (text == null) text = "";
+    @Override
+    protected List<SparseArray<String>> reloadResult(String text) throws SearchException {
         List<SparseArray<String>> res = new ArrayList<>();
-        lastKeyword = text;
         Document d = null;
         try {
             d = Jsoup.connect("http://zsb.hitsz.edu.cn/zs_common/xxbt/getBtxx").
@@ -58,7 +38,6 @@ public class SearchHITSZZSCore {
                     .data("info", "{\"xxbt\":\"" + text + "\"}")
                     .post();
         } catch (IOException e) {
-            totalResult = 0;
             throw SearchException.newConnectError();
         }
         try {
@@ -87,4 +66,11 @@ public class SearchHITSZZSCore {
         }
         return res;
     }
+
+    @Override
+    protected List<SparseArray<String>> loadMoreResult(String text) throws SearchException {
+        return new ArrayList<>();
+    }
+
+
 }

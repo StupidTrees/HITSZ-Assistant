@@ -1,22 +1,18 @@
 package com.stupidtree.hita.fragments.popup;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,45 +23,45 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.stupidtree.hita.BaseActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
-import com.stupidtree.hita.timetable.TimetableCore;
-import com.stupidtree.hita.timetable.timetable.HTime;
-import com.stupidtree.hita.timetable.timetable.Task;
-import com.stupidtree.hita.diy.PickSingleTimeDialog;
+import com.stupidtree.hita.activities.BaseActivity;
 import com.stupidtree.hita.hita.TextTools;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.packable.HTime;
+import com.stupidtree.hita.timetable.packable.Task;
+import com.stupidtree.hita.views.PickSingleTimeDialog;
 
 import java.util.Calendar;
 
-import cn.bmob.v3.http.I;
-
-import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
-
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
-import static com.stupidtree.hita.timetable.TimeWatcherService.WATCHER_REFRESH;
 
 @SuppressLint("ValidFragment")
-public class FragmentAddTask extends BottomSheetDialogFragment {
-     HTime fT = new HTime(now),tT = new HTime(now);
-     int fW ;
+public class FragmentAddTask extends FragmentRadiusPopup {
+    HTime fT = new HTime(timeTableCore.getNow()), tT = new HTime(timeTableCore.getNow());
+    private int fW;
      int fDOW;
      int tDOW ;
      int tW;
      boolean fDset = false;
-     boolean tDset = false;
-     boolean fTset = false;
-     boolean tTset = false;
+    private boolean tDset = false;
+    private boolean fTset = false;
+    private boolean tTset = false;
 
-    TextView fD_show,tD_show,fT_show,tT_show;
-    ImageView fD_pick,tD_pick,fT_pick,tT_pick;
-    FloatingActionButton bt_done;
-    Switch adt_switch,adt_switch2,adt_switch3;
-    NumberPicker adt_lengthpicker;
-    EditText name;
-    LinearLayout arrangetime,arrangelength;
-    AddTaskDoneListener addTaskDoneListener;
+    private TextView fD_show, tD_show, fT_show, tT_show;
+    private ImageView fD_pick, tD_pick, fT_pick, tT_pick;
+    private FloatingActionButton bt_done;
+    private Switch adt_switch, adt_switch2, adt_switch3;
+    private NumberPicker adt_lengthpicker;
+    private EditText name;
+    private LinearLayout arrangetime, arrangelength;
+    private AddTaskDoneListener addTaskDoneListener;
 
 
 
@@ -78,20 +74,27 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
 
     }
 
+
+    @Nullable
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        fT = new HTime(now);
-        tT = new HTime(now);
-        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.fragment_add_task, null);
-        dialog.setContentView(view);
-        ((View) view.getParent()).setBackgroundColor(Color.TRANSPARENT);
         initViews(view);
         setViewFunctions();
-        //name.requestFocus();
-         return dialog;
+        return view;
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+        name.requestFocus();
+        name.setText("");
+    }
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
@@ -101,6 +104,8 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fT = new HTime(timeTableCore.getNow());
+        tT = new HTime(timeTableCore.getNow());
     }
 
     void initViews(View v){
@@ -122,8 +127,24 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
         bt_done = v.findViewById(R.id.adt_bt_done);
         adt_lengthpicker.setMaxValue(10000);
     }
-    
-    void setViewFunctions(){
+
+    private void setViewFunctions() {
+        name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                decideWhetherShowDone();
+            }
+        });
         adt_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -149,7 +170,7 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                         fW = week;
                         if(dateSet){
                             fD_show.setText(week+"周"+ TextTools.words_time_DOW[dow-1]+" "+hour+":"+minute);
-                            fD_show.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+                            fD_show.setTextColor(((BaseActivity) getActivity()).getColorAccent());
                         }
                     }
                 }).show();
@@ -167,7 +188,7 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                         tW = week;
                         if(dateSet){
                             tD_show.setText(week+"周"+ TextTools.words_time_DOW[dow-1]+" "+hour+":"+minute);
-                            tD_show.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+                            tD_show.setTextColor(((BaseActivity) getActivity()).getColorAccent());
                         }
                     }
                 }).show();
@@ -182,11 +203,11 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         fT.setTime(hourOfDay,minute);
                         fT_show.setText(fT.tellTime());
-                        fT_show.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+                        fT_show.setTextColor(((BaseActivity) getActivity()).getColorAccent());
                         fTset = true;
 
                     }
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
+                }, timeTableCore.getNow().get(Calendar.HOUR_OF_DAY), timeTableCore.getNow().get(Calendar.MINUTE), true);
                 TPD.create();
                 TPD.show();
 
@@ -201,11 +222,11 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         tT.setTime(hourOfDay,minute);
                         tT_show.setText(fT.tellTime());
-                        tT_show.setTextColor(((BaseActivity)getActivity()).getColorPrimary());
+                        tT_show.setTextColor(((BaseActivity) getActivity()).getColorAccent());
                         tTset = true;
 
                     }
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
+                }, timeTableCore.getNow().get(Calendar.HOUR_OF_DAY), timeTableCore.getNow().get(Calendar.MINUTE), true);
                 TPD.create();
                 TPD.show();
 
@@ -216,14 +237,12 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 if(adt_switch.isChecked()&&(!fDset||!tDset)){
                     Toast.makeText(getContext(),"请设置任务期限！",Toast.LENGTH_SHORT).show();
-                    return;
                 }else if(name.getText().toString().isEmpty()) {
                     Toast.makeText(getContext(),"请输入任务名称！",Toast.LENGTH_SHORT).show();
-                    return;
                 }else{
                     Task t = new Task(timeTableCore.getCurrentCurriculum().getCurriculumCode(),name.getText().toString());
                     if(adt_switch.isChecked()){
-                        String ddlUUID = timeTableCore.addEvent(tW,tDOW, TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE,
+                        String ddlUUID = timeTableCore.addEvent(tW, tDOW, TimetableCore.DDL,
                                 "DDL:"+name.getText().toString(),"任务截至","Deadline",t.getUuid(),tT,tT,false);
                       //  timeTableCore.addTask(name.getText().toString(),fW,fDOW,tW,tDOW,fT,tT,"DDL:"+name.getText().toString());
                         t.arrangeTime(fW,fDOW,tW,tDOW,fT,tT,ddlUUID+":::"+tW);
@@ -249,9 +268,12 @@ public class FragmentAddTask extends BottomSheetDialogFragment {
         });
     }
 
-//    public void attachToFragment(FragmentTasks ft){
-//        attachedFragment = ft;
-//    }
+
+    void decideWhetherShowDone() {
+        if (TextUtils.isEmpty(name.getText())) bt_done.hide();
+        else bt_done.show();
+    }
+
 
  
     public interface AddTaskDoneListener{

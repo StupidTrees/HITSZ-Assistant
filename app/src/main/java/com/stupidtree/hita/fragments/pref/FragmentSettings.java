@@ -2,21 +2,18 @@ package com.stupidtree.hita.fragments.pref;
 
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.preference.DropDownPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -25,7 +22,7 @@ import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreference;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.diy.TimeTablePreferenceChangeListener;
+import com.stupidtree.hita.views.TimeTablePreferenceChangeListener;
 
 import java.util.Objects;
 
@@ -34,13 +31,12 @@ import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.activities.ActivityMain.MAIN_RECREATE;
 import static com.stupidtree.hita.timetable.TimeWatcherService.NOTIFICATION_OFF;
 import static com.stupidtree.hita.timetable.TimeWatcherService.NOTIFICATION_ON;
-import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 import static com.stupidtree.hita.timetable.TimeWatcherService.WATCHER_REFRESH;
 
 public class FragmentSettings extends PreferenceFragmentCompat {
 
-    int prefId;
-    String title;
+    private int prefId;
+    private String title;
 
     public FragmentSettings() {
 
@@ -65,46 +61,26 @@ public class FragmentSettings extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
+        if (prefId == R.xml.pref_appearence) {
+            getPreferenceManager().setSharedPreferencesName("timetable_pref");
+        }
         addPreferencesFromResource(prefId);
         switch (prefId) {
             case R.xml.pref_basic:
+                setDarkModePreference(getPreferenceManager().getSharedPreferences());
                 setAutoLoginPreference();
-                setBasicPreference();
                 break;
             case R.xml.pref_appearence:
-                setDarkModePreference();
-                setTimetablePreference();
+                setTimetablePreference(getPreferenceManager().getSharedPreferences());
                 break;
             case R.xml.pref_others:
                 setAppPreference();
                 break;
 
-
         }
 
     }
 
-    private void setBasicPreference() {
-        findPreference("app_task_enabled").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Intent i = new Intent(MAIN_RECREATE);
-                LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
-                //Toast.makeText(getContext(),getString(R.string.notif_effect_after_restart),Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-        findPreference("app_events_enabled").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Intent i = new Intent(MAIN_RECREATE);
-                LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
-                // Toast.makeText(getContext(),getString(R.string.notif_effect_after_restart),Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-
-    }
 
 
     private void setAppPreference() {
@@ -157,53 +133,54 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         }
     }
 
-    private void setDarkModePreference() {
+    private void setDarkModePreference(final SharedPreferences SP) {
         final ListPreference lp = findPreference("dark_mode_mode");
-        lp.setValue(defaultSP.getString("dark_mode_mode", "dark_mode_normal"));
-        lp.setSummaryProvider(new Preference.SummaryProvider() {
-            @Override
-            public CharSequence provideSummary(Preference preference) {
-                return lp.getEntry();
-            }
-        });
-        lp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @SuppressLint("ApplySharedPref")
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                String mode = (String) newValue;
-                if (mode.equals("dark_mode_follow") || mode.equals("dark_mode_auto")) {
-                    // Toast.makeText(getContext(),getString(R.string.notif_effect_after_restart),Toast.LENGTH_SHORT).show();
-                    //defaultSP.edit().putBoolean("is_dark_mode",false).commit();
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                } else {
-                    boolean isD = defaultSP.getBoolean("is_dark_mode", false);
-                    if (isD)
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        if (lp != null) {
+            lp.setValue(SP.getString("dark_mode_mode", "dark_mode_normal"));
+            lp.setSummaryProvider(new Preference.SummaryProvider() {
+                @Override
+                public CharSequence provideSummary(Preference preference) {
+                    return lp.getEntry();
                 }
-//                else{
-//                   // defaultSP.edit().putBoolean("is_dark_mode",false).commit();
-//
-//                }
-                Intent i = new Intent(MAIN_RECREATE);
-                LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
-                getActivity().recreate();
-                return true;
-            }
-        });
+            });
+            lp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @SuppressLint("ApplySharedPref")
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    String mode = (String) newValue;
+                    if (mode.equals("dark_mode_follow") || mode.equals("dark_mode_auto")) {
+                        // Toast.makeText(getContext(),getString(R.string.notif_effect_after_restart),Toast.LENGTH_SHORT).show();
+                        //SP.edit().putBoolean("is_dark_mode",false).commit();
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                    } else {
+                        boolean isD = SP.getBoolean("is_dark_mode", false);
+                        if (isD)
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    }
+                    Intent i = new Intent(MAIN_RECREATE);
+                    LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
+                    requireActivity().recreate();
+                    return true;
+                }
+            });
+        }
+
+
 
     }
 
-    private void setTimetablePreference() {
-        findPreference("timetable_animation_enable")
+    private void setTimetablePreference(SharedPreferences SP) {
+
+        Objects.requireNonNull(findPreference("timetable_animation_enable"))
                 .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
-        findPreference("timetable_card_opacity")
+        Objects.requireNonNull(findPreference("timetable_card_opacity"))
                 .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
-        findPreference("timetable_card_text_bold")
+        Objects.requireNonNull(findPreference("timetable_card_text_bold"))
                 .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
-        findPreference("timetable_card_title_alpha")
+        Objects.requireNonNull(findPreference("timetable_card_title_alpha"))
                 .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
-        findPreference("timetable_card_subtitle_alpha")
+        Objects.requireNonNull(findPreference("timetable_card_subtitle_alpha"))
                 .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
 
         final SeekBarPreference sbp = findPreference("timetable_card_height");
@@ -218,7 +195,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         sbp.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
 
         final ListPreference dropDownPreference = findPreference("timetable_card_title_gravity");
-        String vl = defaultSP.getString("timetable_card_title_gravity", "top");
+        String vl = SP.getString("timetable_card_title_gravity", "top");
         dropDownPreference.setValue(vl);
         dropDownPreference.setSummaryProvider(new Preference.SummaryProvider() {
             @Override
@@ -230,7 +207,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
 
 
         final ListPreference cdBg = findPreference("timetable_card_background");
-        String bgV = defaultSP.getString("timetable_card_background", "gradient");
+        String bgV = SP.getString("timetable_card_background", "gradient");
         cdBg.setValue(bgV);
         cdBg.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
         cdBg.setSummaryProvider(new Preference.SummaryProvider() {
@@ -241,7 +218,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         });
 
         final ListPreference ttColor = findPreference("timetable_card_title_color");
-        String clV = defaultSP.getString("timetable_card_title_color", "white");
+        String clV = SP.getString("timetable_card_title_color", "white");
         ttColor.setValue(clV);
         ttColor.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
         ttColor.setSummaryProvider(new Preference.SummaryProvider() {
@@ -252,7 +229,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         });
 
         final ListPreference sbttColor = findPreference("timetable_card_subtitle_color");
-        String sbclV = defaultSP.getString("timetable_card_title_color", "white");
+        String sbclV = SP.getString("timetable_card_title_color", "white");
         sbttColor.setValue(sbclV);
         sbttColor.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
         sbttColor.setSummaryProvider(new Preference.SummaryProvider() {
@@ -263,7 +240,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         });
 
         final ListPreference iconColor = findPreference("timetable_card_icon_color");
-        String iconV = defaultSP.getString("timetable_card_icon_color", "white");
+        String iconV = SP.getString("timetable_card_icon_color", "white");
         iconColor.setValue(iconV);
         iconColor.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
         iconColor.setSummaryProvider(new Preference.SummaryProvider() {

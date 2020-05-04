@@ -31,7 +31,7 @@
             android:padding="16dp"
             android:tint="@color/material_background_white"
             android:tintMode="src_in"
-            app:srcCompat="@drawable/bt_done"
+            app:srcCompat="@drawable/fab_done"
             app:theme="@style/button_ripple_white" />
 
     </FrameLayout>

@@ -40,8 +40,8 @@
             android:padding="16dp"
             android:tint="?attr/colorControlNormal"
             android:tintMode="src_in"
-            app:srcCompat="@drawable/bt_done"
-            app:theme="@style/button_ripple_primary"
+            app:srcCompat="@drawable/fab_done"
+            app:theme="@style/button_ripple_accent"
             tools:ignore="ContentDescription" />
     </LinearLayout>
 
@@ -53,45 +53,44 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <com.cncoderx.wheelview.Wheel3DView
+        <com.stupidtree.hita.views.mWheel3DView
             android:id="@+id/pickdow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:cyclic="false"
             app:divider="?attr/background_icon_color_bottom"
-            app:selectedColor="?attr/colorPrimary"
+            app:selectedColor="?attr/colorAccent"
             app:toward="right"
             app:unselectedColor="?attr/background_icon_color_second"
             app:visibleItems="4" />
 
-        <com.cncoderx.wheelview.Wheel3DView
+        <com.stupidtree.hita.views.mWheel3DView
             android:id="@+id/pickfromt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:cyclic="false"
             app:divider="?attr/background_icon_color_bottom"
-            app:selectedColor="?attr/colorPrimary"
+            app:selectedColor="?attr/colorAccent"
             app:toward="right"
             app:unselectedColor="?attr/background_icon_color_second"
             app:visibleItems="4" />
 
         <TextView
-            android:id="@+id/textView41"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/dialog_pick_course_to" />
 
-        <com.cncoderx.wheelview.Wheel3DView
+        <com.stupidtree.hita.views.mWheel3DView
             android:id="@+id/picktot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:cyclic="false"
             app:divider="?attr/background_icon_color_bottom"
-            app:selectedColor="?attr/colorPrimary"
+            app:selectedColor="?attr/colorAccent"
             app:toward="right"
             app:unselectedColor="?attr/background_icon_color_second"
             app:visibleItems="4" />
@@ -112,6 +111,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
         android:text="@string/dialog_pick_course_label"
+        android:textColor="?attr/text_color_secondary"
         tools:ignore="RtlHardcoded" />
 
     <androidx.recyclerview.widget.RecyclerView

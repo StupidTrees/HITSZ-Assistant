@@ -63,10 +63,10 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/class_assistant"
+                    android:textColor="?attr/text_color_primary"
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/textView5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
@@ -93,6 +93,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/mute_assistant"
+                    android:textColor="?attr/text_color_primary"
                     android:textSize="18sp" />
 
                 <TextView
@@ -131,7 +132,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:layout_marginRight="8dp"
-                                android:text="@string/mute_assistant_tag1" />
+                                android:text="@string/mute_assistant_tag1"
+                                android:textColor="?attr/text_color_primary" />
 
                             <NumberPicker
                                 android:id="@+id/numberpicker_mute_before"
@@ -153,7 +155,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="16dp"
                             android:text="@string/mute_assistant_tag3"
-                            android:textColor="?attr/text_color_secondary" />
+                            android:textColor="?attr/text_color_primary" />
 
                         <Switch
                             android:id="@+id/forced_mute"
@@ -163,7 +165,7 @@
                             android:layout_marginRight="16dp"
                             android:layout_marginBottom="4dp"
                             android:text="@string/mute_assistant_tag4"
-                            android:textColor="?attr/text_color_secondary"
+                            android:textColor="?attr/text_color_primary"
                             android:textSize="14sp" />
 
                         <TextView
@@ -191,6 +193,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:text="@string/preview_assistant_tag1"
+                    android:textColor="?attr/text_color_primary"
                     android:textSize="18sp" />
 
                 <net.cachapa.expandablelayout.ExpandableLayout
@@ -216,7 +219,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:layout_marginEnd="8dp"
-                                android:text="@string/preview_assistant_tag2" />
+                                android:text="@string/preview_assistant_tag2"
+                                android:textColor="?attr/text_color_primary" />
 
                             <NumberPicker
                                 android:id="@+id/numberpicker_prevew_length"
@@ -238,12 +242,11 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="16dp"
                             android:text="@string/preview_assistant_tag4"
-                            android:textColor="?attr/text_color_secondary" />
+                            android:textColor="?attr/text_color_primary" />
                     </LinearLayout>
                 </net.cachapa.expandablelayout.ExpandableLayout>
 
                 <TextView
-                    android:id="@+id/textView12"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"

@@ -1,6 +1,7 @@
 package com.stupidtree.hita.util;
 
 import android.util.Base64;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -55,9 +56,10 @@ public class DeflaterUtils {
      */
     @Nullable
     public static String unzipString(String zipString) {
+        if (zipString.startsWith("{") && zipString.endsWith("}")) return zipString;
+        if (zipString.startsWith("[") && zipString.endsWith("]")) return zipString;
         byte[] decode = Base64.decode(zipString, Base64.NO_PADDING);
-        //创建一个新的解压缩器  https://www.yiibai.com/javazip/javazip_inflater.html
-
+        //创建一个新的解压缩器
         Inflater inflater = new Inflater();
         //设置解压缩的输入数据。
         inflater.setInput(decode);
@@ -71,7 +73,8 @@ public class DeflaterUtils {
                 outputStream.write(bytes, 0, length);
             }
         } catch (DataFormatException e) {
-            e.printStackTrace();
+            Log.e("解码错误", e.toString());
+            // e.printStackTrace();
             return null;
         } finally {
             //关闭解压缩器并丢弃任何未处理的输入。

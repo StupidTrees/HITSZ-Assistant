@@ -1,5 +1,6 @@
 package com.stupidtree.hita.adapter;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,11 +11,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,26 +30,32 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityAttitude;
 import com.stupidtree.hita.activities.ActivityChatbot;
 import com.stupidtree.hita.activities.ActivityEmptyClassroom;
+import com.stupidtree.hita.activities.ActivityLeaderBoard;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.activities.ActivityNews;
-import com.stupidtree.hita.activities.ActivityLostAndFound;
-import com.stupidtree.hita.activities.ActivityLeaderBoard;
-import com.stupidtree.hita.activities.ActivityUTMood;
 import com.stupidtree.hita.activities.ActivitySchoolCalendar;
+import com.stupidtree.hita.activities.ActivityUTMood;
+import com.stupidtree.hita.activities.BaseActivity;
+import com.stupidtree.hita.fragments.main.NavigationCardItem;
+import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
 import com.stupidtree.hita.online.BannerItem;
+import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.online.Infos;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.packable.HTime;
 import com.stupidtree.hita.util.ActivityUtils;
+import com.stupidtree.hita.util.EventsUtils;
+import com.zhouwei.mzbanner.MZBannerView;
+import com.zhouwei.mzbanner.holder.MZHolderCreator;
+import com.zhouwei.mzbanner.holder.MZViewHolder;
 
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -57,473 +64,395 @@ import org.jsoup.select.Elements;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.UpdateListener;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.now;
-import static com.stupidtree.hita.fragments.main.FragmentNavi.cardNames;
-import static com.stupidtree.hita.fragments.main.FragmentNavi.cardTyps;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
+import static com.stupidtree.hita.fragments.main.FragmentNavigation.cardNames;
+import static com.stupidtree.hita.fragments.main.FragmentNavigation.cardType;
 
-public class NaviPageAdapter extends RecyclerView.Adapter {
-    List<Map<String, Object>> mBeans;
-    private LayoutInflater inflater;
-    Context mContext;
-    SharedPreferences naviSP;
-    public static final int TYPE_BANNER = 1;
+public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPageAdapter.NaviViewHolder> {
+    private static final int HEADER = 190;
     public static final int TYPE_BOARD_JW = 2;
-    public static final int TYPE_BOARD_SERVICE = 3;
     public static final int TYPE_NEWS = 4;
     public static final int TYPE_HINT = 5;
-    public static final int TYPE_JWTS_FUN = 6;
+    private static final int TYPE_JWTS_FUN = 6;
     public static final int TYPE_HITA = 7;
-    public static final int TYPE_CARD = 8;
     public static final int TYPE_MOOD = 9;
     public static final int TYPE_NOTIFICATION = 10;
-    public static final int TYPE_UT_MOOD = 11;
+    private NaviRoot root;
 
-    public NaviPageAdapter(List<Map<String, Object>> res, Context c, SharedPreferences sp) {
-        this.naviSP = sp;
-        mBeans = res;
-        mContext = c;
-        inflater = LayoutInflater.from(c);
+
+    public NaviPageAdapter(List<NavigationCardItem> res, BaseActivity c, NaviRoot root) {
+        super(c, res);
+        this.root = root;
     }
 
-    @NonNull
+    public static List<Integer> strToIntegerList(String s) {
+        JsonParser jp = new JsonParser();
+        List<Integer> result = new ArrayList<>();
+        JsonArray ja = jp.parse(s).getAsJsonArray();
+        for (JsonElement je : ja) {
+            result.add(je.getAsInt());
+        }
+        return result;
+    }
+
+    static String integerToString(List<Integer> li) {
+        JsonArray ja = new JsonArray();
+        for (Integer i : li) {
+            ja.add(i);
+        }
+        return ja.toString();
+    }
+
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == TYPE_NEWS) {
-            return new ViewHolder_News(inflater.inflate(R.layout.dynamic_navipage_news, parent, false));
+    protected int getLayoutId(int viewType) {
+        switch (viewType) {
+            case HEADER:
+                return R.layout.dynamic_navipage_header;
+            case TYPE_NEWS:
+                return R.layout.dynamic_navipage_news;
+            case TYPE_BOARD_JW:
+                return R.layout.dynamic_navipage_board_jw;
+            case TYPE_HINT:
+                return R.layout.dynamic_navipage_hint;
+            case TYPE_NOTIFICATION:
+                return R.layout.dynamic_navipage_notification;
+            case TYPE_HITA:
+                return R.layout.dynamic_navipage_hita;
+            case TYPE_MOOD:
+                return R.layout.dynamic_navipage_mood;
+            default:
+                return R.layout.dynamic_navipage_hint;
+
+        }
+    }
+
+    @Override
+    int getIndexBias() {
+        return 1;
+    }
+
+    @Override
+    public NaviViewHolder createViewHolder(View v, int viewType) {
+        if (viewType == HEADER) {
+            return new HeaderHolder(v);
+        } else if (viewType == TYPE_NEWS) {
+            return new ViewHolder_News(v);
         } else if (viewType == TYPE_BOARD_JW) {
-            return new ViewHolder_Board_jw(inflater.inflate(R.layout.dynamic_navipage_board_jw, parent, false));
-        }
-//        else if (viewType == TYPE_JWTS_FUN) {
-//            return new ViewHolder_JW(inflater.inflate(R.layout.dynamic_navipage_jwts_fun, parent, false));
-//        }
-        else if (viewType == TYPE_HINT) {
-            return new ViewHolder_Hint(inflater.inflate(R.layout.dynamic_navipage_hint, parent, false));
+            return new ViewHolder_Board_jw(v);
+        } else if (viewType == TYPE_HINT) {
+            return new ViewHolder_Hint(v);
         } else if (viewType == TYPE_NOTIFICATION) {
-            return new ViewHolder_Notification(inflater.inflate(R.layout.dynamic_navipage_notification, parent, false));
+            return new ViewHolder_Notification(v);
         } else if (viewType == TYPE_HITA) {
-            return new ViewHolder_Hita(inflater.inflate(R.layout.dynamic_navipage_hita, parent, false));
-        }
-//        else if (viewType == TYPE_CARD) {
-//            return new ViewHolder_Card(inflater.inflate(R.layout.dynamic_navipage_card, parent, false));
-//        }
-        else if (viewType == TYPE_MOOD) {
-            return new ViewHolder_Mood(inflater.inflate(R.layout.dynamic_navipage_mood, parent, false));
+            return new ViewHolder_Hita(v);
+        } else if (viewType == TYPE_MOOD) {
+            return new ViewHolder_Mood(v);
         } else
-            return new ViewHolder_Hint(inflater.inflate(R.layout.dynamic_navipage_hint, parent, false));
+            return new ViewHolder_Hint(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        if (holder instanceof ViewHolder_XFJ) {
-            ViewHolder_XFJ ve = (ViewHolder_XFJ) holder;
-            ve.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityUtils.startJWTSActivity_forPage(mContext, 3);
-                }
-            });
-        } else if (holder instanceof ViewHolder_JW) {
-            final ViewHolder_JW ve = (ViewHolder_JW) holder;
-            ve.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityUtils.startJWTSActivity(mContext);
-                }
-            });
-            ve.xk_nowCode = naviSP.getString("navi_page_jwts_xk_now_code", "qxrx");
-            int nowPosition = 0;
-            for (int i = 0; i < ve.xk_spinnerOptions.size(); i++) {
-                if (ve.xk_spinnerOptions.get(i).get("value").equals(ve.xk_nowCode)) {
-                    nowPosition = i;
-                    break;
-                }
-            }
-            ve.xk_type.setText(ve.xk_spinnerOptions.get(nowPosition).get("name"));
-
-            // new refreshXKInfoTask(ve.xk_nowCode, ve.xk_loading, ve.xk_top, ve.xk_second).executeOnExecutor(TPE);
-            //new refreshExamListTask(ve.examLayout,ve.exam_title, ve.exam_listRes, ve.exam_loading).executeOnExecutor(TPE);
-            ve.xkLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityUtils.startJWTSActivity_forPage(mContext, 2);
-                    //mContext.startActivity(i);
-                }
-            });
-//            ve.exam_listAdapter.setmOnOperateClickListsner(new KSXXListAdapter.OnOperateClickListener() {
-//                @Override
-//                public void OnClick(View view, int index, boolean choose) {
-//                    showEventDialog(mContext,ve.exams.get(index),null,null);
-//                }
-//            });
-            ve.examLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ActivityUtils.startJWTSActivity_forPage(mContext, 4);
-                }
-            });
-            ve.xklbLayout.setOnClickListener(new View.OnClickListener() {
-                int selectedPosition = 0;
-
-                @Override
-                public void onClick(View v) {
-                    int nowPosition = 0;
-                    for (int i = 0; i < ve.xk_spinnerOptions.size(); i++) {
-                        if (ve.xk_spinnerOptions.get(i).get("value").equals(ve.xk_nowCode)) {
-                            nowPosition = i;
-                            break;
-                        }
-                    }
-                    String[] ss = new String[ve.xk_spinnerOptions.size()];
-                    for (int i = 0; i < ss.length; i++) {
-                        ss[i] = ve.xk_spinnerOptions.get(i).get("name");
-                    }
-
-                    final AlertDialog ad = new AlertDialog.Builder(mContext).setTitle("设置选课类别").setSingleChoiceItems(ss, nowPosition, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            selectedPosition = which;
-                        }
-                    })
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String newCode = ve.xk_spinnerOptions.get(selectedPosition).get("value");
-                                    naviSP.edit().putString("navi_page_jwts_xk_now_code", newCode).apply();
-                                    ve.xk_nowCode = newCode;
-                                    ve.xk_type.setText(ve.xk_spinnerOptions.get(selectedPosition).get("name"));
-                                    //  new refreshXKInfoTask(newCode, ve.xk_loading, ve.xk_top, ve.xk_second).executeOnExecutor(TPE);
-                                }
-                            }).setNegativeButton("取消", null).create();
-                    ad.show();
-
-                }
-            });
+    public void onBindViewHolder(@NonNull NaviViewHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
+        if (holder instanceof HeaderHolder) {
+            HeaderHolder h = (HeaderHolder) holder;
+            h.refresh();
         } else if (holder instanceof ViewHolder_News) {
-            ViewHolder_News vn = (ViewHolder_News) holder;
-            new refreshNewsListTask(vn.top, vn.second, vn.third, vn.loading).executeOnExecutor(TPE);
-            vn.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(mContext, ActivityNews.class);
-                    mContext.startActivity(i);
-                }
-            });
+            bindNews((ViewHolder_News) holder);
         } else if (holder instanceof ViewHolder_Board_jw) {
-            ViewHolder_Board_jw vb = (ViewHolder_Board_jw) holder;
-            vb.card_xl.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(mContext, ActivitySchoolCalendar.class);
-                    mContext.startActivity(i);
-                }
-            });
-//            vb.card_info.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent i = new Intent(mContext, ActivityNews.class);
-//                    mContext.startActivity(i);
-//                }
-//            });
-            View.OnClickListener jwtsClick = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityUtils.startJWTSActivity(mContext);
-                }
-            };
-            vb.card_jwts.setOnClickListener(jwtsClick);
-            vb.card_emptyclassroom.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(mContext, ActivityEmptyClassroom.class);
-                    mContext.startActivity(i);
-                }
-            });
-        } else if (holder instanceof ViewHolder_Card) {
-            ViewHolder_Card vc = (ViewHolder_Card) holder;
-            vc.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ActivityUtils.startUTActivity(mContext);
-                }
-            });
-            //  new refreshCardTask(vc.money,vc.loading).executeOnExecutor(TPE);
+            bindJWBoard((ViewHolder_Board_jw) holder);
         } else if (holder instanceof ViewHolder_Hint) {
-            ViewHolder_Hint vh = (ViewHolder_Hint) holder;
-            vh.button.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    removeItem_position(position);
-                    naviSP.edit().putBoolean("first_enter_navipage_hint_drag", false).apply();
-                }
-            });
+            bindHint((ViewHolder_Hint) holder, position);
         } else if (holder instanceof ViewHolder_Notification) {
-            ViewHolder_Notification vh = (ViewHolder_Notification) holder;
-            final BannerItem bi = (BannerItem) mBeans.get(position).get("item");
-            vh.title.setText(bi.getTitle());
-            vh.subtitle.setText(bi.getSubtitle());
-            Glide.with(mContext).load(bi.getImageUri()).into(vh.image);
-            vh.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        bannerAction(bi.getAction());
-                        if(CurrentUser!=null){
-                            bi.addClickUser(CurrentUser);
-                            bi.update(new UpdateListener() {
-                                @Override
-                                public void done(BmobException e) {
-
-                                }
-                            });
-                        }
-
-                    }catch (Exception e){
-
-                    }
-
-                }
-            });
-            vh.button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeItem_position(position);
-                    naviSP.edit().putBoolean("notifi_clicked:" + bi.getObjectId(), true).apply();
-                }
-            });
+            bindNotification((ViewHolder_Notification) holder, position);
         } else if (holder instanceof ViewHolder_Hita) {
-            ViewHolder_Hita vb = (ViewHolder_Hita) holder;
-            View.OnClickListener ol = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(mContext, ActivityChatbot.class);
-                    mContext.startActivity(i);
-                }
-            };
-            vb.card.setOnClickListener(ol);
-            //vb.button.setOnClickListener(ol);
-            // vb.hint.setText(now.get(Calendar.MONTH) + 1 + "月" + now.get(Calendar.DAY_OF_MONTH) + "日");
-            // vb.hint_second.setText("希塔一直在这陪你");
-//           vht.animationView.setAnimation("hita_animation/hita_normal.json");
-//           vht.animationView.playAnimation();
-            vb.card_explore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(mContext, ActivityAttitude.class);
-                    mContext.startActivity(i);
-                }
-            });
-            vb.card_canteen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent g = new Intent(mContext, ActivityLeaderBoard.class);
-                    mContext.startActivity(g);
-                }
-            });
-            vb.card_lostandfound.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(mContext, ActivityLostAndFound.class);
-                    mContext.startActivity(i);
-                }
-            });
-            vb.card_ut.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ActivityUtils.startUTActivity(mContext);
-                }
-            });
-            vb.card_hita.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent pp = new Intent(mContext, ActivityChatbot.class);
-                    mContext.startActivity(pp);
-                }
-            });
-            vb.card_search.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mContext instanceof ActivityMain) {
-                        WindowManager manager = ((ActivityMain) mContext).getWindowManager();
-                        DisplayMetrics outMetrics = new DisplayMetrics();
-                        manager.getDefaultDisplay().getMetrics(outMetrics);
-                        int width = outMetrics.widthPixels;
-                        ((ActivityMain) mContext).presentActivity((ActivityMain) mContext, width, 10);
-                    }
-                }
-            });
+            bindService((ViewHolder_Hita) holder);
         } else if (holder instanceof ViewHolder_Mood) {
-            final ViewHolder_Mood vm = (ViewHolder_Mood) holder;
-            vm.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(mContext, ActivityUTMood.class);
-                    mContext.startActivity(i);
-                }
-            });
-            if (CurrentUser != null && !CurrentUser.hasPunch(now)) {
-                vm.ut.setVisibility(View.GONE);
-                vm.vote.setVisibility(View.VISIBLE);
-                vm.normal.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        new punchTask(1, mContext.getString(R.string.punch_success_normal), position).executeOnExecutor(TPE);
-                    }
-                });
-                vm.happy.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        new punchTask(0, mContext.getString(R.string.punch_success_happy), position).executeOnExecutor(TPE);
-                    }
-                });
-                vm.sad.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        new punchTask(2, mContext.getString(R.string.punch_success_sad), position).executeOnExecutor(TPE);
-
-                    }
-                });
-            } else {
-                vm.ut.setVisibility(View.VISIBLE);
-                vm.vote.setVisibility(View.GONE);
-                new refreshUTMoodTask(vm).executeOnExecutor(TPE);
-            }
-
-
+            bindMood((ViewHolder_Mood) holder, position);
         }
+    }
+
+    private void bindNews(ViewHolder_News vn) {
+        new refreshNewsListTask(vn.top, vn.second, vn.third, vn.loading).executeOnExecutor(TPE);
+        vn.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mContext, ActivityNews.class);
+                mContext.startActivity(i);
+            }
+        });
+    }
+
+    private void bindJWBoard(ViewHolder_Board_jw holder) {
+        ViewHolder_Board_jw vb = holder;
+        vb.card_xl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mContext, ActivitySchoolCalendar.class);
+                mContext.startActivity(i);
+            }
+        });
+        View.OnClickListener jwtsClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityUtils.startJWTSActivity(mContext);
+            }
+        };
+        vb.card_jwts.setOnClickListener(jwtsClick);
+        vb.card_emptyclassroom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mContext, ActivityEmptyClassroom.class);
+                mContext.startActivity(i);
+            }
+        });
+    }
+
+    private void bindNotification(ViewHolder_Notification vh, final int position) {
+        final BannerItem bi = mBeans.get(position - 1).getNotificationExtra();
+        if (bi == null) return;
+        vh.title.setText(bi.getTitle());
+        vh.subtitle.setText(bi.getSubtitle());
+        //  vh.card.setMinimumHeight((int) bi.getHeight());
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(MATCH_PARENT,
+                dip2px(mContext, bi.getHeight()));
+
+        int marginTopPixel = mContext.getResources().getDimensionPixelSize(R.dimen.navi_page_card_margin_top_bottom);
+        int marginStartPixel = mContext.getResources().getDimensionPixelSize(R.dimen.navi_page_card_margin_start_end);
+        lp.setMargins(marginStartPixel, marginTopPixel, marginStartPixel, marginTopPixel);
+        vh.card.setLayoutParams(lp);
+//            vh.card.setPadding(8,8,8,8);
+        vh.button.setText(bi.getButtonText());
+        Glide.with(mContext).load(bi.getImageUri()).into(vh.image);
+        vh.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+
+                    bannerAction(bi.getAction());
+                    if (CurrentUser != null) {
+                        bi.addClickUser(CurrentUser);
+                        bi.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+
+                            }
+                        });
+                    }
+
+                } catch (Exception e) {
+
+                }
+
+            }
+        });
+        vh.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                removeItem_position(position);
+                root.getPreferences().edit().putBoolean("notifi_clicked:" + bi.getObjectId(), true).apply();
+            }
+        });
+    }
+
+    private void bindService(ViewHolder_Hita holder) {
+        ViewHolder_Hita vb = holder;
+        View.OnClickListener ol = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mContext, ActivityChatbot.class);
+                mContext.startActivity(i);
+            }
+        };
+//        vb.card.setOnClickListener(ol);
+        vb.card_explore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityUtils.startAttitudeActivity(mContext);
+            }
+        });
+        vb.card_canteen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent g = new Intent(mContext, ActivityLeaderBoard.class);
+                mContext.startActivity(g);
+            }
+        });
+        vb.card_lostandfound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityUtils.startCommunityActivity(mContext);
+            }
+        });
+        vb.card_ut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityUtils.startUTActivity(mContext);
+            }
+        });
+        vb.card_hita.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent pp = new Intent(mContext, ActivityChatbot.class);
+                mContext.startActivity(pp);
+            }
+        });
+        vb.card_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mContext instanceof ActivityMain) {
+                    WindowManager manager = ((ActivityMain) mContext).getWindowManager();
+                    DisplayMetrics outMetrics = new DisplayMetrics();
+                    manager.getDefaultDisplay().getMetrics(outMetrics);
+                    int width = outMetrics.widthPixels;
+                    ((ActivityMain) mContext).presentActivity((Activity) mContext, width, 10);
+                }
+            }
+        });
+    }
+
+    private void bindMood(final ViewHolder_Mood vm, final int position) {
+        vm.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(mContext, ActivityUTMood.class);
+                mContext.startActivity(i);
+            }
+        });
+        if (CurrentUser == null) {
+            vm.vote.setVisibility(View.GONE);
+            vm.ut.setVisibility(View.VISIBLE);
+            new refreshUTMoodTask(vm).executeOnExecutor(TPE);
+            return;
+        }
+        vm.disableButtons();
+        BmobUser.fetchUserInfo(new FetchUserInfoListener<BmobUser>() {
+            @Override
+            public void done(BmobUser bmobUser, BmobException e) {
+                vm.enableButtons();
+                if (e == null) {
+                    CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
+                    if (CurrentUser != null && !CurrentUser.hasPunch(timeTableCore.getNow())) {
+                        vm.ut.setVisibility(View.GONE);
+                        vm.vote.setVisibility(View.VISIBLE);
+                        vm.normal.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                                new punchTask(1, mContext.getString(R.string.punch_success_normal), position).executeOnExecutor(TPE);
+                            }
+                        });
+                        vm.happy.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                                new punchTask(0, mContext.getString(R.string.punch_success_happy), position).executeOnExecutor(TPE);
+                            }
+                        });
+                        vm.sad.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                                new punchTask(2, mContext.getString(R.string.punch_success_sad), position).executeOnExecutor(TPE);
+
+                            }
+                        });
+                    } else {
+                        vm.ut.setVisibility(View.VISIBLE);
+                        vm.vote.setVisibility(View.GONE);
+                        new refreshUTMoodTask(vm).executeOnExecutor(TPE);
+                    }
+                }
+            }
+        });
 
 
     }
 
+    private void bindHint(ViewHolder_Hint vh, final int position) {
+        vh.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                removeItem_position(position);
+                root.getPreferences().edit().putBoolean("first_enter_navipage_hint_drag", false).apply();
+            }
+        });
+    }
 
-    public void onMove(int fromPosition, int toPosition) {
+    private void onMove(int fromPosition, int toPosition) {
         //对原数据进行移动
-        Collections.swap(mBeans, fromPosition, toPosition);
+        if (toPosition == 0 || fromPosition == 0) return;
+        Collections.swap(mBeans, fromPosition - 1, toPosition - 1);
         //通知数据移动
         notifyItemMoved(fromPosition, toPosition);
         saveOrders();
     }
 
-
     @Override
     public int getItemViewType(int position) {
-        return ((Number) mBeans.get(position).get("type")).intValue();
+        if (position == 0) return HEADER;
+        return mBeans.get(position - 1).getType();
     }
 
     @Override
     public int getItemCount() {
-        return mBeans.size();
+        //  if(mBeans.size()==0) return 0;
+        return mBeans.size() + 1;
     }
 
-    public void addItem(int type, int position, Map<String, Object> bundles) {
-        if (mBeans.contains(type)) return;
-        Map<String, Object> item = new HashMap<>();
-        item.put("type", type);
-        item.putAll(bundles);
-        mBeans.add(position, item);
-        notifyItemInserted(position);
-        notifyItemRangeChanged(position, mBeans.size());
-        if (type == TYPE_JWTS_FUN) {
-            saveOrders();
-        }
-    }
-
-    //    public void removeItem(int type) {
-//        int posToRemove = mBeans.indexOf(type);
-//        if (posToRemove < 0) return;
-//        mBeans.remove(posToRemove);
-//        notifyItemRemoved(posToRemove);
-//        notifyItemRangeChanged(posToRemove, mBeans.size());
-//        saveOrders();
-//    }
-    private void bannerAction(JsonObject action) {
-        try {
-            if (action == null) return;
-            if (action.has("intent")) {
-                if (action.get("intent").getAsString().equals("jwts")) {
-                    ActivityUtils.startJWTSActivity(mContext);
-                } else if (action.get("intent").getAsString().equals("rankboard")) {
-                    Intent i = new Intent(mContext, ActivityLeaderBoard.class);
-                    mContext.startActivity(i);
-                }
-            } else if (action.has("url")) {
-                Uri uri = Uri.parse(action.get("url").getAsString());
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                mContext.startActivity(intent);
-            } else if (action.has("dialog_title") && action.has("dialog_message")) {
-                AlertDialog ad = new AlertDialog.Builder(mContext).setTitle(action.get("dialog_title").getAsString())
-                        .setMessage(action.get("dialog_message").getAsString()).setPositiveButton("好的", null).create();
-                ad.show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void removeItem_position(int posToRemove) {
-        mBeans.remove(posToRemove);
+    private void removeItem_position(int posToRemove) {
+        mBeans.remove(posToRemove - 1);
         notifyItemRemoved(posToRemove);
         notifyItemRangeChanged(posToRemove, mBeans.size());
         saveOrders();
     }
 
-    public void removeItems(int[] types) {
-        int[] pos = new int[types.length];
-        for (int i = 0; i < types.length; i++) pos[i] = mBeans.indexOf(types[i]);
-        for (int i = pos.length - 2; i >= 0; i--) {
-            for (int j = 0; j <= i; j++) {
-                if (pos[j] < pos[j + 1]) {
-                    int temp = pos[j];
-                    pos[j] = pos[j + 1];
-                    pos[j + 1] = temp;
-                }
-            }
+    public void addItem(NavigationCardItem item, int position) {
+        mBeans.add(position, item);
+        notifyItemChanged(0);
+        notifyItemInserted(position + 1);
+        notifyItemRangeChanged(position + 1, mBeans.size());
+        if (item.getType() == TYPE_JWTS_FUN) {
+            saveOrders();
         }
-        for (int i = 0; i < pos.length; i++) {
-            if (pos[i] < 0) continue;
-            //Log.e("remove:",pos[i]+"");
-            mBeans.remove(pos[i]);
-            notifyItemRemoved(pos[i]);
-            notifyItemRangeChanged(pos[i], mBeans.size());
-        }
-        saveOrders();
-    }
-
-    boolean arrayContains(Integer[] arr, int ele) {
-        for (int x : arr) {
-            if (ele == x) return true;
-        }
-        return false;
     }
 
     public void saveOrders() {
-        SharedPreferences.Editor editor = naviSP.edit();
+        SharedPreferences.Editor editor = root.getPreferences().edit();
         for (int i = 0; i < mBeans.size(); i++) {
-            Map<String, Object> m = mBeans.get(i);
-            int type = (int) m.get("type");
-            if (arrayContains(cardTyps, type)) {
-                String name = (String) m.get("type_name");
+            NavigationCardItem m = mBeans.get(i);
+            int type = m.getType();
+            if (arrayContains(cardType, type)) {
+                String name = m.getType_name();
                 editor.putInt(name + "_power", i);
             }
-
         }
         editor.apply();
 //        for(int i=0;i<cardNames.length;i++){
 //            String card = cardNames[i];
-//            int type = cardTyps[i];
+//            int type = cardType[i];
 //            boolean enable = naviSP.getBoolean(card+"_enable",true);
 //            if(enable){
 //
@@ -566,14 +495,6 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         }
     }
 
-    class ViewHolder_XFJ extends NaviViewHolder {
-        TextView title;
-
-        public ViewHolder_XFJ(@NonNull View itemView) {
-            super(itemView);
-            title = itemView.findViewById(R.id.title);
-        }
-    }
 
     class ViewHolder_News extends NaviViewHolder {
         TextView top, second, third;
@@ -590,68 +511,11 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         }
     }
 
-    class ViewHolder_Mood extends NaviViewHolder {
-        ImageView happy, normal, sad;
-        LinearLayout vote, ut;
-        ImageView icon;
-        TextView percentage, text, score;
-
-
-        public ViewHolder_Mood(@NonNull View itemView) {
-            super(itemView);
-            happy = itemView.findViewById(R.id.happy);
-            normal = itemView.findViewById(R.id.normal);
-            sad = itemView.findViewById(R.id.sad);
-            ut = itemView.findViewById(R.id.mood_ut);
-            vote = itemView.findViewById(R.id.mood_vote);
-            // image = itemView.findViewById(R.id.image);
-            score = itemView.findViewById(R.id.score);
-            icon = itemView.findViewById(R.id.icon);
-            percentage = itemView.findViewById(R.id.percentage);
-            text = itemView.findViewById(R.id.mood_text);
-            // image = itemView.findViewById(R.id.image);
-
+    boolean arrayContains(Integer[] arr, int ele) {
+        for (int x : arr) {
+            if (ele == x) return true;
         }
-    }
-
-
-    class ViewHolder_Card extends NaviViewHolder {
-        TextView money;
-        ProgressBar loading;
-        //ImageView image;
-
-        public ViewHolder_Card(@NonNull View itemView) {
-            super(itemView);
-            loading = itemView.findViewById(R.id.loading);
-            money = itemView.findViewById(R.id.money);
-            // image = itemView.findViewById(R.id.image);
-        }
-    }
-
-    class ViewHolder_Bulletin extends NaviViewHolder {
-        TextView top, second, third;
-        ProgressBar loading;
-
-        public ViewHolder_Bulletin(@NonNull View itemView) {
-            super(itemView);
-            top = itemView.findViewById(R.id.top_news);
-            second = itemView.findViewById(R.id.second_news);
-            third = itemView.findViewById(R.id.third_news);
-            loading = itemView.findViewById(R.id.loading);
-        }
-    }
-
-    class ViewHolder_Lecture extends NaviViewHolder {
-        TextView top, second, third;
-        ProgressBar loading;
-
-        public ViewHolder_Lecture(@NonNull View itemView) {
-            super(itemView);
-            top = itemView.findViewById(R.id.top_news);
-            second = itemView.findViewById(R.id.second_news);
-            third = itemView.findViewById(R.id.third_news);
-            loading = itemView.findViewById(R.id.loading);
-        }
+        return false;
     }
 
     class ViewHolder_Board_jw extends NaviViewHolder {
@@ -666,13 +530,82 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         }
     }
 
+    private void bannerAction(JsonObject action) {
+        try {
+            if (action == null) return;
+            String type = action.get("type").getAsString();
+            switch (type) {
+                case "intent":
+                    if (action.has("intent")) {
+                        if (action.get("intent").getAsString().equals("jwts")) {
+                            ActivityUtils.startJWTSActivity(mContext);
+                        } else if (action.get("intent").getAsString().equals("rankboard")) {
+                            Intent i = new Intent(mContext, ActivityLeaderBoard.class);
+                            mContext.startActivity(i);
+                        }
+                    }
+                    break;
+                case "website":
+                    Uri uri = Uri.parse(action.get("url").getAsString());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    mContext.startActivity(intent);
+                    break;
+                case "search":
+                    if (action.has("keyword")) {
+                        String key = action.get("keyword").getAsString();
+                        if (action.has("search_type")) {
+                            ActivityUtils.searchFor(mContext, key, action.get("search_type").getAsString());
+                        } else {
+                            ActivityUtils.search(mContext, key);
+                        }
+                    }
+                    break;
+                case "dialog":
+                    if (action.has("dialog_title") && action.has("dialog_message")) {
+                        AlertDialog ad = new AlertDialog.Builder(mContext).setTitle(action.get("dialog_title").getAsString())
+                                .setMessage(action.get("dialog_message").getAsString()).setPositiveButton("好的", null).create();
+                        ad.show();
+                    }
+                    break;
+                case "timetable":
+                    if (!timeTableCore.isDataAvailable()) return;
+                    if (action.has("event_type") && action.has("name")) {
+                        FragmentAddEvent fad = FragmentAddEvent.newInstance();
+                        fad.setInitialType(action.get("event_type").getAsString()).setInitialName(action.get("name").getAsString());
+                        if (action.has("tag2"))
+                            fad.setInitialTag2(action.get("tag2").getAsString());
+                        if (action.has("tag3"))
+                            fad.setInitialTag3(action.get("tag3").getAsString());
+                        if (action.has("date")) {
+                            Calendar date = Calendar.getInstance();
+                            date.setTime(Objects.requireNonNull(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(action.get("date").getAsString())));
+                            fad.setInitialDate(date);
+                        }
+                        if (action.has("from_time")) {
+                            Calendar c = Calendar.getInstance();
+                            c.setTime(Objects.requireNonNull(new SimpleDateFormat("HH:mm", Locale.getDefault()).parse(action.get("from_time").getAsString())));
+                            fad.setInitialFromTime(new HTime(c));
+                        }
+                        if (action.has("to_time")) {
+                            Calendar c = Calendar.getInstance();
+                            c.setTime(Objects.requireNonNull(new SimpleDateFormat("HH:mm", Locale.getDefault()).parse(action.get("to_time").getAsString())));
+                            fad.setInitialToTime(new HTime(c));
+                        }
+                        if (action.has("weeks")) {
+                            List<Integer> weks = new ArrayList<>();
+                            for (JsonElement je : action.get("weeks").getAsJsonArray()) {
+                                weks.add(je.getAsInt());
+                            }
+                            fad.setInitialWeeks(weks);
+                        }
+                        fad.show(((BaseActivity) mContext).getSupportFragmentManager(), "fad");
+                    }
+                    break;
 
-    class ViewHolder_Hint extends RecyclerView.ViewHolder {
-        Button button;
 
-        public ViewHolder_Hint(@NonNull View itemView) {
-            super(itemView);
-            button = itemView.findViewById(R.id.button);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -690,216 +623,401 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         }
     }
 
-    class ViewHolder_JW extends NaviViewHolder {
-        TextView xk_top, xk_second, xk_type;
-        // CalendarView calendarView;
-        ProgressBar xk_loading;
-        String xk_nowCode;
-        TextView exam_title;
-        //RecyclerView exam_list;
-        //KSXXListAdapter exam_listAdapter;
-        List<Map<String, String>> exam_listRes;
-        ProgressBar exam_loading;
-        List<Map<String, String>> xk_spinnerOptions;
-        LinearLayout examLayout, xkLayout, xklbLayout;
-        //List<EventItem> exams;
+    public interface NaviRoot {
+        SharedPreferences getPreferences();
 
-        public ViewHolder_JW(@NonNull View itemView) {
-            super(itemView);
-            // exams = new ArrayList<>();
-            xk_top = itemView.findViewById(R.id.top);
-            xk_second = itemView.findViewById(R.id.second);
-            xk_loading = itemView.findViewById(R.id.loading_xk);
-            xkLayout = itemView.findViewById(R.id.layout_xk);
-            xklbLayout = itemView.findViewById(R.id.xklb_choose);
-            xk_type = itemView.findViewById(R.id.type);
-            exam_title = itemView.findViewById(R.id.title_exam);
-            // exam_list = itemView.findViewById(R.id.list_exam);
-            exam_loading = itemView.findViewById(R.id.loading_exam);
-            examLayout = itemView.findViewById(R.id.layout_exam);
-            exam_listRes = new ArrayList<>();
-            // exam_listAdapter = new KSXXListAdapter(mContext, exam_listRes,true);
-            //exam_list.setAdapter(exam_listAdapter);
-            //exam_list.setLayoutManager(new WrapContentLinearLayoutManager(mContext, RecyclerView.VERTICAL, false));
+        List<BannerItem> getADBanners();
 
-            xk_spinnerOptions = new ArrayList<>();
-            Map<String, String> m1 = new HashMap<>();
-            Map<String, String> m2 = new HashMap<>();
-            Map<String, String> m3 = new HashMap<>();
-            Map<String, String> m4 = new HashMap<>();
-            Map<String, String> m5 = new HashMap<>();
-            Map<String, String> m6 = new HashMap<>();
-            Map<String, String> m7 = new HashMap<>();
-            m1.put("name", "必修");
-            m1.put("value", "bx");
-            m2.put("name", "限选");
-            m2.put("value", "xx");
-            m3.put("name", "文理通识");
-            m3.put("value", "qxrx");
-            m4.put("name", "创新研修");
-            m4.put("value", "cxyx");
-            m5.put("name", "创新实验");
-            m5.put("value", "cxsy");
-            m6.put("name", "体育");
-            m6.put("value", "ty");
-            m7.put("name", "MOOC");
-            m7.put("value", "mooc");
-            Map[] m = new Map[]{m1, m2, m3, m4, m5, m6, m7};
-            xk_spinnerOptions.addAll(Arrays.<Map<String, String>>asList(m));
+        void Refresh(boolean a, boolean b, boolean c);
+    }
 
+    public static class mCallBack extends ItemTouchHelper.Callback {
+        NaviPageAdapter mAdapter;
+        NaviViewHolder focusedHolder = null;
+
+        public mCallBack(NaviPageAdapter mAdapter) {
+            this.mAdapter = mAdapter;
+        }
+
+        @Override
+        public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            //首先回调的方法,返回int表示是否监听该方向
+            int dragFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP;//拖拽
+            int swipeFlag = 0;//侧滑删除
+            return makeMovementFlags(dragFlag, swipeFlag);
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            if (viewHolder instanceof HeaderHolder) return false;
+            if (mAdapter != null) {
+                mAdapter.onMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+            }
+
+            return true;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+
+
+        @Override
+        public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            super.clearView(recyclerView, viewHolder);
+//            Log.e("clearView", String.valueOf(viewHolder));
+            if (viewHolder instanceof HeaderHolder) return;
+            NaviViewHolder holder = (NaviViewHolder) viewHolder;
+            if (holder == null || holder.card == null) return;
+            holder.itemView.setAlpha(1.0f);
+            holder.card.setCardElevation(dip2px(HContext, 0));
+
+            if (focusedHolder != null) {
+                focusedHolder.itemView.setAlpha(1f);
+                focusedHolder.card.setCardElevation(dip2px(HContext, 0));
+            }
+            try {
+                if (mAdapter != null) {
+                    mAdapter.notifyDataSetChanged();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+            super.onSelectedChanged(viewHolder, actionState);
+            if (viewHolder instanceof HeaderHolder) return;
+            //Log.e("selectedChanged",viewHolder==null?"null":String.valueOf(viewHolder));
+            NaviViewHolder holder = (NaviViewHolder) viewHolder;
+            if (holder == null || holder.card == null) return;
+            if (actionState == 2 && holder != null) {
+                focusedHolder = holder;
+                holder.itemView.setAlpha(0.8f);
+                holder.card.setCardElevation(dip2px(HContext, 6));
+//                holder.card.refreshDrawableState();
+//                Log.e("elevation_changed", String.valueOf(holder.card.getCardElevation()));
+            }
+
+
+        }
+
+    }
+
+    static class refreshUTMoodTask extends AsyncTask {
+        ViewHolder_Mood holder;
+        int totalNumber;
+        float score;
+        int happy, normal, sad;
+        ArrayList<Map.Entry<String, Integer>> moodList;
+
+        refreshUTMoodTask(ViewHolder_Mood holder) {
+            this.holder = holder;
+            moodList = new ArrayList<>();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            try {
+                @SuppressLint("SimpleDateFormat") String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(timeTableCore.getNow().getTime());
+                BmobQuery<Infos> bq = new BmobQuery<>();
+                bq.addWhereEqualTo("name", "ut_mood_" + today);
+                List<Infos> resu = bq.findObjectsSync(Infos.class);
+                Infos utMood;
+                if (resu != null && resu.size() > 0) {
+                    utMood = resu.get(0);
+                } else {
+                    JsonObject jx = new JsonObject();
+                    jx.addProperty("happy", 0);
+                    jx.addProperty("normal", 0);
+                    jx.addProperty("sad", 0);
+                    Infos in = new Infos();
+                    in.setName("ut_mood_" + today);
+                    in.setType("ut_mood");
+                    in.setJson(jx);
+                    try {
+                        in.saveSync();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                    utMood = in;
+                }
+
+                JsonObject JO = utMood.getJson();
+                if (!JO.has("happy")) JO.addProperty("happy", 0);
+                if (!JO.has("normal")) JO.addProperty("normal", 0);
+                if (!JO.has("sad")) JO.addProperty("sad", 0);
+                happy = JO.get("happy").getAsInt();
+                normal = JO.get("normal").getAsInt();
+                sad = JO.get("sad").getAsInt();
+                HashMap<String, Integer> moodData = new HashMap<>();
+                moodData.put("happy", happy);
+                moodData.put("normal", normal);
+                moodData.put("sad", sad);
+                moodList = new ArrayList<>(moodData.entrySet());
+                Collections.sort(moodList, new Comparator<Map.Entry<String, Integer>>() {
+                    @Override
+                    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                        return o2.getValue() - o1.getValue();
+                    }
+                });
+                totalNumber = normal + happy + sad;
+                float haP = 100f * (float) happy / totalNumber;
+                float nP = 100f * (float) normal / totalNumber;
+                score = (float) (haP * 0.5 + nP * 0.2 + 50);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+
+            }
+        }
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        protected void onPostExecute(Object o) {
+            try {
+                if ((boolean) o) {
+                    final DecimalFormat df = new DecimalFormat("#0.0");
+                    holder.scoreT.setText(df.format(score));
+                    for (int i = 0; i < moodList.size(); i++) {
+                        int iconID;
+                        String type = moodList.get(i).getKey();
+                        final int count = moodList.get(i).getValue();
+                        if (type.equals("happy")) {
+                            iconID = R.drawable.ic_mood_happy;
+                        } else if (type.equals("normal")) {
+                            iconID = R.drawable.ic_mood_normal;
+                        } else {
+                            iconID = R.drawable.ic_mood_sad;
+                        }
+                        holder.icons[i].setImageResource(iconID);
+                        final ValueAnimator va = ValueAnimator.ofInt(holder.progressBars[i].getProgress(), (int) (100 * (float) count / totalNumber));
+                        va.setDuration(500);
+                        va.setInterpolator(new DecelerateInterpolator());
+                        final int finalI = i;
+                        va.setStartDelay(i * 50);
+                        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                int value = (int) animation.getAnimatedValue();
+                                holder.percentages[finalI].setText(df.format(value) + "%");
+                                holder.progressBars[finalI].setProgress(value);
+                            }
+                        });
+                        va.start();
+
+                    }
+                } else {
+                    holder.icon.setImageResource(R.drawable.ic_mood_happy);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-//    class refreshExamListTask extends AsyncTask {
-//        List<Map<String, String>> listRes;
-//        ProgressBar loading;
-//        TextView title;
-//        LinearLayout exam_layout;
-//        public refreshExamListTask(LinearLayout exam_layout,TextView title, List<Map<String, String>> listRes, ProgressBar loading) {
-//            this.title = title;
-//            this.exam_layout = exam_layout;
-//            this.listRes = listRes;
-//            this.loading = loading;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-////            list.setVisibility(View.GONE);
-//            loading.setVisibility(View.VISIBLE);
-//        }
-//
-//        @Override
-//        protected Object doInBackground(Object[] objects) {
-//            try {
-//                listRes.clear();
-//                Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kscx/queryKcForXs").cookies(cookies_jwts).timeout(5000)
-//                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-//                        .header("Content-Type", "application/x-www-form-urlencoded")
-//                        .ignoreContentType(true)
-//                        .get();
-//                //System.out.println(xkPage.toString());
-//                if (xkPage.toString().contains("alert('")) return false;
-//                Elements rows = xkPage.getElementsByClass("bot_line").first().select("tr");
-//                rows.remove(0);
-//                for (Element tr : rows) {
-//                    //Log.e("!",tr.toString());
-//                    Elements tds = tr.select("td");
-//                    Map<String, String> m = new HashMap<String, String>();
-//                    String name = tds.get(1).text();
-//                    String time = tds.get(5).text();
-//                    String place = tds.get(3).text();
-//                    String code = tds.get(2).text();
-//                    m.put("name", name);
-//                    m.put("code", code);
-//                    m.put("place", place);
-//                    m.put("time", time);
-//                    listRes.add(m);
-//                }
-//
-//
-//                return listRes.size() > 0;
-//            } catch (Exception e) {
-//                return false;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object o) {
-//            super.onPostExecute(o);
-//            try {
-//                if ((Boolean) o) {
-//                    exam_layout.setVisibility(View.VISIBLE);
-//                    title.setText("共公布了" + listRes.size() + "场考试信息");
-//                    loading.setVisibility(View.GONE);
-//                } else {
-//                    exam_layout.setVisibility(View.GONE);
-//                    title.setText("近期没有公布考试信息");
-//                    loading.setVisibility(View.GONE);
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//    }
-//
-//    class refreshXKInfoTask extends AsyncTask {
-//
-//
-//        ProgressBar loading;
-//        TextView top, second;
-//        String xkCode;
-//
-//        public refreshXKInfoTask(String xkCode, ProgressBar loading, TextView top, TextView second) {
-//            this.loading = loading;
-//            this.xkCode = xkCode;
-//            this.top = top;
-//            this.second = second;
-//
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            loading.setVisibility(View.VISIBLE);
-//        }
-//
-//        @Override
-//        protected Object doInBackground(Object[] objects) {
-//            try {
-//                Document xkPage = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/xsxk/queryXsxk?pageXklb=" + xkCode).cookies(cookies_jwts).timeout(5000)
-//                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-//                        .header("Content-Type", "application/x-www-form-urlencoded")
-//                        .ignoreContentType(true)
-//                        .get();
-//                String timeInfo = xkPage.getElementsByClass("Floatright bold blue").first().text();
-//                return timeInfo;
-//            } catch (Exception e) {
-//                return null;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object o) {
-//            super.onPostExecute(o);
-//            loading.setVisibility(View.GONE);
-//            if (o != null) {
-//
-//                try {
-//                    String text = (String) o;
-//                    String newtext = text.replaceAll("&nbsp; ", "").replaceAll("&nbsp;", "").replaceAll("选课时间：", "");
-//                    String[] sl = newtext.split("至");
-//                    String from = sl[0];
-//                    String to = sl[1];
-//                    @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//                    if (from.startsWith(" ")) from = from.substring(1);
-//                    if (from.endsWith(" ")) from = from.substring(0, from.length() - 1);
-//                    if (to.startsWith(" ")) to = to.substring(1);
-//                    if (to.endsWith(" ")) to = to.substring(0, to.length() - 1);
-//
-//                    Date fromD = df.parse(from);
-//                    Date toD = df.parse(to);
-//                    Log.e("日期识别", "from:" + from + ",to:" + to);
-//                    second.setVisibility(View.VISIBLE);
-//                    second.setText(text.replaceAll("选课时间：", ""));
-//                    if (toD.before(now.getTime())) top.setText("选课已经结束！");
-//                    else if (fromD.after(now.getTime())) top.setText("选课即将开始！");
-//                    else top.setText("选课正在进行！");
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    top.setText("没有选课信息");
-//                    second.setText("试试换换类别吧");
-//                }
-//
-//
-//            }
-//
-//        }
-//    }
+    class ViewHolder_Mood extends NaviViewHolder {
+        ImageView happy, normal, sad;
+        LinearLayout vote, ut;
+        ImageView icon;
+        TextView scoreT;
 
+        private TextView[] percentages;
+        private ImageView[] icons;
+        private ProgressBar[] progressBars;
+
+        public ViewHolder_Mood(@NonNull View v) {
+            super(v);
+            happy = v.findViewById(R.id.happy);
+            normal = v.findViewById(R.id.normal);
+            sad = v.findViewById(R.id.sad);
+            ut = v.findViewById(R.id.mood_ut);
+            vote = v.findViewById(R.id.mood_vote);
+            // image = v.findViewById(R.id.image);
+            scoreT = v.findViewById(R.id.score);
+            icon = v.findViewById(R.id.icon);
+            TextView score_comment = v.findViewById(R.id.score_comment);
+            ImageView firstI = v.findViewById(R.id.first_icon);
+            ProgressBar firstPr = v.findViewById(R.id.first_progress);
+            TextView firstP = v.findViewById(R.id.first_percentage);
+
+            ImageView secondI = v.findViewById(R.id.second_icon);
+            ProgressBar secondPr = v.findViewById(R.id.second_progress);
+            TextView secondP = v.findViewById(R.id.second_percentage);
+
+            ImageView thirdI = v.findViewById(R.id.third_icon);
+            TextView thirdP = v.findViewById(R.id.third_percentage);
+            ProgressBar thirdPr = v.findViewById(R.id.third_progress);
+
+            progressBars = new ProgressBar[]{firstPr, secondPr, thirdPr};
+            percentages = new TextView[]{firstP, secondP, thirdP};
+            icons = new ImageView[]{firstI, secondI, thirdI};
+        }
+
+        void disableButtons() {
+            happy.setClickable(false);
+            happy.setAlpha(0.4f);
+            sad.setClickable(false);
+            sad.setAlpha(0.4f);
+            normal.setClickable(false);
+            normal.setAlpha(0.4f);
+        }
+
+        void enableButtons() {
+            happy.setClickable(true);
+            happy.setAlpha(1f);
+            sad.setClickable(true);
+            sad.setAlpha(1f);
+            normal.setClickable(true);
+            normal.setAlpha(1f);
+        }
+    }
+
+    class ViewHolder_Hint extends NaviViewHolder {
+        Button button;
+
+        public ViewHolder_Hint(@NonNull View itemView) {
+            super(itemView);
+            button = itemView.findViewById(R.id.button);
+        }
+    }
+
+    class HeaderHolder extends NaviViewHolder {
+        MZBannerView<BannerItem> banner;
+
+        TextView title, subtitle;
+        ImageView settingButton;
+
+        public HeaderHolder(@NonNull View v) {
+            super(v);
+            settingButton = v.findViewById(R.id.navi_setting);
+            title = v.findViewById(R.id.navi_title);
+            subtitle = v.findViewById(R.id.navi_subtitle);
+
+            banner = v.findViewById(R.id.navi_banner);
+            banner.setDelayedTime(4000);
+            banner.start();
+            settingButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    String[] x = mContext.getResources().getStringArray(R.array.navi_setting_items);
+                    // final Integer[] preferenceTyps = new Integer[]{TYPE_NEWS, TYPE_HITA, TYPE_MOOD, TYPE_BOARD_JW};
+                    boolean[] checked = new boolean[4];
+                    for (int i = 0; i < checked.length; i++) {
+                        checked[i] = root.getPreferences().getBoolean(cardNames[i] + "_enable", true);
+                    }
+                    final SharedPreferences.Editor edit = root.getPreferences().edit();
+                    AlertDialog ad = new AlertDialog.Builder(mContext).setTitle(mContext.getString(R.string.navi_settings_title)).setMultiChoiceItems(x, checked, new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                            edit.putBoolean(cardNames[i] + "_enable", b);
+                        }
+                    })
+                            .setPositiveButton(mContext.getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                                    new saveOrderTask(edit).execute();
+                                }
+                            })
+                            .create();
+                    ad.show();
+                }
+            });
+        }
+
+        @SuppressLint("SetTextI18n")
+        void refresh() {
+            title.setText(EventsUtils.getDateString(timeTableCore.getNow(), false, EventsUtils.TTY_NONE));
+            // title.setText(mContext.getResources().getStringArray(R.array.months_full)[timeTableCore.getNow().get(Calendar.MONTH)] + String.format(mContext.getString(R.string.date_day), timeTableCore.getNow().get(Calendar.DAY_OF_MONTH)));
+            if (timeTableCore.isDataAvailable()) {
+                if (timeTableCore.isThisTerm())
+                    subtitle.setText(
+                            mContext.getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(timeTableCore.getNow()) - 1]
+                                    + " " +
+                                    String.format(mContext.getString(R.string.week), timeTableCore.getCurrentCurriculum().getWeekOfTerm(timeTableCore.getNow()))
+                    );
+                else
+                    subtitle.setText(mContext.getString(R.string.navi_semister_not_begun) + " " + mContext.getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(timeTableCore.getNow()) - 1]);
+
+            } else subtitle.setText(mContext.getString(R.string.navi_semister_no_data));
+
+            if (root.getADBanners().size() == 1) banner.setCanLoop(false);
+            else banner.setCanLoop(true);
+            banner.setPages(root.getADBanners(), new MZHolderCreator<BannerViewHolder>() {
+                @Override
+                public BannerViewHolder createViewHolder() {
+                    return new BannerViewHolder();
+                }
+            });
+            if (root.getADBanners().size() == 0) {
+                banner.setVisibility(View.GONE);
+            } else {
+                banner.setVisibility(View.VISIBLE);
+                banner.start();
+            }
+        }
+    }
+
+    class saveOrderTask extends AsyncTask {
+        SharedPreferences.Editor edit;
+
+        public saveOrderTask(SharedPreferences.Editor edit) {
+            this.edit = edit;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            edit.commit();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            root.Refresh(false, false, false);
+        }
+    }
+
+    class BannerViewHolder implements MZViewHolder<BannerItem> {
+        private ImageView image;
+        private TextView title;
+        private TextView subtitle;
+        private CardView card;
+
+        @Override
+        public View createView(Context context) {
+            // 返回页面布局
+            View view = LayoutInflater.from(context).inflate(R.layout.dynamic_navi_banner, null);
+            image = view.findViewById(R.id.banner_image);
+            title = view.findViewById(R.id.banner_title);
+            subtitle = view.findViewById(R.id.banner_subtitle);
+            card = view.findViewById(R.id.banner_card);
+            return view;
+        }
+
+        @Override
+        public void onBind(Context context, int i, final BannerItem bannerItem) {
+            // Log.e("bind",bannerItem.getTitle());
+            Glide.with(context).load(bannerItem.getImageUri()).centerCrop()
+                    .placeholder(R.drawable.gradient_bg)
+                    .into(image);
+            title.setText(bannerItem.getTitle());
+            subtitle.setText(bannerItem.getSubtitle());
+            card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    bannerAction(bannerItem.getAction());
+                }
+            });
+        }
+
+    }
 
     class refreshNewsListTask extends AsyncTask {
 
@@ -928,40 +1046,52 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         @Override
         protected Object doInBackground(Object[] objects) {
             try {
-                Document d = Jsoup.connect("http://www.hitsz.edu.cn/article/id-116.html?maxPageItems=20&keywords=&pager.offset=0")
+                Document d = Jsoup.connect("http://www.hitsz.edu.cn/article/id-75.html?maxPageItems=20&keywords=&pager.offset=0")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .header("X-Requested-With", "XMLHttpRequest")
                         .get();
                 Elements e = d.getElementsByClass("newsletters");
-                if (e.select("li").size() > 0) {
-                    Elements x = e.select("li").first().select("a");
+                int i = 0;
+                for (Element li : e.select("li")) {
+                    Elements x = li.select("a");
                     if (x != null) {
-                        titleRes.put("news", x.text().replace("[详细]", "").replace("[转发]", ""));
+                        switch (i) {
+                            case 0:
+                                titleRes.put("news", x.text().replace("[详细]", "").replace("[转发]", ""));
+                                break;
+                            case 1:
+                                titleRes.put("announce", x.text().replace("[详细]", "").replace("[转发]", ""));
+                                break;
+                            case 2:
+                                titleRes.put("lecture", x.text().replace("[详细]", "").replace("[转发]", ""));
+                                break;
+
+                        }
                     }
+                    i++;
                 }
-
-                Document d2 = Jsoup.connect("http://www.hitsz.edu.cn/article/id-74.html?maxPageItems=20&keywords=&pager.offset=0")
-                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-                        .header("X-Requested-With", "XMLHttpRequest")
-                        .get();
-                Elements annoucements = d2.getElementsByClass("announcement");
-                //System.out.println(annoucements);
-                if (annoucements.select("li").size() > 0) {
-                    Elements xx = annoucements.select("li").first().select("a");
-                    if (xx != null) titleRes.put("announce", xx.text());
-                }
-
-
-                Document d3 = Jsoup.connect("http://www.hitsz.edu.cn/article/id-78.html?maxPageItems=10&keywords=&pager.offset=0")
-                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-                        .header("X-Requested-With", "XMLHttpRequest")
-                        .get();
-                Elements lect = d3.select("ul[class^=lecture_n]");
-                Elements ee = lect.select("li");
-                if (ee.size() > 0) {
-                    Elements xxx = ee.first().select("a");
-                    if (xxx != null) titleRes.put("lecture", xxx.text());
-                }
+//                Document d2 = Jsoup.connect("http://www.hitsz.edu.cn/article/id-74.html?maxPageItems=20&keywords=&pager.offset=0")
+//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+//                        .header("X-Requested-With", "XMLHttpRequest")
+//                        .get();
+//                Elements annoucements = d2.getElementsByClass("announcement");
+//                //System.out.println(annoucements);
+//                if (annoucements.select("li").size() > 0) {
+//                    Elements xx = annoucements.select("li").first().select("a");
+//                    if (xx != null) titleRes.put("announce", xx.text());
+//                }
+//
+//
+//                Document d3 = Jsoup.connect("http://www.hitsz.edu.cn/article/id-78.html?maxPageItems=10&keywords=&pager.offset=0")
+//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
+//                        .header("X-Requested-With", "XMLHttpRequest")
+//                        .get();
+//                Elements lect = d3.select("ul[class^=lecture_n]");
+//                Elements ee = lect.select("li");
+//                if (ee.size() > 0) {
+//                    Elements xxx = ee.first().select("a");
+//                    if (xxx != null) titleRes.put("lecture", xxx.text());
+//                }
 
                 return true;
 
@@ -999,89 +1129,6 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
         }
     }
 
-//    class refreshCardTask extends AsyncTask{
-//        TextView money;
-//        ProgressBar loading;
-//        String money_str;
-//
-//        public refreshCardTask(TextView money, ProgressBar loading) {
-//            this.money = money;
-//            this.loading = loading;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            loading.setVisibility(View.VISIBLE);
-//        }
-//
-//        @Override
-//        protected Object doInBackground(Object[] objects) {
-//            try {
-//                Connection.Response r = Jsoup.connect("http://10.64.1.15/sfrzwhlgportalHome.action")
-//                        .data("errorcode","1")
-//                        .header("Connection","keep-alive")
-//                        .data("continueurl","http://ecard.utsz.edu.cn/accountcardUser.action")
-//                        .data("ssoticketid",ut_username)
-//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36").header("Connection","keep-alive")
-//                        .execute();
-//                cookies_ut_card.clear();
-//                cookies_ut_card.putAll(r.cookies());
-//                Document d2 = Jsoup.connect("http://10.64.1.15/accountcardUser.action")
-//                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-//                        .header("Connection","keep-alive")
-//                        .header("Host","10.64.1.15")
-//                        .cookies(cookies_ut_card)
-//                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-//                        .header("Content-Type", "application/x-www-form-urlencoded")
-//                        .get();
-//                // System.out.println(d2);
-//                Elements infosList = d2.select("td");
-//                Elements toR = new Elements();
-//                for(Element e:infosList){
-//                    if(!e.hasClass("neiwen")||e.toString().contains("table")) toR.add(e);
-//                }
-//                infosList.removeAll(toR);
-//                //System.out.println(infosList);
-//                Map<String, String> infosMap = new HashMap<>();
-//                for(int i = 0;i+1<infosList.size();i+=2){
-//                    //Log.e("td", String.valueOf(infosList.get(i)));
-//                    String key = infosList.get(i).text().replaceAll(" ","").replaceAll("：","");
-//                    String value = infosList.get(i+1).text();
-//                    infosMap.put(key,value);
-//                }
-//                //Log.e("infos", String.valueOf(infosMap));
-//                //  name_str = infosMap.get("姓名").toString();
-//                String ye = infosMap.get("余额");
-//                int in1 = ye.indexOf("(");
-//                int in2 = ye.indexOf("（");
-//                int index = in1<in2?in1:in2;
-//                money_str = ye.substring(0,index);
-////            number_str = infosMap.get("学工号").toString();
-////            kzt_str = infosMap.get("卡状态").toString();
-////            djzt_str = infosMap.get("冻结状态").toString();
-////            gszt_str = infosMap.get("挂失状态").toString();
-////            jczt_str = infosMap.get("检查状态").toString();
-//                return true;
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                return false;
-//            }
-//
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object o) {
-//            super.onPostExecute(o);
-//            loading.setVisibility(View.GONE);
-//            if((Boolean) o){
-//                money.setText(money_str);
-//            }else{
-//                money.setText("--");
-//            }
-//        }
-//    }
-
     class punchTask extends AsyncTask {
         int type;
         String hint;
@@ -1095,360 +1142,76 @@ public class NaviPageAdapter extends RecyclerView.Adapter {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             BmobQuery<Infos> bq = new BmobQuery<>();
-            bq.addWhereEqualTo("name", "ut_mood_" + sdf.format(now.getTime()));
+            bq.addWhereEqualTo("name", "ut_mood_" + sdf.format(timeTableCore.getNow().getTime()));
             Infos utMood;
-            List<Infos> res = bq.findObjectsSync(Infos.class);
-            if (res != null && res.size() > 0) utMood = res.get(0);
-            else {
-                JsonObject jx = new JsonObject();
-                jx.addProperty("happy", 0);
-                jx.addProperty("normal", 0);
-                jx.addProperty("sad", 0);
-                Infos in = new Infos();
-                in.setName("ut_mood_" + sdf.format(now.getTime()));
-                in.setType("ut_mood");
-                in.setJson(jx);
-                in.saveSync();
-                utMood = in;
-            }
-
-            // CurrentUser.Punch(now,type);
-            JsonObject JO = utMood.getJson();
-
-            if (!JO.has("happy")) JO.addProperty("happy", 0);
-            if (!JO.has("normal")) JO.addProperty("normal", 0);
-            if (!JO.has("sad")) JO.addProperty("sad", 0);
-            if (type == 0) {
-                int happy = JO.get("happy").getAsInt();
-                JO.addProperty("happy", happy + 1);
-            } else if (type == 1) {
-                int normal = JO.get("normal").getAsInt();
-                JO.addProperty("normal", normal + 1);
-            } else if (type == 2) {
-                int sad = JO.get("sad").getAsInt();
-                JO.addProperty("sad", sad + 1);
-            }
-            utMood.setJson(JO);
-            CurrentUser.Punch(now, type);
             try {
-                utMood.updateSync();
-                CurrentUser.updateSync();
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            if ((boolean) o) {
-                Toast.makeText(mContext, hint, Toast.LENGTH_SHORT).show();
-                notifyItemChanged(position);
-                //removeItem(TYPE_MOOD);
-            } else {
-                Toast.makeText(mContext, HContext.getString(R.string.punch_failed), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
-    class refreshUTMoodTask extends AsyncTask {
-        ViewHolder_Mood holder;
-        int maxNumber;
-        int totalNumber;
-        String maxTitle;
-        int iconID;
-        float score;
-
-        public refreshUTMoodTask(ViewHolder_Mood holder) {
-            this.holder = holder;
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            try {
-                @SuppressLint("SimpleDateFormat") String today = new SimpleDateFormat("yyyy-MM-dd").format(now.getTime());
-                BmobQuery<Infos> bq = new BmobQuery<>();
-                bq.addWhereEqualTo("name", "ut_mood_" + today);
-                List<Infos> resu = bq.findObjectsSync(Infos.class);
-                Infos utMood;
-                if (resu != null && resu.size() > 0) {
-                    utMood = resu.get(0);
+                List<Infos> res = bq.findObjectsSync(Infos.class);
+                if (res != null && res.size() > 0) {
+                    utMood = res.get(0);
+                    JsonObject JO = utMood.getJson();
+                    if (!JO.has("happy")) JO.addProperty("happy", 0);
+                    if (!JO.has("normal")) JO.addProperty("normal", 0);
+                    if (!JO.has("sad")) JO.addProperty("sad", 0);
+                    if (type == 0) {
+                        int happy = JO.get("happy").getAsInt();
+                        JO.addProperty("happy", happy + 1);
+                    } else if (type == 1) {
+                        int normal = JO.get("normal").getAsInt();
+                        JO.addProperty("normal", normal + 1);
+                    } else if (type == 2) {
+                        int sad = JO.get("sad").getAsInt();
+                        JO.addProperty("sad", sad + 1);
+                    }
+                    utMood.setJson(JO);
+                    utMood.updateSync();
                 } else {
                     JsonObject jx = new JsonObject();
-                    jx.addProperty("happy", 0);
-                    jx.addProperty("normal", 0);
-                    jx.addProperty("sad", 0);
+                    int a = type == 0 ? 1 : 0;
+                    int b = type == 1 ? 1 : 0;
+                    int c = type == 2 ? 1 : 0;
+                    jx.addProperty("happy", a);
+                    jx.addProperty("normal", b);
+                    jx.addProperty("sad", c);
                     Infos in = new Infos();
-                    in.setName("ut_mood_" + today);
+                    in.setName("ut_mood_" + sdf.format(timeTableCore.getNow().getTime()));
                     in.setType("ut_mood");
                     in.setJson(jx);
                     in.saveSync();
-                    utMood = in;
                 }
+                CurrentUser.Punch(timeTableCore.getNow(), type);
+                CurrentUser.update(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
 
-                JsonObject JO = utMood.getJson();
-                if (!JO.has("happy")) JO.addProperty("happy", 0);
-                if (!JO.has("normal")) JO.addProperty("normal", 0);
-                if (!JO.has("sad")) JO.addProperty("sad", 0);
-                int happy = JO.get("happy").getAsInt();
-                int normal = JO.get("normal").getAsInt();
-                int sad = JO.get("sad").getAsInt();
-                Log.e("t", happy + "," + normal + "," + sad);
-                int[] t = {happy, normal, sad};
-                maxNumber = happy;
-                int maxIndex = 0;
-                for (int i = 0; i < 3; i++) {
-                    if (t[i] > maxNumber) {
-                        maxNumber = t[i];
-                        maxIndex = i;
                     }
-
-                }
-                if (maxIndex == 0) {
-                    maxTitle = HContext.getString(R.string.max_title_happy);
-                    iconID = R.drawable.ic_mood_happy;
-                } else if (maxIndex == 1) {
-                    maxTitle = HContext.getString(R.string.max_title_normal);
-                    iconID = R.drawable.ic_mood_normal;
-                } else {
-                    maxTitle = HContext.getString(R.string.max_title_sad);
-                    iconID = R.drawable.ic_mood_sad;
-                }
-                totalNumber = normal + happy + sad;
-                float haP = 100f * (float) happy / totalNumber;
-                float nP = 100f * (float) normal / totalNumber;
-                score = (float) (haP * 0.5 + nP * 0.2 + 50);
+                });
                 return true;
+                // CurrentUser.Punch(timeTableCore.getNow(),type);
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
-
             }
+
+
         }
 
-        @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            if ((boolean) o) {
-                DecimalFormat df = new DecimalFormat("#.0");
-                holder.score.setText(df.format(score));
-
-                holder.percentage.setText(df.format((float) maxNumber / totalNumber * 100) + "%");
-                holder.text.setText(maxTitle);
-                holder.icon.setImageResource(iconID);
-            } else {
-                holder.percentage.setText("-");
-                holder.icon.setImageResource(R.drawable.ic_mood_happy);
-                holder.text.setText(maxTitle);
-            }
-        }
-    }
-//    class refreshBulletinListTask extends AsyncTask {
-//
-//        TextView first;
-//        TextView second, third;
-//        ProgressBar loading;
-//        List<Map<String, String>> listRes;
-//
-//        public refreshBulletinListTask(TextView first, TextView second, TextView third, ProgressBar loading) {
-//            this.first = first;
-//            this.second = second;
-//            this.loading = loading;
-//            this.third = third;
-//            listRes = new ArrayList<>();
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            loading.setVisibility(View.VISIBLE);
-//        }
-//
-//        @Override
-//        protected Object doInBackground(Object[] objects) {
-//            try {
-//
-//            } catch (Exception e) {
-//                return false;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object o) {
-//            super.onPostExecute(o);
-//            try {
-//                loading.setVisibility(View.GONE);
-//                first.setVisibility(View.VISIBLE);
-//                second.setVisibility(View.VISIBLE);
-//                if ((Boolean) o) {
-//                    first.setText(listRes.get(0).get("title"));
-//                    if (listRes.size() >= 2) {
-//                        second.setText(listRes.get(1).get("title"));
-//                        if (listRes.size() >= 3) {
-//                            third.setText(listRes.get(2).get("title"));
-//                        } else third.setText("没有更多新闻了");
-//                    } else {
-//                        second.setText("没有更多新闻了");
-//                        third.setText("...");
-//                    }
-//                } else {
-//                    first.setText("加载新闻失败");
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//    }
-//
-//    class refreshLectureListTask extends AsyncTask {
-//
-//        TextView first;
-//        TextView second, third;
-//        ProgressBar loading;
-//        List<Map<String, String>> listRes;
-//
-//        public refreshLectureListTask(TextView first, TextView second, TextView third, ProgressBar loading) {
-//            this.first = first;
-//            this.second = second;
-//            this.loading = loading;
-//            this.third = third;
-//            listRes = new ArrayList<>();
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            loading.setVisibility(View.VISIBLE);
-//        }
-//
-//        @Override
-//        protected Object doInBackground(Object[] objects) {
-//            try {
-//                Document d = Jsoup.connect("http://www.hitsz.edu.cn/article/id-78.html?maxPageItems=10&keywords=&pager.offset=0")
-//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-//                        .header("X-Requested-With", "XMLHttpRequest")
-//                        .get();
-//                Elements e = d.select("ul[class^=lecture_n]");
-//                Elements ee = e.select("li");
-//                for (Element x : ee) {
-//                    Map<String, String> lecture = new HashMap<>();
-//                    String title = x.select("a").text();
-//                    // Log.e("!!",date);
-//                    lecture.put("title", title);
-//                    listRes.add(lecture);
-//                    if (listRes.size() == 3) break;
-//                }
-//                return listRes.size() >= 1;
-//            } catch (Exception e) {
-//                return false;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object o) {
-//            super.onPostExecute(o);
-//            try {
-//                loading.setVisibility(View.GONE);
-//                first.setVisibility(View.VISIBLE);
-//                second.setVisibility(View.VISIBLE);
-//                if ((Boolean) o) {
-//                    first.setText(listRes.get(0).get("title"));
-//                    if (listRes.size() >= 2) {
-//                        second.setText(listRes.get(1).get("title"));
-//                        if (listRes.size() >= 3) {
-//                            third.setText(listRes.get(2).get("title"));
-//                        } else third.setText("没有更多新闻了");
-//                    } else {
-//                        second.setText("没有更多新闻了");
-//                        third.setText("...");
-//                    }
-//                } else {
-//                    first.setText("加载新闻失败");
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//    }
-
-    public static List<Integer> strToIntegerList(String s) {
-        JsonParser jp = new JsonParser();
-        List<Integer> result = new ArrayList<>();
-        JsonArray ja = jp.parse(s).getAsJsonArray();
-        for (JsonElement je : ja) {
-            result.add(je.getAsInt());
-        }
-        return result;
-    }
-
-    public static String integerToString(List<Integer> li) {
-        JsonArray ja = new JsonArray();
-        for (Integer i : li) {
-            ja.add(i);
-        }
-        return ja.toString();
-    }
-
-    public static class mCallBack extends ItemTouchHelper.Callback {
-        NaviPageAdapter mAdapter;
-
-        public mCallBack(NaviPageAdapter mAdapter) {
-            this.mAdapter = mAdapter;
-        }
-
-        @Override
-        public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-            //首先回调的方法,返回int表示是否监听该方向
-            int dragFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP;//拖拽
-            int swipeFlag = 0;//侧滑删除
-            return makeMovementFlags(dragFlag, swipeFlag);
-        }
-
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            if (mAdapter != null) {
-                mAdapter.onMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-            }
-
-            return true;
-        }
-
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-        }
-
-        @Override
-        public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-            super.clearView(recyclerView, viewHolder);
-            viewHolder.itemView.setAlpha(1.0f);
-            viewHolder.itemView.setElevation(0f);
             try {
-                if (mAdapter != null) {
-                    mAdapter.notifyDataSetChanged();
+                if ((boolean) o) {
+                    Toast.makeText(mContext, hint, Toast.LENGTH_SHORT).show();
+                    notifyItemChanged(position);
+                    //removeItem(TYPE_MOOD);
+                } else {
+                    Toast.makeText(mContext, HContext.getString(R.string.punch_failed), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        @Override
-        public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
-            if (actionState != 0) {
-                viewHolder.itemView.setAlpha(0.92f);
-                viewHolder.itemView.setElevation(38f);
-            }
-            super.onSelectedChanged(viewHolder, actionState);
-        }
-
     }
 
 

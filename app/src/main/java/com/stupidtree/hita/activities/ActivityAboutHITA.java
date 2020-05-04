@@ -7,15 +7,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Handler;
 import android.os.Bundle;
-import androidx.core.widget.NestedScrollView;
-import androidx.appcompat.widget.Toolbar;
-import android.util.Log;
+import android.os.Handler;
+import android.text.Html;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,16 +18,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.diy.ButtonLoading;
 import com.stupidtree.hita.util.UpdateManager;
+import com.stupidtree.hita.views.ButtonLoading;
+import com.stupidtree.hita.views.LongStringDialog;
 import com.tencent.bugly.beta.Beta;
-import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.download.DownloadTask;
-import com.tencent.bugly.beta.upgrade.UpgradeListener;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -54,11 +51,13 @@ TextView update_title,update_message,update_version,update_time,update_size;
 Button update_start,update_delete;
 ProgressBar update_progress;
 LinearLayout updateArea;
-WebView webView;
+//WebView webView;
 
+    TextView about_info;
 Handler handler;
 Runnable runnable;
 BroadcastReceiver receiver;
+    TextView userPro, privacyPro;
 
     @Override
     protected void stopTasks() {
@@ -97,12 +96,22 @@ BroadcastReceiver receiver;
         runnable = new Runnable() {
             @Override
             public void run() {
-                refreshViews();
+                try {
+                    refreshViews();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 handler.postDelayed(this,500);
             }
         };
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
 
     void initReceiver(){
         receiver = new BroadcastReceiver() {
@@ -138,8 +147,11 @@ BroadcastReceiver receiver;
 
     }
     void initViews(){
-        webView = findViewById(R.id.webview);
-        webView.setBackgroundColor(0);
+        userPro = findViewById(R.id.user_protocol);
+        privacyPro = findViewById(R.id.privacy_protocol);
+//        webView = findViewById(R.id.webview);
+//        webView.setBackgroundColor(0);
+        about_info = findViewById(R.id.about_info);
         checkUpDate = findViewById(R.id.update_check);
         update_image = findViewById(R.id.update_image);
         version = findViewById(R.id.version);
@@ -152,16 +164,39 @@ BroadcastReceiver receiver;
         update_delete = findViewById(R.id.update_delete);
         update_time = findViewById(R.id.update_time);
         update_version = findViewById(R.id.update_version);
+        userPro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new LongStringDialog(getThis(), R.string.name_user_agreement, R.string.user_agreement, R.string.i_have_read).show();
+            }
+        });
+        privacyPro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new LongStringDialog(getThis(), R.string.name_privacy_agreement, R.string.privacy_policy, R.string.i_have_read).show();
+            }
+        });
         update_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Beta.startDownload();
 //                updateBtn(task);
+                try {
+                    if (Beta.getStrategyTask().getStatus() == DownloadTask.COMPLETE) {
+                        Beta.installApk(Beta.getStrategyTask().getSaveFile());
+                    } else {
+                        Beta.startDownload();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
             }
         });
         checkUpDate.setOnButtonLoadingListener(new ButtonLoading.OnButtonLoadingListener() {
             @Override
             public void onClick() {
+
                 checkUpDate.setProgress(true);
                // Toast.makeText(ActivityAboutHITA.this, getString(R.string.checking_for_update),Toast.LENGTH_SHORT).show();
                 UpdateManager.checkUpdate(ActivityAboutHITA.this);
@@ -190,9 +225,13 @@ BroadcastReceiver receiver;
             @Override
             public void done(List<BmobArticle> list, BmobException e) {
                 if(e==null&&list!=null&&list.size()>0){
-                    webView.setVisibility(View.VISIBLE);
-                    webView.loadUrl(list.get(0).getUrl());
-                }else webView.setVisibility(View.GONE);
+                    Document d = Jsoup.parse(list.get(0).getContent());
+                    d.body().select("style").remove();
+                    about_info.setText(Html.fromHtml(d.body().toString()));
+                    about_info.setVisibility(View.VISIBLE);
+//                    webView.setVisibility(View.VISIBLE);
+//                    webView.loadUrl(list.get(0).getUrl());
+                } else about_info.setVisibility(View.GONE);
             }
         });
          }
@@ -235,7 +274,7 @@ BroadcastReceiver receiver;
     }
 
     @SuppressLint("SetTextI18n")
-    void refreshViews(){
+    void refreshViews() throws Exception {
 
         if(Beta.getUpgradeInfo()!=null){
             Glide.with(this).load(Beta.getUpgradeInfo().imageUrl).into(update_image);
@@ -250,7 +289,8 @@ BroadcastReceiver receiver;
                 btProgress = "";
             }
             updateArea.setVisibility(View.VISIBLE);
-            webView.setVisibility(View.GONE);
+            about_info.setVisibility(View.GONE);
+            //   webView.setVisibility(View.GONE);
             checkUpDate.setVisibility(View.GONE);
             update_title.setText(Beta.getUpgradeInfo().title);
 
@@ -288,7 +328,7 @@ BroadcastReceiver receiver;
 
         }else{
             updateArea.setVisibility(View.GONE);
-            webView.setVisibility(View.VISIBLE);
+            about_info.setVisibility(View.VISIBLE);
             checkUpDate.setVisibility(View.VISIBLE);
         }
 

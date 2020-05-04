@@ -3,29 +3,24 @@ package com.stupidtree.hita.online;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.stupidtree.hita.timetable.Curriculum;
-import com.stupidtree.hita.timetable.CurriculumCreator;
-import com.stupidtree.hita.timetable.Subject;
-import com.stupidtree.hita.timetable.timetable.EventItem;
-import com.stupidtree.hita.timetable.timetable.EventItemHolder;
-import com.stupidtree.hita.timetable.timetable.Task;
+import com.stupidtree.hita.timetable.packable.Curriculum;
+import com.stupidtree.hita.timetable.packable.EventItemHolder;
+import com.stupidtree.hita.timetable.packable.Subject;
+import com.stupidtree.hita.timetable.packable.Task;
 import com.stupidtree.hita.util.DeflaterUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 import cn.bmob.v3.BmobObject;
 
-import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_COURSE;
+import static com.stupidtree.hita.timetable.TimetableCore.COURSE;
 
 public class UserData {
     private ArrayList<EventItemHolder> events;
@@ -33,44 +28,6 @@ public class UserData {
     private ArrayList<Subject> subjects;
     private ArrayList<Curriculum> curriculum;
     private SQLiteDatabase database;
-//    public UserData(List<Curriculum> ccs, ArrayList<TimeTable_upload_helper> tth, ArrayList<Task> tts){
-////        StringBuilder sb = new StringBuilder();
-////        for(int i=0;i<ccs.size();i++){
-////            String rex=(i==ccs.size()-1)?"":":::";
-////            sb.append(ccs.get(i).toString()).append(rex);
-////        }
-////        CurriculumsText = sb.toString();
-//        JsonParser jp = new JsonParser();
-//        JsonObject jo = new JsonObject();
-//        for(Curriculum c:ccs){
-//            jo.add(c.getCurriculumCode(),jp.parse(c.toString()));
-//        }
-//        CurriculumsText = jo.toString();
-//
-//        //StringBuilder sb2 = new StringBuilder();
-////        for(int i=0;i<tth.size();i++){
-////            String rex = i==tth.size()-1?"":"///";
-////            sb2.append(tth.get(i)).append(rex);
-////        }
-//        JsonArray ja = new JsonArray();
-//        for(TimeTable_upload_helper x:tth){
-//            ja.add(x.toString());
-//        }
-//        timetableText = ja.toString();
-////        StringBuilder sb3 = new StringBuilder();
-////        for(int i=0;i<tts.size();i++){
-////            String rex=(i==tts.size()-1)?"":"///";
-////            sb3.append(tts.get(i).toString()).append(rex);
-////        }
-//        JsonArray ja2 = new JsonArray();
-//        for(Task t:tts){
-//            ja2.add(t.toString());
-//        }
-//        //TasksText = sb3.toString();
-//        TasksText = ja2.toString();
-//    }
-
-
 
     public UserData(SQLiteDatabase database){
         this.database = database;
@@ -89,7 +46,7 @@ public class UserData {
         final Cursor c = database.query("timetable", null, null, null, null, null, null);
         while (c.moveToNext()) {
             EventItemHolder eih = new EventItemHolder(c);
-            if (eih.eventType == TIMETABLE_EVENT_TYPE_COURSE)
+            if (eih.eventType == COURSE)
                 continue;
             else events.add(eih);
         }
@@ -121,7 +78,11 @@ public class UserData {
     @WorkerThread
     public UserData loadCurriculumData(List<Curriculum> curriculms){
         this.curriculum.clear();
-        curriculum.addAll(curriculms);
+        for (Curriculum c : curriculms) {
+            c.generateCurriculumText();
+            curriculum.add(c);
+        }
+        //  curriculum.addAll(curriculms);
         return this;
     }
 
@@ -144,7 +105,11 @@ public class UserData {
             tasks.add(gson.fromJson(s,Task.class));
         }
         for(String s:subjectList){
-            subjects.add(gson.fromJson(s,Subject.class));
+            Subject k = gson.fromJson(s, Subject.class);
+            if (TextUtils.isEmpty(k.getUUID())) {
+                k.setUUID(UUID.randomUUID().toString());
+            }
+            subjects.add(k);
            // Log.e("name",subjects.get(subjects.size()-1).getName());
         }
         for(String s:curriculumList){
@@ -219,6 +184,12 @@ public class UserData {
             this.user = user;
         }
 
+        @NonNull
+        @Override
+        public String toString() {
+            return getSubjectData() + "\n" + getCurriculumData();
+        }
+
         public UserDataCloud cloneWithNewUser(HITAUser user){
             UserDataCloud newD = new UserDataCloud(user);
             newD.curriculumData = this.curriculumData;
@@ -272,7 +243,9 @@ public class UserData {
 
         @WorkerThread
         public String getSubjectData() {
-            return DeflaterUtils.unzipString(subjectData);
+            String decoded = DeflaterUtils.unzipString(subjectData);
+            //Log.e("科目：",decoded);
+            return decoded;
         }
 
         @WorkerThread

@@ -9,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
+        android:layout_height="360dp"
         android:background="#00000000"
         app:elevation="0dp">
 
@@ -26,18 +26,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|start"
-                android:layout_marginLeft="24dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="36dp"
                 android:gravity="center|start"
                 android:orientation="vertical"
                 app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.9">
+                app:layout_collapseParallaxMultiplier="0.99">
 
                 <TextView
                     android:id="@+id/profile_nick"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|start"
+                    android:layout_marginStart="16dp"
                     android:layout_marginBottom="8dp"
                     android:fontFamily="sans-serif-black"
                     android:gravity="center"
@@ -50,6 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|start"
+                    android:layout_marginStart="16dp"
                     android:gravity="center"
                     android:text="-"
                     android:textColor="?attr/text_color_secondary"
@@ -60,11 +62,82 @@
                     android:layout_width="90dp"
                     android:layout_height="90dp"
                     android:layout_gravity="center|start"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:transitionName="useravatar"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="0.3" />
+
+                <LinearLayout
+                    android:id="@+id/grade_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/radius_accent_lgiht_button_bg"
+                    android:orientation="horizontal"
+                    android:paddingStart="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="4dp">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="4dp"
+                        android:padding="2dp"
+                        android:tint="?attr/colorAccent"
+                        android:tintMode="src_in"
+                        app:srcCompat="@drawable/ic_menu_subject" />
+
+                    <TextView
+                        android:id="@+id/profile_grade"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="sans-serif-black"
+                        android:gravity="center|right"
+                        android:textColor="?attr/colorAccent"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|start"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/following"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="0dp"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:gravity="center|start"
+                        android:padding="8dp"
+                        android:textColor="?attr/text_color_secondary"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/fans"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="0dp"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:gravity="center|start"
+                        android:padding="8dp"
+                        android:textColor="?attr/text_color_secondary"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -82,11 +155,34 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="96dp"
+        android:layout_gravity="bottom|end"
+        app:layout_behavior=".views.mBottomHideBehavior">
+
+    </FrameLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_follow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="24dp"
+        android:focusable="true"
+        android:text="@string/follow"
+        android:textColor="@color/material_text_icon_white"
+        android:theme="@style/Theme.MaterialComponents"
+        app:icon="@drawable/fab_add"
+        app:iconTint="@color/material_text_icon_white"
+        app:layout_anchor="@+id/appbar"
+        app:layout_anchorGravity="end|bottom"
+        tools:ignore="RtlHardcoded" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:behavior_overlapTop="36dp"
+        app:behavior_overlapTop="0dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
@@ -96,92 +192,229 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:visibility="gone"
-                app:cardBackgroundColor="?attr/background_color_second">
+                android:layout_height="match_parent"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="?attr/background_color_second"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:text="@string/community_name"
+                        android:textColor="?attr/text_color_primary"
+                        android:textSize="18sp"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/its_post"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/radius_accent_round_icon_bg"
+                            android:padding="4dp"
+                            android:tint="?attr/colorAccent"
+                            app:srcCompat="@drawable/ic_post" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/its_post"
+                            android:textColor="?attr/text_color_primary"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="?attr/background_color_second"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/punch_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:text="@string/mood_title"
+                        android:textColor="?attr/text_color_primary"
+                        android:textSize="18sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/first_icon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/radius_accent_round_icon_bg"
+                            android:backgroundTint="?attr/background_color_bottom_as_tint"
+                            android:backgroundTintMode="src_over"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_mood_happy"
+                            android:tint="?attr/colorAccent" />
+
+                        <ProgressBar
+                            android:id="@+id/first_progress"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="14dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_weight="1"
+                            android:progress="0"
+                            android:progressDrawable="@drawable/style_progressbar_accent" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:id="@+id/first_percentage"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="失物招领"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="打卡地点"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="签到天数"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="12sp" />
-
+                            android:textColor="?attr/text_color_secondary" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/second_icon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/radius_accent_round_icon_bg"
+                            android:backgroundTint="?attr/background_color_bottom_as_tint"
+                            android:backgroundTintMode="src_over"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_mood_happy"
+                            android:tint="?attr/colorAccent" />
+
+                        <ProgressBar
+                            android:id="@+id/second_progress"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="14dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_weight="1"
+                            android:progress="0"
+                            android:progressDrawable="@drawable/style_progressbar_accent" />
 
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="0"
+                            android:id="@+id/second_percentage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:textColor="?attr/text_color_secondary"
-                            android:textSize="14sp" />
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/third_icon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:background="@drawable/radius_accent_round_icon_bg"
+                            android:backgroundTint="?attr/background_color_bottom_as_tint"
+                            android:backgroundTintMode="src_over"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_mood_happy"
+                            android:tint="?attr/colorAccent" />
+
+                        <ProgressBar
+                            android:id="@+id/third_progress"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="14dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_weight="1"
+                            android:progress="0"
+                            android:progressDrawable="@drawable/style_progressbar_accent"
+                            tools:ignore="InefficientWeight" />
 
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="0"
+                            android:id="@+id/third_percentage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:textColor="?attr/text_color_secondary"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="0"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="14sp" />
-
+                            tools:ignore="HardcodedText" />
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/mood_lock"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/background_color_bottom_as_tint">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/radius_accent_round_icon_bg"
+                        android:padding="16dp"
+                        android:tint="?attr/colorAccent"
+                        android:tintMode="src_in"
+                        app:srcCompat="@drawable/ic_lock" />
+                </FrameLayout>
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -199,94 +432,18 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/item_realname"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
                             android:layout_gravity="center"
-                            android:layout_marginRight="8dp"
-                            android:tint="?attr/colorControlNormal"
-                            android:tintMode="src_in"
-                            app:srcCompat="@drawable/ic_person" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center|start"
-                            android:text="姓名"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/profile_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.6"
-                            android:gravity="center|right"
-                            android:text="-"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="8dp"
-                            android:tint="?attr/colorControlNormal"
-                            android:tintMode="src_in"
-                            app:srcCompat="@drawable/ic_short_text" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center|start"
-                            android:text="年级"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/profile_grade"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.6"
-                            android:gravity="center|right"
-                            android:text="-"
-                            android:textColor="?attr/text_color_secondary"
-                            android:textSize="16sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/item_school"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
-
-                        <ImageView
-                            android:id="@+id/imageView19"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="8dp"
-                            android:tint="?attr/colorControlNormal"
+                            android:layout_marginEnd="8dp"
+                            android:tint="?attr/colorAccent"
                             android:tintMode="src_in"
                             app:srcCompat="@drawable/ic_university" />
 
@@ -309,6 +466,60 @@
                             android:textColor="?attr/text_color_secondary"
                             android:textSize="16sp" />
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/privacy_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="8dp"
+                            android:tint="?attr/colorAccent"
+                            android:tintMode="src_in"
+                            app:srcCompat="@drawable/ic_person" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center|start"
+                            android:text="姓名"
+                            android:textColor="?attr/text_color_secondary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/profile_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.6"
+                            android:gravity="center|right"
+                            android:text="-"
+                            android:textColor="?attr/text_color_secondary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/radius_accent_lgiht_button_bg"
+                            android:fontFamily="sans-serif-black"
+                            android:paddingStart="8dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="4dp"
+                            android:text="认证信息"
+                            android:textColor="?attr/colorAccent" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

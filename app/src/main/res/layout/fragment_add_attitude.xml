@@ -14,26 +14,28 @@
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:background="@drawable/gradient_round"
-            android:padding="4dp"
-            android:tint="@color/material_background_white"
-            android:tintMode="src_in"
-            app:srcCompat="@drawable/ic_short_text" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:fontFamily="sans-serif-black"
+            android:layout_weight="1"
             android:gravity="center|start"
             android:text="@string/add_attitude_title"
             android:textColor="?attr/text_color_primary"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:background="@drawable/radius_accent_round_icon_bg"
+            android:backgroundTint="?attr/background_color_bottom_as_tint"
+            android:backgroundTintMode="src_over"
+            android:padding="4dp"
+            android:tint="?attr/colorAccent"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_short_text" />
     </LinearLayout>
 
     <LinearLayout
@@ -47,7 +49,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_gravity="center"
-            android:tint="?attr/colorControlNormal"
+            android:tint="?attr/colorAccent"
             android:tintMode="src_in"
             app:srcCompat="@drawable/ic_subtitles" />
 
@@ -88,7 +90,6 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/laf_add"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -121,7 +122,7 @@
             android:tintMode="src_in"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_clear"
-            app:theme="@style/button_ripple_primary"
+            app:theme="@style/button_ripple_accent"
             tools:ignore="KeyboardInaccessibleWidget" />
 
     </LinearLayout>

@@ -3,8 +3,6 @@ package com.stupidtree.hita.online;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
-import androidx.annotation.WorkerThread;
-
 import com.stupidtree.hita.util.HTMLUtils;
 
 import org.jsoup.Connection;
@@ -17,23 +15,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class SearchLibraryCore {
+public class SearchLibraryCore extends SearchCore<SparseArray<String>> {
     public static final int TITLE = 0;
-    public static final int SUBTITLE = 1;
+    private static final int SUBTITLE = 1;
     public static final int AUTHOR = 2;
     public static final int PUBLISHER = 3;
-    public static final int DATE = 4;
+    private static final int DATE = 4;
     public static final int IMAGE = 5;
     public static final int URL = 6;
     private HashMap<String, String> cookies;
-    // private String token;
-    private int totalResult = 0;
-
-    private int pagerOffset = 0;
-    private String lastKeyword;
-    private String range;
+    private String range = "F44010";
 
     public void setRange(String range) {
         this.range = range;
@@ -43,34 +35,20 @@ public class SearchLibraryCore {
         this.cookies = new HashMap<>();
     }
 
-    public String getLastKeyword() {
-        return lastKeyword;
+
+    @Override
+    public int getPageSize() {
+        return 10;
     }
 
-
-    public int getOffset() {
-        return pagerOffset;
-    }
-
-    public void reset() {
-        pagerOffset = 0;
-        lastKeyword = null;
-    }
-
-    public int getTotalResult() {
-        return totalResult;
-    }
-
-    @WorkerThread
-    public List<SparseArray<String>> searchForResult(String text) throws SearchException {
-        if (text == null) text = "";
+    @Override
+    protected List<SparseArray<String>> reloadResult(String text) throws SearchException {
         List<SparseArray<String>> res = new ArrayList<>();
-        lastKeyword = text;
-        pagerOffset = 0;
         Document d = null;
         try {
             Connection c = Jsoup.connect("https://opac.lib.utsz.edu.cn/Search/searchshow.jsp").
                     cookies(cookies)
+                    .timeout(5000)
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36")
                     .header("Sec-Fetch-Dest", "document")
                     .header("Sec-Fetch-Mode", "nvigate")
@@ -81,18 +59,18 @@ public class SearchLibraryCore {
                     .data("v_value", text)
                     .data("sortfield", "ptitle")
                     .data("sorttype", "desc")
-                    .data("pageNum", "20")
+                    .data("pageNum", "10")
                     .ignoreHttpErrors(true)
                     .ignoreContentType(true)
-                    .data("v_page", "" + (pagerOffset + 1));
+                    .data("v_page", "" + (getOffset() + 1));
             if (TextUtils.isEmpty(range)) d = c.get();
             else d = c.data("library", range).get();
         } catch (IOException e) {
-            totalResult = 0;
             e.printStackTrace();
             //throw SearchException.newConnectError();
         }
         try {
+            assert d != null;
             Elements lis = d.getElementsByTag("li");
             for (Element li : lis) {
                 if (li.getElementsByClass("author").size() > 0) {
@@ -118,7 +96,6 @@ public class SearchLibraryCore {
 
         } catch (Exception e) {
             e.printStackTrace();
-            totalResult = 0;
             throw SearchException.newResolveError();
         }
         try {
@@ -130,16 +107,16 @@ public class SearchLibraryCore {
         return res;
     }
 
-    @WorkerThread
-    public List<SparseArray<String>> loadMore() throws SearchException {
+    @Override
+    protected List<SparseArray<String>> loadMoreResult(String text) throws SearchException {
         List<SparseArray<String>> res = new ArrayList<>();
-        pagerOffset++;
         Document d = null;
         try {
             Connection c = Jsoup.connect("https://opac.lib.utsz.edu.cn/Search/searchshow.jsp").
                     cookies(cookies)
+                    .timeout(5000)
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36")
-                    .data("v_value", lastKeyword)
+                    .data("v_value", text)
                     .header("Sec-Fetch-Dest", "document")
                     .header("Sec-Fetch-Mode", "nvigate")
                     .header("Sec-Fetch-Site", "same-origin")
@@ -151,15 +128,14 @@ public class SearchLibraryCore {
                     .data("pageNum", "10")
                     .ignoreHttpErrors(true)
                     .ignoreContentType(true)
-                    .data("v_page", "" + (pagerOffset + 1));
+                    .data("v_page", "" + (getOffset() + 1));
             if (TextUtils.isEmpty(range)) d = c.get();
             else d = c.data("library", range).get();
         } catch (IOException e) {
-            totalResult = 0;
             e.printStackTrace();
-            //throw SearchException.newConnectError();
         }
         try {
+            if (d == null) return res;
             Elements lis = d.getElementsByTag("li");
             for (Element li : lis) {
                 if (li.getElementsByClass("author").size() > 0) {
@@ -185,7 +161,6 @@ public class SearchLibraryCore {
 
         } catch (Exception e) {
             e.printStackTrace();
-            totalResult = 0;
             throw SearchException.newResolveError();
         }
         try {

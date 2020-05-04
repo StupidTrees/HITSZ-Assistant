@@ -13,7 +13,7 @@
     tools:context=".activities.ActivityJWTS"
     tools:ignore="HardcodedText">
 
-    <com.stupidtree.hita.diy.ButtonLoading
+    <com.stupidtree.hita.views.ButtonLoading
         android:id="@+id/item"
         android:layout_width="match_parent"
         android:layout_height="48dp"

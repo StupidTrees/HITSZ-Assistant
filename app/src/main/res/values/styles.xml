@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- 设置toolbar按钮样式-->
         <item name="drawerArrowStyle">@style/left_Drawer_Arrow_Style</item>
         <item name="background_color_bottom">@color/material_background_grey_50</item>
-        <item name="text_color_primary">?android:attr/textColorPrimary</item>
-        <item name="text_color_secondary">?android:attr/textColorSecondary</item>
         <item name="background_color_second">?android:attr/colorBackgroundFloating</item>
         <item name="background_icon_color_bottom">#11020202</item>
         <item name="background_icon_color_second">#11020202</item>
-        <item name="toolbar_icon_color">#202020</item>
-        <item name="text_color_iconic">#202020</item>
+        <item name="text_color_primary">#FF000000</item>
+        <item name="text_color_secondary">#FF808080</item>
+        <item name="colorTransparent">#00FFFFFF</item>
+        <!--        <item name="android:textColorPrimary">?attr/text_color_primary</item>-->
+        <!--        <item name="android:textColorSecondary">?attr/text_color_secondary</item>-->
         <item name="background_color_bottom_as_tint">#CFFAFAFA</item>
         <item name="toolbarStyle">@style/ToolBarTheme</item>
+        <item name="colorControlNormal">#44000000</item>
+        <!--        <item name="colorControlHighlight">?attr/colorAccent</item>-->
         <item name="drawer_header_buttons_background">@drawable/drawer_radius_bg</item>
-        <item name="drawer_header_background">@drawable/gradient_bg_reverse</item>
+        <item name="drawer_header_background">?attr/background_color_second</item>
         <item name="color_primary_fade_background">@drawable/gradient_bg_reverse</item>
     </style>
 
@@ -23,31 +26,14 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="NaviTitleExpandTheme">
-        <item name="android:textSize">28sp</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">sans-serif-black</item>
-    </style>
-    <style name="NaviTitleCollapseTheme">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">sans-serif-black</item>
-    </style>
-    <style name="CalendarTextTheme">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">?attr/text_color_primary</item>
-    </style>
 
+    <style name="TopTextTheme">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
     <style name="MainTabsTextTheme_normal">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?android:textColorPrimary</item>
-    </style>
-
-    <style name="CourseTitleTheme_normal">
-        <item name="android:textSize">24sp</item>
-        <item name="android:textColor">?attr/text_color_primary</item>
     </style>
 
 
@@ -78,42 +64,53 @@
         <!--<item name="gapBetweenBars">3dp</item>-->
     </style>
 
-    <style name="Text_style_28sp_bold_primary">
-        <item name="android:textSize">28sp</item>
-        <item name="android:singleLine">false</item>
-        <item name="android:textColor">?attr/text_color_primary</item>
+    <style name="Text_style_18sp_bold_white">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/material_text_icon_white</item>
         <item name="android:fontFamily">sans-serif-black</item>
     </style>
-    <style name="Text_style_18sp_bold_secondary">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">?attr/text_color_secondary</item>
+
+    <style name="Text_style_28sp_bold_white">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/material_text_icon_white</item>
         <item name="android:fontFamily">sans-serif-black</item>
     </style>
     <!--水波纹风格-->
-    <style name="button_ripple_primary">
-        <item name="android:colorControlHighlight">?attr/colorPrimary</item>
+    <style name="button_ripple_accent">
+        <item name="android:colorControlHighlight">?attr/colorAccent</item>
         <item name="android:radius">24dp</item>
     </style>
-    <style name="button_ripple_primary_small">
-        <item name="android:colorControlHighlight">?attr/colorPrimary</item>
+
+    <style name="button_ripple_accent_small">
+        <item name="android:colorControlHighlight">?attr/colorAccent</item>
         <item name="android:radius">16dp</item>
     </style>
+
+    <style name="button_ripple_accent_tiny">
+        <item name="android:colorControlHighlight">?attr/colorAccent</item>
+        <item name="android:radius">8dp</item>
+    </style>
     <!--水波纹风格-->
-    <style name="button_ripple_primary_large">
-        <item name="android:colorControlHighlight">?attr/colorPrimary</item>
+    <style name="button_ripple_accent_large">
+        <item name="android:colorControlHighlight">?attr/colorAccent</item>
         <item name="android:radius">36dp</item>
     </style>
     <!--水波纹风格-->
-    <style name="button_ripple_primary_extra_large">
-        <item name="android:colorControlHighlight">?attr/colorPrimary</item>
-        <item name="android:radius">64dp</item>
-    </style>
     <!--水波纹风格-->
     <style name="button_ripple_white">
         <item name="android:colorControlHighlight">@color/white</item>
         <item name="android:radius">24dp</item>
     </style>
 
+    <style name="button_ripple_control">
+        <item name="android:colorControlHighlight">?attr/colorControlNormal</item>
+
+        <item name="android:radius">24dp</item>
+    </style>
+
+    <style name="unbound_ripple_white_light">
+        <item name="android:colorControlHighlight">#44FFFFFF</item>
+    </style>
     <!--水波纹风格-->
     <style name="attitude_button_ripple_blue">
         <item name="android:colorControlHighlight">@color/blue_primary</item>
@@ -127,22 +124,19 @@
     </style>
 
     <!--水波纹风格-->
-    <style name="attitude_button_ripple_green">
-        <item name="android:colorControlHighlight">@color/green_primary</item>
-        <item name="android:radius">36dp</item>
-    </style>
     <!--switch风格-->
-    <style name="switch_white" parent="Theme.AppCompat.Light">
-        <!-- Active thumb color & Active track color(30% transparency) switch 打开时的拇指按钮的颜色 轨迹颜色默认为30%这个颜色 -->
-        <item name="colorControlActivated">@color/white</item>
 
-        <!--&lt;!&ndash; Inactive thumb color switch关闭时的拇指按钮的颜色 &ndash;&gt;-->
-        <!--<item name="colorSwitchThumbNormal">@color/theme_color_gray</item>-->
+    <style name="RadiusCornerBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+           
+        <item name="bottomSheetStyle">@style/RadiusCornerBottomSheetStyle</item>
 
-        <!--&lt;!&ndash; Inactive track color(30% transparency) switch关闭时的轨迹的颜色 30%这个颜色 &ndash;&gt;-->
-        <!--<item name="android:colorForeground">@color/colorAccent</item>-->
+    </style>
 
-        <!--使用方法： 在布局文件中给需要自定义控件中增加app:theme="@style/MySwitch"-->
+    <style name="RadiusCornerBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+           
+        <item name="android:background">@android:color/transparent</item>
+        <item name="behavior_peekHeight">400dp</item>
+
     </style>
 
 
@@ -151,21 +145,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="FullscreenTheme" parent="AppTheme">
-        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
-    </style>
-
-    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
-    </style>
 
     <style name="ToolBarTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
 <!--        <item name="colorPrimary">?attr/colorPrimary</item>-->
@@ -196,40 +176,30 @@
         <item name="colorPrimaryDark">@color/red_primary_dark</item>
         <item name="colorAccent">@color/red_accent</item>
         <item name="colorFade">@color/red_fade</item>
-        <item name="colorPrimaryLight">@color/red_primary_light</item>
-
     </style>
     <style name="PinkTheme" parent="AppTheme">
         <item name="colorPrimary">@color/pink_primary</item>
         <item name="colorPrimaryDark">@color/pink_primary_dark</item>
         <item name="colorAccent">@color/pink_accent</item>
         <item name="colorFade">@color/pink_fade</item>
-        <item name="colorPrimaryLight">@color/pink_primary_light</item>
-
     </style>
     <style name="BrownTheme" parent="AppTheme">
         <item name="colorPrimary">@color/brown_primary</item>
         <item name="colorPrimaryDark">@color/brown_primary_dark</item>
         <item name="colorAccent">@color/brown_accent</item>
         <item name="colorFade">@color/brown_fade</item>
-        <item name="colorPrimaryLight">@color/brown_primary_light</item>
-
     </style>
     <style name="BlueTheme" parent="AppTheme">
         <item name="colorPrimary">@color/blue_primary</item>
         <item name="colorPrimaryDark">@color/blue_primary_dark</item>
         <item name="colorAccent">@color/blue_accent</item>
         <item name="colorFade">@color/blue_fade</item>
-        <item name="colorPrimaryLight">@color/blue_primary_light</item>
-
     </style>
     <style name="BlueGreyTheme" parent="AppTheme">
         <item name="colorPrimary">@color/blue_grey_primary</item>
         <item name="colorPrimaryDark">@color/blue_grey_primary_dark</item>
         <item name="colorAccent">@color/blue_grey_accent</item>
         <item name="colorFade">@color/blue_grey_fade</item>
-        <item name="colorPrimaryLight">@color/blue_grey_primary_light</item>
-
     </style>
 
 
@@ -238,8 +208,6 @@
         <item name="colorPrimaryDark">@color/teal_primary_dark</item>
         <item name="colorAccent">@color/teal_accent</item>
         <item name="colorFade">@color/teal_fade</item>
-        <item name="colorPrimaryLight">@color/teal_primary_light</item>
-
     </style>
 
 
@@ -248,8 +216,6 @@
         <item name="colorPrimaryDark">@color/deep_purple_primary_dark</item>
         <item name="colorAccent">@color/deep_purple_accent</item>
         <item name="colorFade">@color/deep_purple_fade</item>
-        <item name="colorPrimaryLight">@color/deep_purple_primary_light</item>
-
     </style>
 
 
@@ -258,8 +224,6 @@
         <item name="colorPrimaryDark">@color/green_primary_dark</item>
         <item name="colorAccent">@color/green_accent</item>
         <item name="colorFade">@color/green_fade</item>
-        <item name="colorPrimaryLight">@color/green_primary_light</item>
-
     </style>
 
     <style name="DeepOrangeTheme" parent="AppTheme">
@@ -267,8 +231,6 @@
         <item name="colorPrimaryDark">@color/deep_orange_primary_dark</item>
         <item name="colorAccent">@color/deep_orange_accent</item>
         <item name="colorFade">@color/deep_orange_fade</item>
-        <item name="colorPrimaryLight">@color/deep_orange_primary_light</item>
-
     </style>
 
     <!--<style name="DeepOrangeTheme" parent="AppTheme">-->
@@ -286,13 +248,11 @@
     <!--<item name="toolbarStyle">@style/ToolBarTheme_Light</item>-->
     <!--</style>-->
 
-    <style name="IndigoTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/indigo_primary</item>
-        <item name="colorPrimaryDark">@color/indigo_primary_dark</item>
-        <item name="colorAccent">@color/indigo_accent</item>
-        <item name="colorFade">@color/indigo_fade</item>
-        <item name="colorPrimaryLight">@color/indigo_primary_light</item>
-
+    <style name="normal_blueTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/normal_blue_primary</item>
+        <item name="colorPrimaryDark">@color/normal_blue_primary_dark</item>
+        <item name="colorAccent">@color/normal_blue_accent</item>
+        <item name="colorFade">@color/normal_blue_fade</item>
     </style>
 
     <style name="CyanTheme" parent="AppTheme">
@@ -300,8 +260,6 @@
         <item name="colorPrimaryDark">@color/cyan_primary_dark</item>
         <item name="colorAccent">@color/cyan_accent</item>
         <item name="colorFade">@color/cyan_fade</item>
-        <item name="colorPrimaryLight">@color/cyan_primary_light</item>
-
     </style>
 
     <style name="AmberTheme" parent="AppTheme">
@@ -309,14 +267,12 @@
         <item name="colorPrimaryDark">@color/amber_primary_dark</item>
         <item name="colorAccent">@color/amber_accent</item>
         <item name="colorFade">@color/amber_fade</item>
-        <item name="colorPrimaryLight">@color/amber_primary_light</item>
     </style>
     <style name="RoseTheme" parent="AppTheme">
         <item name="colorPrimary">@color/rose_primary</item>
         <item name="colorPrimaryDark">@color/rose_primary_dark</item>
         <item name="colorAccent">@color/rose_accent</item>
         <item name="colorFade">@color/rose_fade</item>
-        <item name="colorPrimaryLight">@color/rose_primary_light</item>
     </style>
 
     <style name="ViceTheme" parent="AppTheme">
@@ -324,7 +280,6 @@
         <item name="colorPrimaryDark">@color/vice_primary_dark</item>
         <item name="colorAccent">@color/vice_accent</item>
         <item name="colorFade">@color/vice_fade</item>
-        <item name="colorPrimaryLight">@color/vice_primary_light</item>
     </style>
 
     <style name="MildTheme" parent="AppTheme">
@@ -332,16 +287,12 @@
     <item name="colorPrimaryDark">@color/mild_primary_dark</item>
     <item name="colorAccent">@color/mild_accent</item>
     <item name="colorFade">@color/mild_fade</item>
-    <item name="colorPrimaryLight">@color/mild_primary_light</item>
-        
-        
 </style>
     <style name="MorningTheme" parent="AppTheme">
     <item name="colorPrimary">@color/morning_primary</item>
     <item name="colorPrimaryDark">@color/morning_primary_dark</item>
     <item name="colorAccent">@color/morning_accent</item>
     <item name="colorFade">@color/morning_fade</item>
-    <item name="colorPrimaryLight">@color/morning_primary_light</item>
 </style>
 
     <style name="PHTheme" parent="AppTheme">
@@ -349,7 +300,6 @@
         <item name="colorPrimaryDark">@color/ph_primary_dark</item>
         <item name="colorAccent">@color/ph_accent</item>
         <item name="colorFade">@color/ph_fade</item>
-        <item name="colorPrimaryLight">@color/ph_primary_light</item>
     </style>
 
 
@@ -359,7 +309,6 @@
         <item name="colorPrimaryDark">@color/p30_primary_dark</item>
         <item name="colorAccent">@color/p30_accent</item>
         <item name="colorFade">@color/p30_fade</item>
-        <item name="colorPrimaryLight">@color/p30_primary_light</item>
     </style>
 
     <style name="HITTheme" parent="AppTheme">
@@ -367,7 +316,6 @@
         <item name="colorPrimaryDark">@color/hit_primary_dark</item>
         <item name="colorAccent">@color/hit_accent</item>
         <item name="colorFade">@color/hit_fade</item>
-        <item name="colorPrimaryLight">@color/hit_primary_light</item>
     </style>
 
     <style name="CruelSummerTheme" parent="AppTheme">
@@ -375,7 +323,6 @@
         <item name="colorPrimaryDark">@color/cruelsummer_primary_dark</item>
         <item name="colorAccent">@color/cruelsummer_accent</item>
         <item name="colorFade">@color/cruelsummer_fade</item>
-        <item name="colorPrimaryLight">@color/cruelsummer_primary_light</item>
     </style>
 
     <style name="MITheme" parent="AppTheme">
@@ -383,7 +330,6 @@
         <item name="colorPrimaryDark">@color/mi_primary_dark</item>
         <item name="colorAccent">@color/mi_accent</item>
         <item name="colorFade">@color/mi_fade</item>
-        <item name="colorPrimaryLight">@color/mi_primary_light</item>
     </style>
 
     <style name="TanTheme" parent="AppTheme">
@@ -391,7 +337,6 @@
         <item name="colorPrimaryDark">@color/tan_primary_dark</item>
         <item name="colorAccent">@color/tan_accent</item>
         <item name="colorFade">@color/tan_fade</item>
-        <item name="colorPrimaryLight">@color/tan_primary_light</item>
         <item name="background_color_bottom">#efdeb0</item>
         <item name="background_color_second">#efdeb0</item>
         <item name="background_color_bottom_as_tint">#cfefdeb0</item>
@@ -401,7 +346,6 @@
         <item name="colorPrimaryDark">@color/yadinglv_primary_dark</item>
         <item name="colorAccent">@color/yadinglv_accent</item>
         <item name="colorFade">@color/yadinglv_fade</item>
-        <item name="colorPrimaryLight">@color/yadinglv_primary_light</item>
         <item name="background_color_bottom">#c7d7d6</item>
         <item name="background_color_second">#c7d7d6</item>
         <item name="background_color_bottom_as_tint">#cfc7d7d6</item>
@@ -411,7 +355,6 @@
         <item name="colorPrimaryDark">@color/manjianghong_primary_dark</item>
         <item name="colorAccent">@color/manjianghong_accent</item>
         <item name="colorFade">@color/manjianghong_fade</item>
-        <item name="colorPrimaryLight">@color/manjianghong_primary_light</item>
         <item name="background_color_bottom">#e6d2d5</item>
         <item name="background_color_second">#e6d2d5</item>
         <item name="background_color_bottom_as_tint">#cfe6d2d5</item>
@@ -421,21 +364,19 @@
         <item name="colorPrimaryDark">@color/magic_primary_dark</item>
         <item name="colorAccent">@color/magic_accent</item>
         <item name="colorFade">@color/magic_fade</item>
-        <item name="colorPrimaryLight">@color/magic_primary_light</item>
         <item name="background_color_bottom">#d0dfe6</item>
         <item name="background_color_second">#c3d7df</item>
         <item name="background_color_bottom_as_tint">#cfc3d7df</item>
     </style>
     <style name="CyberPunkTheme" parent="AppTheme">
         <item name="colorPrimary">@color/cyberpunk_primary</item>
-        <item name="text_color_secondary">@color/cyberpunk_primary</item>
-        <item name="text_color_primary">@color/cyberpunk_fade</item>
+        <item name="text_color_secondary">@color/cyberpunk_fade</item>
+        <item name="text_color_primary">@color/cyberpunk_primary</item>
         <item name="colorPrimaryDark">@color/cyberpunk_primary_dark</item>
-        <item name="colorAccent">@color/cyberpunk_fade</item>
+        <item name="colorAccent">@color/cyberpunk_primary</item>
         <item name="colorFade">@color/cyberpunk_fade</item>
-        <item name="background_color_second">#Df000000</item>
+        <item name="background_color_second">#aa000000</item>
         <item name="drawer_header_buttons_background">@drawable/cyberpunk_drawer_header_buttons</item>
-        <item name="colorPrimaryLight">@color/cyberpunk_primary_light</item>
         <item name="drawer_header_background">@drawable/cyberpunk_drawer_header</item>
     </style>
 

@@ -31,18 +31,17 @@
             android:id="@+id/done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:alpha="0.6"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:padding="16dp"
             android:tint="?attr/colorControlNormal"
             android:tintMode="src_in"
-            app:srcCompat="@drawable/bt_done"
-            app:theme="@style/button_ripple_primary" />
+            app:srcCompat="@drawable/fab_done"
+            app:theme="@style/button_ripple_accent" />
     </LinearLayout>
 
-    <com.cncoderx.wheelview.Wheel3DView
+    <com.stupidtree.hita.views.mWheel3DView
         android:id="@+id/number"
         android:layout_width="240dp"
         android:layout_height="140dp"
@@ -50,7 +49,7 @@
         android:layout_weight="1.2"
         app:cyclic="false"
         app:divider="@color/transparent_none"
-        app:selectedColor="?attr/colorPrimary"
+        app:selectedColor="?attr/colorAccent"
         app:textSize="36sp"
         app:toward="right"
         app:unselectedColor="?attr/background_icon_color_second"

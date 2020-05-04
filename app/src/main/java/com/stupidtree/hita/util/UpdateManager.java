@@ -1,8 +1,6 @@
 package com.stupidtree.hita.util;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.stupidtree.hita.BaseActivity;
+import com.stupidtree.hita.activities.BaseActivity;
 import com.tencent.bugly.beta.Beta;
 
 public class UpdateManager {

@@ -32,15 +32,14 @@
             android:id="@+id/done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:alpha="0.6"
             android:clickable="true"
+            android:focusable="true"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:padding="16dp"
             android:tint="?attr/colorControlNormal"
             android:tintMode="src_in"
-            app:srcCompat="@drawable/bt_done"
-            app:theme="@style/button_ripple_primary"
-            android:focusable="true" />
+            app:srcCompat="@drawable/fab_done"
+            app:theme="@style/button_ripple_accent" />
 
     </LinearLayout>
 

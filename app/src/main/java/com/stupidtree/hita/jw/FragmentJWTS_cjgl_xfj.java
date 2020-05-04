@@ -10,7 +10,7 @@
 //import android.view.ViewGroup;
 //import android.widget.TextView;
 //
-//import com.stupidtree.hita.BaseFragment;
+//import com.stupidtree.hita.fragments.BaseFragment;
 //import com.stupidtree.hita.HITAApplication;
 //import com.stupidtree.hita.R;
 //

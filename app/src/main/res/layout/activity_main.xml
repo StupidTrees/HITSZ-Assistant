@@ -5,15 +5,18 @@
     android:id="@+id/main_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:nestedScrollingEnabled="true"
     tools:context=".activities.ActivityMain"
     tools:openDrawer="start">
 
+
+    <!--android:background="?attr/background_color_second"-->
+
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/mainpage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/background_color_bottom"
-        android:orientation="vertical">
+        android:background="?attr/background_color_bottom">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -31,36 +34,47 @@
                 android:fitsSystemWindows="true"
                 android:gravity="center"
                 android:minHeight="?attr/actionBarSize"
+
+                app:contentInsetEnd="0dp"
+                app:contentInsetEndWithActions="0dp"
+                app:contentInsetLeft="0dp"
+                app:contentInsetRight="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
                 app:theme="?attr/toolbarStyle">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/mainTabs"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_height="wrap_content"
+                    android:foregroundGravity="center"
+
+                    app:tabGravity="center"
                     app:tabIndicator="@color/transparent_none"
-                    app:tabRippleColor="?attr/colorPrimary"
+                    app:tabMode="auto"
+                    app:tabPaddingEnd="20dp"
+                    app:tabPaddingStart="12dp"
                     app:tabSelectedTextColor="@color/main_tabs_selected_color"
                     app:tabTextAppearance="@style/MainTabsTextTheme"
                     app:tabTextColor="@color/main_tabs_unselected_color"
                     app:tabUnboundedRipple="true">
 
                     <com.google.android.material.tabs.TabItem
-                        android:id="@+id/tabItem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="Tab2" />
 
                     <com.google.android.material.tabs.TabItem
-                        android:id="@+id/tabItem5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="Tab2" />
 
                     <com.google.android.material.tabs.TabItem
-                        android:id="@+id/tabItem6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="Tab2" />
                 </com.google.android.material.tabs.TabLayout>
 
@@ -76,37 +90,151 @@
             android:overScrollMode="never"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_main"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="@dimen/material_fab_margin"
-            android:clickable="true"
-            android:transitionName="fab"
-            android:visibility="visible"
-            app:fabCustomSize="60dp"
-            app:fab_shadowColor="?attr/colorPrimary"
-            app:fab_shadowRadius="16dp"
-            app:fab_showShadow="true"
-            app:layout_behavior=".diy.mBottomHideBehavior"
-            app:srcCompat="@drawable/bt_timeline_toolbar_timetable"
-            android:focusable="true"
-            tools:ignore="RtlHardcoded" />
+            android:layout_height="96dp"
+            android:layout_gravity="bottom|end"
+            app:layout_behavior=".views.mBottomHideBehavior">
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/fab_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/material_fab_margin"
+                android:layout_marginEnd="@dimen/material_fab_margin"
+                android:focusable="true"
+                android:text="@string/search"
+                android:textColor="@color/material_text_icon_white"
+                android:theme="@style/Theme.MaterialComponents"
+                app:icon="@drawable/bt_timeline_toolbar_timetable"
+                app:iconTint="@color/material_text_icon_white"
+                tools:ignore="RtlHardcoded" />
+        </FrameLayout>
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <!--android:background="?attr/background_color_second"-->
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/drawer_navigationview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom|center|start"
 
+    <LinearLayout
+        android:layout_width="290dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
         android:background="?attr/background_color_second"
-        app:itemIconPadding="16dp"
-        app:itemIconTint="?attr/text_color_secondary"
-        app:itemTextColor="?attr/text_color_secondary"
-        app:menu="@menu/drawer_main" />
+        android:gravity="start"
+        android:orientation="vertical">
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/drawer_navigationview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|center|start"
+
+            android:layout_weight="1"
+
+            android:background="#00000000"
+            android:overScrollMode="never"
+            app:elevation="0dp"
+            app:itemHorizontalPadding="24dp"
+            app:itemIconPadding="16dp"
+            app:itemIconSize="18dp"
+            app:itemIconTint="?attr/colorControlNormal"
+            app:itemMaxLines="1"
+            app:itemTextColor="?attr/text_color_secondary"
+            app:menu="@menu/drawer_main">
+
+        </com.google.android.material.navigation.NavigationView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:alpha="0.8"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/dark_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center|start"
+                android:orientation="horizontal"
+                android:paddingStart="24dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:tint="?attr/colorControlNormal"
+                    android:tintMode="src_in"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_moon" />
+
+                <Switch
+                    android:id="@+id/switch_darkmode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:singleLine="true"
+                    android:switchPadding="8dp"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="16sp">
+
+                </Switch>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/main_drawer_menu_darkmode"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center|start"
+                android:orientation="horizontal"
+                android:paddingStart="24dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:tint="?attr/colorControlNormal"
+                    android:tintMode="src_in"
+                    app:srcCompat="@drawable/ic_settings" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/main_drawer_menu_settings"
+                    android:textColor="?attr/text_color_secondary"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -19,8 +19,8 @@
 //import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 //import com.bumptech.glide.request.RequestOptions;
 //import com.bumptech.glide.signature.ObjectKey;
-//import com.stupidtree.hita.BaseActivity;
-//import com.stupidtree.hita.BaseFragment;
+//import com.stupidtree.hita.activities.BaseActivity;
+//import com.stupidtree.hita.fragments.BaseFragment;
 //import com.stupidtree.hita.HITAApplication;
 //import com.stupidtree.hita.R;
 //import com.stupidtree.hita.activities.ActivityLoginJWTS;

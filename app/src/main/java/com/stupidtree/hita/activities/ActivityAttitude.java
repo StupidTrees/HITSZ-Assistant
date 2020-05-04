@@ -1,33 +1,23 @@
 package com.stupidtree.hita.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.ViewPager;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.adapter.AttitudeListAdapter;
-import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
+import com.stupidtree.hita.adapter.BaseTabAdapter;
 import com.stupidtree.hita.fragments.attitude.FragmentAttitude;
 import com.stupidtree.hita.fragments.popup.FragmentAddAttitude;
 import com.stupidtree.hita.online.Attitude;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -35,31 +25,27 @@ import java.util.Objects;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobDate;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
-public class ActivityAttitude extends BaseActivity implements FragmentAddAttitude.AttachedActivity{
+public class ActivityAttitude extends BaseActivity implements FragmentAddAttitude.AttachedActivity {
 
 
     FloatingActionButton fab;
     Toolbar toolbar;
     ViewPager pager;
     TabLayout tabs;
-    List<FragmentAttitude> fragments;
+
     @Override
     protected void stopTasks() {
 
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attitude);
-        setWindowParams(true,true,false);
+        setWindowParams(true, true, false);
         initToolbar();
-        initFragments();
         initViews();
 
     }
@@ -68,10 +54,9 @@ public class ActivityAttitude extends BaseActivity implements FragmentAddAttitud
     @Override
     protected void onResume() {
         super.onResume();
-//        if(refreshFlags[pager.getCurrentItem()]) fragments.get(pager.getCurrentItem()).Refresh();
     }
 
-    void initToolbar(){
+    void initToolbar() {
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.label_activity_attitude));
@@ -87,110 +72,101 @@ public class ActivityAttitude extends BaseActivity implements FragmentAddAttitud
 
     }
 
-    void initFragments(){
-        fragments = new ArrayList<>();
-        fragments.add(new FragmentAttitude(getString(R.string.attitude_tabs_latest_created), new FragmentAttitude.DataFetcher() {
-                    @Override
-                    public List<Attitude> fetch() throws Exception {
-                        BmobQuery<Attitude> bq = new BmobQuery<>();
-//                        Calendar c = Calendar.getInstance();
-//                        c.add(Calendar.DATE,-14);
-//                        bq.addWhereGreaterThanOrEqualTo("createdAt",new BmobDate(c.getTime()));
-                        List<Attitude> res = bq.setLimit(50).order("-createdAt").findObjectsSync(Attitude.class);
-                        if(res==null) throw new Exception();
-                        return res;
-                    }
-                }));
-        fragments.add(new FragmentAttitude(getString(R.string.attitude_tabs_latest_updated), new FragmentAttitude.DataFetcher() {
-            @Override
-            public List<Attitude> fetch() throws Exception {
-                BmobQuery<Attitude> bq = new BmobQuery<>();
-//                        Calendar c = Calendar.getInstance();
-//                        c.add(Calendar.DATE,-14);
-//                        bq.addWhereGreaterThanOrEqualTo("createdAt",new BmobDate(c.getTime()));
-                List<Attitude> res = bq.setLimit(50).order("-updatedAt").findObjectsSync(Attitude.class);
-                if(res==null) throw new Exception();
-                return res;
-            }
-        }));
-        fragments.add(new FragmentAttitude(getString(R.string.attitude_tabs_weekly_top), new FragmentAttitude.DataFetcher() {
-            @Override
-            public List<Attitude> fetch() throws Exception {
-                BmobQuery<Attitude> bq = new BmobQuery<>();
-                Calendar c = Calendar.getInstance();
-                int dow = c.get(Calendar.DAY_OF_WEEK)==1?6:c.get(Calendar.DAY_OF_WEEK)-2
-                        ;
-                //Log.e("dow", String.valueOf(dow));
-                c.add(Calendar.DATE,-dow);
-                c.set(Calendar.HOUR_OF_DAY,0);
-                c.set(Calendar.MINUTE,0);
-                bq.addWhereGreaterThanOrEqualTo("createdAt",new BmobDate(c.getTime()));
-                List<Attitude> res = bq.findObjectsSync(Attitude.class);
-                Collections.sort(res, new Comparator<Attitude>() {
-                    @Override
-                    public int compare(Attitude attitude, Attitude t1) {
-                        int x = attitude.getUp()+attitude.getDown();
-                        int y = t1.getUp() + t1.getDown();
-                        return y-x;
-                    }
-                });
-                if(res==null) throw new Exception();
-                return res;
-            }
-        }));
-        fragments.add(new FragmentAttitude(getString(R.string.attitude_tabs_history_top), new FragmentAttitude.DataFetcher() {
-            @Override
-            public List<Attitude> fetch() throws Exception {
-                BmobQuery<Attitude> bq = new BmobQuery<>();
-               // bq.addWhereGreaterThanOrEqualTo("up",10);
-//                bq.addWhereGreaterThanOrEqualTo("down",30);
-                List<Attitude> res = bq.setLimit(50).findObjectsSync(Attitude.class);
-                Collections.sort(res, new Comparator<Attitude>() {
-                    @Override
-                    public int compare(Attitude attitude, Attitude t1) {
-                        int x = attitude.getUp()+attitude.getDown();
-                        int y = t1.getUp() + t1.getDown();
-                        return y-x;
-                    }
-                });
-                if(res==null) throw new Exception();
-                return res;
-            }
-        }));
-        for(FragmentAttitude fa:fragments) fa.setShouldRefresh(true);
-    }
-    void initViews(){
+    void initViews() {
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentAddAttitude.newInstance().show(getSupportFragmentManager(),"add_attitude");
+                FragmentAddAttitude.newInstance().show(getSupportFragmentManager(), "add_attitude");
             }
         });
         pager = findViewById(R.id.pager);
         tabs = findViewById(R.id.tabs);
-        pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(),FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-            @NonNull
-            @Override
-            public Fragment getItem(int position) {
-                return fragments.get(position);
-            }
-
-            @Override
-            public int getCount() {
-                return fragments.size();
-            }
+        pager.setAdapter(new BaseTabAdapter(getSupportFragmentManager(), 4) {
+            int[] titles = new int[]{
+                    R.string.attitude_tabs_latest_created,
+                    R.string.attitude_tabs_latest_updated,
+                    R.string.attitude_tabs_weekly_top,
+                    R.string.attitude_tabs_history_top
+            };
 
             @Override
             public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
                 //super.destroyItem(container, position, object);
+                mFragments[position] = null;
             }
 
-            @Nullable
+            @Override
+            protected Fragment initItem(int position) {
+                switch (position) {
+                    case 0:
+                        return new FragmentAttitude(new FragmentAttitude.DataFetcher() {
+                            @Override
+                            public List<Attitude> fetch() throws Exception {
+                                BmobQuery<Attitude> bq = new BmobQuery<>();
+                                List<Attitude> res = bq.setLimit(50).order("-createdAt").findObjectsSync(Attitude.class);
+                                if (res == null) throw new Exception();
+                                return res;
+                            }
+                        });
+                    case 1:
+                        return new FragmentAttitude(new FragmentAttitude.DataFetcher() {
+                            @Override
+                            public List<Attitude> fetch() throws Exception {
+                                BmobQuery<Attitude> bq = new BmobQuery<>();
+                                List<Attitude> res = bq.setLimit(50).order("-updatedAt").findObjectsSync(Attitude.class);
+                                if (res == null) throw new Exception();
+                                return res;
+                            }
+                        });
+                    case 2:
+                        return new FragmentAttitude(new FragmentAttitude.DataFetcher() {
+                            @Override
+                            public List<Attitude> fetch() {
+                                BmobQuery<Attitude> bq = new BmobQuery<>();
+                                Calendar c = Calendar.getInstance();
+                                int dow = c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ? 6 : c.get(Calendar.DAY_OF_WEEK) - 2;
+                                c.add(Calendar.DATE, -dow);
+                                c.set(Calendar.HOUR_OF_DAY, 0);
+                                c.set(Calendar.MINUTE, 0);
+                                bq.addWhereGreaterThanOrEqualTo("createdAt", new BmobDate(c.getTime()));
+                                List<Attitude> res = bq.findObjectsSync(Attitude.class);
+                                Collections.sort(res, new Comparator<Attitude>() {
+                                    @Override
+                                    public int compare(Attitude attitude, Attitude t1) {
+                                        int x = attitude.getUp() + attitude.getDown();
+                                        int y = t1.getUp() + t1.getDown();
+                                        return y - x;
+                                    }
+                                });
+                                return res;
+                            }
+                        });
+                    default:
+                        return new FragmentAttitude(new FragmentAttitude.DataFetcher() {
+                            @Override
+                            public List<Attitude> fetch() {
+                                BmobQuery<Attitude> bq = new BmobQuery<>();
+                                List<Attitude> res = bq.setLimit(50).findObjectsSync(Attitude.class);
+                                Collections.sort(res, new Comparator<Attitude>() {
+                                    @Override
+                                    public int compare(Attitude attitude, Attitude t1) {
+                                        int x = attitude.getUp() + attitude.getDown();
+                                        int y = t1.getUp() + t1.getDown();
+                                        return y - x;
+                                    }
+                                });
+                                return res;
+                            }
+                        });
+                }
+            }
+
+            @NonNull
             @Override
             public CharSequence getPageTitle(int position) {
-                return fragments.get(position).getTitle();
+                return getString(titles[position]);
             }
         });
         tabs.setupWithViewPager(pager);
@@ -215,12 +191,33 @@ public class ActivityAttitude extends BaseActivity implements FragmentAddAttitud
 
     @Override
     public void refreshAll() {
-        for(FragmentAttitude fa:fragments) fa.setShouldRefresh(true);
-        fragments.get(pager.getCurrentItem()).Refresh();
+        for (Fragment f : getSupportFragmentManager().getFragments()) {
+            if (f instanceof FragmentAttitude) {
+                if (f.isResumed()) {
+                    ((FragmentAttitude) f).Refresh();
+                } else {
+                    ((FragmentAttitude) f).setShouldRefresh(true);
+                }
+            }
+        }
     }
 
     @Override
     public void refreshOthers() {
-        for(FragmentAttitude fa:fragments) fa.setShouldRefresh(true);
+        for (Fragment f : getSupportFragmentManager().getFragments()) {
+            if (f instanceof FragmentAttitude) {
+                if (!f.isResumed()) ((FragmentAttitude) f).setShouldRefresh(true);
+            }
+        }
+    }
+
+
+    @Override
+    public void notifyItem(String objectId) {
+        for (Fragment f : getSupportFragmentManager().getFragments()) {
+            if (f instanceof FragmentAttitude) {
+                ((FragmentAttitude) f).notifySpecificAttitudeChanged(objectId);
+            }
+        }
     }
 }

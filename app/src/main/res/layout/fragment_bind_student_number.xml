@@ -20,18 +20,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:fontFamily="sans-serif-black"
             android:text="@string/bind_stun_title"
             android:textColor="?attr/text_color_primary"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/current_user_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:background="@drawable/radius_accent_lgiht_button_bg"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
             android:text="绑定账号：StupidTree（15159128923）"
-            android:textColor="?attr/text_color_secondary"
+            android:textColor="?attr/colorAccent"
             tools:ignore="HardcodedText" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -55,12 +60,20 @@
             android:paddingBottom="16dp"
             android:singleLine="true" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/verify_stuid_hint"
+            android:textColor="?attr/text_color_secondary" />
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:clickable="false">
 
-            <com.stupidtree.hita.diy.ButtonLoading
+            <com.stupidtree.hita.views.ButtonLoading
                 android:id="@+id/login"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"

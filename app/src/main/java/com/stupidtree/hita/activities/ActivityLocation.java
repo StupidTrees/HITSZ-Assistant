@@ -1,54 +1,41 @@
 package com.stupidtree.hita.activities;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.HITAApplication;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.LocationInfoListAdapter;
-import com.stupidtree.hita.diy.MaterialCircleAnimator;
-import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.online.Canteen;
 import com.stupidtree.hita.online.Classroom;
 import com.stupidtree.hita.online.Facility;
 import com.stupidtree.hita.online.Location;
-import com.stupidtree.hita.online.LostAndFound;
 import com.stupidtree.hita.online.Scenery;
 import com.stupidtree.hita.util.ActivityUtils;
+import com.stupidtree.hita.views.MaterialCircleAnimator;
+import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -60,12 +47,10 @@ public class ActivityLocation extends BaseActivity {
 
     Location location;
     TextView name,intro;
-    RecyclerView infoList,lafList;
+    RecyclerView infoList;
     Toolbar mToolbar;
     LocationInfoListAdapter infoListAdapter;
-    lafListAdapter lafListAdapter;
     ArrayList<HashMap> infoListRes;
-    ArrayList<LostAndFound> lafListRes;
     ImageView appbarBG;
     FloatingActionButton fab;
     //CollapsingToolbarLayout collapsingToolbarLayout;
@@ -80,12 +65,11 @@ public class ActivityLocation extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true,true,false);
+        setWindowParams(true, false, false);
         setContentView(R.layout.activity_location);
         initToolbar();
         initViews();
         initInfoList();
-        initLafList();
         if(getIntent().getSerializableExtra("location")!=null){
             location = (Location) getIntent().getSerializableExtra("location");
             loadInfos();
@@ -220,7 +204,7 @@ public class ActivityLocation extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if(location!=null&&location.getImageURL()!=null){
-                    ActivityUtils.startPhotoDetailActivity_transition(ActivityLocation.this,location.getImageURL(),view);
+                    ActivityUtils.showOneImage(getThis(), location.getImageURL());
                 }
             }
         });
@@ -266,19 +250,13 @@ public class ActivityLocation extends BaseActivity {
 //        if(getAction().getSerializableExtra("infos")!=null){
 //            infoListRes.addAll((Collection<? extends Map>) getAction().getSerializableExtra("infos"));
 //        }
-        infoListAdapter = new LocationInfoListAdapter(this,infoListRes,getColorPrimary());
+        infoListAdapter = new LocationInfoListAdapter(this, infoListRes, getColorAccent());
         LinearLayoutManager lm = new WrapContentLinearLayoutManager(this,RecyclerView.VERTICAL,false);
         infoList.setAdapter(infoListAdapter);
         infoList.setLayoutManager(lm);
     }
 
-    void initLafList(){
-        lafListRes = new ArrayList<>();
-        lafList = findViewById(R.id.location_laf_list);
-        lafListAdapter = new lafListAdapter(lafListRes);
-        lafList.setAdapter(lafListAdapter);
-        lafList.setLayoutManager(new WrapContentLinearLayoutManager(this,RecyclerView.HORIZONTAL,false));
-    }
+
 
     void refresh(){
         DecimalFormat  df = new DecimalFormat("#0.00");
@@ -286,73 +264,6 @@ public class ActivityLocation extends BaseActivity {
         infoListRes.addAll(location.getInfoListArray());
         infoListAdapter.notifyDataSetChanged();
         rate.setText(df.format(location.getRate())+"/10");
-        if(location!=null) new refreshLafTask().executeOnExecutor(HITAApplication.TPE);
     }
 
-    class lafListAdapter extends RecyclerView.Adapter<lafListAdapter.lafViewHolder>{
-
-        List<LostAndFound> mBeans;
-
-        public lafListAdapter(List<LostAndFound> mBeans) {
-            this.mBeans = mBeans;
-        }
-
-        @NonNull
-        @Override
-        public lafViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new lafViewHolder(getLayoutInflater().inflate(R.layout.dynamic_location_laf,parent,false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull lafViewHolder holder, final int position) {
-            holder.time.setText(mBeans.get(position).getCreatedAt());
-            holder.title.setText(mBeans.get(position).getTitle());
-            holder.card.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-               ActivityUtils.startPostDetailActivity(ActivityLocation.this,mBeans.get(position),mBeans.get(position).getAuthor());
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return mBeans.size();
-        }
-
-        class lafViewHolder extends RecyclerView.ViewHolder{
-
-            TextView title,time;
-            CardView card;
-            public lafViewHolder(@NonNull View itemView) {
-                super(itemView);
-                title = itemView.findViewById(R.id.title);
-                time = itemView.findViewById(R.id.time);
-                card = itemView.findViewById(R.id.card);
-            }
-        }
-    }
-
-    class refreshLafTask extends AsyncTask{
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            if(location!=null){
-                BmobQuery<LostAndFound> bq = new BmobQuery();
-                bq.addWhereEqualTo("location",location.getObjectId());
-                List<LostAndFound> r = bq.findObjectsSync(LostAndFound.class);
-                if(r!=null&&r.size()>0) {
-                    lafListRes.clear();
-                    lafListRes.addAll(r);
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            lafListAdapter.notifyDataSetChanged();
-        }
-    }
 }

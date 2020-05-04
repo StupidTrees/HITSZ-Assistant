@@ -1,27 +1,22 @@
 package com.stupidtree.hita.fragments;
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputLayout;
-
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.stupidtree.hita.BaseFragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.online.HITAUser;
-import com.stupidtree.hita.diy.ButtonLoading;
+import com.stupidtree.hita.views.ButtonLoading;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -30,6 +25,7 @@ import cn.bmob.v3.listener.SaveListener;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.timetable.TimeWatcherService.USER_CHANGED;
 
 public class FragmentLogin extends BaseFragment {
     
@@ -37,15 +33,20 @@ public class FragmentLogin extends BaseFragment {
     ButtonLoading login;
    // TextInputLayout usernameLayout,passwordLayout;
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_login,container,false);
-        initViews(v);
-        return v;
+    protected int getLayoutId() {
+        return R.layout.fragment_login;
     }
-    
-    void initViews(View v){
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViews(view);
+    }
+
+    private void initViews(View v) {
         username = v.findViewById(R.id.username);
         password = v.findViewById(R.id.password);
      //   usernameLayout = v.findViewById(R.id.usernameLayout);
@@ -79,6 +80,8 @@ public class FragmentLogin extends BaseFragment {
                             login.setProgress(false);
                             if (e == null) {
                                 Toast.makeText(HContext, R.string.login_success_syncing, Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(USER_CHANGED);
+                                LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
                                 CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
                                 timeTableCore.loadDataFromCloud(getActivity());
                             } else {

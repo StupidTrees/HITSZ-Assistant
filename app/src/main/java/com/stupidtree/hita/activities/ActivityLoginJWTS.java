@@ -5,29 +5,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.stupidtree.hita.BaseActivity;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.diy.ButtonLoading;
 import com.stupidtree.hita.jw.JWException;
 import com.stupidtree.hita.util.ActivityUtils;
+import com.stupidtree.hita.views.ButtonLoading;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
-
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -40,28 +36,16 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
-import static com.stupidtree.hita.HITAApplication.*;
+import static com.stupidtree.hita.HITAApplication.CurrentUser;
+import static com.stupidtree.hita.HITAApplication.TPE;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
+import static com.stupidtree.hita.HITAApplication.jwCore;
 
 public class ActivityLoginJWTS extends BaseActivity {
-    //登录请求地址
-    private final static String LOGIN = "http://jwts.hitsz.edu.cn:8080/login";
-    //登录界面
-    private final static String LOGIN_VIEW = "http://jwts.hitsz.edu.cn:8080/";
-    //验证码请求地址
-    private final static String CHECK_CODE = "http://jwts.hitsz.edu.cn:8080/captchaImage";
-    //固定的参数值（URL编码）
-
     EditText username, password;
     ButtonLoading login;
     LinearLayout loginCard;
-    TextView loadingError;
-    String lt;
-    String execution;
     ImageView vpnHint;
-   // Button bt_vpn;
-    //验证码
-    private byte[] checkPic;
-
     loginTask pageTask_login;
 
     @Override
@@ -90,7 +74,6 @@ public class ActivityLoginJWTS extends BaseActivity {
         login = findViewById(R.id.login);
         vpnHint = findViewById(R.id.vpn);
         loginCard = findViewById(R.id.logincard);
-        loadingError = findViewById(R.id.loadingerror);
         vpnHint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,7 +168,7 @@ public class ActivityLoginJWTS extends BaseActivity {
             super.onPostExecute(o);
             login.setProgress(false);
             if(o instanceof JWException){
-                ((JWException)o).printStackTrace();;
+                ((JWException) o).printStackTrace();
                 JWException jwe = (JWException) o;
                 AlertDialog ad = new AlertDialog.Builder(ActivityLoginJWTS.this).create();
                 ad.setTitle("提示");

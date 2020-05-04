@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/color_primary_fade_background">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00000000"
+        android:background="?attr/color_primary_fade_background"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="420dp"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
             app:title=" "
             app:toolbarId="@+id/toolbar">
@@ -24,8 +22,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="280dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="48dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="64dp"
+                android:layout_marginBottom="48dp"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_collapseMode="parallax"
@@ -39,11 +37,11 @@
                     app:cardElevation="16dp">
 
                     <ImageView
-                        android:id="@+id/imageView9"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        app:srcCompat="@drawable/splash_logo" />
+                        android:padding="8dp"
+                        app:srcCompat="@drawable/logo" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView
@@ -66,6 +64,47 @@
                     android:textColor="@color/material_background_white"
                     android:textSize="16sp" />
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/privacy_protocol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="2dp"
+                        android:background="@drawable/radius_white_lgiht_button_bg"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/name_privacy_agreement"
+                        android:textColor="@color/material_text_icon_white"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/user_protocol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:background="@drawable/radius_white_lgiht_button_bg"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/name_user_agreement"
+                        android:textColor="@color/material_text_icon_white"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <androidx.appcompat.widget.Toolbar
@@ -80,10 +119,10 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/about_radius_background"
+        android:layout_marginTop="-36dp"
+        android:background="@drawable/jw_radius_bg_bottom"
         android:overScrollMode="never"
         app:behavior_overlapTop="0dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -91,6 +130,19 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/about_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="36dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="24dp"
+                android:autoLink="all"
+                android:textColor="?attr/text_color_primary"
+                android:textIsSelectable="true"
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:id="@+id/update_area"
@@ -109,7 +161,7 @@
                     android:layout_margin="4dp"
                     android:gravity="center|start"
                     android:text="@string/new_version_available"
-                    android:textColor="@color/material_secondary_text" />
+                    android:textColor="?attr/text_color_secondary" />
 
                 <TextView
                     android:id="@+id/update_title"
@@ -120,7 +172,7 @@
                     android:fontFamily="sans-serif-black"
                     android:gravity="center|start"
                     android:text="古娜拉黑暗之神 升级魔法"
-                    android:textColor="@color/material_primary_text"
+                    android:textColor="?attr/text_color_primary"
                     android:textSize="18sp" />
 
                 <ImageView
@@ -128,8 +180,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxHeight="50dp"
-                    android:scaleType="centerCrop"
-                    app:srcCompat="@drawable/bt_addevent_triangle" />
+                    android:scaleType="centerCrop" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -144,7 +195,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="4dp"
                         android:text="时间：2019年5月25日"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="14sp" />
 
                     <TextView
@@ -154,7 +205,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="4dp"
                         android:text="大小：40m"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="14sp" />
 
                     <TextView
@@ -164,7 +215,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="4dp"
                         android:text="版本：2.3"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="14sp" />
 
                     <TextView
@@ -178,7 +229,7 @@
                         android:layout_marginBottom="16dp"
                         android:lineSpacingExtra="8sp"
                         android:text="新增：主题\nUI优化\n课程表优化"
-                        android:textColor="@color/material_secondary_text"
+                        android:textColor="?attr/text_color_secondary"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -215,21 +266,10 @@
 
             </LinearLayout>
 
-            <WebView
-                android:id="@+id/webview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="60dp"
-                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-            </WebView>
         </FrameLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.stupidtree.hita.diy.ButtonLoading
+    <com.stupidtree.hita.views.ButtonLoading
         android:id="@+id/update_check"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -243,5 +283,6 @@
         app:BL_stateShow="normal"
         app:BL_text="@string/check_for_update"
         app:BL_textColor="#FFFFFF"
-        app:BL_textSize="18sp" />
+        app:BL_textSize="18sp"
+        app:layout_behavior=".views.mBottomHideBehavior" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

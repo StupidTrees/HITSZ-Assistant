@@ -8,9 +8,8 @@
 
             <gradient
                 android:angle="0"
-                android:endColor="@color/blue_primary"
-                android:startColor="@color/blue_fade"
-                android:centerY="0.75" />
+                android:endColor="@color/cruelsummer_accent"
+                android:startColor="@color/blue_primary" />
         </shape>
     </item>
 
@@ -25,9 +24,8 @@
 
                 <gradient
                     android:angle="0"
-                    android:startColor="@color/red_primary"
-                    android:endColor="@color/red_primary_light"
-                    android:centerColor="@color/red_primary_light"/>
+                    android:endColor="@color/amber_fade"
+                    android:startColor="@color/amber_fade" />
             </shape>
         </clip>
     </item>

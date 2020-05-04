@@ -1,15 +1,18 @@
 package com.stupidtree.hita.adapter;
 
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import android.view.ViewGroup;
 
 import com.stupidtree.hita.jw.JWFragment;
 
 import java.util.List;
+
+import static com.stupidtree.hita.HITAApplication.HContext;
 
 public class JWTSPagerAdapter extends FragmentPagerAdapter {
     List<JWFragment> mBeans;
@@ -36,7 +39,7 @@ public class JWTSPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return mBeans.get(position).getTitle();
+        return HContext.getString(mBeans.get(position).getTitle());
     }
 
     @Override

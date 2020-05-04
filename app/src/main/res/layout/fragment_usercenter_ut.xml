@@ -13,163 +13,320 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/punch_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="sans-serif-black"
-                android:text="-"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="18sp"
-                tools:ignore="HardcodedText" />
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="?attr/background_color_second"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/punch_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="共23天校园心情"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="18sp" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:gravity="bottom"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:tint="?attr/colorPrimary"
-                        android:tintMode="src_in"
-                        app:srcCompat="@drawable/ic_mood_happy" />
+                        android:id="@+id/first_icon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/radius_accent_round_icon_bg"
+                        android:backgroundTint="?attr/background_color_bottom_as_tint"
+                        android:backgroundTintMode="src_over"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_mood_happy"
+                        android:tint="?attr/colorAccent" />
+
+                    <ProgressBar
+                        android:id="@+id/first_progress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="14dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_weight="1"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/style_progressbar_accent" />
 
                     <TextView
-                        android:id="@+id/happy_text"
+                        android:id="@+id/first_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:gravity="bottom"
-                        android:text="-"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="36sp"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/day"
+                        android:text="32天"
                         android:textColor="?attr/text_color_secondary" />
-
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:gravity="bottom"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:tint="?attr/colorPrimary"
-                        android:tintMode="src_in"
-                        app:srcCompat="@drawable/ic_mood_normal" />
+                        android:id="@+id/second_icon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/radius_accent_round_icon_bg"
+                        android:backgroundTint="?attr/background_color_bottom_as_tint"
+                        android:backgroundTintMode="src_over"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_mood_happy"
+                        android:tint="?attr/colorAccent" />
+
+                    <ProgressBar
+                        android:id="@+id/second_progress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="14dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_weight="1"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/style_progressbar_accent" />
 
                     <TextView
-                        android:id="@+id/normal_text"
+                        android:id="@+id/second_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:gravity="bottom"
-                        android:text="-"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="36sp"
+                        android:text="18天"
+                        android:textColor="?attr/text_color_secondary"
                         tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/textView39"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/day"
-                        android:textColor="?attr/text_color_secondary" />
-
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:gravity="bottom"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:tint="?attr/colorPrimary"
-                        android:tintMode="src_in"
-                        app:srcCompat="@drawable/ic_mood_sad" />
+                        android:id="@+id/third_icon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/radius_accent_round_icon_bg"
+                        android:backgroundTint="?attr/background_color_bottom_as_tint"
+                        android:backgroundTintMode="src_over"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_mood_happy"
+                        android:tint="?attr/colorAccent" />
+
+                    <ProgressBar
+                        android:id="@+id/third_progress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="14dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_weight="1"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/style_progressbar_accent"
+                        tools:ignore="InefficientWeight" />
 
                     <TextView
-                        android:id="@+id/sad_text"
+                        android:id="@+id/third_percentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:gravity="bottom"
-                        android:text="-"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="36sp"
+                        android:text="65天"
+                        android:textColor="?attr/text_color_secondary"
                         tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/textView40"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/day"
-                        android:textColor="?attr/text_color_secondary" />
-
                 </LinearLayout>
+
             </LinearLayout>
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:orientation="vertical">
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="?attr/background_color_second"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp">
 
-            <TextView
-                android:id="@+id/textView20"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="sans-serif-black"
-                android:text="@string/usercenter_ut_laf_title"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="18sp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingBottom="16dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/laf_list"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="@string/community_name"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:id="@+id/my_post"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/radius_accent_round_icon_bg"
+                        android:padding="4dp"
+                        android:tint="?attr/colorAccent"
+                        app:srcCompat="@drawable/ic_post" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/my_post"
+                        android:textColor="?attr/text_color_primary"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/my_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/radius_accent_round_icon_bg"
+                        android:padding="3dp"
+                        android:tint="?attr/colorAccent"
+                        app:srcCompat="@drawable/ic_notifications" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="@string/my_message"
+                        android:textColor="?attr/text_color_primary"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/message_num"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/radius_grey_round_icon_bg"
+                        android:gravity="center"
+                        android:text="12"
+                        android:textColor="@color/material_text_icon_white"
+                        android:textSize="10sp" />
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="?attr/background_color_second"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="@string/explore_friends"
+                    android:textColor="?attr/text_color_primary"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:id="@+id/find_school_mate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@drawable/radius_accent_round_icon_bg"
+                        android:padding="4dp"
+                        android:tint="?attr/colorAccent"
+                        app:srcCompat="@drawable/ic_university" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/school_mate"
+                        android:textColor="?attr/text_color_primary"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

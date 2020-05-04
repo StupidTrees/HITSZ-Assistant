@@ -2,26 +2,24 @@ package com.stupidtree.hita.activities;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
-import androidx.annotation.NonNull;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.os.Bundle;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
+import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.popup.FragmentEmptyClassroomDialog;
 import com.stupidtree.hita.hita.TextTools;
-import com.stupidtree.hita.R;
 import com.stupidtree.hita.timetable.TimetableCore;
 
 import org.jsoup.Jsoup;
@@ -32,7 +30,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class ActivityEmptyClassroom extends BaseActivity {
@@ -155,12 +152,12 @@ public class ActivityEmptyClassroom extends BaseActivity {
             super.onPreExecute();
             invalid.setVisibility(View.GONE);
             pageXnxq_Text.setText(timeTableCore.getCurrentCurriculum().getCurriculumCode());
-            pageCourseNumber = TimetableCore.getNumberAtTime(now);
+            pageCourseNumber = TimetableCore.getNumberAtTime(timeTableCore.getNow());
             String nowNumber;
             if(pageCourseNumber<0)nowNumber = "课间/课后";
             else nowNumber = "第"+pageCourseNumber+"节课";
-            pageTime_Text.setText("第"+timeTableCore.getThisWeekOfTerm()+"周 "+ TextTools.words_time_DOW[TimetableCore.getDOW(now)-1]+" "+nowNumber);
-            now.setTimeInMillis(System.currentTimeMillis());
+            pageTime_Text.setText("第" + timeTableCore.getThisWeekOfTerm() + "周 " + TextTools.words_time_DOW[TimetableCore.getDOW(timeTableCore.getNow()) - 1] + " " + nowNumber);
+
             refresh.setRefreshing(true);
         }
 

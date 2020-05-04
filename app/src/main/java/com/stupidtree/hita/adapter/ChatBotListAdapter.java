@@ -1,22 +1,23 @@
 package com.stupidtree.hita.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.hita.ChatBotMessageItem;
-import com.stupidtree.hita.diy.CornerTransform;
+import com.stupidtree.hita.views.CornerTransform;
+import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.
     private List<ChatBotMessageItem> mMsgList;
     private LayoutInflater mInflater;//布局装载器对象
     private Context mContext;
-    OnUserAvatarClickListener mOnUserAvatarClickListener;
+    private OnUserAvatarClickListener mOnUserAvatarClickListener;
 
     public ChatBotListAdapter(Context context, List<ChatBotMessageItem> items) {
         super();

@@ -1,27 +1,22 @@
 package com.stupidtree.hita.jw;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
+import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.stupidtree.hita.HITAApplication.HContext;
 
 public class FragmentJWTS_cjgl extends JWFragment {
 
@@ -46,12 +41,17 @@ public class FragmentJWTS_cjgl extends JWFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v =  inflater.inflate(R.layout.fragment_jwts_cjgl, container, false);
-        initViews(v);
-        return v;
+    protected int getLayoutId() {
+        return R.layout.fragment_jwts_cjgl;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViews(view);
+    }
+
+
 
     void initViews(View v){
         pager = v.findViewById(R.id.cjgl_pager);
@@ -78,8 +78,8 @@ public class FragmentJWTS_cjgl extends JWFragment {
     }
 
     @Override
-    public String getTitle() {
-        return HContext.getString(R.string.jw_tabs_cj);
+    public int getTitle() {
+        return R.string.jw_tabs_cj;
     }
 
     @Override

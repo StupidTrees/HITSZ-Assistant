@@ -1,27 +1,22 @@
 package com.stupidtree.hita.fragments.news;
 
-import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-
-import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityNewsDetail;
 import com.stupidtree.hita.adapter.NewsBulletinRecyclerAdapter;
-import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
+import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.util.ActivityUtils;
+import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,12 +38,11 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
     boolean first = true;
     loadTask pageTask;
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_news, container, false);
-        initList(v);
-        return v;
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initList(view);
     }
 
     @Override
@@ -63,6 +57,7 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
 
     void initList(View v) {
         pullRefreshLayout = v.findViewById(R.id.pullrefresh);
+        pullRefreshLayout.setColorSchemeColors(getColorAccent(), getColorPrimary());
         list = v.findViewById(R.id.list);
         listRes = new ArrayList<>();
         listAdapter = new NewsBulletinRecyclerAdapter(this.getContext(), listRes);
@@ -118,6 +113,11 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
         if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
         pageTask = new loadTask(false);
         pageTask.executeOnExecutor(HITAApplication.TPE);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_news;
     }
 
     class loadTask extends AsyncTask {

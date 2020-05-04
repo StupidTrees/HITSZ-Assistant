@@ -1,58 +1,36 @@
 package com.stupidtree.hita.online;
 
-import android.util.Log;
-import android.util.SparseArray;
-
-import androidx.annotation.WorkerThread;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.stupidtree.hita.activities.ActivityChatbot;
 import com.stupidtree.hita.hita.ChatBotA;
 import com.stupidtree.hita.hita.Chat_SearchEvent;
 import com.stupidtree.hita.hita.Term;
 import com.stupidtree.hita.hita.TextTools;
-import com.stupidtree.hita.timetable.TimetableCore;
-import com.stupidtree.hita.timetable.timetable.EventItem;
-import com.stupidtree.hita.util.JsonUtils;
+import com.stupidtree.hita.timetable.packable.EventItem;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.w3c.dom.Text;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.hita.ChatBotA.propcessSerchEvents;
 
-public class SearchTimetableCore {
-    private HashMap<String, String> cookies;
-
-    private String lastKeyword;
+public class SearchTimetableCore extends SearchCore<Object> {
 
     public SearchTimetableCore() {
-        this.cookies = new HashMap<>();
+
     }
 
-    public void reset() {
-        lastKeyword = "";
+    @Override
+    public int getPageSize() {
+        return 100;
     }
 
-    public String getLastKeyword() {
-        return lastKeyword;
-    }
+    @Override
+    protected List<Object> reloadResult(String text) throws SearchException {
 
-    @WorkerThread
-    public List<Object> searchForResult(String text, List<String> texts) throws SearchException {
+        List<String> texts = Arrays.asList(text.replaceAll(" {2}", " ").split(" "));
         List<String> keywordConditions = new ArrayList<>();
         List<EventItem> UnderTimeCondition = new ArrayList<>();
-        lastKeyword = text;
-        List<Object> res = new ArrayList<>();
+        List res = new ArrayList<>();
         try {
             for (String condition : texts) {
                 List<Term> segment = TextTools.NaiveSegmentation(condition);
@@ -89,4 +67,14 @@ public class SearchTimetableCore {
 
         return res;
     }
+
+    @Override
+    protected List<Object> loadMoreResult(String text) throws SearchException {
+        return new ArrayList<>();
+    }
+
+
+
+
+
 }

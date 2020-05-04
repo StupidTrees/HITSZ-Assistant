@@ -4,20 +4,22 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- 设置toolbar按钮样式-->
         <item name="drawerArrowStyle">@style/left_Drawer_Arrow_Style</item>
-        <item name="text_color_primary">@color/material_text_icon_white</item>
         <item name="text_color_secondary">@color/material_text_icon_white_secondary</item>
-        <item name="toolbar_icon_color">#202020</item>
-        <item name="background_color_bottom">#000000</item>
-        <item name="background_color_second">#242424</item>
-        <item name="background_icon_color_bottom">#11fefefe</item>
-        <item name="background_icon_color_second">#11fefefe</item>
+        <item name="text_color_primary">@color/material_text_icon_white</item>
+        <!--        <item name="android:textColorPrimary">@color/material_text_icon_white</item>-->
+        <!--        <item name="android:textColorSecondary">@color/material_text_icon_white_secondary</item>-->
+        <item name="background_color_bottom">#FF000000</item>
+        <item name="background_color_second">#FF121212</item>
+        <item name="colorControlHighlight">#44FFFFFF</item>
+        <item name="colorControlNormal">#44FFFFFF</item>
+        <item name="background_icon_color_bottom">#22fefefe</item>
+        <item name="background_icon_color_second">#22fefefe</item>
         <item name="background_color_bottom_as_tint">#CF242424</item>
-        <item name="text_color_iconic">#FFFFFF</item>
+        <item name="colorBackgroundFloating">?attr/background_color_second</item>
         <item name="drawer_header_buttons_background">@drawable/drawer_radius_bg</item>
         <item name="toolbarStyle">@style/ToolBarTheme_Light</item>
         <item name="drawer_header_background">@drawable/bg_black</item>
         <item name="color_primary_fade_background">@drawable/gradient_bg_reverse_darkmode</item>
-
     </style>
 
     <style name="MainTabsTextTheme">
@@ -25,10 +27,12 @@
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="CalendarTextTheme">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">?attr/text_color_primary</item>
-    </style>
+    <!--    <style name="AlertDialog" parent="Widget.AppCompat.ButtonBar.AlertDialog">-->
+    <!--        <item name="android:textColorPrimary">?attr/text_color_primary</item>-->
+    <!--        <item name="android:textColorSecondary">?attr/text_color_secondary</item>-->
+    <!--        <item name="android:actionMenuTextColor">?attr/text_color_primary</item>-->
+    <!--    </style>-->
+
 
     <style name="MainTabsTextTheme_normal">
         <item name="android:textSize">16sp</item>
@@ -52,14 +56,13 @@
         <item name="colorFade">@color/ph_fade</item>
         <item name="text_color_primary">@color/ph_accent</item>
         <item name="background_color_bottom">#000000</item>
-        <item name="colorPrimaryLight">@color/ph_primary_light</item>
+        <item name="background_color_second">#202020</item>
     </style>
     <style name="TanTheme" parent="AppTheme">
         <item name="colorPrimary">@color/tan_primary</item>
         <item name="colorPrimaryDark">@color/tan_primary_dark</item>
         <item name="colorAccent">@color/tan_accent</item>
         <item name="colorFade">@color/tan_fade</item>
-        <item name="colorPrimaryLight">@color/tan_primary_light</item>
     </style>
 
     <style name="yadinglvTheme" parent="AppTheme">
@@ -67,7 +70,6 @@
         <item name="colorPrimaryDark">@color/yadinglv_primary_dark</item>
         <item name="colorAccent">@color/yadinglv_accent</item>
         <item name="colorFade">@color/yadinglv_fade</item>
-        <item name="colorPrimaryLight">@color/yadinglv_primary_light</item>
     </style>
 
     <style name="ManjiangHongTheme" parent="AppTheme">
@@ -75,7 +77,19 @@
         <item name="colorPrimaryDark">@color/manjianghong_primary_dark</item>
         <item name="colorAccent">@color/manjianghong_accent</item>
         <item name="colorFade">@color/manjianghong_fade</item>
-        <item name="colorPrimaryLight">@color/manjianghong_primary_light</item>
     </style>
 
+    <style name="CyberPunkTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/cyberpunk_primary</item>
+        <item name="text_color_secondary">@color/cyberpunk_fade</item>
+        <item name="text_color_primary">@color/cyberpunk_primary</item>
+        <item name="colorPrimaryDark">@color/cyberpunk_primary_dark</item>
+        <item name="colorAccent">@color/cyberpunk_primary</item>
+        <item name="colorFade">@color/cyberpunk_fade</item>
+        <item name="background_color_second">#aa000000</item>
+        <item name="android:colorControlHighlight">?attr/colorAccent</item>
+        <item name="drawer_header_buttons_background">@drawable/cyberpunk_drawer_header_buttons
+        </item>
+        <item name="drawer_header_background">@drawable/cyberpunk_drawer_header</item>
+    </style>
 </resources>

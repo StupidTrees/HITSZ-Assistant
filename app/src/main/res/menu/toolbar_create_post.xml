@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.stupidtree.hita.activities.ActivityUserCenter">
+    <!--<item android:title="问答系统" android:id="@+id/action_chatbot"-->
+    <!--android:icon="@drawable/ic_keyboard_voice"-->
+    <!--android:iconTint="?attr/text_color_secondary"-->
+    <!--app:showAsAction="always"-->
+    <!--android:orderInCategory="1200"/>-->
+    <item
+        android:id="@+id/action_done"
+        android:icon="@drawable/bt_guide_done"
+        android:iconTint="?attr/colorControlNormal"
+        android:iconTintMode="src_in"
+        android:title="@string/button_post"
+        app:showAsAction="always"
+        tools:targetApi="o" />
+</menu>

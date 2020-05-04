@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#00000000"
+        android:fitsSystemWindows="true"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
@@ -19,39 +20,45 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:elevation="0dp"
-            android:fitsSystemWindows="true"
             android:gravity="center"
+            android:theme="?attr/toolbarStyle"
             android:minHeight="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:theme="?attr/toolbarStyle" />
+            app:contentInsetStartWithNavigation="0dp"
+            app:layout_collapseMode="none">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:tabIndicator="@color/transparent_none"
-            app:tabMode="scrollable"
-            app:tabPaddingEnd="24dp"
-            app:tabPaddingStart="24dp"
-            app:tabSelectedTextColor="?attr/colorAccent">
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Monday" />
+                android:layout_gravity="center|start"
+                android:background="#00000000"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="@color/transparent_none"
+                app:tabIndicatorFullWidth="false"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="?attr/text_color_primary"
+                app:tabTextAppearance="@style/MainTabsTextTheme"
+                app:tabTextColor="@color/main_tabs_unselected_color">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tuesday" />
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monday" />
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Wednesday" />
-        </com.google.android.material.tabs.TabLayout>
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tuesday" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wednesday" />
+            </com.google.android.material.tabs.TabLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -61,7 +68,7 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:clickable="true"
-        app:layout_behavior="com.stupidtree.hita.diy.mBottomHideBehavior"
+        app:layout_behavior="com.stupidtree.hita.views.mBottomHideBehavior"
         app:srcCompat="@drawable/bt_edit"
         android:focusable="true"
         tools:ignore="RtlHardcoded" />

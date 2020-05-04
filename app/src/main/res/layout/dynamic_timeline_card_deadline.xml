@@ -2,29 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="24dp">
 
     <com.alorma.timeline.RoundTimelineView
         android:id="@+id/timeline"
-        android:layout_width="16dp"
+        android:layout_width="24dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
         app:timeline_alignment="middle"
         app:timeline_drawInternal="false"
-        app:timeline_indicatorColor="?attr/colorPrimary"
+        app:timeline_indicatorColor="?attr/colorAccent"
         app:timeline_indicatorSize="8dp"
         app:timeline_lineColor="?attr/background_icon_color_bottom"
         app:timeline_lineStyle="linear"
-        app:timeline_lineWidth="6dp" />
+        app:timeline_lineWidth="@dimen/timeline_width" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/tl_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -64,7 +64,7 @@
                     android:clickable="false"
                     android:orientation="horizontal"
                     android:visibility="visible"
-                    app:theme="@style/button_ripple_primary_large">
+                    app:theme="@style/button_ripple_accent_large">
 
                     <ImageView
                         android:layout_width="14dp"
@@ -94,7 +94,6 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

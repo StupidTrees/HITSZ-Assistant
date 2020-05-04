@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+    <path
+        android:pathData="M12,2C8.13,2 5,5.13 5,9c0,5.25 7,13 7,13s7,-7.75 7,-13c0,-3.87 -3.13,-7 -7,-7zM12,11.5c-1.38,0 -2.5,-1.12 -2.5,-2.5s1.12,-2.5 2.5,-2.5 2.5,1.12 2.5,2.5 -1.12,2.5 -2.5,2.5z"
+        tools:ignore="VectorRaster">
+
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endX="22"
+                android:endY="22"
+                android:startX="0"
+                android:startY="0"
+                android:type="linear">
+                <item
+                    android:color="?attr/colorPrimary"
+                    android:offset="0"
+                    tools:ignore="VectorRaster" />
+                <item
+                    android:color="?attr/colorFade"
+                    android:offset="1"
+                    tools:ignore="VectorRaster" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

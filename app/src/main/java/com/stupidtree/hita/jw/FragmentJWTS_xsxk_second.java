@@ -1,35 +1,39 @@
 package com.stupidtree.hita.jw;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.util.Pair;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.XSXKListAdapter;
+import com.stupidtree.hita.fragments.BasicRefreshTask;
 import com.stupidtree.hita.util.JsonUtils;
+import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-import static com.stupidtree.hita.HITAApplication.now;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
-public class FragmentJWTS_xsxk_second extends JWFragment implements FragmentJW_xk_popup.XKPageSecond {
+
+public class FragmentJWTS_xsxk_second extends JWFragment
+        implements FragmentJW_xk_popup.XKPageSecond, BasicRefreshTask.ListRefreshedListener2<Pair<List<Map<String, String>>, List<Map<String, String>>>> {
     RecyclerView list;
     XSXKListAdapter listAdapter;
     List<Map<String, String>> lisRes;
@@ -38,54 +42,55 @@ public class FragmentJWTS_xsxk_second extends JWFragment implements FragmentJW_x
     TextView notification;
     FragmentJW_xk_popup.XKPageRoot xkPageRoot;
     protected String type;
-    protected String title;
     protected boolean willRefreshOnResume;
 
 
-    public FragmentJWTS_xsxk_second(FragmentJW_xk_popup.XKPageRoot xkPageRoot,String type, String title) {
-        this.type = type;
-        this.xkPageRoot = xkPageRoot;
-        this.title = title;
+    public static FragmentJWTS_xsxk_second newInstance(String type, int title) {
+        FragmentJWTS_xsxk_second fragment = new FragmentJWTS_xsxk_second();
+        Bundle args = new Bundle();
+        args.putString("type", type);
+        args.putInt("title", title);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public FragmentJWTS_xsxk_second() {
         // Required empty public constructor
     }
 
-
-    public static BaseFragment newInstance() {
-        FragmentJWTS_xsxk_second fragment = new FragmentJWTS_xsxk_second();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+    void setXkPageRoot(FragmentJW_xk_popup.XKPageRoot root) {
+        this.xkPageRoot = root;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            type = getArguments().getString("type");
+        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_jw_xk_second, container, false);
-        initPage(v);
-        initList(v);
-        super.initRefresh(v);
-        return v;
+    protected int getLayoutId() {
+        return R.layout.fragment_jw_xk_second;
     }
 
-    void initPage(View v) {
-       notification = v.findViewById(R.id.xsxk_notification);
+    @Override
+    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(v, savedInstanceState);
+        initList(v);
+        initRefresh(v);
     }
+
 
     void initList(final View v) {
+        notification = v.findViewById(R.id.xsxk_notification);
         list = v.findViewById(R.id.xsxk_list);
         lisRes = new ArrayList<>();
         listResFull = new ArrayList<>();
-        listAdapter = new XSXKListAdapter(v.getContext(), lisRes);
+        listAdapter = new XSXKListAdapter(v.getContext(), lisRes, false);
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new LinearLayoutManager(getActivity()));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
         listAdapter.setOnItemClickListener(new XSXKListAdapter.OnItemClickListener() {
             @Override
             public void OnClick(View view,int position) {
@@ -113,7 +118,8 @@ public class FragmentJWTS_xsxk_second extends JWFragment implements FragmentJW_x
 
     @Override
     public void Refresh() {
-        new refreshListTask(type,xkPageRoot.getXn(),xkPageRoot.getXq(),xkPageRoot.getFilterNoVacancy(),
+        if (xkPageRoot != null) new refreshListTask(this,
+                type, xkPageRoot.getXn(), xkPageRoot.getXq(), xkPageRoot.getFilterNoVacancy(),
                 xkPageRoot.getFilterConflict()).executeOnExecutor(TPE);
     }
 
@@ -128,8 +134,9 @@ public class FragmentJWTS_xsxk_second extends JWFragment implements FragmentJW_x
     }
 
     @Override
-    public String getTitle() {
-        return title;
+    public int getTitle() {
+        assert getArguments() != null;
+        return getArguments().getInt("title");
     }
 
 
@@ -150,9 +157,10 @@ public class FragmentJWTS_xsxk_second extends JWFragment implements FragmentJW_x
                 JsonObject pageDetail = pageInfo.get("xkgzszOne").getAsJsonObject();
                 String begin = JsonUtils.getStringInfo(pageDetail,"ksrq");
                 String end = JsonUtils.getStringInfo(pageDetail,"jsrq");
-                Date beginD = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(begin);
-                Date endD = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(end);
-                return beginD.before(now.getTime())&&endD.after(now.getTime());
+                Date beginD = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).parse(begin);
+                Date endD = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).parse(end);
+                if (beginD == null || endD == null) return false;
+                return beginD.before(timeTableCore.getNow().getTime()) && endD.after(timeTableCore.getNow().getTime());
             }
             return false;
         } catch (Exception e) {
@@ -171,56 +179,67 @@ public class FragmentJWTS_xsxk_second extends JWFragment implements FragmentJW_x
         return xkPageRoot;
     }
 
+    @Override
+    public void onRefreshStart(String id, Boolean[] params) {
+        lisRes.clear();
+        list.setVisibility(View.INVISIBLE);
+        refresh.setRefreshing(true);
+    }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+    @Override
+    public void onListRefreshed(String id, Boolean[] params, Object result) {
+
+    }
+
+    @Override
+    public void onListRefreshed(String id, Boolean[] params, Pair<List<Map<String, String>>, List<Map<String, String>>> result, Object[] others) {
+        String message = null;
+        lisRes.clear();
+        listResFull.clear();
+        lisRes.addAll(result.second);
+        listResFull.addAll(result.first);
+        if (params.length > 1) message = (String) others[1];
+        if (params.length > 0) pageInfo = (JsonObject) others[0];
+        if (message != null) {
+            notification.setVisibility(View.VISIBLE);
+            notification.setText(message);
+        } else notification.setVisibility(View.GONE);
+        refresh.setRefreshing(false);
+        list.setVisibility(View.VISIBLE);
+        listAdapter.notifyDataSetChanged();
+        list.scheduleLayoutAnimation();
     }
 
 
-    class refreshListTask extends RefreshJWPageTask {
+    static class refreshListTask extends BasicRefreshTask<Pair<List<Map<String, String>>, List<Map<String, String>>>> {
         String xklb;
         String xn;
         String xq;
-        Boolean hasButton;
         boolean filter_novacancy,filter_conflict;
 
-        public refreshListTask(String xklb, String xn, String xq, boolean filter_novacancy, boolean filter_conflict) {
+
+        refreshListTask(ListRefreshedListener listRefreshedListener, String xklb, String xn, String xq, boolean filter_novacancy, boolean filter_conflict) {
+            super(listRefreshedListener);
             this.xklb = xklb;
             this.xn = xn;
             this.xq = xq;
             this.filter_novacancy = filter_novacancy;
             this.filter_conflict = filter_conflict;
         }
-//
-//        refreshListTask(String xklb, String xn, String xq) {
-//            this.xklb = xklb;
-//            this.xn = xn;
-//            this.xq = xq;
-//        }
 
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            lisRes.clear();
-            list.setVisibility(View.INVISIBLE);
-            hasButton = false;
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            String toReturn = null;
+        protected Pair<List<Map<String, String>>, List<Map<String, String>>> doInBackground(ListRefreshedListener listRefreshedListener, Boolean... booleans) {
+            JsonObject pageInfo = null;
+            List<Map<String, String>> listResFull = new ArrayList<>();
+            List<Map<String, String>> listRes = new ArrayList<>();
             try {
-                lisRes.clear();
-                listResFull.clear();
                 List<Map<String,String>> res = jwCore.getXKList(xn,xq,xklb,filter_novacancy,filter_conflict);
-                if(res.size()>0&&(res.get(0).get("header")!=null&&res.get(0).get("header").equals("true"))){
+                if (res.size() > 0 && (res.get(0).get("header") != null && Objects.equals(res.get(0).get("header"), "true"))) {
                     Map<String,String> header = res.get(0);
                     try {
-                        pageInfo = new JsonParser().parse(header.get("page")).getAsJsonObject();
-
-                    } catch (Exception e) {
-                        pageInfo = null;
+                        pageInfo = new JsonParser().parse(Objects.requireNonNull(header.get("page"))).getAsJsonObject();
+                    } catch (Exception ignored) {
                     }
                     if(pageInfo!=null&&pageInfo.has("xkgzszOne")){
                         JsonObject pageDetail = pageInfo.get("xkgzszOne").getAsJsonObject();
@@ -232,16 +251,13 @@ public class FragmentJWTS_xsxk_second extends JWFragment implements FragmentJW_x
                             headerTime.put("begin",begin);
                         }
                         if(!TextUtils.isEmpty(end)){
-                           headerTime.put("end",end);
+                            headerTime.put("end", end);
                         }
                         if(headerTime.size()>0){
-                            lisRes.add(headerTime);
+                            listRes.add(headerTime);
                         }
-                        //Log.e("header", String.valueOf(headerTime));
                     }
                     res.remove(header);
-//                    String begin = header.get("begin");
-//                    String end = header.get("end");
 
                 }
                 listResFull.addAll(res);
@@ -252,27 +268,17 @@ public class FragmentJWTS_xsxk_second extends JWFragment implements FragmentJW_x
                     mToShow.put("type",m.get("kcxzmc"));
                     mToShow.put("xs",m.get("zxs")+"学时");
                     mToShow.put("credit",m.get("xf")+"学分");
-                    lisRes.add(mToShow);
+                    listRes.add(mToShow);
                 }
-               // Log.e("map-", String.valueOf(keyToTitle));
+                // Log.e("map-", String.valueOf(keyToTitle));
             } catch (Exception e) {
-                toReturn = null;
                 e.printStackTrace();
             }
-            return toReturn;
+            others = new Object[]{pageInfo};
+            return new Pair<>(listResFull, listRes);
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            if (o != null) {
-                notification.setVisibility(View.VISIBLE);
-                notification.setText(o.toString());
-            } else notification.setVisibility(View.GONE);
-            list.setVisibility(View.VISIBLE);
-            listAdapter.notifyDataSetChanged();
-            list.scheduleLayoutAnimation();
-        }
+
     }
 
 }

@@ -1,16 +1,15 @@
 package com.stupidtree.hita.activities;
 
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
-
 import android.text.TextUtils;
 import android.view.View;
 
-import com.stupidtree.hita.BaseActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.NewsPagerAdapter;
 import com.stupidtree.hita.fragments.news.FragmentNewsBulletin;
@@ -27,7 +26,7 @@ public class ActivityNews extends BaseActivity {
     List<Fragment> fragments;
     TabLayout tab;
     Toolbar toolbar;
-    ActivityLostAndFound fragmentSociety;
+
 
     @Override
     protected void stopTasks() {
@@ -58,10 +57,11 @@ public class ActivityNews extends BaseActivity {
         pager = findViewById(R.id.hitszinfo_pager);
         fragments = new ArrayList<>();
         fragments.add(FragmentNewsIPNews.getInstance("75"));
+        fragments.add(FragmentNewsIPNews.getInstance("77"));
         fragments.add(new FragmentNewsLecture());
         fragments.add(new FragmentNewsBulletin());
         fragments.add(FragmentNewsIPNews.getInstance("116"));
-        fragments.add(FragmentNewsIPNews.getInstance("77"));
+
         pagerAdapter = new NewsPagerAdapter(getSupportFragmentManager(),fragments,getResources().getStringArray(R.array.news_tabs));
         pager.setAdapter(pagerAdapter);
         tab.setTabIndicatorFullWidth(false);

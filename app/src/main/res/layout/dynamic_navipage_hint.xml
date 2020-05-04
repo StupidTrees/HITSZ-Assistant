@@ -5,24 +5,24 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
+    android:layout_marginLeft="@dimen/navi_page_card_margin_start_end"
     android:layout_marginTop="@dimen/navi_page_card_margin_top_bottom"
-    android:layout_marginRight="16dp"
+    android:layout_marginRight="@dimen/navi_page_card_margin_start_end"
     android:layout_marginBottom="@dimen/navi_page_card_margin_top_bottom"
     android:background="@drawable/gradient_bg"
     android:clickable="true"
+    android:focusable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:orientation="vertical"
     app:cardBackgroundColor="?attr/background_color_second"
     app:cardCornerRadius="16dp"
-    app:cardElevation="@dimen/navi_page_card_elevation"
-    android:focusable="true">
+    app:cardElevation="@dimen/navi_page_card_elevation">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="?attr/colorPrimary"
+        android:background="@drawable/gradient_bg_reverse"
         android:orientation="vertical">
 
         <LinearLayout
@@ -36,21 +36,18 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:id="@+id/imageView34"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:tint="@color/material_text_icon_white"
-                app:srcCompat="@drawable/ic_hint"
-/>
+                app:srcCompat="@drawable/ic_hint" />
 
             <TextView
                 android:id="@+id/title"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="8dp"
-                android:layout_weight="1"
                 android:text="@string/navi_hint_text"
                 android:textColor="@color/material_background_white"
                 android:textSize="18sp"

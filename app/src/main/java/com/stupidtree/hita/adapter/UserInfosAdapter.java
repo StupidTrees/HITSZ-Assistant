@@ -1,15 +1,16 @@
 package com.stupidtree.hita.adapter;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.stupidtree.hita.BaseActivity;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.activities.BaseActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class UserInfosAdapter extends RecyclerView.Adapter<UserInfosAdapter.user
             userInfoViewHolder.value.setTextColor(ContextCompat.getColor(context,R.color.material_primary_text));
         }else{
             userInfoViewHolder.value.setText(mBeans.get(i).getValue());
-            userInfoViewHolder.value.setTextColor(context.getColorPrimary());
+            userInfoViewHolder.value.setTextColor(context.getColorAccent());
 
         }
 

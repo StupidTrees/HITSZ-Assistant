@@ -1,12 +1,10 @@
 package com.stupidtree.hita.util;
 
-import android.content.Context;
 import android.widget.Toast;
 
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityAboutHITA;
 import com.stupidtree.hita.activities.ActivityMain;
+import com.stupidtree.hita.activities.BaseActivity;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
 

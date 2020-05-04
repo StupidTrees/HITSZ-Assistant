@@ -9,31 +9,27 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:background="#00000000"
+        android:layout_height="wrap_content"
+        android:background="?attr/color_primary_fade_background"
         android:fitsSystemWindows="true"
-        android:minHeight="180dp"
         app:elevation="0dp">
 
         <net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
-            android:id="@+id/toolbarlayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="180dp"
+            android:id="@+id/collapse"
+            android:layout_height="220dp"
+            android:minHeight="56dp"
             app:collapsedTitleGravity="left|center"
-            app:collapsedTitleTextAppearance="@style/Text_style_18sp_bold_secondary"
-            app:contentScrim="?attr/background_color_bottom"
+            app:collapsedTitleTextAppearance="@style/Text_style_18sp_bold_white"
             app:expandedTitleGravity="left|bottom|center"
-            app:expandedTitleMarginBottom="20dp"
             app:expandedTitleMarginEnd="36dp"
             app:expandedTitleMarginStart="24dp"
-            app:expandedTitleMarginTop="56dp"
-            app:expandedTitleTextAppearance="@style/Text_style_28sp_bold_primary"
+            app:expandedTitleTextAppearance="@style/Text_style_28sp_bold_white"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:maxLines="4"
 
+            app:maxLines="4"
             app:scrimAnimationDuration="200"
-            app:statusBarScrim="?attr/background_color_bottom"
+            app:statusBarScrim="#00000000"
             app:titleEnabled="true"
             app:toolbarId="@+id/toolbar">
 
@@ -41,9 +37,9 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:theme="@style/ToolBarTheme_Light"
                 app:contentInsetStartWithNavigation="0dp"
-                app:layout_collapseMode="pin"
-                app:theme="?attr/toolbarStyle" />
+                app:layout_collapseMode="pin" />
 
             <TextView
                 android:id="@+id/subject_name"
@@ -66,11 +62,18 @@
                 tools:ignore="HardcodedText" />
 
         </net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="@drawable/jw_radius_bg_bottom" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="-8dp"
         android:overScrollMode="never"
         app:behavior_overlapTop="0dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -80,27 +83,110 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <com.github.lzyzsd.circleprogress.ArcProgress
+                android:id="@+id/subject_progress"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="24dp"
+                app:arc_bottom_text="@string/subject_progress_text"
+                app:arc_bottom_text_size="10sp"
+                app:arc_finished_color="?attr/colorAccent"
+                app:arc_progress="43"
+                app:arc_stroke_width="12dp"
+                app:arc_text_color="?attr/colorAccent"
+                app:arc_text_size="28sp"
+                app:arc_unfinished_color="?attr/background_icon_color_bottom" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/subject_card_allcourses"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:transitionName="card"
+                app:cardBackgroundColor="?attr/background_color_second"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/edit_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/subject_title_all_courses"
+                            android:textColor="?attr/text_color_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/course_add"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:clickable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:padding="16dp"
+                            android:theme="@style/button_ripple_control"
+                            android:tint="?attr/colorAccent"
+                            android:tintMode="src_in"
+                            app:srcCompat="@drawable/fab_add" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/subject_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="16dp"
+                        android:nestedScrollingEnabled="false"
+                        android:overScrollMode="never"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
+                android:transitionName="card"
                 app:cardBackgroundColor="?attr/background_color_second"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/gradient_bg_reverse"
-                    android:orientation="vertical"
-                    android:padding="10dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
@@ -109,102 +195,390 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/subject_compulsory"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="12sp"
-                            tools:ignore="NestedWeights" />
+                            android:text="@string/subject_title_info"
+                            android:textColor="?attr/text_color_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:visibility="visible" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/subject_credit"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
+                        <ImageView
+                            android:id="@+id/edit_info"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/subject_total"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="12sp" />
+                            android:layout_marginStart="4dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:padding="16dp"
+                            android:tint="?attr/colorAccent"
+                            android:tintMode="src_in"
+                            app:srcCompat="@drawable/bt_edit"
+                            app:theme="@style/button_ripple_accent" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/subject_exam"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_weight="1"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/subject_attr"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:fontFamily="sans-serif-black"
-                            android:gravity="center"
-                            android:text="必修"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="18sp"
-                            tools:ignore="HardcodedText" />
+                            android:orientation="vertical"
+                            tools:ignore="NestedWeights">
 
-                        <TextView
-                            android:id="@+id/subject_point"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:fontFamily="sans-serif-black"
-                            android:gravity="center"
-                            android:text="3.0"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="18sp"
-                            tools:ignore="HardcodedText" />
 
-                        <TextView
-                            android:id="@+id/subject_totalcourses"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:fontFamily="sans-serif-black"
-                            android:gravity="center"
-                            android:text="3周"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="18sp"
-                            tools:ignore="HardcodedText" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/subject_exam"
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/subject_compulsory"
+                                    android:textColor="?attr/text_color_secondary"
+                                    android:textSize="12sp" />
+
+                                <EditText
+                                    android:id="@+id/edit_attr"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="16dp"
+                                    android:ems="10"
+                                    android:inputType="text"
+                                    android:text="COP2022" />
+
+                                <TextView
+                                    android:id="@+id/subject_attr"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:hint="@string/no_info"
+                                    android:text="COP2022"
+                                    android:textColor="?attr/text_color_primary"
+                                    android:textSize="16sp"
+                                    android:visibility="gone"
+                                    tools:ignore="HardcodedText" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="16dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/subject_credit"
+                                    android:textColor="?attr/text_color_secondary"
+                                    android:textSize="12sp" />
+
+                                <EditText
+                                    android:id="@+id/edit_credit"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="16dp"
+                                    android:ems="10"
+                                    android:inputType="text"
+                                    android:text="COP2022" />
+
+                                <TextView
+                                    android:id="@+id/subject_credit"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:hint="@string/no_info"
+                                    android:text="COP2022"
+                                    android:textColor="?attr/text_color_primary"
+                                    android:textSize="16sp"
+                                    android:visibility="gone"
+                                    tools:ignore="HardcodedText" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="16dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/subject_code"
+                                    android:textColor="?attr/text_color_secondary"
+                                    android:textSize="12sp" />
+
+                                <EditText
+                                    android:id="@+id/edit_code"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="16dp"
+                                    android:ems="10"
+                                    android:inputType="text"
+                                    android:text="COP2022" />
+
+                                <TextView
+                                    android:id="@+id/subject_code"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:hint="@string/no_info"
+                                    android:text="COP2022"
+                                    android:textColor="?attr/text_color_primary"
+                                    android:textSize="16sp"
+                                    android:visibility="gone"
+                                    tools:ignore="HardcodedText" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="16dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/subject_xnxq"
+                                    android:textColor="?attr/text_color_secondary"
+                                    android:textSize="12sp" />
+
+                                <EditText
+                                    android:id="@+id/edit_xnxq"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="16dp"
+                                    android:ems="10"
+                                    android:inputType="text"
+                                    android:text="COP2022" />
+
+                                <TextView
+                                    android:id="@+id/subject_xnxq"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:hint="@string/no_info"
+                                    android:text="2019年春季"
+                                    android:textColor="?attr/text_color_primary"
+                                    android:textSize="16sp"
+                                    android:visibility="gone"
+                                    tools:ignore="HardcodedText" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="16dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/subject_mooc"
+                                    android:textColor="?attr/text_color_secondary"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/subject_mooc"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:hint="@string/no_info"
+                                    android:text="2019年春季"
+                                    android:textColor="?attr/text_color_primary"
+                                    android:textSize="16sp"
+                                    android:visibility="gone"
+                                    tools:ignore="HardcodedText" />
+
+                                <Switch
+                                    android:id="@+id/edit_mooc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="8dp" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:layout_weight="1"
-                            android:fontFamily="sans-serif-black"
-                            android:gravity="center"
-                            android:text="是"
-                            android:textColor="@color/material_text_icon_white"
-                            android:textSize="18sp"
-                            tools:ignore="HardcodedText" />
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/subject_exam"
+                                    android:textColor="?attr/text_color_secondary"
+                                    android:textSize="12sp" />
+
+                                <Switch
+                                    android:id="@+id/edit_exam"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="8dp" />
+
+                                <TextView
+                                    android:id="@+id/subject_exam"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:hint="@string/no_info"
+                                    android:text="其他"
+                                    android:textColor="?attr/text_color_primary"
+                                    android:textSize="16sp"
+                                    android:visibility="gone"
+                                    tools:ignore="HardcodedText" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="16dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/subject_total"
+                                    android:textColor="?attr/text_color_secondary"
+                                    android:textSize="12sp" />
+
+                                <EditText
+                                    android:id="@+id/edit_totalcourse"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="16dp"
+                                    android:ems="10"
+                                    android:inputType="text"
+                                    android:text="COP2022" />
+
+                                <TextView
+                                    android:id="@+id/subject_totalcourses"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:hint="@string/no_info"
+                                    android:text="其他"
+                                    android:textColor="?attr/text_color_primary"
+                                    android:textSize="16sp"
+                                    android:visibility="gone"
+                                    tools:ignore="HardcodedText" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="16dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/subject_type"
+                                    android:textColor="?attr/text_color_secondary"
+                                    android:textSize="12sp" />
+
+                                <EditText
+                                    android:id="@+id/edit_type"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="16dp"
+                                    android:ems="10"
+                                    android:inputType="text"
+                                    android:text="COP2022" />
+
+                                <TextView
+                                    android:id="@+id/subject_type"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:hint="@string/no_info"
+                                    android:text="其他"
+                                    android:textColor="?attr/text_color_primary"
+                                    android:textSize="16sp"
+                                    android:visibility="gone"
+                                    tools:ignore="HardcodedText" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="16dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/subject_school"
+                                    android:textColor="?attr/text_color_secondary"
+                                    android:textSize="12sp" />
+
+                                <EditText
+                                    android:id="@+id/edit_school"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="16dp"
+                                    android:ems="10"
+                                    android:inputType="text"
+                                    android:text="COP2022" />
+
+                                <TextView
+                                    android:id="@+id/subject_school"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:hint="@string/no_info"
+                                    android:singleLine="false"
+                                    android:text="计算机科学与技术学院"
+                                    android:textColor="?attr/text_color_primary"
+                                    android:textSize="16sp"
+                                    android:visibility="gone"
+                                    tools:ignore="HardcodedText" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+
                     </LinearLayout>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="@string/subject_sync_hint" />
                 </LinearLayout>
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -212,9 +586,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:transitionName="card"
                 android:visibility="gone"
                 app:cardBackgroundColor="?attr/background_color_second"
@@ -232,7 +606,10 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:text="@string/subject_jw_detail" />
+                        android:text="@string/subject_jw_detail"
+                        android:textColor="?attr/text_color_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <Space
                         android:layout_width="wrap_content"
@@ -255,13 +632,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="4dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginEnd="12dp"
+                            android:layout_marginBottom="6dp"
+                            android:fontFamily="sans-serif-black"
                             android:text="@string/subjet_jw_detail_click_jump"
-                            android:textColor="?attr/colorAccent" />
+                            android:textColor="?attr/colorAccent"
+                            android:textSize="14sp" />
                     </androidx.cardview.widget.CardView>
+
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -269,222 +650,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:transitionName="card"
-                app:cardBackgroundColor="?attr/background_color_second"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="16dp"
-                        android:layout_weight="1"
-                        android:fontFamily="sans-serif-black"
-                        android:text="@string/subject_title_info"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="18sp"
-                        android:visibility="gone" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="16dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            tools:ignore="NestedWeights">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/subject_code"
-                                    android:textColor="?attr/text_color_secondary"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/subject_code"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="COP2022"
-                                    android:textColor="?attr/text_color_primary"
-                                    android:textSize="16sp"
-                                    tools:ignore="HardcodedText" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="16dp"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/subject_xnxq"
-                                    android:textColor="?attr/text_color_secondary"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/subject_xnxq"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="2019年春季"
-                                    android:textColor="?attr/text_color_primary"
-                                    android:textSize="16sp"
-                                    tools:ignore="HardcodedText" />
-
-                            </LinearLayout>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/subject_type"
-                                    android:textColor="?attr/text_color_secondary"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/subject_type"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="其他"
-                                    android:textColor="?attr/text_color_primary"
-                                    android:textSize="16sp"
-                                    tools:ignore="HardcodedText" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="16dp"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/subject_school"
-                                    android:textColor="?attr/text_color_secondary"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/subject_school"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:singleLine="false"
-                                    android:text="计算机科学与技术学院"
-                                    android:textColor="?attr/text_color_primary"
-                                    android:textSize="16sp"
-                                    tools:ignore="HardcodedText" />
-
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/subject_card_allcourses"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:visibility="visible"
-                app:cardBackgroundColor="?attr/background_color_second"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="16dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:fontFamily="sans-serif-black"
-                        android:text="@string/subject_title_all_courses"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="18sp" />
-
-                    <com.github.lzyzsd.circleprogress.ArcProgress
-                        android:id="@+id/subject_progress"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="16dp"
-                        app:arc_bottom_text="@string/subject_progress_text"
-                        app:arc_finished_color="?attr/colorPrimary"
-                        app:arc_stroke_width="6dp"
-                        app:arc_text_color="?attr/colorPrimary"
-                        app:arc_text_size="28sp"
-                        app:arc_unfinished_color="?attr/background_icon_color_bottom" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/subject_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:nestedScrollingEnabled="false"
-                        android:overScrollMode="never" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/subject_card_score"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:visibility="gone"
                 app:cardBackgroundColor="?attr/background_color_second"
                 app:cardCornerRadius="12dp"
@@ -495,6 +663,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="16dp"
                     android:orientation="vertical">
+
 
                     <LinearLayout
                         android:id="@+id/subject_card_rate"
@@ -524,7 +693,6 @@
                             tools:ignore="HardcodedText" />
 
                         <ImageView
-                            android:id="@+id/imageView26"
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:layout_gravity="center"
@@ -593,7 +761,6 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textView19"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="总成绩："
@@ -620,9 +787,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 app:cardBackgroundColor="?attr/background_color_second"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp">
@@ -637,15 +804,15 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="16dp"
-                        android:fontFamily="sans-serif-black"
                         android:text="@string/subject_color"
                         android:textColor="?attr/text_color_primary"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/color_sample"
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_gravity="center"
                         android:layout_marginStart="8dp"
                         app:srcCompat="@drawable/gradient_round" />
@@ -662,16 +829,33 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="4dp"
                         android:clickable="true"
+                        android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         android:padding="16dp"
-                        android:tint="?attr/colorControlNormal"
+                        android:tint="?attr/colorAccent"
                         android:tintMode="src_in"
-                        app:srcCompat="@drawable/bt_edit"
-                        app:theme="@style/button_ripple_primary"
-                        android:focusable="true" />
+                        app:srcCompat="@drawable/ic_settings"
+                        app:theme="@style/button_ripple_accent" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/delete"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/radius_accent_lgiht_button_bg"
+                android:backgroundTint="?attr/background_color_bottom_as_tint"
+                android:backgroundTintMode="src_over"
+                android:fontFamily="sans-serif-black"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:text="@string/delete_subject"
+                android:textColor="?attr/colorAccent" />
 
 
         </LinearLayout>

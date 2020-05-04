@@ -1,8 +1,6 @@
 package com.stupidtree.hita.fragments.popup;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,8 +18,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.timetable.TimetableCore;
@@ -38,10 +34,9 @@ import java.util.List;
 import java.util.Map;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
-public class FragmentEmptyClassroomDialog extends BottomSheetDialogFragment {
+public class FragmentEmptyClassroomDialog extends FragmentRadiusPopup {
     private String lhName;
     private String lhValue;
     private List<Map> detailRes;
@@ -89,16 +84,14 @@ public class FragmentEmptyClassroomDialog extends BottomSheetDialogFragment {
     }
 
 
+    @Nullable
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = View.inflate(getContext(),R.layout.dialog_emptyclassroom_detail,null);
-        dialog.setContentView(v);
-        ((View)v.getParent()).setBackgroundColor(Color.TRANSPARENT);
         initList(v);
-        return dialog;
-    }
+        return v;
 
+    }
 
     @Override
     public void onResume() {
@@ -253,7 +246,7 @@ public class FragmentEmptyClassroomDialog extends BottomSheetDialogFragment {
                         }
                     }
                     if(!hasMatch) m.put("value",tds.get(0).text());
-                    int dow = TimetableCore.getDOW(now);
+                    int dow = TimetableCore.getDOW(timeTableCore.getNow());
                     int number = pageCourseNumber;
                     int index = (dow-1)*6+(number%2==0?number/2:number/2+1);
                     Log.e("Number", String.valueOf(number));

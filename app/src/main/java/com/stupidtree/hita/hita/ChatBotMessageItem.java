@@ -2,11 +2,11 @@ package com.stupidtree.hita.hita;
 
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.timetable.Subject;
-import com.stupidtree.hita.timetable.TimetableCore;
-import com.stupidtree.hita.timetable.timetable.EventItem;
-import com.stupidtree.hita.timetable.timetable.Task;
 import com.stupidtree.hita.online.Teacher;
+import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.packable.EventItem;
+import com.stupidtree.hita.timetable.packable.Subject;
+import com.stupidtree.hita.timetable.packable.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,11 +49,18 @@ public class ChatBotMessageItem {
             m.put("type","event");
             int icon = R.drawable.ic_chatbot_course;
             switch(ei.eventType){
-                case TimetableCore.TIMETABLE_EVENT_TYPE_COURSE:icon = R.drawable.ic_chatbot_course ;break;
-                case TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT:icon = R.drawable.ic_chatbot_arrangement;break;
-                case TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE:icon = R.drawable.ic_chatbot_deadline;break;
-                case TimetableCore.TIMETABLE_EVENT_TYPE_REMIND:icon = R.drawable.ic_chatbot_remind;break;
-                case TimetableCore.TIMETABLE_EVENT_TYPE_EXAM:icon = R.drawable.ic_chatbot_exam;break;
+                case TimetableCore.COURSE:
+                    icon = R.drawable.ic_chatbot_course;
+                    break;
+                case TimetableCore.ARRANGEMENT:
+                    icon = R.drawable.ic_chatbot_arrangement;
+                    break;
+                case TimetableCore.DDL:
+                    icon = R.drawable.ic_chatbot_deadline;
+                    break;
+                case TimetableCore.EXAM:
+                    icon = R.drawable.ic_chatbot_exam;
+                    break;
             }
             m.put("icon",icon);
             list.add(m);

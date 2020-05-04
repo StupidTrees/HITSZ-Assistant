@@ -1,81 +1,105 @@
 package com.stupidtree.hita.activities;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager;
 import com.github.lzyzsd.circleprogress.ArcProgress;
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.jw.JWException;
-import com.stupidtree.hita.jw.JWFragment;
-import com.stupidtree.hita.timetable.Subject;
-import com.stupidtree.hita.timetable.timetable.EventItem;
+import com.stupidtree.hita.adapter.BaseListAdapter;
 import com.stupidtree.hita.adapter.SubjectCoursesListAdapter;
-import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
+import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
+import com.stupidtree.hita.timetable.packable.EventItem;
+import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.util.ActivityUtils;
+import com.stupidtree.hita.util.EventsUtils;
+import com.stupidtree.hita.views.EditModeHelper;
+
+import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-
+import java.util.Comparator;
+import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-import static com.stupidtree.hita.HITAApplication.now;
+import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
-import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialog;
+import static com.stupidtree.hita.activities.ActivityMain.saveData;
+import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 
-public class ActivitySubject extends BaseActivity {
+public class ActivitySubject extends BaseActivity implements EditModeHelper.EditableContainer {
 
     boolean isFirst = true;
     public static final int RESULT_COLOR_CHANGED = 817;
     Subject subject;
     TextView ratingText;
     RecyclerView courseList;
+    List<EventItem> courseListRes;
     SubjectCoursesListAdapter listAdapter;
     ArcProgress arcProgress;
-    TextView name, point, attr, totalcourses, exam, school, xnxq, type, code, score_qz, score_qm, score_none;
-    CardView card_allcourses;
+    TextView name, point, attr, totalcourses, exam, school, xnxq, type, code, score_qz, score_qm, score_none, mooc;
+    EditText pointEdit, attrEdit, totalcoursesEdit, schoolEdit, xnxqEdit, typeEdit, codeEdit;
+    Switch examEdit, moocEdit;
+    ViewGroup card_all_courses;
     View card_rate, card_color;
     LinearLayout qz_score_layout, qm_score_layout;
-    InitProgressTask pageTask_progress;
     //RefreshRatingTask pageTask_rating;
-    ImageView pickColor, colorSample;
-    InitCourseListTask pageTask_courseList;
+    ImageView pickColor, colorSample, editInfos, addCourse;
+    RefreshCourseListTask pageTask_courseList;
     DecimalFormat df = new DecimalFormat("#0.00");
     CardView jw_detail_entrance;
     CardView jw_detail_button;
+    Button delete;
+    //ImageView course_expand;
+    boolean isCourseExpanded = false;
+    List<EventItem> tempWholeCourses;
 
     boolean useCode;
     String subjectKey;
-
+    boolean editMode = false;
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    BroadcastReceiver receiver;
     //WebView webView;
-
+    SharedPreferences SP;
+    EditModeHelper editModeHelper;
 
     @Override
     protected void stopTasks() {
-        if (pageTask_progress != null && pageTask_progress.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask_progress.cancel(true);
         if (pageTask_courseList != null && pageTask_courseList.getStatus() != AsyncTask.Status.FINISHED)
             pageTask_courseList.cancel(true);
 
@@ -84,28 +108,63 @@ public class ActivitySubject extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true, true, false);
+        setWindowParams(true, false, false);
+        SP = getSharedPreferences("timetable_pref", MODE_PRIVATE);
         useCode = getIntent().getBooleanExtra("useCode", false);
         subjectKey = getIntent().getStringExtra("subject");
-        //requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS);//申请动画
-        //Transition explode = TransitionInflater.from(this).inflateTransition(android.R.transition.explode);
-        //getWindow().setEnterTransition(explode);
         setContentView(R.layout.activity_subject);
-        new InitSubjectTask().executeOnExecutor(TPE);
+        initViews();
+        initToolBar();
+        initCourseList();
+        initReceiver();
+    }
 
+
+    void initReceiver() {
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (isDestroyed()) return;
+                Refresh();
+            }
+        };
+        IntentFilter iF = new IntentFilter(TIMETABLE_CHANGED);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, iF);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     void initViews() {
+        arcProgress = findViewById(R.id.subject_progress);
+        delete = findViewById(R.id.delete);
+        editInfos = findViewById(R.id.edit_info);
+        addCourse = findViewById(R.id.course_add);
         jw_detail_entrance = findViewById(R.id.jw_subject_entrance);
         jw_detail_button = findViewById(R.id.jw_subject_button);
         name = findViewById(R.id.subject_name);
-        point = findViewById(R.id.subject_point);
+        point = findViewById(R.id.subject_credit);
         exam = findViewById(R.id.subject_exam);
         school = findViewById(R.id.subject_school);
         attr = findViewById(R.id.subject_attr);
         code = findViewById(R.id.subject_code);
         type = findViewById(R.id.subject_type);
         xnxq = findViewById(R.id.subject_xnxq);
+        mooc = findViewById(R.id.subject_mooc);
+
+        pointEdit = findViewById(R.id.edit_credit);
+        examEdit = findViewById(R.id.edit_exam);
+        schoolEdit = findViewById(R.id.edit_school);
+        attrEdit = findViewById(R.id.edit_attr);
+        codeEdit = findViewById(R.id.edit_code);
+        typeEdit = findViewById(R.id.edit_type);
+        xnxqEdit = findViewById(R.id.edit_xnxq);
+        totalcoursesEdit = findViewById(R.id.edit_totalcourse);
+        moocEdit = findViewById(R.id.edit_mooc);
+        
         pickColor = findViewById(R.id.pick_color);
         colorSample = findViewById(R.id.color_sample);
         qz_score_layout = findViewById(R.id.score_qz_layout);
@@ -113,59 +172,164 @@ public class ActivitySubject extends BaseActivity {
         score_qz = findViewById(R.id.score_qz);
         score_qm = findViewById(R.id.score_qm);
         totalcourses = findViewById(R.id.subject_totalcourses);
-        card_allcourses = findViewById(R.id.subject_card_allcourses);
+        card_all_courses = findViewById(R.id.subject_card_allcourses);
+        //course_expand = findViewById(R.id.course_expand);
         card_rate = findViewById(R.id.subject_card_rate);
         card_color = findViewById(R.id.subject_card_color);
         //  card_html = findViewById(R.id.subject_card_html);
         score_none = findViewById(R.id.score_none);
 
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog ad = new AlertDialog.Builder(getThis()).setTitle(getString(R.string.delete_subject)).setMessage(getString(R.string.dialog_message_delete_subject)).
+                        setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new deleteSubjectTask(subject.getName()).execute();
+                            }
+                        }).setNegativeButton(getString(R.string.button_cancel), null).
+                        create();
+                ad.show();
+            }
+        });
         pickColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new com.stupidtree.hita.diy.ColorPickerDialog(ActivitySubject.this)
-                        .initColor(defaultSP.getInt("color:" + subject.getName(), Color.YELLOW)).show(new com.stupidtree.hita.diy.ColorPickerDialog.OnColorSelectedListener() {
+                new com.stupidtree.hita.views.ColorPickerDialog(ActivitySubject.this)
+                        .initColor(SP.getInt("color:" + subject.getName(), Color.YELLOW)).show(new com.stupidtree.hita.views.ColorPickerDialog.OnColorSelectedListener() {
                     @Override
                     public void OnSelected(int color) {
-                        defaultSP.edit().putInt("color:" + subject.getName(), color).apply();
+                        SP.edit().putInt("color:" + subject.getName(), color).apply();
                         colorSample.setColorFilter(color);
                         setResult(RESULT_COLOR_CHANGED);
+                        Intent i = new Intent(TIMETABLE_CHANGED);
+                        LocalBroadcastManager.getInstance(getThis()).sendBroadcast(i);
                     }
                 });
-//                new ColorPickerDialog.Builder(ActivitySubject.this)
-//                        .attachAlphaSlideBar(false)
-//                        .attachBrightnessSlideBar(true)
-//                        .setTitle(R.string.pick_color)
-//                        .setPositiveButton(R.string.button_confirm,
-//                                new ColorEnvelopeListener() {
-//                                    @Override
-//                                    public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
-//                                        defaultSP.edit().putInt("color:"+subject.getName(),envelope.getColor()).apply();
-//                                        colorSample.setColorFilter(envelope.getColor());
-//                                        setResult(RESULT_COLOR_CHANGED);
-//                                            }
-//                                })
-//                        .setNegativeButton(R.string.button_cancel,
-//                                new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialogInterface, int i) {
-//                                        dialogInterface.dismiss();
-//                                    }
-//                                })
-//                        .attachAlphaSlideBar(true) // default is true. If false, do not show the AlphaSlideBar.
-//                        .attachBrightnessSlideBar(true)  // default is true. If false, do not show the BrightnessSlideBar.
-//                        .show();
+
             }
         });
+        addCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (subject == null) return;
+                EventItem first = tempWholeCourses.get(0);
+                new FragmentAddEvent().setInitialType("course")
+//                        .setInitialFromTime(first.getStartTime())
+//                        .setInitialToTime(first.getEndTime())
+                        .setInitialTag2(first.getTag2())
+                        .setInitialTag3(first.getTag3())
+                        .setInitialExtraName(subject.getName())
+                        .setExtraEditable(false)
+                        .show(getSupportFragmentManager(), "fae");
+            }
+        });
+
+        pointEdit.setVisibility(View.GONE);
+        examEdit.setVisibility(View.GONE);
+        moocEdit.setVisibility(View.GONE);
+        schoolEdit.setVisibility(View.GONE);
+        attrEdit.setVisibility(View.GONE);
+        codeEdit.setVisibility(View.GONE);
+        typeEdit.setVisibility(View.GONE);
+        xnxqEdit.setVisibility(View.GONE);
+        totalcoursesEdit.setVisibility(View.GONE);
+
+        point.setVisibility(View.VISIBLE);
+        exam.setVisibility(View.VISIBLE);
+        mooc.setVisibility(View.VISIBLE);
+        school.setVisibility(View.VISIBLE);
+        attr.setVisibility(View.VISIBLE);
+        code.setVisibility(View.VISIBLE);
+        type.setVisibility(View.VISIBLE);
+        xnxq.setVisibility(View.VISIBLE);
+        totalcourses.setVisibility(View.VISIBLE);
+//        course_expand.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                toggleCourseExpand();
+//            }
+//        });
+
+        editInfos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editMode = !editMode;
+                switchEditMode();
+                if (!editMode) {
+                    editInfos.setImageResource(R.drawable.bt_edit);
+                    saveEditInfo();
+                    new saveTask().executeOnExecutor(TPE);
+                } else {
+                    editInfos.setImageResource(R.drawable.fab_done);
+                }
+            }
+        });
+
     }
 
+    void switchEditMode() {
+        if (!editMode) {
+            pointEdit.setVisibility(View.GONE);
+            examEdit.setVisibility(View.GONE);
+            moocEdit.setVisibility(View.GONE);
+            schoolEdit.setVisibility(View.GONE);
+            attrEdit.setVisibility(View.GONE);
+            codeEdit.setVisibility(View.GONE);
+            typeEdit.setVisibility(View.GONE);
+            xnxqEdit.setVisibility(View.GONE);
+            totalcoursesEdit.setVisibility(View.GONE);
+            point.setVisibility(View.VISIBLE);
+            exam.setVisibility(View.VISIBLE);
+            mooc.setVisibility(View.VISIBLE);
+            school.setVisibility(View.VISIBLE);
+            attr.setVisibility(View.VISIBLE);
+            code.setVisibility(View.VISIBLE);
+            type.setVisibility(View.VISIBLE);
+            xnxq.setVisibility(View.VISIBLE);
+            totalcourses.setVisibility(View.VISIBLE);
+        } else {
+            pointEdit.setVisibility(View.VISIBLE);
+            examEdit.setVisibility(View.VISIBLE);
+            moocEdit.setVisibility(View.VISIBLE);
+            schoolEdit.setVisibility(View.VISIBLE);
+            attrEdit.setVisibility(View.VISIBLE);
+            codeEdit.setVisibility(View.VISIBLE);
+            typeEdit.setVisibility(View.VISIBLE);
+            xnxqEdit.setVisibility(View.VISIBLE);
+            totalcoursesEdit.setVisibility(View.VISIBLE);
+
+            pointEdit.setText(point.getText());
+            examEdit.setChecked(subject.isExam());
+            moocEdit.setChecked(subject.isMOOC());
+            schoolEdit.setText(school.getText());
+            attrEdit.setText(attr.getText());
+            codeEdit.setText(code.getText());
+            typeEdit.setText(type.getText());
+            xnxqEdit.setText(xnxq.getText());
+            totalcoursesEdit.setText(totalcourses.getText());
+
+            point.setVisibility(View.GONE);
+            exam.setVisibility(View.GONE);
+            mooc.setVisibility(View.GONE);
+            school.setVisibility(View.GONE);
+            attr.setVisibility(View.GONE);
+            code.setVisibility(View.GONE);
+            type.setVisibility(View.GONE);
+            xnxq.setVisibility(View.GONE);
+            totalcourses.setVisibility(View.GONE);
+        }
+    }
     void initToolBar() {
 //        toolbarLayout = findViewById(R.id.toolbarlayout);
 //        toolbarLayout.setExpandedTitleColor(getTextColorPrimary());
 //        toolbarLayout.setCollapsedTitleTextColor(getTextColorSecondary());
         //toolbarLayout.setTitle(subject.name);
+        collapsingToolbarLayout = findViewById(R.id.collapse);
         Toolbar toolbar = findViewById(R.id.toolbar);
         ratingText = findViewById(R.id.text_rate);
-        toolbar.setTitle(subject.getName());
+        //toolbar.setTitle(subject.getName());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -190,14 +354,31 @@ public class ActivitySubject extends BaseActivity {
 
     }
 
+    void saveEditInfo() {
+        subject.setExam(examEdit.isChecked());
+        subject.setMOOC(moocEdit.isChecked());
+        subject.setCompulsory(attrEdit.getText().toString());
+        subject.setCredit(pointEdit.getText().toString());
+        subject.setTotalCourses(totalcoursesEdit.getText().toString());
+        subject.setCode(codeEdit.getText().toString());
+        subject.setType(typeEdit.getText().toString());
+        subject.setXnxq(xnxqEdit.getText().toString());
+        subject.setSchool(schoolEdit.getText().toString());
+    }
+
+    void Refresh() {
+        new InitSubjectTask().executeOnExecutor(TPE);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_subject, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    void setInfos() {
+    void setInfo() {
+        if (subject == null) return;
 //        Log.e("id",subject.getId());
+        collapsingToolbarLayout.setTitle(subject.getName());
         name.setText(subject.getName());
         attr.setText(subject.getCompulsory());
         point.setText(subject.getCredit());
@@ -205,15 +386,16 @@ public class ActivitySubject extends BaseActivity {
         code.setText(subject.getCode());
         xnxq.setText(subject.getXnxq());
         type.setText(subject.getType());
-        colorSample.setColorFilter(defaultSP.getInt("color:" + subject.getName(), Color.YELLOW));
+        colorSample.setColorFilter(SP.getInt("color:" + subject.getName(), Color.YELLOW));
         totalcourses.setText(subject.getTotalCourses());
-        exam.setText((subject.isExam() ? "是" : "否") + (subject.isDefault() ? "(默认)" : ""));
+        exam.setText(subject.isExam() ? getString(R.string.yes) : getString(R.string.no));
+        mooc.setText(subject.isMOOC() ? getString(R.string.yes) : getString(R.string.no));
         if (subject.isMOOC()) {
             card_rate.setVisibility(View.GONE);
-            card_color.setVisibility(View.GONE);
+//            card_color.setVisibility(View.GONE);
             arcProgress.setVisibility(View.GONE);
-            card_allcourses.setVisibility(View.GONE);
-            courseList.setVisibility(View.GONE);
+            card_all_courses.setVisibility(View.GONE);
+//            courseList.setVisibility(View.GONE);
         }
 
         if (subject.getScores().size() == 0) {
@@ -258,88 +440,184 @@ public class ActivitySubject extends BaseActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (editModeHelper.isEditMode()) editModeHelper.closeEditMode();
+        else if (editMode) editInfos.callOnClick();
+        else super.onBackPressed();
+    }
+
     void initCourseList() {
         courseList = findViewById(R.id.subject_recycler);
+        tempWholeCourses = new ArrayList<>();
+        courseListRes = new ArrayList<>();
+        listAdapter = new SubjectCoursesListAdapter(ActivitySubject.this, courseListRes);
+        courseList.setAdapter(listAdapter);
+//        courseList.setLayoutManager(new StaggeredGridLayoutManager(3,
+//                StaggeredGridLayoutManager.HORIZONTAL));
+        courseList.setLayoutManager(ChipsLayoutManager.newBuilder(this)
+                .setOrientation(ChipsLayoutManager.HORIZONTAL)
+                .setMaxViewsInRow(3)
+//                .setRowBreaker(new IRowBreaker() {
+//                    @Override
+//                    public boolean isItemBreakRow(int i) {
+//                        return i%3==0;
+//                    }
+//                })
+                .build());
+        listAdapter.setOnItemClickListener(new BaseListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View card, int position) {
+                if (courseListRes.get(position).getEventType() == EventItem.TAG) {
+//                  String name = courseListRes.get(position).getMainName();
+//                  if(name.equals("more")){
+//                      togg
+//                  }
+                    toggleCourseExpand();
+                } else EventsUtils.showEventItem(getThis(), courseListRes.get(position));
+            }
+        });
+        listAdapter.setOnItemLongClickListener(new BaseListAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view, int position) {
+                if (editModeHelper.isEditMode()) return false;
+                editModeHelper.activateEditMode(position);
+                return true;
+            }
+        });
+        editModeHelper = new EditModeHelper(this, listAdapter, this);
+        editModeHelper.init(this, R.id.edit_bar, R.layout.edit_mode_bar_2);
+        editModeHelper.closeEditMode();
+    }
+
+    void refreshCourseList() {
         if (pageTask_courseList != null && pageTask_courseList.getStatus() != AsyncTask.Status.FINISHED)
             pageTask_courseList.cancel(true);
-        pageTask_courseList = new InitCourseListTask();
+        pageTask_courseList = new RefreshCourseListTask();
         pageTask_courseList.executeOnExecutor(HITAApplication.TPE);
+    }
+
+    @Override
+    public void onEditClosed() {
 
     }
 
-    void initProgress() {
-        arcProgress = findViewById(R.id.subject_progress);
-        //arcProgress.setTextColor(getColorAccent());
-        if (pageTask_progress != null && pageTask_progress.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask_progress.cancel(true);
-        pageTask_progress = new InitProgressTask();
-        pageTask_progress.executeOnExecutor(HITAApplication.TPE);
+    @Override
+    public void onEditStarted() {
+
     }
 
-    @SuppressLint("StaticFieldLeak")
-    class InitProgressTask extends AsyncTask<String, Integer, Integer> {
+    @Override
+    public void onItemCheckedChanged(int position, boolean checked, int currentSelected) {
 
-        @Override
-        protected Integer doInBackground(String... strings) {
-            int finished = 0, unfinished = 0;
-            for (EventItem ei : subject.getCourses()) {
-                if (ei.hasPassed(now)) finished++;
-                else unfinished++;
+    }
+
+    @Override
+    public void onDelete(Collection toDelete) {
+        new deleteCoursesTask(toDelete).execute();
+    }
+
+    void toggleCourseExpand() {
+        Comparator<EventItem> comparator = new Comparator<EventItem>() {
+            @Override
+            public int compare(EventItem o1, EventItem o2) {
+                if (o1.getEventType() == EventItem.TAG && o2.getEventType() == EventItem.TAG)
+                    return 0;
+                else return o1.compareTo(o2);
             }
-            float x = ((float) finished) * 100.0f / (float) (finished + unfinished);
-            return (int) x;
+        };
+        BaseListAdapter.RefreshJudge<EventItem> refreshJudge = new BaseListAdapter.RefreshJudge<EventItem>() {
+            @Override
+            public boolean judge(EventItem data) {
+                return data.getEventType() == EventItem.TAG;
+            }
+        };
+        //   MaterialCircleAnimator.rotateTo(!isCourseExpanded,course_expand);
+        if (isCourseExpanded) {
+            int max = Math.min(tempWholeCourses.size(), 5);
+            List<EventItem> temp = new ArrayList<>(tempWholeCourses.subList(0, max));
+            if (tempWholeCourses.size() > 5) temp.add(EventItem.getTagInstance("more"));
+            if (max > 0) listAdapter.notifyItemChangedSmooth(temp, refreshJudge, comparator);
+            isCourseExpanded = false;
+        } else {
+            List<EventItem> temp = new ArrayList<>(tempWholeCourses);
+            temp.add(EventItem.getTagInstance("less"));
+            listAdapter.notifyItemChangedSmooth(temp, refreshJudge, comparator);
+            isCourseExpanded = true;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Refresh();
+    }
+
+    class RefreshCourseListTask extends AsyncTask<String, Integer, ArrayList<EventItem>> {
+
+        float percentage;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             arcProgress.setMax(100);
-            arcProgress.setProgress(0);
         }
-
-        @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
-            arcProgress.setProgress(integer);
-        }
-    }
-
-
-    @SuppressLint("StaticFieldLeak")
-    class InitCourseListTask extends AsyncTask<String, Integer, ArrayList<EventItem>> {
 
         @Override
         protected ArrayList<EventItem> doInBackground(String... strings) {
             ArrayList<EventItem> result = subject.getCourses();
-            Collections.sort(result);
+            Collections.sort(result, new Comparator<EventItem>() {
+                @Override
+                public int compare(EventItem o1, EventItem o2) {
+                    return o1.compareTo(o2);
+                }
+            });
+            int finished = 0, unfinished = 0;
+            for (EventItem ei : result) {
+                if (ei.hasPassed(timeTableCore.getNow())) finished++;
+                else unfinished++;
+            }
+            percentage = ((float) finished) * 100.0f / (float) (finished + unfinished);
             return result;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<EventItem> eventItems) {
+        protected void onPostExecute(final ArrayList<EventItem> eventItems) {
             super.onPostExecute(eventItems);
-            if (eventItems != null) {
-                listAdapter = new SubjectCoursesListAdapter(ActivitySubject.this, eventItems);
-                courseList.setAdapter(listAdapter);
-                LinearLayoutManager ll = new WrapContentLinearLayoutManager(ActivitySubject.this, LinearLayoutManager.HORIZONTAL, false);
-                courseList.setLayoutManager(ll);
-                listAdapter.setOnItemClickListener(new SubjectCoursesListAdapter.OnItemClickListener() {
-                    @Override
-                    public void OnClick(View v, int position, EventItem ei) {
-//                        Intent i = new Intent(ActivitySubject.this, ActivityCourse.class);
-//                        Bundle b = new Bundle();
-//                        b.putSerializable("eventitem", ei);
-//                        i.putExtra("showSubject", false);
-//                        i.putExtras(b);
-//                        ActivitySubject.this.startActivity(i);
-                        showEventDialog(ActivitySubject.this, ei, v, null);
-                    }
-                });
+            tempWholeCourses.clear();
+            tempWholeCourses.addAll(eventItems);
+            if (isCourseExpanded) {
+                List<EventItem> temp = new ArrayList<>(tempWholeCourses);
+                temp.add(EventItem.getTagInstance("less"));
+                listAdapter.notifyItemChangedSmooth(temp);
+            } else {
+                int max = Math.min(tempWholeCourses.size(), 5);
+                List<EventItem> temp = new ArrayList<>(tempWholeCourses.subList(0, max));
+                if (tempWholeCourses.size() > 5) temp.add(EventItem.getTagInstance("more"));
+                if (max > 0)
+                    listAdapter.notifyItemChangedSmooth(temp, true, new Comparator<EventItem>() {
+                        @Override
+                        public int compare(EventItem o1, EventItem o2) {
+                            if (o1.getEventType() == EventItem.TAG && o2.getEventType() == EventItem.TAG)
+                                return 0;
+                            else return o1.compareTo(o2);
+                        }
+                    });
             }
+
+            ValueAnimator va = ValueAnimator.ofInt(arcProgress.getProgress(), (int) percentage);
+            va.setDuration(500);
+            va.setInterpolator(new DecelerateInterpolator());
+            va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    arcProgress.setProgress((int) animation.getAnimatedValue());
+                }
+            });
+            va.start();
 
         }
     }
-
 
     @SuppressLint("StaticFieldLeak")
     class InitSubjectTask extends AsyncTask {
@@ -359,13 +637,9 @@ public class ActivitySubject extends BaseActivity {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             isFirst = false;
+            if (isDestroyed() || isFinishing()) return;
             if ((boolean) o) {
-
-                initViews();
-                initToolBar();
-                initCourseList();
-                initProgress();
-                setInfos();
+                setInfo();
                 Double rate = 0.0;
                 Double sum = 0.0;
                 int size = 0;
@@ -388,57 +662,83 @@ public class ActivitySubject extends BaseActivity {
                         }
                     });
                 }
-            }
-        }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    class RefreshSubjectTask extends AsyncTask {
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            if (!useCode) {
-                subject = timeTableCore.getCurrentCurriculum().getSubjectByName(subjectKey);
+                refreshCourseList();
             } else {
-                subject = timeTableCore.getCurrentCurriculum().getSubjectByCourseCode(subjectKey);
-            }
-            return subject != null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-
-            if ((boolean) o) {
-                setInfos();
-                Double rate = 0.0;
-                Double sum = 0.0;
-                int size = 0;
-                for (Double f : subject.getRatingMap().values()) {
-                    if (f < 0) continue;
-                    sum += f;
-                    size++;
-                }
-                if (size == 0) rate = 0.0;
-                else rate = sum / size;
-                ratingText.setText(df.format(rate) + "/5");
-
-                if (!jwCore.hasLogin() || TextUtils.isEmpty(subject.getId())) {
-                    jw_detail_entrance.setVisibility(View.GONE);
-                } else {
-                    jw_detail_entrance.setVisibility(View.VISIBLE);
-                }
-
-            }else{
+                Toast.makeText(getThis(), "数据库版本过低，请清除APP数据！", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
     }
 
+    class saveTask extends AsyncTask {
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!isFirst) new RefreshSubjectTask().executeOnExecutor(TPE);
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            SQLiteDatabase sql = mDBHelper.getWritableDatabase();
+            sql.update("subject", subject.getContentValues(), "uuid=?", new String[]{subject.getUUID()});
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            Intent i = new Intent(TIMETABLE_CHANGED);
+            LocalBroadcastManager.getInstance(getThis()).sendBroadcast(i);
+            setInfo();
+            saveData();
+        }
+    }
+
+    class deleteCoursesTask extends AsyncTask {
+        Collection<EventItem> target;
+
+        public deleteCoursesTask(Collection<EventItem> target) {
+            this.target = target;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            for (EventItem ei : target) timeTableCore.deleteEvent(ei, true);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            Refresh();
+        }
+    }
+
+    class deleteSubjectTask extends AsyncTask {
+
+        String name;
+
+        public deleteSubjectTask(String name) {
+            this.name = name;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            try {
+                timeTableCore.deleteSubject(name, timeTableCore.getCurrentCurriculum().getCurriculumCode());
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if ((boolean) o) {
+                Toast.makeText(getThis(), R.string.delete_success, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getThis(), R.string.delete_failed, Toast.LENGTH_SHORT).show();
+            }
+            Intent i = new Intent(TIMETABLE_CHANGED);
+            LocalBroadcastManager.getInstance(getThis()).sendBroadcast(i);
+            finish();
+        }
     }
 }

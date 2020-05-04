@@ -17,7 +17,7 @@
 //import android.widget.Toast;
 //
 //
-//import com.stupidtree.hita.BaseFragment;
+//import com.stupidtree.hita.fragments.BaseFragment;
 //import com.stupidtree.hita.HITAApplication;
 //import com.stupidtree.hita.R;
 //import com.stupidtree.hita.activities.ActivityMain;
@@ -216,7 +216,7 @@
 //        tempTo.setTimeInMillis(to.getTime());
 //        int DOW = tempDate.get(Calendar.DAY_OF_WEEK)==1?7:tempDate.get(Calendar.DAY_OF_WEEK)-1;
 //        //Log.e("date",tempDate.toString());
-//        EventItem add = new EventItem(null,timeTableCore.getCurrentCurriculum().curriculumCode,TimetableCore.TIMETABLE_EVENT_TYPE_EXAM,name+"考试",place,"科目代码："+code,time,new HTime(tempFrom),new HTime(tempTo),timeTableCore.getCurrentCurriculum().getWeekOfTerm(tempDate),DOW,false);
+//        EventItem add = new EventItem(null,timeTableCore.getCurrentCurriculum().curriculumCode,TimetableCore.EXAM,name+"考试",place,"科目代码："+code,time,new HTime(tempFrom),new HTime(tempTo),timeTableCore.getCurrentCurriculum().getWeekOfTerm(tempDate),DOW,false);
 //        Log.e("!!",add.toString());
 //        exams.add(add);
 //
@@ -295,7 +295,7 @@
 //        protected void onPreExecute() {
 //            super.onPreExecute();
 //            bt_import_exam.setProgress(true);
-//            timeTableCore.clearEvent(TimetableCore.TIMETABLE_EVENT_TYPE_EXAM);
+//            timeTableCore.clearEvent(TimetableCore.EXAM);
 //        }
 //
 //        @Override

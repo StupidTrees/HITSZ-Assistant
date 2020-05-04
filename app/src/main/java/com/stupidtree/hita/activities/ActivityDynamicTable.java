@@ -1,34 +1,24 @@
 package com.stupidtree.hita.activities;
 
-import androidx.core.content.ContextCompat;
-
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.Switch;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.snackbar.Snackbar;
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
-import cn.bmob.v3.http.I;
-
-import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.timeServiceBinder;
 import static com.stupidtree.hita.timetable.TimeWatcherService.WATCHER_REFRESH;

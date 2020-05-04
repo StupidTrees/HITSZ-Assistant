@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     android:orientation="vertical"
     app:cardBackgroundColor="?attr/background_color_second"
     app:cardCornerRadius="16dp"
@@ -12,9 +14,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:orientation="vertical">
 
         <TextView
@@ -22,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="5"
-            android:text="你觉得呢？"
             android:textColor="?attr/text_color_primary"
             android:textSize="18sp" />
 
@@ -30,16 +31,16 @@
             android:id="@+id/time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:text="2020-2-15"
             android:textColor="?attr/text_color_secondary"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:alpha="0.4"
+            android:alpha="0.3"
             android:background="?android:attr/listDivider" />
 
         <LinearLayout
@@ -59,7 +60,7 @@
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:paddingTop="24dp"
                 android:paddingBottom="16dp"
-                android:tint="@color/red_primary_light"
+                android:tint="@color/red_primary"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_thumb_down"
                 app:theme="@style/attitude_button_ripple_red" />
@@ -127,7 +128,7 @@
                         android:tint="@color/material_background_white"
                         android:tintMode="src_in"
                         app:srcCompat="@drawable/ic_thumb_down"
-                        app:theme="@style/button_ripple_primary" />
+                        app:theme="@style/button_ripple_accent" />
                 </FrameLayout>
 
                 <TextView
@@ -173,7 +174,7 @@
                         android:tint="@color/material_background_white"
                         android:tintMode="src_in"
                         app:srcCompat="@drawable/ic_thumb_up"
-                        app:theme="@style/button_ripple_primary" />
+                        app:theme="@style/button_ripple_accent" />
                 </FrameLayout>
 
             </LinearLayout>

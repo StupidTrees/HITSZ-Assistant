@@ -3,7 +3,6 @@ package com.stupidtree.hita.jw;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -15,19 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.diy.ButtonLoading;
+import com.stupidtree.hita.fragments.popup.FragmentRadiusPopup;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.JsonUtils;
+import com.stupidtree.hita.views.ButtonLoading;
+import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,18 +34,16 @@ import java.util.Map;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 
-public class FragmentJW_xk_popup extends BottomSheetDialogFragment {
+public class FragmentJW_xk_popup extends FragmentRadiusPopup {
 
 
     private static final int XK_TYPE_DIRECT = 179; //直接选方式
     private static final int XK_TYPE_TZY = 246; //填志愿方式
-    RecyclerView list;
-    xkDetailListAdapter listAdapter;
-    Map<String, String> infoFull;
-    List<Map<String, String>> listRes;
-    String type;
-    View view;
-    XKPageSecond xkPageSecond;
+    private xkDetailListAdapter listAdapter;
+    private Map<String, String> infoFull;
+    private List<Map<String, String>> listRes;
+    private String type;
+    private XKPageSecond xkPageSecond;
 
     interface XKPageSecond {
 
@@ -71,11 +66,12 @@ public class FragmentJW_xk_popup extends BottomSheetDialogFragment {
         boolean getFilterConflict();
     }
 
-    public FragmentJW_xk_popup(XKPageSecond xkPageSecond, String type, Map<String, String> listResFull) {
+    FragmentJW_xk_popup(XKPageSecond xkPageSecond, String type, Map<String, String> listResFull) {
         this.infoFull = listResFull;
         this.xkPageSecond = xkPageSecond;
         this.type = type;
     }
+
 
 
     @NonNull
@@ -83,9 +79,7 @@ public class FragmentJW_xk_popup extends BottomSheetDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
         View view = View.inflate(getContext(), R.layout.fragment_jw_xk_popup, null);
-        this.view = view;
         dialog.setContentView(view);
-        ((View) view.getParent()).setBackgroundColor(Color.TRANSPARENT);
         initList(view);
         return dialog;
     }
@@ -99,9 +93,9 @@ public class FragmentJW_xk_popup extends BottomSheetDialogFragment {
     void initList(View v) {
         listRes = new ArrayList<>();
         listAdapter = new xkDetailListAdapter();
-        list = v.findViewById(R.id.list);
+        RecyclerView list = v.findViewById(R.id.list);
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
     }
 
     class xkDetailListAdapter extends RecyclerView.Adapter<xkDetailListAdapter.XViewHolder> {
@@ -235,7 +229,6 @@ public class FragmentJW_xk_popup extends BottomSheetDialogFragment {
             // Log.e("map", String.valueOf(keyToTitle));
             for (Map.Entry<String, String> etr : infoFull.entrySet()) {
                 if (TextUtils.isEmpty(etr.getValue())) continue;
-                ;
                 Map<String, String> mToShow = new HashMap();
                 if (xkPageSecond.getJWRoot().getKeyToTitleMap().containsKey(etr.getKey())) {
                     String title = xkPageSecond.getJWRoot().getKeyToTitleMap().get(etr.getKey());

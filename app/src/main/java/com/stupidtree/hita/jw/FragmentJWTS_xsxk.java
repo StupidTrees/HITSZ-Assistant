@@ -1,59 +1,42 @@
 package com.stupidtree.hita.jw;
 
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.adapter.XSXKListAdapter;
+import com.stupidtree.hita.adapter.BaseTabAdapter;
+import com.stupidtree.hita.views.MaterialCircleAnimator;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.jwCore;
+import java.util.Objects;
 
 public class FragmentJWTS_xsxk extends JWFragment implements FragmentJW_xk_popup.XKPageRoot {
-    //List<Map<String, String>> xnxqOptions;
-    List<String> spinnerOptionsXNXQ;
+    private List<String> spinnerOptionsXNXQ;
     private ArrayAdapter<? extends String> spinnerAdapterXNXQ;
-   // Map<String,String> keyToTitle;
-    Spinner spinnerXNXQ;
-    ViewPager pager;
-    TabLayout tabs;
-    String xn,xq;
-    boolean filter_no_vacancy,filter_conflict;
-    List<FragmentJWTS_xsxk_second> fragments;
-    CheckBox switch_no_vacancy,switch_conflict;
+    private Spinner spinnerXNXQ;
+    private String xn, xq;
+    private boolean filter_no_vacancy, filter_conflict;
+    private ViewGroup optionsButton;
+
     public FragmentJWTS_xsxk() {
-        // Required empty public constructor
+        /* Required empty public constructor */
     }
 
 
@@ -69,60 +52,87 @@ public class FragmentJWTS_xsxk extends JWFragment implements FragmentJW_xk_popup
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_jwts_xsxk, container, false);
+    public void onAttachFragment(@NonNull Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+        if (childFragment instanceof FragmentJWTS_xsxk_second) {
+            ((FragmentJWTS_xsxk_second) childFragment).setXkPageRoot(this);
+        }
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_jwts_xsxk;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(v, savedInstanceState);
         initPage(v);
         initPager(v);
-        super.initRefresh(v);
-      //  new refreshXNXQTask().executeOnExecutor(TPE);
-        return v;
+        initRefresh(v);
     }
 
-    void initPager(View v){
-        fragments = new ArrayList<>();
-        fragments.add(new FragmentJWTS_xsxk_second_yx(this,getString(R.string.jw_xk_tabs_yx)));
-        fragments.add(new FragmentJWTS_xsxk_second(this,"bx-b-b",getString(R.string.jw_xk_tabs_bx)));
-        fragments.add(new FragmentJWTS_xsxk_second(this,"tsk-b-b",getString(R.string.jw_xk_tabs_wlts)));
-        fragments.add(new FragmentJWTS_xsxk_second(this,"mooc-b-b",getString(R.string.jw_xk_tabs_mooc)));
-        fragments.add(new FragmentJWTS_xsxk_second(this,"ty-b-b",getString(R.string.jw_xk_tabs_ty)));
-        fragments.add(new FragmentJWTS_xsxk_second(this,"cx-b-b",getString(R.string.jw_xk_tabs_cx)));
-        fragments.add(new FragmentJWTS_xsxk_second(this,"xx-b-b",getString(R.string.jw_xk_tabs_xx)));
-        fragments.add(new FragmentJWTS_xsxk_second(this,"cxyx-b-b",getString(R.string.jw_xk_tabs_cxyx)));
-        fragments.add(new FragmentJWTS_xsxk_second(this,"cxsy-b-b",getString(R.string.jw_xk_tabs_cxsy)));
-        fragments.add(new FragmentJWTS_xsxk_second(this,"fankzy-b-b",getString(R.string.jw_xk_tabs_fankzy)));
-        fragments.add(new FragmentJWTS_xsxk_second(this,"kzy-b-b",getString(R.string.jw_xk_tabs_kzy)));
-        pager = v.findViewById(R.id.pager);
-        tabs = v.findViewById(R.id.tabs);
-        pager.setAdapter(new FragmentPagerAdapter(getFragmentManager(),FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+
+    private void initPager(View v) {
+        ViewPager pager = v.findViewById(R.id.pager);
+        TabLayout tabs = v.findViewById(R.id.tabs);
+        final int[] titles = new int[]{R.string.jw_xk_tabs_yx, R.string.jw_xk_tabs_bx, R.string.jw_xk_tabs_wlts, R.string.jw_xk_tabs_mooc
+                , R.string.jw_xk_tabs_ty, R.string.jw_xk_tabs_cx, R.string.jw_xk_tabs_xx, R.string.jw_xk_tabs_cxyx, R.string.jw_xk_tabs_cxsy
+                , R.string.jw_xk_tabs_fankzy, R.string.jw_xk_tabs_kzy};
+        pager.setAdapter(new BaseTabAdapter(getChildFragmentManager(), 11) {
+            @Override
+            protected Fragment initItem(int position) {
+                switch (position) {
+                    case 0:
+                        return FragmentJWTS_xsxk_second_yx.newInstance(R.string.jw_xk_tabs_yx);
+                    case 1:
+                        return FragmentJWTS_xsxk_second.newInstance("bx-b-b", R.string.jw_xk_tabs_bx);
+                    case 2:
+                        return FragmentJWTS_xsxk_second.newInstance("tsk-b-b", R.string.jw_xk_tabs_wlts);
+                    case 3:
+                        return FragmentJWTS_xsxk_second.newInstance("mooc-b-b", R.string.jw_xk_tabs_mooc);
+                    case 4:
+                        return FragmentJWTS_xsxk_second.newInstance("ty-b-b", R.string.jw_xk_tabs_ty);
+                    case 5:
+                        return FragmentJWTS_xsxk_second.newInstance("cx-b-b", R.string.jw_xk_tabs_cx);
+                    case 6:
+                        return FragmentJWTS_xsxk_second.newInstance("xx-b-b", R.string.jw_xk_tabs_xx);
+                    case 7:
+                        return FragmentJWTS_xsxk_second.newInstance("cxyx-b-b", R.string.jw_xk_tabs_cxyx);
+                    case 8:
+                        return FragmentJWTS_xsxk_second.newInstance("cxsy-b-b", R.string.jw_xk_tabs_cxsy);
+                    case 9:
+                        return FragmentJWTS_xsxk_second.newInstance("fankzy-b-b", R.string.jw_xk_tabs_fankzy);
+                    case 10:
+                        return FragmentJWTS_xsxk_second.newInstance("kzy-b-b", R.string.jw_xk_tabs_kzy);
+                }
+                return null;
+            }
+
             @NonNull
             @Override
-            public Fragment getItem(int position) {
-                return fragments.get(position);
-            }
-
-            @Override
-            public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-               // super.destroyItem(container, position, object);
-            }
-
-            @Nullable
-            @Override
             public CharSequence getPageTitle(int position) {
-                return fragments.get(position).getTitle();
+                return getString(titles[position]);
             }
-
-            @Override
-            public int getCount() {
-                return fragments.size();
-            }
-        });
+        }.setDestroyFragment(false));
         tabs.setupWithViewPager(pager);
     }
-    void initPage(View v) {
-        switch_conflict = v.findViewById(R.id.filter_conflict);
-        switch_no_vacancy = v.findViewById(R.id.filter_novacancy);
+
+    private void initPage(View v) {
+        optionsButton = v.findViewById(R.id.more);
+        final ImageView optionsArrow = v.findViewById(R.id.more_arrow);
+        final ExpandableLayout expandableLayout = v.findViewById(R.id.expand);
+        optionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expandableLayout.toggle();
+                MaterialCircleAnimator.rotateTo(expandableLayout.isExpanded(), optionsArrow);
+            }
+        });
+        CheckBox switch_conflict = v.findViewById(R.id.filter_conflict);
+        CheckBox switch_no_vacancy = v.findViewById(R.id.filter_novacancy);
         switch_conflict.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -149,13 +159,13 @@ public class FragmentJWTS_xsxk extends JWFragment implements FragmentJW_xk_popup
                 xn = jwRoot.getXNXQItems().get(position).get("xn");
                 xq = jwRoot.getXNXQItems().get(position).get("xq");
 //                Refresh();
-                for(int i=0;i<fragments.size();i++){
-                    if(i==pager.getCurrentItem()){
-                        JWFragment current = fragments.get(i);
-                        if(current.isResumed()) current.Refresh();
-                        else current.setWillRefreshOnResume(true);
-                    }else{
-                        fragments.get(i).setWillRefreshOnResume(true);
+                for (Fragment f : getChildFragmentManager().getFragments()) {
+                    if (f instanceof JWFragment) {
+                        if (f.isResumed()) {
+                            ((JWFragment) f).Refresh();
+                        } else {
+                            ((JWFragment) f).setWillRefreshOnResume(true);
+                        }
                     }
                 }
             }
@@ -171,8 +181,8 @@ public class FragmentJWTS_xsxk extends JWFragment implements FragmentJW_xk_popup
 
 
     @Override
-    public String getTitle() {
-        return HContext.getString(R.string.jw_tabs_xk);
+    public int getTitle() {
+        return R.string.jw_tabs_xk;
     }
 
     @Override
@@ -186,33 +196,23 @@ public class FragmentJWTS_xsxk extends JWFragment implements FragmentJW_xk_popup
         int i = 0;
         int now = 0;
         for (Map<String, String> item : jwRoot.getXNXQItems()) {
-            if (item.get("sfdqxq").equals("1")) now = i;
+            if (Objects.equals(item.get("sfdqxq"), "1")) now = i;
             spinnerOptionsXNXQ.add(item.get("xnmc")+item.get("xqmc"));
             i++;
         }
         spinnerAdapterXNXQ.notifyDataSetChanged();
         spinnerXNXQ.setSelection(now);
-        //new refreshXNXQTask().executeOnExecutor(TPE);
-//        int i = 0;
-//        int now = 0;
-//        for (Map<String, String> item : jwRoot.getXNXQItems()) {
-//            if (item.get("sfdqxq").equals("1")) now = i;
-//            spinnerOptionsXNXQ.add(item.get("xnmc")+item.get("xqmc"));
-//            i++;
-//        }
-//        spinnerXNXQ.setSelection(now);
-//        spinnerAdapterXNXQ.notifyDataSetChanged();
     }
 
     @Override
     public void refreshAllPages() {
-        for(int i=0;i<fragments.size();i++){
-            if(i==pager.getCurrentItem()){
-                JWFragment current = fragments.get(i);
-                if(current.isResumed()) current.Refresh();
-                else current.setWillRefreshOnResume(true);
-            }else{
-                fragments.get(i).setWillRefreshOnResume(true);
+        for (Fragment f : getChildFragmentManager().getFragments()) {
+            if (f instanceof JWFragment) {
+                if (f.isResumed()) {
+                    ((JWFragment) f).Refresh();
+                } else {
+                    ((JWFragment) f).setWillRefreshOnResume(true);
+                }
             }
         }
     }
@@ -238,9 +238,6 @@ public class FragmentJWTS_xsxk extends JWFragment implements FragmentJW_xk_popup
     }
 
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
 
 
 }

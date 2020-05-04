@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -51,42 +49,80 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|left"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="4dp"
                         android:backgroundTint="@color/material_text_icon_white"
                         android:padding="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/radius_white_lgiht_button_bg"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:orientation="horizontal"
+                        android:paddingStart="12dp"
+                        android:paddingTop="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingBottom="2dp"
+                        android:theme="@style/button_ripple_white">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="选项"
+                            android:textColor="@color/material_text_icon_white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/more_arrow"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
+                <net.cachapa.expandablelayout.ExpandableLayout
+                    android:id="@+id/expand"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="28dp"
-                    android:layout_marginEnd="28dp"
-                    android:layout_marginBottom="24dp"
-                    android:orientation="horizontal"
-                    app:layout_scrollFlags="scroll|enterAlways">
+                    android:layout_height="wrap_content">
 
-                    <CheckBox
-                        android:id="@+id/filter_novacancy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/material_text_icon_white"
-                        android:drawableTint="@color/material_text_icon_white"
-                        android:switchPadding="4dp"
-                        android:text="过滤零余量课程"
-                        android:textColor="@color/material_text_icon_white" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="28dp"
+                        android:layout_marginEnd="28dp"
+                        android:layout_marginBottom="24dp"
+                        android:orientation="horizontal"
+                        app:layout_scrollFlags="scroll|enterAlways">
 
-                    <CheckBox
-                        android:id="@+id/filter_conflict"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:buttonTint="@color/material_text_icon_white"
-                        android:drawableTint="@color/material_text_icon_white"
-                        android:switchPadding="4dp"
-                        android:text="过滤冲突课程"
-                        android:textColor="@color/material_text_icon_white" />
-                </LinearLayout>
+                        <CheckBox
+                            android:id="@+id/filter_novacancy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/material_text_icon_white"
+                            android:drawableTint="@color/material_text_icon_white"
+                            android:switchPadding="4dp"
+                            android:text="过滤零余量课程"
+                            android:textColor="@color/material_text_icon_white" />
+
+                        <CheckBox
+                            android:id="@+id/filter_conflict"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:buttonTint="@color/material_text_icon_white"
+                            android:drawableTint="@color/material_text_icon_white"
+                            android:switchPadding="4dp"
+                            android:text="过滤冲突课程"
+                            android:textColor="@color/material_text_icon_white" />
+                    </LinearLayout>
+                </net.cachapa.expandablelayout.ExpandableLayout>
             </LinearLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

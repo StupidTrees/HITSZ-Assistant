@@ -4,6 +4,8 @@ import androidx.annotation.WorkerThread;
 
 import com.google.gson.Gson;
 import com.stupidtree.hita.hita.TextTools;
+import com.stupidtree.hita.timetable.packable.Curriculum;
+import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.util.DeflaterUtils;
 
 import org.apache.http.util.TextUtils;
@@ -28,6 +30,14 @@ public class CurriculumCreator implements Serializable {
         return new CurriculumCreator(code, name, startDate);
     }
 
+    public String getName() {
+        return curriculum.getName();
+    }
+
+    public void setName(String name) {
+        curriculum.setName(name);
+    }
+
     @WorkerThread
     public CurriculumCreator loadCourse(List<Map<String, String>> data) {
         for (Map<String, String> map : data) {
@@ -47,16 +57,25 @@ public class CurriculumCreator implements Serializable {
             }
             generateCourse(dow, name, teacher, classroom, begin, last, weeks);
         }
-        String curriculumText = new Gson().toJson(data);
-        curriculum.setCurriculumText(DeflaterUtils.zipString(curriculumText));
+//        String curriculumText = new Gson().toJson(data);
+//        curriculum.setCurriculumText(DeflaterUtils.zipString(curriculumText));
         return this;
     }
 
     @WorkerThread
     public CurriculumCreator loadCourse(String dataString){
         if(TextUtils.isEmpty(dataString)) return null;
+        // System.out.println(dataString);
+        String result;
+        List<Map<String, String>> data = new ArrayList<>();
         String decoded = DeflaterUtils.unzipString(dataString);
-        List<Map<String,String>> data = new Gson().fromJson(decoded,List.class);
+        result = decoded == null ? dataString : decoded;
+        try {
+            // System.out.println(result);
+            data.addAll(new Gson().fromJson(result, data.getClass()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return loadCourse(data);
     }
 
@@ -166,8 +185,11 @@ public class CurriculumCreator implements Serializable {
         for (CurriculumItem cit : CurriculumList) {
             if (cit.type == CURRICULUM_TYPE_EXAM) continue;
             Subject tempS = new Subject(curriculum.getCurriculumCode(), cit.name, cit.tag);
-            int subIndex = Subjects.indexOf(tempS);
-            if (subIndex < 0) {
+            boolean contains = false;
+            for (Subject s : Subjects) {
+                if (s.getName().equals(tempS.getName())) contains = true;
+            }
+            if (!contains) {
                 Subjects.add(tempS);
             }
         }

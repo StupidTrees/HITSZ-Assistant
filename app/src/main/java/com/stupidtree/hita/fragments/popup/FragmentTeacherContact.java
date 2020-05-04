@@ -1,7 +1,5 @@
 package com.stupidtree.hita.fragments.popup;
 
-import android.app.Dialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,34 +10,48 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.stupidtree.hita.R;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class FragmentTeacherContact extends BottomSheetDialogFragment {
-    TextView phone,email,address;
-    String phoneS,emailS,addressS;
-    public FragmentTeacherContact(Map<String,String> contact){
-        phoneS = contact.get("phone");
-        emailS = contact.get("email");
-        addressS = contact.get("address");
+public class FragmentTeacherContact extends FragmentRadiusPopup {
+    private TextView phone, email, address;
+    private String phoneS, emailS, addressS;
+
+    public FragmentTeacherContact() {
+
     }
 
-    @NonNull
+    public static FragmentTeacherContact newInstance(Map<String, String> contact) {
+        Bundle b = new Bundle();
+        b.putString("phone", contact.get("phone"));
+        b.putString("email", contact.get("email"));
+        b.putString("address", contact.get("address"));
+        FragmentTeacherContact f = new FragmentTeacherContact();
+        f.setArguments(b);
+        return f;
+    }
+
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            Bundle contact = getArguments();
+            phoneS = contact.getString("phone");
+            emailS = contact.getString("email");
+            addressS = contact.getString("address");
+        }
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.fragment_teacher_contact, null);
-        dialog.setContentView(view);
         initViews(view);
         setInfos();
-        ((View) view.getParent()).setBackgroundColor(Color.TRANSPARENT);
-        return dialog;
+        return view;
     }
-
 
     private void initViews(View v){
         phone = v.findViewById(R.id.phone);

@@ -1,32 +1,29 @@
 package com.stupidtree.hita.activities;
 
 import android.os.AsyncTask;
-import androidx.core.content.ContextCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.os.Bundle;
-import androidx.cardview.widget.CardView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
-import com.stupidtree.hita.timetable.timetable.HTime;
-import com.stupidtree.hita.diy.PickTimePeriodDialog;
-import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.timetable.packable.HTime;
+import com.stupidtree.hita.views.PickTimePeriodDialog;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class ActivityEmptyClassroomDetail extends BaseActivity {
@@ -57,7 +54,7 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
        // xnxq = getIntent().getStringExtra("xnxq");
         cd = getIntent().getStringExtra("cd");
         name = getIntent().getStringExtra("name");
-        pageDow = TimetableCore.getDOW(now);
+        pageDow = TimetableCore.getDOW(timeTableCore.getNow());
         pageWeek = timeTableCore.getThisWeekOfTerm();
         initToolbar();
         initViews();

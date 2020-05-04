@@ -50,7 +50,7 @@
         android:clickable="true"
         android:tint="@color/material_text_icon_white"
         android:visibility="gone"
-        app:layout_behavior="com.stupidtree.hita.diy.mBottomHideBehavior"
+        app:layout_behavior="com.stupidtree.hita.views.mBottomHideBehavior"
         app:srcCompat="@drawable/ic_refresh" />
 
     <androidx.viewpager.widget.ViewPager

@@ -1,19 +1,20 @@
 package com.stupidtree.hita.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.diy.CornerTransform;
+import com.stupidtree.hita.views.CornerTransform;
 
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,6 @@ public class NewsIpNewsListAdapter extends RecyclerView.Adapter<NewsIpNewsListAd
             //newsViewHolder.image.setImageResource(R.drawable.gradient_bg);
         }else{
             newsViewHolder.image.setVisibility(View.VISIBLE);
-
             Glide.with(mContext).load(mBeans.get(i).get("image"))
                     //.apply(RequestOptions.bitmapTransform(new RoundedCorners()))
                     .apply(RequestOptions.bitmapTransform(transformation))

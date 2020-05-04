@@ -5,10 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.util.SparseArray;
 
-import com.stupidtree.hita.timetable.timetable.EventItem;
-import com.stupidtree.hita.timetable.timetable.HTime;
-import com.stupidtree.hita.timetable.timetable.Task;
-import com.stupidtree.hita.timetable.timetable.TimePeriod;
+import com.stupidtree.hita.timetable.packable.EventItem;
+import com.stupidtree.hita.timetable.packable.HTime;
+import com.stupidtree.hita.timetable.packable.Subject;
+import com.stupidtree.hita.timetable.packable.Task;
+import com.stupidtree.hita.timetable.packable.TimePeriod;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,16 +31,16 @@ public class TimeTableGenerator {
 //        from.set(Calendar.MINUTE, 0);
 //        to.set(Calendar.HOUR_OF_DAY, 23);
 //        to.set(Calendar.MINUTE, 59);
-//        TimetableCore.deleteEvent(from, to, TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC);
+//        TimetableCore.deleteEvent(from, to, TimetableCore.DYNAMIC);
 //        List<TimePeriod> breakTime = getBreakTime();
 //        for (TimePeriod tp : breakTime) {
-//            timeTableCore.addEvent(thisWeekOfTerm, TimetableCore.getDOW(now), TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break", "", "", "", tp.start, tp.end, false);
+//            timeTableCore.addEvent(thisWeekOfTerm, TimetableCore.getDOW(timeTableCore.getNow()), TimetableCore.DYNAMIC, "%%%break", "", "", "", tp.start, tp.end, false);
 //        }
 //        List<TimePeriod> spaces = TimetableCore.getSpaces(from, to, minDURATION, -1);
-//        TimetableCore.clearEvent(TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break");
+//        TimetableCore.clearEvent(TimetableCore.DYNAMIC, "%%%break");
 //        Collections.sort(spaces);
 //        for (TimePeriod tp : spaces) {
-//            timeTableCore.addEvent(thisWeekOfTerm, TimetableCore.getDOW(now), TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC, "动态", "", "", "", tp.start, tp.end, false);
+//            timeTableCore.addEvent(thisWeekOfTerm, TimetableCore.getDOW(timeTableCore.getNow()), TimetableCore.DYNAMIC, "动态", "", "", "", tp.start, tp.end, false);
 //        }
 //        Log.e("after:", String.valueOf(spaces));
 //    }
@@ -56,7 +57,7 @@ public class TimeTableGenerator {
         to.add(Calendar.DATE,1);
         List<EventItem> toRemove = new ArrayList<>();
         HashMap<EventItem,Float> courseMap = new HashMap<>();
-        List<EventItem> courses = timeTableCore.getEventFrom(from,to,TimetableCore.TIMETABLE_EVENT_TYPE_COURSE);
+        List<EventItem> courses = timeTableCore.getEventFrom(from, to, TimetableCore.COURSE);
         if(courses==null||courses.size()==0) return;
         boolean skipNoExam = defaultSP.getBoolean("dtt_preview_skip_no_exam",true);
         for(EventItem ei:courses){
@@ -72,7 +73,7 @@ public class TimeTableGenerator {
             Task t = new Task(timeTableCore.getCurrentCurriculum().getCurriculumCode(),"预习"+entry.getKey().mainName);
             t.setType(Task.TYPE_DYNAMIC);
             //t.setLength((int) (totalLength*entry.getValue()/total));
-           // t.arrangeTime(thisWeekOfTerm,TimetableCore.getDOW(now),entry.getKey().week,entry.getKey().DOW,new HTime(now),entry.getKey().startTime,"null");
+            // t.arrangeTime(thisWeekOfTerm,TimetableCore.getDOW(timeTableCore.getNow()),entry.getKey().week,entry.getKey().DOW,new HTime(timeTableCore.getNow()),entry.getKey().startTime,"null");
             t.setPriority(entry.getValue().intValue());
             String tag = entry.getKey().getUuid()+":::"+entry.getKey().week;
             t.setTag(tag);
@@ -91,8 +92,8 @@ public class TimeTableGenerator {
         int minDURATION = 40;
         Calendar date = timeTableCore.getCurrentCurriculum().getDateAtWOT(week, dow);
         Calendar from,to;
-        if(now!=null&&date.get(Calendar.YEAR)==now.get(Calendar.YEAR)&&date.get(Calendar.DAY_OF_YEAR)==now.get(Calendar.DAY_OF_YEAR)){
-            from = (Calendar) now.clone();
+        if (now != null && date.get(Calendar.YEAR) == timeTableCore.getNow().get(Calendar.YEAR) && date.get(Calendar.DAY_OF_YEAR) == timeTableCore.getNow().get(Calendar.DAY_OF_YEAR)) {
+            from = (Calendar) timeTableCore.getNow().clone();
             to = (Calendar) date.clone();
         }else{
             from = (Calendar) date.clone();
@@ -102,15 +103,15 @@ public class TimeTableGenerator {
         }
         to.set(Calendar.HOUR_OF_DAY, 23);
         to.set(Calendar.MINUTE, 59);
-        //timeTableCore.deleteEvent(from, to, TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC);
+        //timeTableCore.deleteEvent(from, to, TimetableCore.DYNAMIC);
         List<TimePeriod> breakTime = getBreakTime();
         List<EventItem> breakTemp = new ArrayList<>();
         for (TimePeriod tp : breakTime) {
-            breakTemp.add(new EventItem("",timeTableCore.getCurrentCurriculum().getCurriculumCode(),TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break","", "", "",tp.start, tp.end, week,dow, false));
+            breakTemp.add(new EventItem("", timeTableCore.getCurrentCurriculum().getCurriculumCode(), TimetableCore.DYNAMIC, "%%%break", "", "", "", tp.start, tp.end, week, dow, false));
         }
         List<TimePeriod> spaces = timeTableCore.getSpaces(breakTemp,from, to, minDURATION, -1);
        // Log.e("spaces", String.valueOf(spaces));
-        //timeTableCore.clearEvent(TimetableCore.TIMETABLE_EVENT_TYPE_DYNAMIC, "%%%break");
+        //timeTableCore.clearEvent(TimetableCore.DYNAMIC, "%%%break");
         Collections.sort(spaces);
        // Log.e( "autoAdd_getTime:the free time is: ",spaces.toString() );
         if(spaces==null||spaces.size()==0) return null;

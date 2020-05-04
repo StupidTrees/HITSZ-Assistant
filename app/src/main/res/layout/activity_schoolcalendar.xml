@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/background_color_bottom">
@@ -20,7 +19,6 @@
             app:toolbarId="@+id/toolbar">
 
             <ImageView
-                android:id="@+id/imageView2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:srcCompat="?attr/color_primary_fade_background" />
@@ -74,7 +72,7 @@
         android:layout_margin="16dp"
         android:clickable="true"
         app:layout_anchorGravity="end|center"
-        app:layout_behavior=".diy.mBottomHideBehavior"
+        app:layout_behavior=".views.mBottomHideBehavior"
         app:srcCompat="@drawable/ic_more" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

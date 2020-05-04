@@ -2,49 +2,39 @@ package com.stupidtree.hita.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import androidx.annotation.WorkerThread;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AlertDialog;
-
 import android.os.Bundle;
-
-import androidx.appcompat.widget.Toolbar;
-
 import android.text.TextUtils;
-import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.stupidtree.hita.BaseActivity;
-import com.stupidtree.hita.HITAApplication;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.adapter.JWTSPagerAdapter;
-import com.stupidtree.hita.diy.MaterialCircleAnimator;
+import com.stupidtree.hita.adapter.BaseTabAdapter;
+import com.stupidtree.hita.fragments.BasicOperationTask;
 import com.stupidtree.hita.jw.FragmentJWTS_cjgl;
-import com.stupidtree.hita.jw.FragmentJWTS_cjgl_grcj;
 import com.stupidtree.hita.jw.FragmentJWTS_grkb;
 import com.stupidtree.hita.jw.FragmentJWTS_xsxk;
 import com.stupidtree.hita.jw.JWException;
 import com.stupidtree.hita.jw.JWFragment;
+import com.stupidtree.hita.views.MaterialCircleAnimator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
-
+import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
@@ -52,12 +42,10 @@ import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 
-public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot {
+public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot, BasicOperationTask.OperationListener<Pair<List<Map<String, String>>, HashMap<String, String>>> {
     public static final String EXTRA_CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
     public static final String EXTRA_CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
     ViewPager pager;
-    JWTSPagerAdapter pagerAdapter;
-    List<JWFragment> fragments;
     TabLayout tabs;
     FloatingActionButton fab;
     CoordinatorLayout rootLayout;
@@ -77,11 +65,10 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot {
         super.onCreate(savedInstanceState);
         setWindowParams(true, false, false);
         setContentView(R.layout.activity_jwts);
-
         initViews();
         initToolbar();
         initPager();
-        new loadBasicInfosTask().executeOnExecutor(TPE);
+        new loadBasicInfoTask(this).executeOnExecutor(TPE);
     }
 
 //    @Override
@@ -110,7 +97,7 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,15 +139,29 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot {
     void initPager() {
         tabs = findViewById(R.id.jwts_tab);
         pager = findViewById(R.id.jwts_pager);
-        fragments = new ArrayList<>();
         keyToTitle = new HashMap<>();
+        final int[] titles = new int[]{R.string.jw_tabs_frkb, R.string.jw_tabs_xk, R.string.jw_tabs_cj};
+        pager.setAdapter(new BaseTabAdapter(getSupportFragmentManager(), 3) {
+            @Override
+            protected Fragment initItem(int position) {
+                switch (position) {
+                    case 0:
+                        return FragmentJWTS_grkb.newInstance();
+                    case 1:
+                        return FragmentJWTS_xsxk.newInstance();
+                    case 2:
+                        return FragmentJWTS_cjgl.newInstance();
+                }
+                return null;
+            }
 
-        // fragments.add(FragmentJWTS_ksxx.newInstance());
-        //  fragments.add(FragmentJWTS_info.newInstance());
-        pagerAdapter = new JWTSPagerAdapter(getSupportFragmentManager(), fragments);
-        pager.setAdapter(pagerAdapter);
+            @NonNull
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return getString(titles[position]);
+            }
+        }.setDestroyFragment(false));
         tabs.setupWithViewPager(pager);
-
     }
 
     @Override
@@ -179,23 +180,58 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot {
         return keyToTitle;
     }
 
-    class loadBasicInfosTask extends AsyncTask {
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+        loading.setVisibility(View.VISIBLE);
+        pager.setVisibility(View.GONE);
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loading.setVisibility(View.VISIBLE);
-            pager.setVisibility(View.GONE);
+    @Override
+    public void onOperationDone(String id, Boolean[] params, Pair<List<Map<String, String>>, HashMap<String, String>> result) {
+        MaterialCircleAnimator.animHide(loading);
+        pager.setVisibility(View.VISIBLE);
+        if (result == null) {
+            jwCore.logOut();
+            Toast.makeText(HContext, "页面过期，请返回重新登录！", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(ActivityJWTS.this, ActivityLoginJWTS.class);
+            startActivity(i);
+            finish();
+        } else {
+            keyToTitle.clear();
+            keyToTitle.putAll(result.second);
+            xnxqItems.clear();
+            xnxqItems.addAll(result.first);
+            if (!TextUtils.isEmpty(getIntent().getStringExtra("terminal"))) {
+                pager.setCurrentItem(Integer.parseInt(Objects.requireNonNull(getIntent().getStringExtra("terminal"))));
+            }
+            // Log.e("refresh2", String.valueOf(getSupportFragmentManager().getFragments()));
+            for (Fragment f : getSupportFragmentManager().getFragments()) {
+                if (f instanceof JWFragment) {
+                    if (f.isResumed()) {
+                        ((JWFragment) f).Refresh();
+                    } else {
+                        ((JWFragment) f).setWillRefreshOnResume(true);
+                    }
+                }
+            }
+        }
+    }
+
+
+    static class loadBasicInfoTask extends BasicOperationTask<Pair<List<Map<String, String>>, HashMap<String, String>>> {
+
+        loadBasicInfoTask(OperationListener listRefreshedListener) {
+            super(listRefreshedListener);
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Pair<List<Map<String, String>>, HashMap<String, String>> doInBackground(OperationListener<Pair<List<Map<String, String>>, HashMap<String, String>>> listRefreshedListener, Boolean... booleans) {
+            List<Map<String, String>> xnxqItems = new ArrayList<>();
+            HashMap<String, String> keyToTitle = new HashMap<>();
             try {
-                xnxqItems.clear();
                 xnxqItems.addAll(jwCore.getXNXQ());
-                keyToTitle.clear();
                 keyToTitle.putAll(jwCore.getXKColumnTitles());
-                return true;
+                return new Pair<>(xnxqItems, keyToTitle);
             } catch (JWException e) {
                 try {
                     xnxqItems.clear();
@@ -203,51 +239,14 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot {
                         xnxqItems.addAll(jwCore.getXNXQ());
                         keyToTitle.clear();
                         keyToTitle.putAll(jwCore.getXKColumnTitles());
-                        return true;
-                    } else return e;
+                        return new Pair<>(xnxqItems, keyToTitle);
+                    } else return null;
                 } catch (JWException e2) {
-                    return e2;
-                }
-            }
-
-        }
-
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            MaterialCircleAnimator.animHide(loading);
-            //  loading.setVisibility(View.GONE);
-            pager.setVisibility(View.VISIBLE);
-            if (o instanceof JWException) {
-                jwCore.logOut();
-                Toast.makeText(HContext, "页面过期，请返回重新登录！", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(ActivityJWTS.this, ActivityLoginJWTS.class);
-                startActivity(i);
-                finish();
-            } else if ((boolean) o) {
-                fragments.clear();
-                fragments.add(FragmentJWTS_grkb.newInstance());
-                fragments.add(FragmentJWTS_xsxk.newInstance());
-                fragments.add(FragmentJWTS_cjgl.newInstance());
-                //  fragments.add(FragmentJWTS_pyfa.newInstance());
-
-
-                pagerAdapter.notifyDataSetChanged();
-                if (!TextUtils.isEmpty(getIntent().getStringExtra("terminal"))) {
-                    pager.setCurrentItem(Integer.parseInt(getIntent().getStringExtra("terminal")));
-                }
-                for (int i = 0; i < fragments.size(); i++) {
-                    if (i == pager.getCurrentItem()) {
-                        JWFragment current = fragments.get(i);
-                        if (current.isResumed()) current.Refresh();
-                        else current.setWillRefreshOnResume(true);
-                    } else {
-                        fragments.get(i).setWillRefreshOnResume(true);
-                    }
+                    return null;
                 }
             }
         }
+
     }
 
 
@@ -265,27 +264,4 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot {
     }
 
 
-class checkLoginTask extends AsyncTask<String, Integer, Boolean> {
-
-    @Override
-    protected Boolean doInBackground(String... strings) {
-        try {
-            return jwCore.loginCheck();
-        } catch (JWException e) {
-            return false;
-        }
-    }
-
-    @Override
-    protected void onPostExecute(Boolean o) {
-        super.onPostExecute(o);
-        if (!o) {
-            jwCore.logOut();
-            Toast.makeText(HContext, "页面过期，请返回重新登录！", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(ActivityJWTS.this, ActivityLoginJWTS.class);
-            startActivity(i);
-            finish();
-        }
-    }
-}
 }

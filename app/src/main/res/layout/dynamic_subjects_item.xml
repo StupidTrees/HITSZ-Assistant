@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/usercenter_subjects_card"
+    android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="24dp"
+    android:layout_marginStart="16dp"
     android:layout_marginTop="8dp"
-    android:layout_marginRight="24dp"
+    android:layout_marginEnd="16dp"
     android:layout_marginBottom="8dp"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
-    android:minHeight="100dp"
     app:cardBackgroundColor="?attr/background_color_second"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp">
@@ -24,6 +23,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -32,23 +34,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginTop="24dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="sans-serif-black"
-                android:maxEms="20"
+                android:layout_marginBottom="8dp"
+                android:maxEms="12"
                 android:singleLine="true"
                 android:text="电工与电子技术（）"
                 android:textColor="?attr/text_color_primary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/usercenter_subjectitem_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
                 android:textColor="?attr/text_color_secondary"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/usercenter_subjectitem_progressBar"
+                style="@android:style/Widget.Material.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_weight="1"
+                android:maxWidth="10dp"
+                android:progressDrawable="@drawable/style_progressbar_accent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,15 +66,8 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
                 android:gravity="center"
-                android:orientation="horizontal">
-
-                <ProgressBar
-                    android:id="@+id/usercenter_subjectitem_progressBar"
-                    style="@android:style/Widget.Material.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_weight="1" />
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/usercenter_subjectitem_progress"
@@ -75,7 +77,8 @@
                     android:singleLine="true"
                     android:text="60%"
                     android:textColor="?attr/text_color_secondary"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>
@@ -90,7 +93,14 @@
             android:foreground="?attr/selectableItemBackground"
             android:padding="16dp"
             app:srcCompat="@drawable/gradient_round"
-            app:theme="@style/button_ripple_primary" />
+            app:theme="@style/button_ripple_accent" />
+
+        <CheckBox
+            android:id="@+id/check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

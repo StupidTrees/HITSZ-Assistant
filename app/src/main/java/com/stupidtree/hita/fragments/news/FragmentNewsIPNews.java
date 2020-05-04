@@ -1,25 +1,21 @@
 package com.stupidtree.hita.fragments.news;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-
-import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityNewsDetail;
 import com.stupidtree.hita.adapter.NewsIpNewsListAdapter;
-import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
+import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.util.ActivityUtils;
+import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,43 +28,38 @@ import java.util.List;
 import java.util.Map;
 
 public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
-    RecyclerView list;
-    int offset = 0;
-    List<Map<String,String>> listRes;
-    NewsIpNewsListAdapter listAdapter;
-    SwipeRefreshLayout pullRefreshLayout;
-    String pageCode;
-    boolean first = true;
-    LoadTask pageTask;
+    private RecyclerView list;
+    private int offset = 0;
+    private List<Map<String, String>> listRes;
+    private NewsIpNewsListAdapter listAdapter;
+    private SwipeRefreshLayout pullRefreshLayout;
+    private String pageCode;
+    private boolean first = true;
+    private LoadTask pageTask;
 
-    public String getPageCode() {
-        return pageCode;
-    }
-
-    public void setPageCode(String pageCode) {
-        this.pageCode = pageCode;
-    }
-
-    FragmentNewsIPNews() {
+    public FragmentNewsIPNews() {
     }
     public static FragmentNewsIPNews getInstance(String pageCode){
         FragmentNewsIPNews r = new FragmentNewsIPNews();
-        r.setPageCode(pageCode);
+        Bundle arg = new Bundle();
+        arg.putString("code", pageCode);
+        r.setArguments(arg);
         return r;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            pageCode = getArguments().getString("code");
+        }
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_news,container,false);
-        initList(v);
 
-        return v;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initList(view);
     }
 
     @Override
@@ -81,8 +72,9 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
         list.smoothScrollToPosition(0);
     }
 
-    void initList(View v){
+    private void initList(View v) {
         pullRefreshLayout = v.findViewById(R.id.pullrefresh);
+        pullRefreshLayout.setColorSchemeColors(getColorAccent(), getColorPrimary());
         list = v.findViewById(R.id.list);
         listRes = new ArrayList<>();
         listAdapter = new NewsIpNewsListAdapter(this.getContext(),listRes);
@@ -136,6 +128,11 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
         if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED)pageTask.cancel(true);
         pageTask = new LoadTask(false);
         pageTask.executeOnExecutor(HITAApplication.TPE);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_news;
     }
 
     class LoadTask extends AsyncTask{

@@ -1,48 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
     android:orientation="vertical"
     android:transitionName="card">
 
 
     <LinearLayout
+        android:id="@+id/name_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:orientation="horizontal">
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:orientation="horizontal"
+        android:paddingStart="24dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/tt_dlg_name"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:focusable="true"
             android:gravity="center|start"
-            android:paddingStart="24dp"
-            android:singleLine="true"
-            android:text="高等数学B"
+            android:paddingEnd="16dp"
+            android:text="名字非常长"
             android:textColor="?attr/text_color_primary"
             android:textSize="20sp"
+            android:textStyle="bold"
             android:transitionName="course_name"
-            android:focusable="true"
             tools:ignore="HardcodedText" />
 
-        <ImageView
-            android:id="@+id/dlg_bt_detail"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="16dp"
-            android:tint="?attr/colorControlNormal"
-            android:tintMode="src_in"
-            app:srcCompat="@drawable/bt_dlg_more"
-            app:theme="@style/button_ripple_primary" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/radius_accent_lgiht_button_bg"
+            android:fontFamily="sans-serif-black"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp"
+            android:text="课程"
+            android:textColor="?attr/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -51,22 +63,24 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
-        android:layout_marginBottom="10dp"
         android:clickable="true"
+        android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
         android:orientation="horizontal"
-        android:focusable="true">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_gravity="top"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center|top"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp"
+            android:backgroundTint="?attr/background_color_bottom_as_tint"
+            android:backgroundTintMode="src_over"
             android:scaleType="fitCenter"
-            android:tint="?attr/colorPrimary"
+            android:tint="?attr/colorAccent"
             app:srcCompat="@drawable/ic_dlg_tt_teacher" />
 
         <LinearLayout
@@ -112,7 +126,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="4dp"
                     android:clickable="false"
-                    android:tint="?attr/colorPrimary"
+                    android:tint="?attr/colorAccent"
                     app:srcCompat="@drawable/bt_detail" />
             </LinearLayout>
 
@@ -124,24 +138,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="24dp"
-        android:layout_marginBottom="10dp"
         android:clickable="true"
+        android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
         android:orientation="horizontal"
-        android:focusable="true">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_gravity="top"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center|top"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp"
+            android:backgroundTint="?attr/background_color_bottom_as_tint"
+            android:backgroundTintMode="src_over"
             android:scaleType="fitCenter"
-            android:tint="?attr/colorPrimary"
+            android:tint="?attr/colorAccent"
             app:srcCompat="@drawable/ic_location2" />
 
         <LinearLayout
@@ -176,7 +191,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:gravity="center"
-                    android:maxEms="8"
+                    android:maxEms="10"
                     android:singleLine="false"
                     android:text="T3502"
                     android:textColor="?attr/text_color_primary"
@@ -190,7 +205,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="4dp"
                     android:clickable="false"
-                    android:tint="?attr/colorPrimary"
+                    android:tint="?attr/colorAccent"
                     app:srcCompat="@drawable/bt_detail" />
             </LinearLayout>
 
@@ -201,21 +216,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="24dp"
-        android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_gravity="top"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center|top"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp"
+            android:backgroundTint="?attr/background_color_bottom_as_tint"
+            android:backgroundTintMode="src_over"
             android:scaleType="fitCenter"
-            android:tint="?attr/colorPrimary"
+            android:tint="?attr/colorAccent"
             app:srcCompat="@drawable/ic_dlg_tt_duration" />
 
         <LinearLayout
@@ -250,27 +266,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="24dp"
-        android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_gravity="top"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center|top"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp"
+            android:backgroundTint="?attr/background_color_bottom_as_tint"
+            android:backgroundTintMode="src_over"
             android:scaleType="fitCenter"
-            android:tint="?attr/colorPrimary"
+            android:tint="?attr/colorAccent"
             app:srcCompat="@drawable/ic_dlg_tt_duration"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -302,22 +319,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="24dp"
-        android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_gravity="top"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center|top"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp"
+            android:backgroundTint="?attr/background_color_bottom_as_tint"
+            android:backgroundTintMode="src_over"
             android:scaleType="fitCenter"
-            android:tint="?attr/colorPrimary"
-            app:srcCompat="@drawable/ic_dlg_timetable_date" />
+            android:tint="?attr/colorAccent"
+            app:srcCompat="@drawable/ic_date_range" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -339,8 +357,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left|center"
-                android:singleLine="true"
-                android:text="3月24日(第三周星期日）"
+                android:singleLine="false"
+                android:text="3月24日\n第三周星期日(今天)"
                 android:textColor="?attr/text_color_primary"
                 android:textSize="18sp"
                 tools:ignore="HardcodedText,RtlHardcoded" />
@@ -348,200 +366,157 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/more_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         android:visibility="gone">
 
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center|top"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="20dp"
+            android:scaleType="fitCenter"
+            android:tint="?attr/colorAccent"
+            app:srcCompat="@drawable/ic_bug_report" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="top"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="20dp"
-                android:scaleType="fitCenter"
-                android:tint="?attr/colorPrimary"
-                app:srcCompat="@drawable/ic_date_range" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_course_rate_p"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="12sp" />
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:text="@string/dialog_course_rate_s"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dialog_this_course_s"
-                    android:textColor="?attr/text_color_secondary"
-                    android:textSize="12sp" />
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="@android:style/Widget.Material.Light.RatingBar.Indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|start"
+                android:layout_marginTop="4dp"
+                android:indeterminate="false"
+                android:isIndicator="false"
+                android:max="5"
+                android:numStars="5"
+                android:rating="2.5" />
 
-                <TextView
-                    android:id="@+id/course_course_in_subject"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dialog_this_course_p"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="18sp" />
-
-                <ProgressBar
-                    android:id="@+id/course_progress"
-                    style="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:progress="50" />
-
-            </LinearLayout>
         </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center|top"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="20dp"
+            android:scaleType="fitCenter"
+            android:tint="?attr/colorAccent"
+            app:srcCompat="@drawable/ic_event_note_black_24dp" />
+
         <LinearLayout
-            android:id="@+id/rating_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="top"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="20dp"
-                android:scaleType="fitCenter"
-                android:tint="?attr/colorPrimary"
-                app:srcCompat="@drawable/ic_dlg_timetable_date" />
-
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:text="@string/dialog_this_course_s"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="12sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dialog_course_rate_p"
-                    android:textColor="?attr/text_color_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dialog_course_rate_s"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="18sp" />
-
-                <RatingBar
-                    android:id="@+id/ratingBar"
-                    style="@android:style/Widget.Material.Light.RatingBar.Indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|start"
-                    android:layout_marginTop="4dp"
-                    android:indeterminate="false"
-                    android:isIndicator="false"
-                    android:max="5"
-                    android:numStars="5"
-                    android:rating="2.5" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/notes_card"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:orientation="horizontal"
-            tools:ignore="NestedWeights"
-            android:focusable="true">
-
-            <ImageView
-                android:id="@+id/imageView38"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="top"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="20dp"
-                android:scaleType="fitCenter"
-                android:tint="?attr/colorPrimary"
-                app:srcCompat="@drawable/ic_dlg_timetable_date" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/course_course_in_subject"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/dialog_this_course_p"
+                android:textColor="?attr/text_color_primary"
+                android:textSize="18sp" />
+
+            <ProgressBar
+                android:id="@+id/course_progress"
+                style="@android:style/Widget.DeviceDefault.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
-                android:orientation="vertical">
+                android:progress="50"
+                android:progressDrawable="@drawable/style_progressbar_accent" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dialog_course_notes"
-                    android:textColor="?attr/text_color_secondary"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/text_note"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center"
-                    android:text="还没有笔记！点击添加"
-                    android:textColor="?attr/text_color_primary"
-                    android:textSize="18sp"
-                    app:layout_collapseMode="parallax"
-                    app:layout_collapseParallaxMultiplier="0.89"
-                    tools:ignore="HardcodedText" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/course_recy_note"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:overScrollMode="never" />
-
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:alpha="0.4"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:paddingLeft="16dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:paddingStart="24dp"
         android:paddingTop="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="16dp"
-        android:tint="?attr/colorControlNormal"
-        app:srcCompat="@drawable/ic_arrow_drop_down"
-        app:theme="@style/button_ripple_primary" />
+        android:paddingEnd="24dp"
+        android:paddingBottom="16dp">
+
+        <ImageView
+            android:id="@+id/subject"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/radius_accent_round_icon_bg"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="10dp"
+            android:theme="@style/button_ripple_accent_small"
+            android:tint="?attr/colorAccent"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_menu_subject" />
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="end"
+            android:background="@drawable/radius_accent_round_icon_bg"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="8dp"
+            android:theme="@style/button_ripple_accent_small"
+            android:tint="?attr/colorAccent"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_delete" />
+    </LinearLayout>
 
 
 </LinearLayout>
+
+

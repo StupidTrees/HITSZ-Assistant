@@ -3,37 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="24dp"
     android:orientation="horizontal">
 
     <com.alorma.timeline.RoundTimelineView
         android:id="@+id/timeline"
-        android:layout_width="16dp"
+        android:layout_width="24dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
         app:timeline_alignment="middle"
         app:timeline_drawInternal="true"
         app:timeline_indicatorColor="?attr/background_icon_color_bottom"
         app:timeline_indicatorSize="8dp"
-        app:timeline_internalDrawable="@drawable/ic_timeline_card_finish"
+        app:timeline_internalColor="?attr/background_color_bottom"
+        app:timeline_internalDrawable="@drawable/ic_circle_done"
+        app:timeline_internalPadding="0dp"
         app:timeline_lineColor="?attr/background_icon_color_bottom"
         app:timeline_lineStyle="linear"
-        app:timeline_lineWidth="4dp"
+        app:timeline_lineWidth="@dimen/timeline_width"
         app:timeline_type="middle" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/tl_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:longClickable="true"
         android:visibility="visible"
         app:cardBackgroundColor="?attr/background_color_second"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="24dp"
         app:cardElevation="0dp">
 
         <LinearLayout
@@ -48,14 +50,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="4dp"
                 android:layout_weight="1"
+                android:alpha="0.8"
                 android:maxEms="11"
                 android:singleLine="true"
                 android:text="学习"
                 android:textColor="?attr/text_color_secondary"
-                android:textSize="10sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tl_tv_time"

@@ -1,91 +1,89 @@
 package com.stupidtree.hita.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.stupidtree.hita.hita.TextTools;
+import androidx.annotation.NonNull;
+
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.timetable.timetable.EventItem;
+import com.stupidtree.hita.timetable.packable.EventItem;
+import com.stupidtree.hita.util.EventsUtils;
 
 import java.util.Calendar;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 
-public class SubjectCoursesListAdapter extends RecyclerView.Adapter<SubjectCoursesListAdapter.CoursesViewHolder> {
+public class SubjectCoursesListAdapter extends BaseCheckableListAdapter<EventItem, SubjectCoursesListAdapter.CoursesViewHolder> {
 
-    List<EventItem> mBeans;
-    LayoutInflater mInflater;
-    Context mContext;
-    OnItemClickListener mOnItemClickListener;
-
+    private static final int PASSED = 672;
+    private static final int TODO = 222;
+    private static final int TAG = 914;
     public SubjectCoursesListAdapter(Context context, List<EventItem> list){
-        mBeans = list;
-        mInflater = LayoutInflater.from(context);
-    }
-    public interface OnItemClickListener{
-        void OnClick(View v, int position, EventItem ei);
+        super(context, list);
     }
 
-    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
-        this.mOnItemClickListener = mOnItemClickListener;
-    }
-
-    @NonNull
     @Override
-    public CoursesViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = mInflater.inflate(R.layout.dynamic_subject_courseitem,viewGroup,false);
-        return new CoursesViewHolder(v);
+    protected int getLayoutId(int viewType) {
+        if (viewType == TAG) return R.layout.dynamic_subject_courseitem_tag;
+        else if (viewType == TODO) return R.layout.dynamic_subject_courseitem;
+        else return R.layout.dynamic_subject_courseitem_passed;
+
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull CoursesViewHolder coursesViewHolder, final int i) {
-        coursesViewHolder.week.setText(String.format(HContext.getString(R.string.week),mBeans.get(i).week)
-                + HContext.getResources().getStringArray(R.array.dow2)[mBeans.get(i).DOW-1]);
-        Calendar c = timeTableCore.getCurrentCurriculum().getDateAtWOT(mBeans.get(i).week,mBeans.get(i).DOW);
-        coursesViewHolder.date.setText(
-                HContext.getResources().getStringArray(R.array.months)[c.get(Calendar.MONTH)]
-                        +" "+String.format(HContext.getString(R.string.date_day),c.get(Calendar.DAY_OF_MONTH)));
-        if(mBeans.get(i).hasPassed(now)) coursesViewHolder.mark.setVisibility(View.VISIBLE);
-        else coursesViewHolder.mark.setVisibility(View.INVISIBLE);
-        if(mOnItemClickListener!=null){
-            coursesViewHolder.item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnItemClickListener.OnClick(v,i,mBeans.get(i));
-                }
-            });
+    public int getItemViewType(int position) {
+        if (mBeans.get(position).getEventType() == EventItem.TAG) return TAG;
+        else return mBeans.get(position).hasPassed(System.currentTimeMillis()) ? PASSED : TODO;
+    }
+
+    @Override
+    public CoursesViewHolder createViewHolder(View v, int viewType) {
+        return new CoursesViewHolder(v, viewType);
+    }
+
+    @Override
+    void bindHolderData(CoursesViewHolder coursesViewHolder, int position, EventItem data) {
+        if (coursesViewHolder.type == TAG) {
+            Log.e("tag", "标签被刷新" + data.getMainName());
+            if (data.getMainName().equals("more")) {
+                coursesViewHolder.icon.setRotation(0f);
+            } else {
+                coursesViewHolder.icon.setRotation(180f);
+            }
+        } else {
+            Calendar c = timeTableCore.getCurrentCurriculum().getDateAtWOT(data.getWeek(), data.getDOW());
+            coursesViewHolder.date.setText(EventsUtils.getDateString(c, true, EventsUtils.TTY_REPLACE));
+            if (EditMode) coursesViewHolder.icon.setVisibility(View.GONE);
+            else coursesViewHolder.icon.setVisibility(View.VISIBLE);
         }
 
     }
+
+    public interface OnItemClickListener {
+        void OnClick(View v, int position, EventItem ei);
+    }
+
 
     @Override
     public int getItemCount() {
         return mBeans.size();
     }
 
-    class CoursesViewHolder extends RecyclerView.ViewHolder{
-        TextView week,date;
-        ImageView mark;
-        LinearLayout item;
-        public CoursesViewHolder(@NonNull View itemView) {
+    class CoursesViewHolder extends BaseCheckableListAdapter.CheckableViewHolder {
+        TextView date;
+        ImageView icon;
+        int type;
+
+        CoursesViewHolder(@NonNull View itemView, int type) {
             super(itemView);
-            week = itemView.findViewById(R.id.subject_courselist_week);
-            mark = itemView.findViewById(R.id.subject_courselist_mark);
+            this.type = type;
+            icon = itemView.findViewById(R.id.icon);
             date = itemView.findViewById(R.id.subject_courselist_month);
-            item = itemView.findViewById(R.id.subject_courseItem);
         }
     }
 }

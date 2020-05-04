@@ -6,28 +6,19 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
-import android.util.Log;
-
-import java.io.File;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.activities.ActivityMain;
+
+import java.io.File;
+import java.util.ArrayList;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
 
@@ -78,8 +69,9 @@ public class DownloadService extends Service {
     private Notification getStartNotification(String name) {
         Notification.Builder builder = new Notification.Builder(this);
         //设置notification信息
-        builder.setSmallIcon(R.mipmap.ic_launcher_foreground)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+        builder.setSmallIcon(R.drawable.notification_logo_small)
+                .setLargeIcon(Icon.createWithResource(getApplicationContext(), R.drawable.logo))
+//    BitmapFactory.decodeResource(getResources(), R.drawable.logo))
                 .setContentTitle(name + getString(R.string.downloading))
                 .setContentText(String.format(getString(R.string.download_file_progress_pattern), taskQueue.size()));
         builder.setProgress(100, 100, true);
@@ -91,8 +83,8 @@ public class DownloadService extends Service {
     private Notification getFailedNotification(String name) {
         Notification.Builder builder = new Notification.Builder(this);
         //设置notification信息
-        builder.setSmallIcon(R.mipmap.ic_launcher_foreground)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+        builder.setSmallIcon(R.drawable.notification_logo_small)
+                .setLargeIcon(Icon.createWithResource(getApplicationContext(), R.drawable.logo))
                 .setContentTitle(getString(R.string.download_fail))
                 .setContentText(name);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -108,8 +100,8 @@ public class DownloadService extends Service {
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(this);
         //设置notification信息
-        builder.setSmallIcon(R.mipmap.ic_launcher_foreground)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+        builder.setSmallIcon(R.drawable.notification_logo_small)
+                .setLargeIcon(Icon.createWithResource(getApplicationContext(), R.drawable.logo))
                 .setContentIntent(pi)
                 .setSubText(getString(R.string.download_open_folder))
                 .setContentTitle(getString(R.string.download_success))

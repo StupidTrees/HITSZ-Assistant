@@ -1,19 +1,12 @@
 package com.stupidtree.hita.activities;
 
 import android.annotation.SuppressLint;
-import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Bundle;
-
-import androidx.appcompat.widget.Toolbar;
-
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -23,24 +16,25 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
+import androidx.appcompat.widget.Toolbar;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.JsonUtils;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class ActivityNewsDetail extends BaseActivity {
@@ -51,6 +45,7 @@ public class ActivityNewsDetail extends BaseActivity {
     WebView wv;
     LoadTask pageTask;
     int mode;
+    List<String> imagesOnPage;
 
 
     @Override
@@ -59,12 +54,30 @@ public class ActivityNewsDetail extends BaseActivity {
             pageTask.cancel(true);
     }
 
+    public static String[] returnImageUrlsFromHtml(String htmlCode) {
+        List<String> imageSrcList = new ArrayList<String>();
+        Pattern p = Pattern.compile("<img\\b[^>]*\\bsrc\\b\\s*=\\s*('|\")?([^'\"\n\r\f>]+(\\.jpg|\\.bmp|\\.eps|\\.gif|\\.mif|\\.miff|\\.png|\\.tif|\\.tiff|\\.svg|\\.wmf|\\.jpe|\\.jpeg|\\.dib|\\.ico|\\.tga|\\.cut|\\.pic|\\b)\\b)[^>]*>", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(htmlCode);
+        String quote = null;
+        String src = null;
+        while (m.find()) {
+            quote = m.group(1);
+            src = (quote == null || quote.trim().length() == 0) ? m.group(2).split("//s+")[0] : m.group(2);
+            imageSrcList.add(src);
+        }
+        if (imageSrcList.size() == 0) {
+            return null;
+        }
+        return imageSrcList.toArray(new String[imageSrcList.size()]);
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true, true, false);
         setContentView(R.layout.activity_news_detail);
+        initToolbar();
         String mS = getIntent().getStringExtra("mode");
         if (mS.equals("hitsz_news")) mode = MODE_HITSZ_NEWS;
         else if (mS.equals("zsw_news")) mode = MODE_ZSW_NEWS;
@@ -72,12 +85,13 @@ public class ActivityNewsDetail extends BaseActivity {
 
         initLink();
         initViews();
-        initToolbar();
+
 
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     void initViews(){
+        imagesOnPage = new ArrayList<>();
         title = findViewById(R.id.detail_title);
         time = findViewById(R.id.detail_time);
         wv = findViewById(R.id.webview);
@@ -96,7 +110,8 @@ public class ActivityNewsDetail extends BaseActivity {
             @Override
             public void showBigImg(String url) {
                 //String url =
-                ActivityUtils.startPhotoDetailActivity(ActivityNewsDetail.this,url);
+                ActivityUtils.showOneImage(getThis(), url);
+                //   ActivityUtils.startPhotoDetailActivity(ActivityNewsDetail.this,url);
             }
         },"jsCallJavaObj");
         wv.setWebViewClient(new WebViewClient(){
@@ -107,20 +122,6 @@ public class ActivityNewsDetail extends BaseActivity {
             }
         });
 
-    }
-
-    /**
-     * 設置網頁中圖片的點擊事件
-     * @param view
-     */
-    private  void setWebImageClick(WebView view) {
-        String jsCode="javascript:(function(){" +
-                "var imgs=document.getElementsByTagName(\"img\");" +
-                "for(var i=0;i<imgs.length;i++){" +
-                "imgs[i].onclick=function(){" +
-                "window.jsCallJavaObj.showBigImg(this.src);" +
-                "}}})()";
-        wv.loadUrl(jsCode);
     }
 
     /**
@@ -142,7 +143,6 @@ public class ActivityNewsDetail extends BaseActivity {
                 onBackPressed();
             }
         });
-
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -160,6 +160,20 @@ public class ActivityNewsDetail extends BaseActivity {
         else if(mode == MODE_ZSW_NEWS) link="http://zsb.hitsz.edu.cn/zs_common/bkzn/zswz/zsjzxq?id="+ getIntent().getStringExtra("link");
     }
 
+    /**
+     * 設置網頁中圖片的點擊事件
+     *
+     * @param view
+     */
+    private void setWebImageClick(WebView view) {
+        String jsCode = "javascript:(function(){" +
+                "var imgs=document.getElementsByTagName(\"img\");" +
+                "for(var i=0;i<imgs.length;i++){" +
+                "imgs[i].onclick=function(){" +
+                "window.jsCallJavaObj.showBigImg(this.src);" +
+                "}}})()";
+        view.loadUrl(jsCode);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -205,9 +219,6 @@ public class ActivityNewsDetail extends BaseActivity {
                             .data("info","{\"id\":\""+getIntent().getStringExtra("link")+"\",\"xxlm\":\"\"}")
                             .execute();
                     String json =r.body();
-                    Log.e("lenght_after",String.valueOf(json.length()));
-                   // System.out.print(json.length());
-                    //System.out.println(json);
                     JsonObject jo = new JsonParser().parse(json).getAsJsonObject();
                     JsonObject data = jo.get("module").getAsJsonArray().get(0).getAsJsonObject().get("data").getAsJsonObject();
                     String date = JsonUtils.getStringInfo(data,"fbsj");
@@ -243,7 +254,13 @@ public class ActivityNewsDetail extends BaseActivity {
                             "imgs[i].style.height = 'auto';" +
                             "}" +
                             "</script>";
-                    wv.loadData(d.toString()+js , "text/html; charset=UTF-8", null);
+                    if (mode == MODE_HITSZ_NEWS) {
+                        wv.loadUrl("http://www.hitsz.edu.cn" + getIntent().getStringExtra("link"));
+
+                    } else {
+                        wv.loadData(d.toString() + js, "text/html; charset=UTF-8", null);
+                    }
+                    //
                 }
             } catch (Exception e) {
                 e.printStackTrace();

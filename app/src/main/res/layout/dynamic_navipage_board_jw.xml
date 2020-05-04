@@ -5,16 +5,16 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
+    android:layout_marginStart="@dimen/navi_page_card_margin_start_end"
     android:layout_marginTop="@dimen/navi_page_card_margin_top_bottom"
-    android:layout_marginRight="16dp"
+    android:layout_marginEnd="@dimen/navi_page_card_margin_start_end"
     android:layout_marginBottom="@dimen/navi_page_card_margin_top_bottom"
     android:clickable="true"
+    android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="?attr/background_color_second"
     app:cardCornerRadius="16dp"
-    app:cardElevation="@dimen/navi_page_card_elevation"
-    android:focusable="true">
+    app:cardElevation="@dimen/navi_page_card_elevation">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,15 +22,15 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="@dimen/navi_page_card_padding_top_bottom"
+            android:layout_marginEnd="@dimen/navi_page_card_padding_start_end"
             android:text="@string/navi_jw_title"
-            android:textColor="?attr/text_color_primary"
-            android:textSize="18sp"
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -44,29 +44,33 @@
                 android:id="@+id/jwts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginStart="@dimen/navi_page_card_padding_start_end"
+                android:layout_marginEnd="@dimen/navi_page_card_padding_start_end"
                 android:clickable="true"
+                android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:orientation="horizontal"
                 android:paddingTop="8dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="8dp"
-                android:visibility="visible"
-                android:focusable="true">
+                android:visibility="visible">
 
                 <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/gradient_round"
-                    android:padding="10dp"
-                    android:tint="@color/material_text_icon_white"
-                    app:srcCompat="@drawable/ic_menu_bulletin" />
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/radius_accent_round_icon_bg"
+                    android:padding="6dp"
+                    android:tint="?attr/colorAccent"
+                    app:srcCompat="@drawable/ic_menu_jwts" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="16dp"
                     android:orientation="vertical">
 
@@ -75,14 +79,13 @@
                         android:layout_height="wrap_content"
                         android:text="@string/navi_jw_jw_s"
                         android:textColor="?attr/text_color_secondary"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:visibility="gone" />
 
                     <TextView
-                        android:id="@+id/hita_canteen"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center|top"
-                        android:layout_marginTop="4dp"
+                        android:layout_gravity="center|start"
                         android:text="@string/navi_jw_jw_p"
                         android:textColor="?attr/text_color_primary"
                         android:textSize="16sp" />
@@ -94,16 +97,16 @@
                 android:id="@+id/empty_classroom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginStart="@dimen/navi_page_card_padding_start_end"
+                android:layout_marginEnd="@dimen/navi_page_card_padding_start_end"
                 android:clickable="true"
+                android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:orientation="horizontal"
                 android:paddingTop="8dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="8dp"
-                android:visibility="visible"
-                android:focusable="true">
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -143,29 +146,33 @@
                 android:id="@+id/xl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginStart="@dimen/navi_page_card_padding_start_end"
+                android:layout_marginEnd="@dimen/navi_page_card_padding_start_end"
                 android:clickable="true"
+                android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:orientation="horizontal"
                 android:paddingTop="8dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="8dp"
-                android:visibility="visible"
-                android:focusable="true">
+                android:visibility="visible">
 
                 <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/gradient_round"
-                    android:padding="10dp"
-                    android:tint="@color/material_text_icon_white"
-                    app:srcCompat="@drawable/ic_dlg_timetable_date" />
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/radius_accent_round_icon_bg"
+                    android:padding="6dp"
+                    android:tint="?attr/colorAccent"
+                    app:srcCompat="@drawable/ic_date_range" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginStart="16dp"
                     android:orientation="vertical">
 
@@ -174,13 +181,13 @@
                         android:layout_height="wrap_content"
                         android:text="@string/navi_jw_xl_s"
                         android:textColor="?attr/text_color_secondary"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:visibility="gone" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center|top"
-                        android:layout_marginTop="4dp"
+                        android:layout_gravity="center|start"
                         android:text="@string/navi_jw_xl_p"
                         android:textColor="?attr/text_color_primary"
                         android:textSize="16sp" />

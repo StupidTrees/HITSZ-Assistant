@@ -5,25 +5,19 @@ import android.os.AsyncTask;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.stupidtree.hita.BaseFragment;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BaseFragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class JWFragment extends BaseFragment {
     SwipeRefreshLayout refresh;
-    protected JWRoot jwRoot;
-    protected boolean willRefreshOnResume = false;
+    protected boolean willRefreshOnResume = true;
+    JWRoot jwRoot;
 
-    public boolean isWillRefreshOnResume() {
-        return willRefreshOnResume;
-    }
 
     public void setWillRefreshOnResume(boolean willRefreshOnResume) {
         this.willRefreshOnResume = willRefreshOnResume;
@@ -32,7 +26,7 @@ public abstract class JWFragment extends BaseFragment {
     void initRefresh(View v){
         refresh = v.findViewById(R.id.refresh);
         if(refresh!=null) {
-            refresh.setColorSchemeColors(getColorPrimary());
+            refresh.setColorSchemeColors(getColorAccent());
             refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
@@ -69,7 +63,7 @@ public abstract class JWFragment extends BaseFragment {
     }
 
 
-    abstract public String getTitle();
+    abstract public int getTitle();
     abstract protected void stopTasks();
     public abstract void Refresh();
     @Override

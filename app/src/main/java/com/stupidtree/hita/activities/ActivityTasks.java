@@ -1,60 +1,77 @@
 package com.stupidtree.hita.activities;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.adapter.BaseListAdapter;
+import com.stupidtree.hita.adapter.DDLItemAdapter;
 import com.stupidtree.hita.adapter.TaskListAdapter;
-import com.stupidtree.hita.timetable.timetable.Task;
-import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
 import com.stupidtree.hita.fragments.popup.FragmentAddTask;
+import com.stupidtree.hita.timetable.packable.Task;
+import com.stupidtree.hita.views.EditModeHelper;
+import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
+
+import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-
-import tyrantgit.explosionfield.ExplosionField;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class ActivityTasks extends BaseActivity implements
-        FragmentAddTask.AddTaskDoneListener {
-
-
+        FragmentAddTask.AddTaskDoneListener, EditModeHelper.EditableContainer {
     RecyclerView tasksList_now;
     TaskListAdapter listAdapter_now;
     FloatingActionButton fab;
-    ArrayList<Task> listRes_now, listRes_notyet;
+    ArrayList<Task> listRes_now;
     ImageView none;
-    FragmentAddTask fat;
-    public boolean hasInit = false;
     refreshListTask pageTask;
     Toolbar toolbar;
-
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    EditModeHelper editModeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
-        setWindowParams(true, true, false);
-        fat = new FragmentAddTask();
+        setWindowParams(true, false, false);
         initToolbar();
-        // initReceiver();
         initList();
+    }
+
+
+    void initToolbar() {
+        toolbar = findViewById(R.id.toolbar);
+        collapsingToolbarLayout = findViewById(R.id.collapse);
+        toolbar.setTitle(getString(R.string.label_activity_tasks));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
+        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
         fab = findViewById(R.id.task_fab);
         none = findViewById(R.id.none_img1);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -65,24 +82,14 @@ public class ActivityTasks extends BaseActivity implements
                     Snackbar.make(v, getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
             }
         });
-        hasInit = true;
     }
 
 
-    void initToolbar() {
-        toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.label_activity_tasks));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    @Override
+    public void onBackPressed() {
+        if (editModeHelper.isEditMode()) editModeHelper.closeEditMode();
+        else super.onBackPressed();
     }
-
 
     void initList() {
         tasksList_now = findViewById(R.id.task_recycler);
@@ -90,83 +97,53 @@ public class ActivityTasks extends BaseActivity implements
         //taskList_done = findViewById(R.id.task_recycler_done);
         listRes_now = new ArrayList<>();
         // listRes_done = new ArrayList<>();
-        listRes_notyet = new ArrayList<>();
+
         listAdapter_now = new TaskListAdapter(this, listRes_now);
         tasksList_now.setLayoutManager(new WrapContentLinearLayoutManager(this, RecyclerView.VERTICAL, false));
         //taskList_done.setLayoutManager(new WrapContentLinearLayoutManager(this, RecyclerView.VERTICAL, false));
         tasksList_now.setAdapter(listAdapter_now);
         //taskList_done.setAdapter(listAdapter_done);
-        listAdapter_now.setmOnItemLongClickListener(new TaskListAdapter.OnItemLongClickListener() {
+
+        listAdapter_now.setOnItemClickListener(new BaseListAdapter.OnItemClickListener() {
             @Override
-            public boolean OnClick(View v, int position) {
-//                if ((!TextUtils.isEmpty(listRes_now.get(position).getTag())) && listRes_now.get(position).getTag().contains(":::"))
-//                    return false;
-                ExplosionField ef = ExplosionField.attach2Window(ActivityTasks.this);
-                ef.explode(v);
-                new deleteTask(position, listAdapter_now, listRes_now).execute();
-                return true;
+            public void onItemClick(View card, int position) {
+                //if(listRes_timeTableCore.getNow().get(position).getType()!=Task.TAG)new TaskDialog(getThis(),listRes_timeTableCore.getNow().get(position)).show();
+            }
+        });
+        listAdapter_now.setOnItemSelectedListener(new DDLItemAdapter.OnItemSelectedListener() {
+            @Override
+            public void OnItemSelected(View v, boolean checked, int position, int ttNum) {
+                collapsingToolbarLayout.setTitle(getString(R.string.number_of_items_selected, ttNum));
+                // selectedNum.setText(getString(R.string.number_of_items_selected, ttNum));
+                if (ttNum == 0) editModeHelper.closeEditMode();
+            }
+        });
+        listAdapter_now.setOnItemLongClickListener(new BaseListAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view, int position) {
+                if (listRes_now.get(position).getType() != Task.TAG && !editModeHelper.isEditMode()) {
+                    editModeHelper.activateEditMode(position);
+                    return true;
+                } else return false;
             }
         });
 
-        listAdapter_now.setmOnFinishClickListener(new TaskListAdapter.OnFinishClickListener() {
+        listAdapter_now.setOnFinishClickListener(new TaskListAdapter.OnFinishClickListener() {
             @Override
             public boolean OnClick(View v, Task t, int position) {
+                v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                 new finishTask(t, !t.isFinished(), position, listRes_now, listAdapter_now).execute();
                 return true;
             }
 
         });
 
-//        listAdapter_done.setmOnItemLongClickListener(new TaskListAdapter.OnItemLongClickListener() {
-//            @Override
-//            public boolean OnClick(View v, int position) {
-//                if ((!TextUtils.isEmpty(listRes_done.get(position).getTag())) && listRes_done.get(position).getTag().contains(":::"))
-//                    return false;
-//                ExplosionField ef = ExplosionField.attach2Window(ActivityTasks.this);
-//                ef.explode(v);
-//                new deleteTask(position, listAdapter_done, listRes_done).executeOnExecutor(HITAApplication.TPE);
-//                return true;
-//            }
-//        });
-//
-//        listAdapter_done.setmOnFinishClickListener(new TaskListAdapter.OnFinishClickListener() {
-//            @Override
-//            public boolean OnClick(View v, int position) {
-//                new undoFinishTask(v, position, listRes_done, listAdapter_done).executeOnExecutor(HITAApplication.TPE);
-//                return true;
-//            }
-//        });
-
-
-//        listAdapter_now.setOnClickListener(new TaskListAdapter.OnClickListener() {
-//            @Override
-//            public boolean OnClick(View v, int position) {
-//                Task t = listRes_now.get(position);
-//                int leftTime = t.getLength();
-//                Calendar pointer = Calendar.getInstance();
-//                while (leftTime>0){
-//                    Calendar start;
-//                    if(pointer.get(Calendar.YEAR)== now.get(Calendar.YEAR)&&pointer.get(Calendar.DAY_OF_YEAR)==now.get(Calendar.DAY_OF_YEAR)) start = now;
-//                    else start = null;
-//
-//                    int week = timeTableCore.getCurrentCurriculum().getWeekOfTerm(pointer);
-//                    if(week>timeTableCore.getCurrentCurriculum().totalWeeks) break;;
-//                    int dow =  TimetableCore.getDOW(pointer);
-//                    SparseArray<HTime> tp = TimeTableGenerator.autoAdd_getTime(start,week,dow,50);
-//                    if(tp==null) continue;
-//                    String uuid = timeTableCore.addEvent(week,dow,TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT,"处理任务"+t.name,"","",t.getUuid(),tp.get(0),tp.get(1),false);
-//                    t.putEventMap(uuid+":::"+week,false);
-//                    leftTime-=tp.get(0).getDuration(tp.get(1));
-//                    pointer.add(Calendar.DATE,1);
-//                }
-//                Snackbar.make(v,"安排成功！",Snackbar.LENGTH_SHORT).show();
-//                return true;
-//            }
-//        });
+        editModeHelper = new EditModeHelper(this, listAdapter_now, this);
+        editModeHelper.init(this);
     }
 
     void showAddTaskDialog() {
-        fat.show(Objects.requireNonNull(this).getSupportFragmentManager(), "fat");
+        new FragmentAddTask().show(Objects.requireNonNull(this).getSupportFragmentManager(), "fat");
     }
 
     void refreshText() {
@@ -189,7 +166,7 @@ public class ActivityTasks extends BaseActivity implements
     }
 
     public void Refresh() {
-       // Log.e("refresh", "tasks");
+        // Log.e("refresh", "tasks");
         if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
             pageTask.cancel(true);
         pageTask = new refreshListTask();
@@ -202,9 +179,35 @@ public class ActivityTasks extends BaseActivity implements
         Refresh();
     }
 
+    @Override
+    public void onEditClosed() {
+        if (fab != null) fab.show();
+        collapsingToolbarLayout.setTitle(getString(R.string.label_activity_tasks));
+        // collapsingToolbarLayout.setTitleEnabled(true);
+        toolbar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onEditStarted() {
+        fab.hide();
+        toolbar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onItemCheckedChanged(int position, boolean checked, int currentSelected) {
+        collapsingToolbarLayout.setTitle(getString(R.string.number_of_items_selected, currentSelected));
+    }
+
+    @Override
+    public void onDelete(Collection toDelete) {
+        new deleteTasks().execute();
+    }
+
 
     @SuppressLint("StaticFieldLeak")
     class refreshListTask extends AsyncTask {
+        List<Task> nowRes;
+        List<Task> finishedRes;
 
         @Override
         protected void onPreExecute() {
@@ -213,26 +216,20 @@ public class ActivityTasks extends BaseActivity implements
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            // listRes_done.clear();
-            listRes_now.clear();
-            listRes_notyet.clear();
-            // listRes_done.addAll(timeTableCore.getfinishedTasks());
-            List<Task> tasks = timeTableCore.getUnfinishedTasks();
-
-            for (Task t : tasks) {
-                if (TaskListAdapter.getTaskState(t) == TaskListAdapter.TYPE_FREE || TaskListAdapter.getTaskState(t) == TaskListAdapter.TYPE_ARRANGED_ONGOING)
-                    listRes_now.add(t);
-                else listRes_notyet.add(t);
-            }
-            listRes_now.addAll(timeTableCore.getfinishedTasks());
+            nowRes = timeTableCore.getUnfinishedTasks();
+            finishedRes = timeTableCore.getFinishedTasks();
             return null;
         }
 
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            //listAdapter_done.notifyDataSetChanged();
-            listAdapter_now.notifyDataSetChanged();
+            List<Task> newL = new ArrayList<>();
+            newL.addAll(nowRes);
+            if (finishedRes.size() > 0)
+                newL.add(Task.getTagInstance(getString(R.string.task_finished_name)));
+            newL.addAll(finishedRes);
+            listAdapter_now.notifyItemChangedSmooth(newL);
             refreshText();
         }
     }
@@ -258,24 +255,16 @@ public class ActivityTasks extends BaseActivity implements
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            if (timeTableCore.deleteTask(listRes.get(position))) {
-                listRes.remove(position);
-                return true;
-            } else return false;
+            timeTableCore.deleteTask(listRes.get(position));
+            return null;
         }
 
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             if (isDestroyed()) return;
-            listAdapter.notifyItemRemoved(position);
-            if (position != listRes.size()) { // 如果移除的是最后一个，忽略
-                listAdapter.notifyItemRangeChanged(position, listRes.size() - position);
-            }
-            if ((Boolean) o) {
-                refreshText();
-            } else Toast.makeText(HContext, "删除失败!", Toast.LENGTH_SHORT).show();
             ActivityMain.saveData();
+            Refresh();
             // if(ftl!=null&&ftl.hasInit) ftl.Refresh(FragmentTimeLine.TL_REFRESH_FROM_UNHIDE);
         }
     }
@@ -289,7 +278,6 @@ public class ActivityTasks extends BaseActivity implements
 
         public finishTask(Task t, boolean finished, int position, List<Task> listRes, TaskListAdapter listAdapter) {
             this.t = t;
-            Log.e("finishTask:", listRes.get(position).name);
             this.position = position;
             this.listRes = listRes;
             this.listAdapter = listAdapter;
@@ -313,26 +301,35 @@ public class ActivityTasks extends BaseActivity implements
                 AlertDialog ad = new AlertDialog.Builder(ActivityTasks.this).setMessage("任务未完成，请添加对应处理事件！").setTitle("任务进度尚未完成").create();
                 ad.show();
             } else {
+                ActivityMain.saveData();
                 if ((Boolean) o) {
-                    int detPos;
-                    if (finished)
-                        for (detPos = listRes.size() - 1; detPos > 0 && listRes.get(detPos).isFinished() && detPos != position; detPos--)
-                            ;
-                    else
-                        for (detPos = 0; detPos < listRes.size() - 1 && !listRes.get(detPos).isFinished() && detPos != position; detPos++)
-                            ;
-                    listRes.add(detPos, listRes.remove(position));
-                    //Collections.swap(listRes,position,detPos);
-                    listAdapter.notifyItemMoved(position, detPos);
-                    int rangeFrom = Math.min(position, detPos);
-                    listAdapter.notifyItemRangeChanged(rangeFrom, listRes.size() - rangeFrom);
-                    refreshText();
-                } else Toast.makeText(HContext, "操作失败!", Toast.LENGTH_SHORT).show();
-                // ActivityMain.saveData();
-                // if(ftl!=null&&ftl.hasInit) ftl.Refresh(FragmentTimeLine.TL_REFRESH_FROM_UNHIDE);
+                    Refresh();
+                } else
+                    Toast.makeText(HContext, R.string.operation_failed, Toast.LENGTH_SHORT).show();
+
             }
 
         }
     }
 
+    class deleteTasks extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            if (listAdapter_now.getCheckedItem() != null) {
+                for (Task t : listAdapter_now.getCheckedItem()) {
+                    timeTableCore.deleteTask(t);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            Refresh();
+            editModeHelper.closeEditMode();
+            Toast.makeText(getThis(), R.string.delete_success, Toast.LENGTH_SHORT).show();
+        }
+    }
 }

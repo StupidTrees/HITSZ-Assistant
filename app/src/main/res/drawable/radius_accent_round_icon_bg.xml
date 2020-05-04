@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval"
+    android:tint="?attr/background_color_bottom_as_tint"
+    android:tintMode="src_over"
     >
   <solid android:color="?attr/colorAccent"
       />

@@ -2,98 +2,200 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/import_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/background_color_bottom">
+    android:background="?attr/background_color_bottom"
+    tools:context=".activities.ActivityCurriculumManager">
 
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00000000"
-        android:theme="@style/AppTheme.AppBarOverlay"
+        android:background="?attr/color_primary_fade_background"
+        android:minHeight="200dp"
         app:elevation="0dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/main_tool_bar"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:minHeight="56dp"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed"
+            app:titleEnabled="false">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/main_tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:fitsSystemWindows="true"
+                android:minHeight="56dp"
+                android:theme="@style/ToolBarTheme_Light"
+                app:contentInsetStartWithNavigation="0dp"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll"
+                app:title="@string/menu_timeable_curriculum"
+                app:titleTextColor="@color/material_text_icon_white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="80dp"
+                android:orientation="vertical"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="horizontal"
+                    app:layout_collapseParallaxMultiplier="0.9"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+                    <TextView
+                        android:id="@+id/cm_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="24dp"
+                        android:maxWidth="240dp"
+                        android:maxEms="6"
+                        android:singleLine="true"
+                        android:text="2019春季学期"
+                        android:textColor="@color/material_text_icon_white"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
+
+                    <LinearLayout
+                        android:id="@+id/swap"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/radius_white_lgiht_button_bg"
+                        android:clickable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp"
+                        android:paddingTop="2dp"
+                        android:paddingEnd="2dp"
+                        android:paddingBottom="2dp"
+                        android:theme="@style/button_ripple_white">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/switch_curriculum"
+                            android:textColor="@color/material_text_icon_white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/more"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            app:srcCompat="@drawable/ic_arrow_drop_down_black_24dp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/cm_image"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="16dp"
+                        android:tint="@color/material_text_icon_white"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_spring"
+                        tools:ignore="ContentDescription" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+                <net.cachapa.expandablelayout.ExpandableLayout
+                    android:id="@+id/expand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:el_duration="200"
+                    app:el_parallax="0.8"
+                    app:layout_collapseMode="none">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_scrollFlags="scroll" />
+                </net.cachapa.expandablelayout.ExpandableLayout>
+
+
+            </LinearLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:contentInsetStartWithNavigation="0dp"
-            app:layout_collapseMode="pin"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:theme="?attr/toolbarStyle"
-            app:titleTextColor="?attr/text_color_primary">
+            android:background="@drawable/jw_radius_bg_bottom"
+            android:orientation="horizontal"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:tabIndicatorColor="#00000000"
-                app:tabMode="scrollable"
-                app:tabRippleColor="?attr/colorPrimary"
-                app:tabSelectedTextColor="@color/main_tabs_selected_color"
-                app:tabTextAppearance="@style/MainTabsTextTheme"
-                app:tabTextColor="@color/main_tabs_unselected_color" />
-        </androidx.appcompat.widget.Toolbar>
-
-
+                android:paddingTop="4dp"
+                app:layout_scrollFlags="enterAlwaysCollapsed|exitUntilCollapsed"
+                app:tabGravity="fill"
+                app:tabIndicator="@color/transparent_none"
+                app:tabMode="fixed"
+                app:tabPaddingEnd="16dp"
+                app:tabPaddingStart="16dp"
+                app:tabSelectedTextColor="?attr/colorAccent"
+                app:tabTextColor="?attr/text_color_secondary"
+                app:theme="@style/button_ripple_accent" />
+        </LinearLayout>
 
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/subjects_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/background_color_bottom"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+    </androidx.viewpager.widget.ViewPager>
+
     <LinearLayout
         android:id="@+id/none_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="90dp"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|center_horizontal"
         android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        android:visibility="visible">
 
         <ImageView
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="148dp"
+            android:layout_height="148dp"
             android:layout_gravity="center"
             android:background="@drawable/radius_accent_round_icon_bg"
             android:backgroundTint="?attr/background_color_bottom_as_tint"
             android:backgroundTintMode="src_over"
-            android:padding="16dp"
+            android:padding="24dp"
             android:tint="?attr/colorAccent"
             android:tintMode="src_in"
             app:srcCompat="@drawable/ic_menu_jwts" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="没有课表"
-            android:textColor="?attr/text_color_secondary" />
     </LinearLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginLeft="@dimen/material_fab_margin"
-        android:layout_marginTop="@dimen/material_fab_margin"
-        android:layout_marginRight="@dimen/material_fab_margin"
-        android:layout_marginBottom="@dimen/material_fab_margin"
-        app:fabCustomSize="64dp"
-        app:fabSize="normal"
-        app:layout_anchorGravity="end|bottom"
-        app:srcCompat="@drawable/fab_done" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

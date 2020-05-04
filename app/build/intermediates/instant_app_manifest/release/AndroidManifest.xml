@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stupidtree.hita"
     android:targetSandboxVersion="2"
-    android:versionCode="20200305"
-    android:versionName="3.05" >
+    android:versionCode="20200504"
+    android:versionName="1.1.7" >
 
     <uses-sdk
         android:minSdkVersion="23"
@@ -40,11 +40,26 @@
         android:name="com.stupidtree.hita.HITAApplication"
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:extractNativeLibs="false"
         android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true" >
+
+        <!-- <receiver android:name=".widget.TodayWidget"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> -->
+        <!-- </intent-filter> -->
+
+
+        <!-- <meta-data -->
+        <!-- android:name="android.appwidget.provider" -->
+        <!-- android:resource="@xml/today_widget_info" /> -->
+        <!-- </receiver> -->
+        <!-- <service -->
+        <!-- android:name=".widget.TodayListWidgetService" -->
+        <!-- android:permission="android.permission.BIND_REMOTEVIEWS" /> -->
         <service
             android:name="com.stupidtree.hita.timetable.TimeWatcherService"
             android:enabled="true"
@@ -54,12 +69,23 @@
         <activity android:name="com.stupidtree.hita.activities.ActivitySubjectJW" /> <!-- androidQ要加上这句否则读文件失效 -->
         <activity
             android:name="com.stupidtree.hita.activities.ActivityTasks"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity android:name="com.stupidtree.hita.activities.ActivityUTMood" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityAttitude"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name="com.stupidtree.hita.activities.ActivityUTService" />
+        <activity
+            android:name="com.stupidtree.hita.community.ActivityCommunity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.stupidtree.hita.community.ActivityPostDetail"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+        <activity
+            android:name="com.stupidtree.hita.community.ActivityOneTopic"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name="com.stupidtree.hita.community.ActivityCreatePost"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivitySearch"
             android:label="@string/title_activity_search"
@@ -67,20 +93,20 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name="com.stupidtree.hita.activities.ActivityEmptyClassroomDetail" />
         <activity android:name="com.stupidtree.hita.activities.ActivityEmptyClassroom" />
-        <activity android:name="com.stupidtree.hita.activities.ActivityPostDetail" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityUserProfile"
             android:label="@string/title_activity_user_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.stupidtree.hita.activities.ActivityLocation" />
 
-        <service android:name="com.stupidtree.hita.WidgetService" >
-            <intent-filter>
+        <!-- <service android:name=".WidgetService"> -->
+        <!-- <intent-filter> -->
 
-                <!-- 用来启动服务 -->
-                <action android:name="android.appwidget.action.APP_WIDGET_SERVICE" />
-            </intent-filter>
-        </service> <!-- <receiver android:name=".TimeLineWidget"> -->
+
+        <!-- &lt;!&ndash; 用来启动服务 &ndash;&gt; -->
+        <!-- <action android:name="android.appwidget.action.APP_WIDGET_SERVICE" /> -->
+        <!-- </intent-filter> -->
+        <!-- </service> &lt;!&ndash; <receiver android:name=".TimeLineWidget"> &ndash;&gt; -->
         <service android:name="com.stupidtree.hita.online.DownloadService" /> <!-- <intent-filter> -->
         <!-- <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> -->
         <!-- <action android:name="com.stupidtree.hita.UPDATE_ALL" /> -->
@@ -89,15 +115,13 @@
         <!-- android:name="android.appwidget.provider" -->
         <!-- android:resource="@xml/time_line_widget_info" /> -->
         <!-- </receiver> -->
-        <receiver android:name="com.stupidtree.hita.NotificationClickReceiver" />
 
         <activity android:name="com.stupidtree.hita.activities.ActivitySetting" />
 
-        <service android:name="com.amap.api.location.APSService" />
-
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="com.stupidtree.hita.BmobContentProvider" />
+            android:authorities="com.stupidtree.hita.BmobContentProvider"
+            android:exported="false" />
 
         <activity
             android:name="com.stupidtree.hita.activities.ActivityLeaderBoard"
@@ -138,16 +162,8 @@
             android:name="com.stupidtree.hita.activities.ActivityNewsDetail"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.stupidtree.hita.activities.ActivityLostAndFound"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name="com.stupidtree.hita.activities.ActivityLoginJWTS"
             android:label="@string/title_activity_gfh"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="com.stupidtree.hita.activities.ActivityLoginUT"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
@@ -159,30 +175,29 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityTimeTable"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivitySubject"
             android:label="@string/title_activity_subject"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityPhotoDetail"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name="com.stupidtree.hita.activities.ActivityNotes"
-            android:label="@string/title_activity_notes"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityMain"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivitySchoolCalendar"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivityCurriculumManager"
             android:label="@string/title_activity_import_data"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name="com.stupidtree.hita.activities.ActivitySplash"
             android:theme="@style/SplashTheme" >
@@ -204,13 +219,18 @@
             android:name="com.stupidtree.hita.activities.ActivityChatbot"
             android:theme="@style/ChatBotTheme"
             android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name="com.stupidtree.hita.community.ActivityMessageBox" />
+        <activity android:name="com.stupidtree.hita.community.ActivityOneUserPostList" />
         <activity
-            android:name="com.stupidtree.hita.activities.ActivityExplore"
-            android:theme="@style/AppTheme" />
+            android:name="com.stupidtree.hita.activities.ActivityDDLManager"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+        <activity
+            android:name="com.stupidtree.hita.activities.ActivityExamCountdown"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="5883fb948ec30c3f56f65e46e65f0b09" />
+        <!-- <meta-data -->
+        <!-- android:name="com.amap.api.v2.apikey" -->
+        <!-- android:value="5883fb948ec30c3f56f65e46e65f0b09" /> -->
 
         <provider
             android:name="com.stupidtree.hita.MFileProvider"
@@ -221,27 +241,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <activity
-            android:name="com.yuyh.library.imgsel.ui.ISListActivity"
-            android:theme="@style/SelTheme" />
-        <activity
-            android:name="com.yuyh.library.imgsel.ui.ISCameraActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <meta-data
-            android:name="APP_ID"
-            android:value="com.stupidtree.hita" />
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.stupidtree.hita.image_provider"
-            android:exported="false"
-            android:grantUriPermissions="true" >
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider> <!-- Custom FileProvider for 7.x -->
+        <!-- Custom FileProvider for 7.x -->
         <provider
             android:name="com.tencent.bugly.beta.utils.BuglyFileProvider"
             android:authorities="com.stupidtree.hita.fileProvider"

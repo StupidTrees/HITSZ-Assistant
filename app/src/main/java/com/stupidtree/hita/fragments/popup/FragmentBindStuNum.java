@@ -1,29 +1,27 @@
 package com.stupidtree.hita.fragments.popup;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
-import androidx.appcompat.app.AlertDialog;
-
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.diy.ButtonLoading;
 import com.stupidtree.hita.jw.JWException;
-import com.stupidtree.hita.online.UserData;
 import com.stupidtree.hita.online.HITAUser;
+import com.stupidtree.hita.online.UserData;
+import com.stupidtree.hita.views.ButtonLoading;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,17 +29,16 @@ import java.util.List;
 import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
+
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
-public class FragmentBindStuNum extends BottomSheetDialogFragment {
+public class FragmentBindStuNum extends FragmentRadiusPopup {
 
     EditText username, password;
     ButtonLoading login;
@@ -67,17 +64,15 @@ public class FragmentBindStuNum extends BottomSheetDialogFragment {
     }
 
 
+    @Nullable
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.fragment_bind_student_number, null);
-        dialog.setContentView(view);
-        ((View) view.getParent()).setBackgroundColor(Color.TRANSPARENT);
         initViews(view);
-        return dialog;
+        return view;
     }
 
-//    @Nullable
+    //    @Nullable
 //    @Override
 //    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 //        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), themeID);// your app theme here

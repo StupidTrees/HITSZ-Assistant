@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/background_color_bottom">
@@ -24,22 +23,41 @@
             android:fitsSystemWindows="true"
             android:visibility="visible"
             app:contentInsetStartWithNavigation="0dp"
-            app:theme="?attr/toolbarStyle">
+            android:theme="?attr/toolbarStyle">
             <!--app:contentInsetStart="0dp"-->
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/timetable_tabs"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:overScrollMode="never"
-                app:tabGravity="fill"
-                app:tabIndicatorColor="#00000000"
-                app:tabIndicatorGravity="bottom"
-                app:tabMode="scrollable"
-                app:tabRippleColor="?attr/colorPrimary"
-                app:tabSelectedTextColor="@color/main_tabs_selected_color"
-                app:tabTextAppearance="@style/MainTabsTextTheme_normal"
-                app:tabTextColor="@color/main_tabs_unselected_color"
-                app:tabUnboundedRipple="true" />
+                android:orientation="horizontal">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/timetable_tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:overScrollMode="never"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="#00000000"
+                    app:tabIndicatorGravity="bottom"
+                    app:tabMode="scrollable"
+                    app:tabSelectedTextColor="@color/main_tabs_selected_color"
+                    app:tabTextAppearance="@style/MainTabsTextTheme_normal"
+                    app:tabTextColor="@color/main_tabs_unselected_color"
+                    app:tabUnboundedRipple="true" />
+
+                <ImageView
+                    android:id="@+id/more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:padding="16dp"
+                    android:theme="@style/button_ripple_control"
+                    android:tint="?attr/colorControlNormal"
+                    android:tintMode="src_in"
+                    app:srcCompat="@drawable/ic_more" />
+            </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
 
@@ -78,22 +96,14 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
+        android:foregroundTint="@color/material_text_icon_white"
+        android:foregroundTintMode="src_in"
+        android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
         android:tint="@color/material_text_icon_white"
+        android:tintMode="src_in"
         app:layout_anchor="@+id/timetable_viewpager"
         app:layout_anchorGravity="end|bottom"
-        app:layout_behavior=".diy.mBottomHideBehavior"
+        app:layout_behavior=".views.mBottomHideBehavior"
         app:srcCompat="@drawable/ic_return" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="@dimen/material_fab_margin"
-        android:clickable="true"
-        android:tint="@color/material_text_icon_white"
-        android:visibility="gone"
-        app:layout_behavior=".diy.mBottomHideBehavior"
-        app:srcCompat="@drawable/fab_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

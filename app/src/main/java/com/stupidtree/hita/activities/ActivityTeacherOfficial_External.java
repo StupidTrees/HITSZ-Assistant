@@ -2,35 +2,14 @@ package com.stupidtree.hita.activities;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.core.widget.NestedScrollView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.fragments.popup.FragmentTeacherContact;
-import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.HTMLUtils;
 
 import org.jsoup.Jsoup;
@@ -38,34 +17,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.stupidtree.hita.HITAApplication.TPE;
 
-public class ActivityTeacherOfficial_External extends BaseActivity {
+public class ActivityTeacherOfficial_External extends ActivityTeacherOfficial {
 
-
-    String teacherName;
-    String teacherId;
-    String teacherUrl;
-    ImageView teacherAvatar;
-    TextView name, description, post, position, label;
-    CardView avatar_card;
-    SwipeRefreshLayout refresh;
-    AppBarLayout appBarLayout;
-    Map<String, String> teacherInfo;
-    Map<String, String> teacherProfile;
-    List<String> tabTitles;
-    ViewPager pager;
-    PagerAdapter pagerAdapter;
-    TabLayout tabs;
-    FloatingActionButton fab;
-    NestedScrollView noneView;
-    LoadTeacherPageTask pageTask1;
-    LoadTeacherProfileTask pageTask2;
 
 
     @Override
@@ -80,151 +35,35 @@ public class ActivityTeacherOfficial_External extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true, true, false);
-        setContentView(R.layout.activity_teacher_official);
-        teacherInfo = new HashMap<>();
-        teacherProfile = new HashMap<>();
         try {
             teacherId = getIntent().getData().toString().split("userid=")[1];
         } catch (Exception e) {
             e.printStackTrace();
         }
-        initViews();
-        initPager();
-        initToolbar();
-
     }
-
 
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Refresh(true);
-    }
-
-    void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        appBarLayout = findViewById(R.id.appbar);
-        toolbar.setTitle("");
-       setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
-        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            private float mHeadImgScale = 0;
-
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                float scale = 1.0f + (verticalOffset) / ((float) appBarLayout.getHeight());
-                teacherAvatar.setScaleX(scale);
-                teacherAvatar.setScaleY(scale);
-                teacherAvatar.setTranslationY(mHeadImgScale * verticalOffset);
-                avatar_card.setScaleX(scale);
-                avatar_card.setScaleY(scale);
-                avatar_card.setTranslationY(mHeadImgScale * verticalOffset);
-            }
-        });
-    }
-
-    void initPager() {
-        noneView = findViewById(R.id.empty_view);
-        pager = findViewById(R.id.pager);
-        tabs = findViewById(R.id.tabs);
-        tabTitles = new ArrayList<>();
-        pagerAdapter = new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return tabTitles.size();
-            }
-
-            @Override
-            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-                return view == object;
-            }
-
-            //设置viewpage内部东西的方法，如果viewpage内没有子空间滑动产生不了动画效果
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                View v = getLayoutInflater().inflate(R.layout.dynamic_teacher_official_info_page, null, false);
-                TextView textView = v.findViewById(R.id.text);
-                textView.setText(Html.fromHtml(teacherInfo.get(tabTitles.get(position))));
-                container.addView(v);
-                //最后要返回的是控件本身
-                return v;
-            }
-
-            @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
-                container.removeView((View) object);
-            }
-
-            //目的是展示title上的文字，
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return tabTitles.get(position);
-            }
-
-        };
-        pager.setAdapter(pagerAdapter);
-        tabs.setupWithViewPager(pager);
-    }
-
     void initViews() {
-        fab = findViewById(R.id.fab);
-        refresh = findViewById(R.id.refresh);
-        name = findViewById(R.id.teacher_name);
-        description = findViewById(R.id.teacher_describe);
-        post = findViewById(R.id.teacher_post);
-        label = findViewById(R.id.teacher_label);
-        position = findViewById(R.id.teacher_position);
-        teacherAvatar = findViewById(R.id.teacher_avatar);
-        avatar_card = findViewById(R.id.card_avatar);
-        teacherAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ActivityUtils.startPhotoDetailActivity_transition(ActivityTeacherOfficial_External.this,
-                        "http://faculty.hitsz.edu.cn/file/showHP.do?d=" + teacherId,
-                        view
-                );
-            }
-        });
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new FragmentTeacherContact(teacherProfile).show(getSupportFragmentManager(), "ftc");
-            }
-        });
-        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Refresh(true);
-            }
-        });
-        refresh.setColorSchemeColors(getColorPrimary(), getColorFade());
+        super.initViews();
     }
 
-    void Refresh(boolean swipe) {
 
+    @Override
+    void Refresh() {
         if(pageTask1!=null&&pageTask1.getStatus()!=AsyncTask.Status.FINISHED) pageTask1.cancel(true);
-       pageTask1 = new LoadTeacherPageTask(swipe);
+        pageTask1 = new LoadTeacherPageTask();
         pageTask1.executeOnExecutor(TPE);
-
     }
 
 
-    class LoadTeacherProfileTask extends AsyncTask {
+    class LoadTeacherProfileTask extends ActivityTeacherOfficial.LoadTeacherProfileTask {
 
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            fab.hide();
+
         }
 
         @Override
@@ -261,7 +100,6 @@ public class ActivityTeacherOfficial_External extends BaseActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            fab.show();
             String pos = teacherProfile.get("post");
             if (TextUtils.isEmpty(pos)) post.setVisibility(View.GONE);
             else {
@@ -280,22 +118,26 @@ public class ActivityTeacherOfficial_External extends BaseActivity {
                 label.setVisibility(View.VISIBLE);
                 label.setText(lab);
             }
+            Glide.with(getThis()).load("http://faculty.hitsz.edu.cn/file/showHP.do?d=" +
+                    teacherId + "&&w=200&&h=200&&prevfix=200-")
+                    .apply(RequestOptions.circleCropTransform())
+                    .placeholder(R.drawable.ic_account_activated)
+                    .into(teacherAvatar);
         }
     }
 
-    class LoadTeacherPageTask extends AsyncTask {
-        boolean swipe;
+    class LoadTeacherPageTask extends ActivityTeacherOfficial.LoadTeacherPageTask {
 
-        public LoadTeacherPageTask(boolean swipe) {
-            this.swipe = swipe;
+
+        public LoadTeacherPageTask() {
+            super();
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if (swipe) refresh.setRefreshing(true);
-            teacherInfo.clear();
-            tabTitles.clear();
+            fab.hide();
+            refresh.setRefreshing(true);
         }
 
         @Override
@@ -327,8 +169,8 @@ public class ActivityTeacherOfficial_External extends BaseActivity {
                         String id = e.attr("data-class");
                         Element part = teachersPage.getElementById(id);
                         if (part != null && part.getElementsByTag("table").size() > 0) {
-                            tabTitles.add(e.text());
-                            teacherInfo.put(e.text(), part.getElementsByTag("table").first().toString());
+                            titleToAdd.add(e.text());
+                            infoToAdd.put(e.text(), part.getElementsByTag("table").first().toString());
                         }
                     }
                 }
@@ -343,7 +185,10 @@ public class ActivityTeacherOfficial_External extends BaseActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            if (swipe) refresh.setRefreshing(false);
+            teacherInfo.clear();
+            tabTitles.clear();
+            tabTitles.addAll(titleToAdd);
+            teacherInfo.putAll(infoToAdd);
             if (teacherInfo.size() > 0) {
                 noneView.setVisibility(View.GONE);
                 pager.setVisibility(View.VISIBLE);
@@ -352,11 +197,9 @@ public class ActivityTeacherOfficial_External extends BaseActivity {
                 noneView.setVisibility(View.VISIBLE);
             }
             pagerAdapter.notifyDataSetChanged();
-            Glide.with(ActivityTeacherOfficial_External.this).load("http://faculty.hitsz.edu.cn/file/showHP.do?d=" +
-                    teacherId + "&&w=200&&h=200&&prevfix=200-")
-                    .apply(RequestOptions.circleCropTransform())
-                    .placeholder(R.drawable.ic_account_activated)
-                    .into(teacherAvatar);
+            pager.scheduleLayoutAnimation();
+            fab.show();
+            refresh.setRefreshing(false);
             name.setText(teacherName);
             if(pageTask2!=null&&pageTask2.getStatus() != AsyncTask.Status.FINISHED) pageTask2.cancel(true);
             pageTask2 = new LoadTeacherProfileTask();

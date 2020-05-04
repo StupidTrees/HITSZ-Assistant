@@ -1,24 +1,17 @@
 package com.stupidtree.hita.hita;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.timetable.timetable.EventItem;
-import com.stupidtree.hita.timetable.timetable.HTime;
+import com.stupidtree.hita.timetable.packable.EventItem;
+import com.stupidtree.hita.timetable.packable.HTime;
 
-
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.now;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.activities.ActivityChatbot.STATE_SEARCH_COURSE_SINGLE;
 import static com.stupidtree.hita.activities.ActivityChatbot.State;
@@ -29,11 +22,10 @@ import static com.stupidtree.hita.hita.TextTools.TT_BEFORE;
 import static com.stupidtree.hita.hita.TextTools.TT_NEXT;
 import static com.stupidtree.hita.hita.TextTools.T_BEFORE;
 import static com.stupidtree.hita.hita.TextTools.T_NEXT;
-import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_ARRANGEMENT;
-import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_COURSE;
-import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_DEADLINE;
-import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_EXAM;
-import static com.stupidtree.hita.timetable.TimetableCore.TIMETABLE_EVENT_TYPE_REMIND;
+import static com.stupidtree.hita.timetable.TimetableCore.ARRANGEMENT;
+import static com.stupidtree.hita.timetable.TimetableCore.COURSE;
+import static com.stupidtree.hita.timetable.TimetableCore.DDL;
+import static com.stupidtree.hita.timetable.TimetableCore.EXAM;
 
 
 public class ChatBotA {
@@ -83,7 +75,7 @@ public class ChatBotA {
         HTime toT = new HTime(values.get("tH").getAsInt(), values.get("tM").getAsInt());
         int tag = values.get("tag").getAsInt();
         int num = values.get("num").getAsInt();
-        int thisDOW = now.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : now.get(Calendar.DAY_OF_WEEK) - 1;
+        int thisDOW = timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) == 1 ? 7 : timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) - 1;
         if (fromW == BEFORE) fromW = timeTableCore.getThisWeekOfTerm() - 1 <= 0 ? 1 : timeTableCore.getThisWeekOfTerm() - 1;
         if (fromW == THIS) fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
         if (fromW == NEXT)
@@ -260,19 +252,16 @@ public class ChatBotA {
                 result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_COURSE:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_COURSE);
+                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, COURSE);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_ARRANGEMENT);
+                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, ARRANGEMENT);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_EXAM:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_EXAM);
-                break;
-            case ChatBotA.FUN_SEARCH_EVENT_REMIND:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_REMIND);
+                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, EXAM);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_DDL:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, TIMETABLE_EVENT_TYPE_DEADLINE);
+                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, DDL);
                 break;
         }
         if (num != -1 && result != null && result.size() > 0) {

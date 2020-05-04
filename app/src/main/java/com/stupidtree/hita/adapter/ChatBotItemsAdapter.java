@@ -1,8 +1,6 @@
 package com.stupidtree.hita.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +8,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.timetable.Subject;
-import com.stupidtree.hita.timetable.timetable.EventItem;
-import com.stupidtree.hita.timetable.timetable.Task;
-import com.stupidtree.hita.diy.TaskDialog;
 import com.stupidtree.hita.online.Teacher;
+import com.stupidtree.hita.timetable.packable.EventItem;
+import com.stupidtree.hita.timetable.packable.Subject;
+import com.stupidtree.hita.timetable.packable.Task;
 import com.stupidtree.hita.util.ActivityUtils;
+import com.stupidtree.hita.util.EventsUtils;
+import com.stupidtree.hita.views.TaskDialog;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static com.stupidtree.hita.fragments.main.FragmentTimeLine.showEventDialog;
 
 
 public class ChatBotItemsAdapter extends RecyclerView.Adapter<ChatBotItemsAdapter.mHolder> {
@@ -61,7 +62,7 @@ public class ChatBotItemsAdapter extends RecyclerView.Adapter<ChatBotItemsAdapte
                 try {
                     String type = (String) mList.get(0).get("type");
                     if(type.equals("event")) {
-                        showEventDialog(mContext, (EventItem) mListRes.get(i),null,null);
+                        EventsUtils.showEventItem(mContext, (EventItem) mListRes.get(i));
                     }else if(type.equals("task")){
                         new TaskDialog(mContext, (Task) mListRes.get(i)).show();
                     }else if(type.equals("teacher")){

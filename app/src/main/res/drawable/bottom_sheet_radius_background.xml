@@ -5,6 +5,6 @@
     <solid android:color="?attr/background_color_second" />
 
     <corners
-        android:topLeftRadius="20dp"
-        android:topRightRadius="20dp" />
+        android:topLeftRadius="28dp"
+        android:topRightRadius="28dp" />
 </shape>

@@ -1,11 +1,5 @@
 package com.stupidtree.hita.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -20,12 +14,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.stupidtree.hita.BaseActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.jw.JWException;
 import com.stupidtree.hita.online.DownloadService;
 import com.stupidtree.hita.online.DownloadTask;
 import com.stupidtree.hita.util.ActivityUtils;
+import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -143,8 +142,8 @@ public class ActivitySubjectJW extends BaseActivity {
         listAdapter_xs = new XSListAdapter();
         list_xs.setAdapter(listAdapter_xs);
         list_team.setAdapter(listAdapter_team);
-        list_xs.setLayoutManager(new LinearLayoutManager(this));
-        list_team.setLayoutManager(new LinearLayoutManager(this));
+        list_xs.setLayoutManager(new WrapContentLinearLayoutManager(this));
+        list_team.setLayoutManager(new WrapContentLinearLayoutManager(this));
         guideline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

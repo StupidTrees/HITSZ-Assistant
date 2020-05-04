@@ -12,7 +12,11 @@ public class BannerItem extends BmobObject {
     private String subtitle;
     private String action;
     private String type;
+    private String buttonText;
+    private float height;
     private BmobRelation clickUser;
+    private int showBeforeVersion;
+    private int showAfterVersion;
 
     BannerItem(){
         clickUser = new BmobRelation();
@@ -46,6 +50,14 @@ public class BannerItem extends BmobObject {
         return jo;
     }
 
+    public String getButtonText() {
+        return buttonText;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
     public void setAction(String action) {
         this.action = action;
     }
@@ -60,5 +72,13 @@ public class BannerItem extends BmobObject {
 
     public String getType() {
         return type;
+    }
+
+    public int getShowBeforeVersion() {
+        return showBeforeVersion;
+    }
+
+    public int getShowAfterVersion() {
+        return showAfterVersion;
     }
 }

@@ -1,19 +1,18 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ListPreference
+        android:dialogTitle="@string/settings_summary_darkmode"
+        android:entries="@array/preference_dark_mode"
+        android:entryValues="@array/preference_dark_mode_values"
+        android:key="dark_mode_mode"
+        android:title="@string/settings_title_darkmode"
+        app:iconSpaceReserved="false" />
     <PreferenceCategory
         android:layout_width="match_parent"
         android:title="@string/settings_category_functions"
         app:allowDividerAbove="false"
         app:iconSpaceReserved="false">
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="app_events_enabled"
-            android:summary="@string/settings_summary_mainthirdpage"
-            android:textColor="?attr/text_color_primary"
-            android:textColorHint="?attr/text_color_secondary"
-            android:title="@string/settings_title_mainthirdpage"
-            app:iconSpaceReserved="false" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="app_task_enabled"

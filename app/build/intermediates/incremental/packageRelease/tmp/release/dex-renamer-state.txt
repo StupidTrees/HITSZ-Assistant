@@ -1,7 +1,4 @@
-#Thu Mar 05 22:33:14 CST 2020
-base.0=C\:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\out\\classes.dex
-path.1=classes2.dex
-renamed.1=classes2.dex
+#Mon May 04 23:10:31 CST 2020
+base.0=C\:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\dex\\release\\shrunkDex\\classes.dex
 path.0=classes.dex
 renamed.0=classes.dex
-base.1=C\:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\out\\classes2.dex

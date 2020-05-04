@@ -1,17 +1,15 @@
 package com.stupidtree.hita.activities;
 
-import android.app.SharedElementCallback;
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,9 +23,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.popup.FragmentTeacherContact;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -48,13 +45,13 @@ import static com.stupidtree.hita.HITAApplication.TPE;
 public class ActivityTeacherOfficial extends BaseActivity {
 
 
+    boolean isFirst = true;
     String teacherName;
     String teacherId;
     String teacherUrl;
     ImageView teacherAvatar;
-    TextView name, description, post, position, label;
+    TextView name, post, position, label;
     CardView avatar_card;
-    SwipeRefreshLayout refresh;
     AppBarLayout appBarLayout;
     Map<String, String> teacherInfo;
     Map<String, String> teacherProfile;
@@ -62,16 +59,17 @@ public class ActivityTeacherOfficial extends BaseActivity {
     ViewPager pager;
     PagerAdapter pagerAdapter;
     TabLayout tabs;
-    FloatingActionButton fab;
+    ExtendedFloatingActionButton fab;
     NestedScrollView noneView;
     LoadTeacherPageTask pageTask1;
     LoadTeacherProfileTask pageTask2;
+    SwipeRefreshLayout refresh;
 
 
     @Override
     protected void stopTasks() {
         if (pageTask1 != null && pageTask1.getStatus() != AsyncTask.Status.FINISHED)
-        pageTask1.cancel(true);
+            pageTask1.cancel(true);
         if (pageTask2 != null && pageTask2.getStatus() != AsyncTask.Status.FINISHED)
             pageTask2.cancel(true);
 
@@ -88,23 +86,21 @@ public class ActivityTeacherOfficial extends BaseActivity {
         teacherUrl = getIntent().getStringExtra("url");
         teacherName = getIntent().getStringExtra("name");
         initViews();
-        Log.e("data", String.valueOf(getIntent().getData()));
-        Glide.with(this).load("http://faculty.hitsz.edu.cn/file/showHP.do?d=" +
-                teacherId + "&&w=200&&h=200&&prevfix=200-")
-                .apply(RequestOptions.circleCropTransform())
-                .placeholder(R.drawable.ic_account_activated)
-                .into(teacherAvatar);
+        // Log.e("data", String.valueOf(getIntent().getData()));
+
         initPager();
         initToolbar();
 
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        Refresh(false, false);
+        if (isFirst) {
+            Refresh();
+            isFirst = false;
+        }
     }
 
     void initToolbar() {
@@ -190,50 +186,55 @@ public class ActivityTeacherOfficial extends BaseActivity {
         tabs.setupWithViewPager(pager);
     }
 
+    @SuppressLint("ResourceType")
     void initViews() {
-        fab = findViewById(R.id.fab);
         refresh = findViewById(R.id.refresh);
+        fab = findViewById(R.id.fab);
         name = findViewById(R.id.teacher_name);
-        description = findViewById(R.id.teacher_describe);
         post = findViewById(R.id.teacher_post);
         label = findViewById(R.id.teacher_label);
         position = findViewById(R.id.teacher_position);
         teacherAvatar = findViewById(R.id.teacher_avatar);
         avatar_card = findViewById(R.id.card_avatar);
+        fab.setBackgroundColor(getColorAccent());
+        //fab.hide();
+        fab.setVisibility(View.INVISIBLE);
+        fab.setHideMotionSpecResource(R.anim.fab_scale_hide);
+        fab.setShowMotionSpecResource(R.anim.fab_scale_show);
         teacherAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityUtils.startPhotoDetailActivity_transition(ActivityTeacherOfficial.this,
-                        "http://faculty.hitsz.edu.cn/file/showHP.do?d=" + teacherId,
-                        view
-                );
+                ActivityUtils.showOneImage(getThis(), "http://faculty.hitsz.edu.cn/file/showHP.do?d=" + teacherId);
+
             }
         });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new FragmentTeacherContact(teacherProfile).show(getSupportFragmentManager(), "ftc");
+                FragmentTeacherContact.newInstance(teacherProfile).show(getSupportFragmentManager(), "ftc");
             }
         });
+        refresh.setColorSchemeColors(getColorAccent());
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Refresh(true, true);
+                Refresh();
             }
         });
-        refresh.setColorSchemeColors(getColorPrimary(), getColorFade());
     }
 
-    void Refresh(boolean swipe, boolean glide) {
+    void Refresh() {
         name.setText(teacherName);
-        if (glide) Glide.with(this).load("http://faculty.hitsz.edu.cn/file/showHP.do?d=" +
+        Glide.with(this).load("http://faculty.hitsz.edu.cn/file/showHP.do?d=" +
                 teacherId + "&&w=200&&h=200&&prevfix=200-")
                 .apply(RequestOptions.circleCropTransform())
                 .placeholder(R.drawable.ic_account_activated)
                 .into(teacherAvatar);
-        if(pageTask1!=null&&pageTask1.getStatus()!=AsyncTask.Status.FINISHED) pageTask1.cancel(true);
-        if(pageTask2!=null&&pageTask2.getStatus() != AsyncTask.Status.FINISHED) pageTask2.cancel(true);
-        pageTask1 = new LoadTeacherPageTask(swipe);
+        if (pageTask1 != null && pageTask1.getStatus() != AsyncTask.Status.FINISHED)
+            pageTask1.cancel(true);
+        if (pageTask2 != null && pageTask2.getStatus() != AsyncTask.Status.FINISHED)
+            pageTask2.cancel(true);
+        pageTask1 = new LoadTeacherPageTask();
         pageTask1.executeOnExecutor(TPE);
         pageTask2 = new LoadTeacherProfileTask();
         pageTask2.executeOnExecutor(TPE);
@@ -251,7 +252,7 @@ public class ActivityTeacherOfficial extends BaseActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            fab.hide();
+
         }
 
         @Override
@@ -288,7 +289,6 @@ public class ActivityTeacherOfficial extends BaseActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            fab.show();
             String pos = teacherProfile.get("post");
             if (TextUtils.isEmpty(pos)) post.setVisibility(View.GONE);
             else {
@@ -311,18 +311,17 @@ public class ActivityTeacherOfficial extends BaseActivity {
     }
 
     class LoadTeacherPageTask extends AsyncTask {
-        boolean swipe;
+        List<String> titleToAdd;
+        HashMap<String, String> infoToAdd;
 
-        public LoadTeacherPageTask(boolean swipe) {
-            this.swipe = swipe;
-        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if (swipe) refresh.setRefreshing(true);
-            teacherInfo.clear();
-            tabTitles.clear();
+            fab.hide();
+            refresh.setRefreshing(true);
+            titleToAdd = new ArrayList<>();
+            infoToAdd = new HashMap<>();
         }
 
         @Override
@@ -340,8 +339,8 @@ public class ActivityTeacherOfficial extends BaseActivity {
                         String id = e.attr("data-class");
                         Element part = teachersPage.getElementById(id);
                         if (part != null && part.getElementsByTag("table").size() > 0) {
-                            tabTitles.add(e.text());
-                            teacherInfo.put(e.text(), part.getElementsByTag("table").first().toString());
+                            titleToAdd.add(e.text());
+                            infoToAdd.put(e.text(), part.getElementsByTag("table").first().toString());
                         }
                     }
                 }
@@ -356,7 +355,10 @@ public class ActivityTeacherOfficial extends BaseActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            if (swipe) refresh.setRefreshing(false);
+            teacherInfo.clear();
+            tabTitles.clear();
+            teacherInfo.putAll(infoToAdd);
+            tabTitles.addAll(titleToAdd);
             if (teacherInfo.size() > 0) {
                 noneView.setVisibility(View.GONE);
                 pager.setVisibility(View.VISIBLE);
@@ -365,6 +367,9 @@ public class ActivityTeacherOfficial extends BaseActivity {
                 noneView.setVisibility(View.VISIBLE);
             }
             pagerAdapter.notifyDataSetChanged();
+            pager.scheduleLayoutAnimation();
+            refresh.setRefreshing(false);
+            fab.show();
         }
     }
 

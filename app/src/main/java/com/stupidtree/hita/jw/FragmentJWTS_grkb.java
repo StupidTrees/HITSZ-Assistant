@@ -1,33 +1,28 @@
 package com.stupidtree.hita.jw;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.WorkerThread;
-import androidx.appcompat.app.AlertDialog;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.stupidtree.hita.HITAApplication;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import androidx.appcompat.app.AlertDialog;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
-import com.stupidtree.hita.timetable.CurriculumCreator;
-import com.stupidtree.hita.diy.ButtonLoading;
 import com.stupidtree.hita.online.Teacher;
-import com.stupidtree.hita.util.FileOperator;
+import com.stupidtree.hita.timetable.CurriculumCreator;
+import com.stupidtree.hita.views.ButtonLoading;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,16 +38,13 @@ import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED
 
 
 public class FragmentJWTS_grkb extends JWFragment {
-    Spinner xnxq_picker;
-    ButtonLoading bt_import_grkb;
-    Switch uploadTeacher;
-
-  //  refreshPageTask pageTask;
+    private Spinner xnxq_picker;
+    private ButtonLoading bt_import_grkb;
+    private Switch uploadTeacher, syncSubject;
 
     //数据区
-    List<String> spinnerItems;
-   // List<Map<String, String>> xnxnData;
-    ArrayAdapter xnxqAdapter;
+    private List<String> spinnerItems;
+    private ArrayAdapter xnxqAdapter;
 
     public FragmentJWTS_grkb() {
 
@@ -65,23 +57,21 @@ public class FragmentJWTS_grkb extends JWFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_jwts_grkb, container, false);
-        initViews(v);
+    protected int getLayoutId() {
+        return R.layout.fragment_jwts_grkb;
+    }
 
-        return v;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViews(view);
     }
 
 
-    void initViews(View v) {
+    private void initViews(View v) {
         super.initRefresh(v);
         xnxq_picker = v.findViewById(R.id.xnxq_picker);
         spinnerItems = new ArrayList<>();
@@ -91,6 +81,7 @@ public class FragmentJWTS_grkb extends JWFragment {
         xnxq_picker.setAdapter(xnxqAdapter);
         bt_import_grkb = v.findViewById(R.id.button_import_grkb);
         uploadTeacher = v.findViewById(R.id.switch_teacher);
+        syncSubject = v.findViewById(R.id.switch_subject);
         bt_import_grkb.setOnButtonLoadingListener(new ButtonLoading.OnButtonLoadingListener() {
             @Override
             public void onClick() {
@@ -99,7 +90,7 @@ public class FragmentJWTS_grkb extends JWFragment {
                     String xn = xnxq.get("xn");
                     String xq = xnxq.get("xq");
                     String name = xnxq.get("xnmc") + xnxq.get("xqmc") + "课表";
-                    new importGRKBTask(xn, xq, name,uploadTeacher.isChecked()).execute();
+                    new importGRKBTask(xn, xq, name, uploadTeacher.isChecked(), syncSubject.isChecked()).execute();
                 }
             }
 
@@ -119,12 +110,12 @@ public class FragmentJWTS_grkb extends JWFragment {
 
 
     @WorkerThread
-    protected void getSubjectsInfo(CurriculumCreator ci, String xn, String xq) throws JWException {
+    private void getSubjectsInfo(CurriculumCreator ci, String xn, String xq) throws JWException {
         ci.updateSubjectInfo(jwCore.getChosenSubjectsInfo(xn, xq));
     }
 
     @WorkerThread
-    protected void uploadTeacherInfo(List<String> teacherId) throws JWException {
+    private void uploadTeacherInfo(List<String> teacherId) throws JWException {
         List<Teacher> teacherList = new ArrayList<>();
         for (String id : teacherId) {
             Map<String, String> m = jwCore.getTeacherData(id);
@@ -160,8 +151,8 @@ public class FragmentJWTS_grkb extends JWFragment {
 
 
     @Override
-    public String getTitle() {
-        return HContext.getString(R.string.jw_tabs_frkb);
+    public int getTitle() {
+        return R.string.jw_tabs_frkb;
     }
 
     @Override
@@ -185,48 +176,9 @@ public class FragmentJWTS_grkb extends JWFragment {
         }
         xnxqAdapter.notifyDataSetChanged();
         xnxq_picker.setSelection(now);
-//        pageTask = new refreshPageTask();
-//        pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
 
-//    class refreshPageTask extends RefreshJWPageTask {
-//
-//
-//
-//        @Override
-//        protected Object doInBackground(Object[] objects) {
-//            try {
-//                return jwCore.getXNXQ();
-//            } catch (JWException e) {
-//                return e;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object o) {
-//            super.onPostExecute(o);
-//            if (o != null && o instanceof List) {
-//                List<Map<String, String>> xnxqList = (List<Map<String, String>>) o;
-//                spinnerItems.clear();
-//                xnxnData.clear();
-//                xnxnData.addAll(xnxqList);
-//                int i = 0;
-//                int now = 0;
-//                for (Map<String, String> item : xnxqList) {
-//                    if (item.get("sfdqxq").equals("1")) now = i;
-//                    spinnerItems.add(item.get("xnmc") + item.get("xqmc"));
-//                    i++;
-//                }
-//                xnxqAdapter.notifyDataSetChanged();
-//                xnxq_picker.setSelection(now);
-//                //spinner_grkb.setSelection(now);
-//            } else if (o != null && o instanceof JWException) {
-//
-//            }
-//
-//        }
-//    }
 
     @SuppressLint("StaticFieldLeak")
     class importGRKBTask extends AsyncTask {
@@ -234,11 +186,13 @@ public class FragmentJWTS_grkb extends JWFragment {
         String xn;
         String xq;
         String kbName;
+        boolean syncSubject;
         boolean uploadTeacher;
 
-        public importGRKBTask(String xn, String xq, String kbName,boolean uploadT) {
+        public importGRKBTask(String xn, String xq, String kbName, boolean uploadT, boolean syncSubject) {
             this.xn = xn;
             this.xq = xq;
+            this.syncSubject = syncSubject;
             this.kbName = kbName;
             this.uploadTeacher = uploadT;
         }
@@ -262,7 +216,7 @@ public class FragmentJWTS_grkb extends JWFragment {
                 if (uploadTeacher) {
                     uploadTeacherInfo(jwCore.getTeacherOfChosenSubjects(xn,xq));
                 }
-                if (timeTableCore.addCurriculumToTimeTable(s)) {
+                if (timeTableCore.addCurriculum(s, syncSubject)) {
                     ActivityMain.saveData();
                     return true;
                 }
@@ -300,6 +254,7 @@ public class FragmentJWTS_grkb extends JWFragment {
                 Toast.makeText(HContext, ((Boolean) o) ? "成功" : "失败", Toast.LENGTH_SHORT).show();
                 //if(o.toString().contains("成功")) new ActivityJWTS.getPYJHTask().executeOnExecutor(HITAApplication.TPE);
             }
+            ActivityMain.saveData();
         }
     }
 

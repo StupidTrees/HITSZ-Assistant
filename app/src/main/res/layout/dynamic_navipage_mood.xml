@@ -7,44 +7,42 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:layout_marginStart="@dimen/navi_page_card_margin_start_end"
+    android:layout_marginTop="@dimen/navi_page_card_margin_top_bottom"
+    android:layout_marginEnd="@dimen/navi_page_card_margin_start_end"
+    android:layout_marginBottom="@dimen/navi_page_card_margin_top_bottom"
     android:clickable="true"
+    android:focusable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:orientation="vertical"
     app:cardBackgroundColor="?attr/background_color_second"
     app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    android:focusable="true">
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:id="@+id/mood_vote"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/navi_page_card_padding_top_bottom"
+        android:layout_marginBottom="8dp"
         android:orientation="vertical"
         android:visibility="gone">
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-black"
+            android:layout_marginStart="16dp"
             android:text="@string/navi_mood_greet"
-            android:textColor="?attr/text_color_primary"
-            android:textSize="18sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:alpha="0.4"
-            android:background="?android:attr/listDivider" />
+            android:textColor="?attr/text_color_secondary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/navi_page_card_padding_start_end"
+            android:layout_marginEnd="@dimen/navi_page_card_padding_start_end"
             android:orientation="horizontal">
 
             <ImageView
@@ -55,12 +53,12 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:paddingTop="24dp"
+                android:paddingTop="32dp"
                 android:paddingBottom="16dp"
-                android:tint="@color/green_primary"
+                android:tint="?attr/colorAccent"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_mood_happy"
-                app:theme="@style/attitude_button_ripple_green" />
+                app:theme="@style/button_ripple_accent_large" />
 
             <ImageView
                 android:id="@+id/normal"
@@ -70,12 +68,12 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:paddingTop="24dp"
+                android:paddingTop="32dp"
                 android:paddingBottom="16dp"
-                android:tint="@color/blue_primary"
+                android:tint="?attr/colorAccent"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_mood_normal"
-                app:theme="@style/attitude_button_ripple_blue" />
+                app:theme="@style/button_ripple_accent_large" />
 
             <ImageView
                 android:id="@+id/sad"
@@ -85,12 +83,12 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:paddingTop="24dp"
+                android:paddingTop="32dp"
                 android:paddingBottom="16dp"
-                android:tint="@color/deep_orange_primary"
+                android:tint="?attr/colorAccent"
                 android:tintMode="src_in"
-                app:srcCompat="@drawable/ic_mood_normal"
-                app:theme="@style/attitude_button_ripple_blue" />
+                app:srcCompat="@drawable/ic_mood_sad"
+                app:theme="@style/button_ripple_accent_large" />
 
         </LinearLayout>
 
@@ -100,118 +98,177 @@
         android:id="@+id/mood_ut"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:orientation="vertical">
+        android:layout_marginTop="@dimen/navi_page_card_padding_top_bottom"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/navi_mood_title"
-            android:textColor="?attr/text_color_primary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal">
 
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:alpha="0.4"
-            android:background="?android:attr/listDivider" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/navi_mood_title"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/text_color_secondary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="0dp"
+                android:text="@string/navi_mood_point"
+                android:textColor="@color/text_color_secondary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="12dp"
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/icon"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:id="@+id/first_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/radius_accent_round_icon_bg"
+                android:backgroundTint="?attr/background_color_bottom_as_tint"
+                android:backgroundTintMode="src_over"
+                android:padding="6dp"
+                android:src="@drawable/ic_mood_happy"
+                android:tint="?attr/colorAccent" />
+
+            <ProgressBar
+                android:id="@+id/first_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="14dp"
                 android:layout_gravity="center"
-                android:background="@drawable/gradient_round"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="5.8dp"
-                android:tint="@color/material_text_icon_white"
-                android:tintMode="src_in"
-                app:srcCompat="@drawable/ic_mood_happy"
-                app:theme="@style/attitude_button_ripple_green" />
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:progress="0"
+                android:progressDrawable="@drawable/style_progressbar_accent" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/score"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:gravity="bottom"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="26sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|center"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginBottom="2.5dp"
-                        android:text="@string/navi_mood_point"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="8dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/percentage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|right"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="14sp"
-                        tools:ignore="RtlHardcoded" />
-
-                    <TextView
-                        android:id="@+id/mood_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|center"
-                        android:textColor="?attr/text_color_secondary"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
+            <TextView
+                android:id="@+id/first_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="12dp"
+            android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/second_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/radius_accent_round_icon_bg"
+                android:backgroundTint="?attr/background_color_bottom_as_tint"
+                android:backgroundTintMode="src_over"
+                android:padding="6dp"
+                android:src="@drawable/ic_mood_happy"
+                android:tint="?attr/colorAccent" />
+
+            <ProgressBar
+                android:id="@+id/second_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:progress="0"
+                android:progressDrawable="@drawable/style_progressbar_accent" />
+
+            <TextView
+                android:id="@+id/second_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="13sp"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="18dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/third_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/radius_accent_round_icon_bg"
+                android:backgroundTint="?attr/background_color_bottom_as_tint"
+                android:backgroundTintMode="src_over"
+                android:padding="6dp"
+                android:src="@drawable/ic_mood_happy"
+                android:tint="?attr/colorAccent" />
+
+            <ProgressBar
+                android:id="@+id/third_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:progress="0"
+                android:progressDrawable="@drawable/style_progressbar_accent"
+                tools:ignore="InefficientWeight" />
+
+            <TextView
+                android:id="@+id/third_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="13sp"
+                tools:ignore="HardcodedText" />
         </LinearLayout>
 
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>
 
 

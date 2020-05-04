@@ -1,6 +1,7 @@
 package com.stupidtree.hita.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
@@ -9,97 +10,90 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.viewpager.widget.ViewPager;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
-import com.stupidtree.hita.BaseActivity;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.adapter.NormalPagerAdapter;
-import com.stupidtree.hita.online.errorTableText;
-import com.stupidtree.hita.timetable.Curriculum;
-import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
-import com.stupidtree.hita.fragments.main.FragmentNavi;
-import com.stupidtree.hita.fragments.main.FragmentTasks;
-import com.stupidtree.hita.fragments.popup.FragmentTheme;
+import com.stupidtree.hita.adapter.MainPagerAdapter;
 import com.stupidtree.hita.fragments.main.FragmentTimeLine;
-import com.stupidtree.hita.fragments.FragmentTimeTablePage;
+import com.stupidtree.hita.fragments.popup.FragmentTheme;
 import com.stupidtree.hita.jw.JWException;
-import com.stupidtree.hita.timetable.TimeWatcherService;
+import com.stupidtree.hita.online.errorTableText;
+import com.stupidtree.hita.timetable.packable.Curriculum;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.FileOperator;
+import com.stupidtree.hita.views.mBottomHideBehavior;
 import com.tencent.bugly.beta.Beta;
 
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
-import static com.stupidtree.hita.HITAApplication.*;
+import static com.stupidtree.hita.HITAApplication.CurrentUser;
+import static com.stupidtree.hita.HITAApplication.HContext;
+import static com.stupidtree.hita.HITAApplication.defaultSP;
+import static com.stupidtree.hita.HITAApplication.jwCore;
+import static com.stupidtree.hita.HITAApplication.themeCore;
+import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.util.UpdateManager.checkUpdate;
 
 public class ActivityMain extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener
-        , FragmentTimeLine.OnFragmentInteractionListener
-        , FragmentAddEvent.OnFragmentInteractionListener
-        , FragmentNavi.OnFragmentInteractionListener {
+        , FragmentTimeLine.MainFABController {
 
     public static final String MAIN_RECREATE = "COM.STUPIDTREE.HITA.MAIN_ACTIVITY_RECREATE";
-    public static boolean app_task_enabled;
-    FragmentTimeLine tlf;
-    FragmentNavi nvf;
-    FragmentTasks tskf;
-    public FloatingActionButton fabmain;
+    ExtendedFloatingActionButton fabMain;
+    mBottomHideBehavior<FrameLayout> fabBehavior;
     Toolbar mToolbar;
     DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
@@ -108,18 +102,55 @@ public class ActivityMain extends BaseActivity
     ActionBarDrawerToggle mActionBarDrawerToggle;
     ViewPager mainPager;
     TabLayout mainTabs;
-    NormalPagerAdapter pagerAdapter;
+    MainPagerAdapter pagerAdapter;
     CardView drawer_card_profile, drawer_card_curriculummanager, drawer_card_theme, drawer_card_dynamic;
     CardView avatar_card;
-    ImageView drawer_bg, drawer_bt_settings;
-    MenuItem dark_mode_menu;
+    LinearLayout drawer_header;
+    Switch dark_mode_switch;
+    LinearLayout settingsMenu, darkModeMenu;
     boolean isFirst;
     boolean willRecreateOnResume = false;
 
+    View.OnClickListener click_timetable, click_search = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            Intent i = new Intent(getThis(), ActivitySearch.class);
+            startActivity(i);
+//                v.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        int[] location = new int[2] ;
+//                        v.getLocationInWindow(location);
+//                        int x = location[0]+v.getWidth()/4;
+//                        int y = location[1]+v.getHeight()/2;
+//                        presentActivity(getThis(),x,y);
+//                    }
+//                });
+
+            //ActivityUtils.search(getThis(),"");
+        }
+    };
 
     @Override
     protected void stopTasks() {
 
+    }
+
+    public static void showUpdateDialog(final Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(context.getString(R.string.update_dialog_title))
+                .setMessage(context.getString(R.string.update_dialog_mes1) + Beta.getUpgradeInfo().versionName + "\n" + context.getString(R.string.update_dialog_mes2) + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Beta.getUpgradeInfo().publishTime))
+                .setCancelable(false)
+                .setPositiveButton(context.getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent it = new Intent(context, ActivityAboutHITA.class);
+                        context.startActivity(it);
+                    }
+                })
+                .setNegativeButton(context.getString(R.string.button_cancel), null);
+        builder.create();
+        builder.show();
     }
 
     @Override
@@ -128,69 +159,43 @@ public class ActivityMain extends BaseActivity
         setWindowParams(true, true, false);
         isFirst = defaultSP.getBoolean("firstOpen", true);
         willRecreateOnResume = false;
-        app_task_enabled = defaultSP.getBoolean("app_events_enabled", true);
-       // upDateNoti1202 = defaultSP.getBoolean("update_noti_1202",true);
-        tlf = FragmentTimeLine.newInstance(isFirst);
-        nvf = new FragmentNavi();
-        if (app_task_enabled) tskf = new FragmentTasks();
         checkAPPPermission();
         initBroadcast();
         setContentView(R.layout.activity_main);
-        fabmain = findViewById(R.id.fab_main);
-        fabmain.setOnClickListener(new View.OnClickListener() {
+        fabMain = findViewById(R.id.fab_main);
+        try {
+            CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) ((FrameLayout) fabMain.getParent()).getLayoutParams();
+            fabBehavior = (mBottomHideBehavior<FrameLayout>) lp.getBehavior();
+        } catch (Exception e) {
+            fabBehavior = null;
+        }
+        click_timetable = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //buildHita();
                 if(timeTableCore.isDataAvailable()){
                     Intent i = new Intent(ActivityMain.this, ActivityTimeTable.class);
                     startActivity(i);
                 }else{
-                    Snackbar.make(v,getString(R.string.notif_importdatafirst),Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(fabMain, getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
                 }
-
-
             }
-        });
+        };
         if (defaultSP.getBoolean("autoCheckUpdate", true)) checkUpdate(this);
         initDrawer();
         initToolBar();
         initPager();
+
         if (isFirst) {
             try {
                 Guide();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (!defaultSP.getBoolean("update20200420_guide", false)) {
+            UpdateGuide20200420();
         }
     }
-
-
-    void initBroadcast(){
-        BroadcastReceiver br = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().equals(MAIN_RECREATE)){
-                    try{
-                        recreate();
-                        willRecreateOnResume = false;
-                    }catch (Exception e){
-                        willRecreateOnResume = true;
-                    }
-
-
-                }
-            }
-        };
-        IntentFilter iF = new IntentFilter();
-        iF.addAction(MAIN_RECREATE);
-        LocalBroadcastManager.getInstance(this).registerReceiver(br,iF);
-    }
     public static void autoLogin() {
-//        String ut_un = defaultSP.getString("ut_username",null);
-//        if(ut_un!=null){
-//            String ut_pw = defaultSP.getString(ut_un+".password",null);
-//            if(ut_pw!=null) new loginUTInBackgroundTask(ut_un,ut_pw).executeOnExecutor(HITAApplication.TPE);
-//        }
 
         if (!defaultSP.getBoolean("jwts_autologin", true)) return;
         if (CurrentUser != null) {
@@ -211,11 +216,31 @@ public class ActivityMain extends BaseActivity
 
      }
 
+    void initBroadcast() {
+        BroadcastReceiver br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction() != null && intent.getAction().equals(MAIN_RECREATE)) {
+                    try {
+                        recreate();
+                        willRecreateOnResume = false;
+                    } catch (Exception e) {
+                        willRecreateOnResume = true;
+                    }
+
+
+                }
+            }
+        };
+        IntentFilter iF = new IntentFilter();
+        iF.addAction(MAIN_RECREATE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(br, iF);
+    }
 
     void initToolBar() {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true); //1.决定显示.
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true); //1.决定显示.
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close); //2.传入Toolbar可以点击.
         mActionBarDrawerToggle.setDrawerSlideAnimationEnabled(true);
         mActionBarDrawerToggle.syncState();
@@ -225,8 +250,6 @@ public class ActivityMain extends BaseActivity
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-               // Intent i = new Intent(ActivityMain.this,ActivitySearch.class);
-               // startActivity(i);
                 if (menuItem.getItemId() == R.id.action_search) {
                     WindowManager manager = getWindowManager();
                     DisplayMetrics outMetrics = new DisplayMetrics();
@@ -239,19 +262,15 @@ public class ActivityMain extends BaseActivity
         });
     }
 
+    @SuppressLint("ResourceType")
     void initPager() {
         mainPager = findViewById(R.id.mainPager);
         mainTabs = findViewById(R.id.mainTabs);
-        ArrayList<com.stupidtree.hita.BaseFragment> fragments = new ArrayList<>();
-        fragments.add(nvf);
-        fragments.add(tlf);
-       // fragments.add(new FragmentTasksBackUp());
-        if (tskf != null & app_task_enabled) fragments.add(tskf);
-        //mainTabs.setSelectedTabIndicatorColor(Color.parseColor("#00000000"));
-        pagerAdapter = new NormalPagerAdapter(getSupportFragmentManager(), fragments,
-                new String[]{getString(R.string.maintab_navi),getString(R.string.maintab_today),getString(R.string.maintab_events)});
+        pagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), new String[]{getString(R.string.maintab_navi), getString(R.string.maintab_today), getString(R.string.maintab_events)});
         mainTabs.setupWithViewPager(mainPager);
-
+        fabMain.setBackgroundTintList(ColorStateList.valueOf(getColorAccent()));
+        fabMain.setHideMotionSpecResource(R.anim.fab_scale_hide);
+        fabMain.setShowMotionSpecResource(R.anim.fab_scale_show);
         mainPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -260,12 +279,29 @@ public class ActivityMain extends BaseActivity
 
             @Override
             public void onPageSelected(int i) {
-                if (i != 1){
-                    fabmain.hide();
-
-                }
-                else {
-                    fabmain.show();
+                switch (i) {
+                    case 0:
+                        fabMain.setIcon(getDrawable(R.drawable.ic_search_solid));
+                        fabMain.extend();
+                        fabShow();
+                        if (fabBehavior != null) fabBehavior.setFabSlideEnable(true);
+                        // fabBehavior.setSlideEnable(true);
+                        fabMain.setOnClickListener(click_search);
+                        break;
+                    case 1:
+                        if (fabBehavior != null) {
+                            fabBehavior.setFabSlideEnable(false);
+                            fabRise();
+                        }
+                        if (timelineIsHeaderExpanded()) {
+                            fabHide();
+                        } else {
+                            fabShow();
+                        }
+                        fabMain.setIcon(getDrawable(R.drawable.ic_menu_timetable));
+                        fabMain.shrink();
+                        fabMain.setOnClickListener(click_timetable);
+                        break;
 
                 }
             }
@@ -284,12 +320,12 @@ public class ActivityMain extends BaseActivity
         Intent intent = new Intent(this, ActivitySearch.class);
         intent.putExtra(ActivityJWTS.EXTRA_CIRCULAR_REVEAL_X, revealX);
         intent.putExtra(ActivityJWTS.EXTRA_CIRCULAR_REVEAL_Y, revealY);
+        intent.putExtra("anim", true);
         ActivityCompat.startActivity(activity, intent, null);
-        overridePendingTransition(0, 0);
+        activity.overridePendingTransition(0, 0);
     }
 
-
-    public void Guide(){
+    private void Guide() {
         new TapTargetSequence(this)
                 .targets(
                         TapTarget.forView(mainPager, getString(R.string.guide_1p), getString(R.string.guide_1s))
@@ -297,19 +333,12 @@ public class ActivityMain extends BaseActivity
                                 .cancelable(false)
                                 .tintTarget(true)
                                 .transparentTarget(false)
-                                .outerCircleColor(R.color.blue_accent)
+                                .outerCircleColorInt(getColorAccent())
                                 .titleTextSize(24)
+                                .cancelable(true)
                                 .id(1)
                                 .icon(getDrawable(R.drawable.ic_navigation))
                         ,
-                        TapTarget.forView(mainTabs, getString(R.string.guide_2p), getString(R.string.guide_2s))
-                                .drawShadow(true)
-                                .cancelable(false)
-                                .tintTarget(true)
-                                .transparentTarget(false)
-                                .outerCircleColor(R.color.blue_accent)
-                                .titleTextSize(24),
-
                         TapTarget.forToolbarNavigationIcon(mToolbar, getString(R.string.guide_3p), getString(R.string.guide_3s))
                                 .drawShadow(true)
                                 .cancelable(false)
@@ -318,32 +347,39 @@ public class ActivityMain extends BaseActivity
                                 .id(13)
                                 .transparentTarget(true)
                                 .targetCircleColor(R.color.white)
-                                .outerCircleColor(R.color.blue_accent)
+                                .outerCircleColorInt(getColorAccent())
                         ,
-                        TapTarget.forView(drawerUserAvatar, getString(R.string.guide_4p), getString(R.string.guide_4s))
+//                        TapTarget.forView(drawerUserAvatar, getString(R.string.guide_4p), getString(R.string.guide_4s))
+//                                .drawShadow(true)
+//                                .cancelable(false)
+//                                .tintTarget(true)
+//                                .id(14)
+//                                .titleTextSize(18)
+//                                .transparentTarget(true)
+//                                .targetCircleColor(R.color.white)
+//                                .outerCircleColor(R.color.cruelsummer_accent),
+                        TapTarget.forView(mainPager, getString(R.string.guid_7p), getString(R.string.guid_7s))
                                 .drawShadow(true)
                                 .cancelable(false)
                                 .tintTarget(true)
-                                .id(14)
-                                .titleTextSize(18)
-                                .transparentTarget(true)
+                                .icon(getDrawable(R.drawable.ic_arrow_downward))
+                                .transparentTarget(false)
                                 .targetCircleColor(R.color.white)
-                                .outerCircleColor(R.color.blue_accent),
-
-                        TapTarget.forView(fabmain, getString(R.string.guide_5p), getString(R.string.guide_5s))
+                                .outerCircleColorInt(getColorAccent()),
+                        TapTarget.forView(fabMain, getString(R.string.guide_5p), getString(R.string.guide_5s))
                                 .drawShadow(true)
                                 .cancelable(false)
                                 .tintTarget(false)
                                 .transparentTarget(false)
                                 .targetCircleColor(R.color.white)
-                                .outerCircleColor(R.color.blue_accent),
+                                .outerCircleColorInt(getColorAccent()),
                         TapTarget.forToolbarMenuItem(mToolbar, R.id.action_search, getString(R.string.guide_6p), getString(R.string.guide_6s))
                                 .drawShadow(true)
                                 .cancelable(false)
                                 .tintTarget(false)
                                 .transparentTarget(false)
                                 .targetCircleColor(R.color.white)
-                                .outerCircleColor(R.color.blue_accent),
+                                .outerCircleColorInt(getColorAccent()),
                         TapTarget.forView(mainPager, getString(R.string.guide_7p), getString(R.string.guide_7s))
                                 .drawShadow(true)
                                 .cancelable(false)
@@ -352,7 +388,7 @@ public class ActivityMain extends BaseActivity
                                 .descriptionTextSize(18)
                                 .transparentTarget(false)
                                 .targetCircleColor(R.color.white)
-                                .outerCircleColor(R.color.amber_primary)
+                                .outerCircleColorInt(getColorAccent())
                                 .icon(getDrawable(R.drawable.bt_guide_done))
                 ).listener(new TapTargetSequence.Listener() {
             @Override
@@ -360,19 +396,20 @@ public class ActivityMain extends BaseActivity
                 Intent i = new Intent(ActivityMain.this, ActivityLogin.class);
                 startActivity(i);
                 defaultSP.edit().putBoolean("firstOpen", false).apply();
+                defaultSP.edit().putBoolean("update20200420_guide", true).apply();
                 isFirst = false;
             }
 
             @Override
             public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
-                if (lastTarget.id() == 14) tlf.showHeadCard();
-                if (lastTarget.id() == 13) mDrawerLayout.openDrawer(Gravity.LEFT);
-                if (lastTarget.id() == 14) mDrawerLayout.closeDrawer(Gravity.LEFT);
+//                if (lastTarget.id() == 13) mDrawerLayout.openDrawer(Gravity.LEFT);
+//                if (lastTarget.id() == 14) mDrawerLayout.closeDrawer(Gravity.LEFT);
             }
 
             @Override
             public void onSequenceCanceled(TapTarget lastTarget) {
-
+                defaultSP.edit().putBoolean("firstOpen", false).apply();
+                defaultSP.edit().putBoolean("update20200420_guide", true).apply();
             }
         }).start();
 
@@ -386,22 +423,37 @@ public class ActivityMain extends BaseActivity
         return false;
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(defaultSP.getBoolean("auto_upload_user_data",true)) saveData();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        if(defaultSP.getBoolean("auto_upload_user_data",true)) saveData();
+//    }
 
 
     public static void saveData() {
         new SaveDataTask().executeOnExecutor(HITAApplication.TPE);
     }
 
+    private void UpdateGuide20200420() {
+
+        TapTarget tapTarget = TapTarget.forView(mainPager, getString(R.string.guid_7p), getString(R.string.guid_7s))
+                .drawShadow(true)
+                .cancelable(false)
+                .tintTarget(true)
+                .icon(getDrawable(R.drawable.ic_arrow_downward))
+                .transparentTarget(false)
+                .targetCircleColor(R.color.white)
+                .outerCircleColorInt(getColorAccent());
+        TapTargetView.showFor(this, tapTarget, new TapTargetView.Listener() {
+            @Override
+            public void onTargetClick(TapTargetView view) {
+                super.onTargetClick(view);
+                defaultSP.edit().putBoolean("update20200420_guide", true).apply();
+            }
+        });
+        //new TapTargetView(this,getWindowManager(),null,tapTarget,null);
+    }
 
     public void checkAPPPermission() {
         List<String> permissionList = new ArrayList<>();
@@ -424,7 +476,7 @@ public class ActivityMain extends BaseActivity
             permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         if (!permissionList.isEmpty()) {
-            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+            String[] permissions = permissionList.toArray(new String[0]);
             ActivityCompat.requestPermissions(this, permissions, 1);
         }
         FileOperator.verifyStoragePermissions(this);
@@ -434,6 +486,7 @@ public class ActivityMain extends BaseActivity
         mDrawerLayout = findViewById(R.id.main_drawer_layout);
         mNavigationView = findViewById(R.id.drawer_navigationview);
         View headview = mNavigationView.inflateHeaderView(R.layout.activity_main_nav_header);
+
         drawerUserAvatar = headview.findViewById(R.id.main_drawer_user_avatar);
         avatar_card = headview.findViewById(R.id.main_drawer_user_avatar_card);
         drawerUserName = headview.findViewById(R.id.main_drawer_user_name);
@@ -442,37 +495,48 @@ public class ActivityMain extends BaseActivity
         drawer_card_profile = headview.findViewById(R.id.drawer_card_hita);
         drawer_card_theme = headview.findViewById(R.id.drawer_card_theme);
         drawer_card_dynamic = headview.findViewById(R.id.drawer_card_dynamic);
-        //  drawerUserAvatar.setOnClickListener(new onUserAvatarClickListener());
-        drawer_bg = headview.findViewById(R.id.drawer_bg);
-        drawer_bg.setOnClickListener(new onUserAvatarClickListener());
-        drawer_bt_settings = headview.findViewById(R.id.drawer_bt_setting);
+        drawer_header = headview.findViewById(R.id.drawer_header);
+        settingsMenu = findViewById(R.id.setting);
+        darkModeMenu = findViewById(R.id.dark_mode);
+        dark_mode_switch = findViewById(R.id.switch_darkmode);
+        settingsMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityUtils.startSettingFor(getThis(), "basic");
+            }
+        });
 //        drawerheader = headview.findViewById(R.id.drawer_header);
 //        drawerheader.setOnClickListener(new onUserAvatarClickListener());
-        Menu menu = mNavigationView.getMenu();
-        dark_mode_menu = menu.findItem(R.id.drawer_nav_darkmode);
-        dark_mode_menu.setActionView(R.layout.action_switch_darkmode);
-        Switch switchA = dark_mode_menu.getActionView().findViewById(R.id.switch_darkmode);
-        switchA.setChecked(themeCore.isDarkModeOn());
-        switchA.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//        Menu menu = mNavigationView.getMenu();
+//        dark_mode_menu = menu.findItem(R.id.drawer_nav_darkmode);
+//        dark_mode_menu.setActionView(R.layout.action_switch_darkmode);
+//        Switch switchA = dark_mode_menu.getActionView().findViewById(R.id.switch_darkmode);
+        dark_mode_switch.setChecked(themeCore.isDarkModeOn());
+        dark_mode_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                buttonView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 themeCore.switchDarkMode(getThis(),isChecked);
             }
         });
-
-
-        drawer_bt_settings.setOnClickListener(new View.OnClickListener() {
+        darkModeMenu.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent i = new Intent(ActivityMain.this, ActivitySetting.class);
-                startActivity(i);
+            public void onClick(View v) {
+                dark_mode_switch.toggle();
             }
         });
         drawer_card_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent pp = new Intent(ActivityMain.this, ActivityChatbot.class);
-                ActivityMain.this.startActivity(pp);
+                avatar_card.callOnClick();
+//                Intent pp = new Intent(ActivityMain.this, ActivityChatbot.class);
+//                ActivityMain.this.startActivity(pp);
+            }
+        });
+        drawer_header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer_card_profile.callOnClick();
             }
         });
         drawer_card_dynamic.setOnClickListener(new View.OnClickListener() {
@@ -511,12 +575,22 @@ public class ActivityMain extends BaseActivity
                         Intent d = new Intent(ActivityMain.this, ActivityAboutHITA.class);
                         ActivityMain.this.startActivity(d);
                         break;
+                    case R.id.drawer_nav_hita:
+                        Intent h = new Intent(ActivityMain.this, ActivityChatbot.class);
+                        ActivityMain.this.startActivity(h);
+                        break;
+                    case R.id.drawer_nav_attitude:
+                        ActivityUtils.startAttitudeActivity(getThis());
+                        break;
+                    case R.id.drawer_nav_community:
+                        ActivityUtils.startCommunityActivity(getThis());
+                        break;
                     case R.id.drawer_nav_info:
                         Intent ppp = new Intent(ActivityMain.this, ActivityNews.class);
                         startActivity(ppp);
                         break;
                     case R.id.drawer_nav_search:
-                        mDrawerLayout.closeDrawer(Gravity.LEFT);
+                        mDrawerLayout.closeDrawer(GravityCompat.START);
                         WindowManager manager = getWindowManager();
                         DisplayMetrics outMetrics = new DisplayMetrics();
                         manager.getDefaultDisplay().getMetrics(outMetrics);
@@ -555,13 +629,9 @@ public class ActivityMain extends BaseActivity
             drawerUserName.setText(getString(R.string.drawer_username_null));
             drawerSignature.setText(getString(R.string.drawer_signature_null));
         } else {
-            if (TextUtils.isEmpty(CurrentUser.getAvatarUri())) {
-                drawerUserAvatar.setImageResource(R.drawable.ic_account_activated);
-                // drawer_bg.setImageResource(R.drawable.gradient_bg);
-            } else {
                 Glide.with(ActivityMain.this)
                         .load(CurrentUser.getAvatarUri())
-                        //.placeholder(R.drawable.ic_account_activated)
+                        .placeholder(R.drawable.ic_account_activated)
                         //.skipMemoryCache(false)
                         //.dontAnimate()
                         //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
@@ -572,26 +642,20 @@ public class ActivityMain extends BaseActivity
 //                        //.placeholder(R.drawable.ic_account_activated)
 //                        .apply(RequestOptions.bitmapTransform(new mBlurTransformation(this, 24, 6)))
 //                        .into(drawer_bg);
-            }
+
             drawerUserName.setText(CurrentUser.getNick());
             drawerSignature.setText(TextUtils.isEmpty(CurrentUser.getSignature()) ?getString(R.string.drawer_signature_none) : CurrentUser.getSignature());
         }
 
-        if (themeCore.getCurrentThemeID()!=R.style.PHTheme
-                &&themeCore.getCurrentThemeID()!=R.style.CyberPunkTheme
+        if (!themeCore.isCurrentDarkTheme()
                 &&defaultSP.getString("dark_mode_mode", "dark_mode_normal").equals("dark_mode_normal")) {
-            dark_mode_menu.setVisible(true);
+            darkModeMenu.setVisibility(View.VISIBLE);
+            darkModeMenu.setClickable(true);
         } else {
-            dark_mode_menu.setVisible(false);
+            darkModeMenu.setVisibility(View.GONE);
+            darkModeMenu.setClickable(false);
+            //gdark_mode_menu.setVisible(false);
         }
-    }
-
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        //4.同步状态
-        //mActionBarDrawerToggle.syncState();
     }
 
     @Override
@@ -626,10 +690,22 @@ public class ActivityMain extends BaseActivity
     }
 
     @Override
-    public void onCalledRefresh() {
-
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        //4.同步状态
+        mActionBarDrawerToggle.syncState();
     }
 
+    @Override
+    public void fabRise() {
+        if (fabBehavior != null && fabMain != null)
+            fabBehavior.slideUp((FrameLayout) fabMain.getParent());
+    }
+
+    @Override
+    public void fabHide() {
+        if (fabMain != null) fabMain.hide();
+    }
 
 
     class onUserAvatarClickListener implements View.OnClickListener {
@@ -646,14 +722,54 @@ public class ActivityMain extends BaseActivity
         }
     }
 
+    @Override
+    public void fabShow() {
+        if (fabMain != null) fabMain.show();
+    }
 
-    static class SaveDataTask extends AsyncTask {
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) mDrawerLayout.closeDrawers();
+        else if (!timelineCloseHeader()) { //返回桌面而不是退出
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
+        }
+    }
+
+    boolean timelineIsHeaderExpanded() {
+        for (Fragment f : getSupportFragmentManager().getFragments()) {
+            if (f instanceof FragmentTimeLine) {
+                FragmentTimeLine tlf = (FragmentTimeLine) f;
+                return tlf.isHeaderExpanded();
+            }
+        }
+        return false;
+    }
+
+    boolean timelineCloseHeader() {
+        for (Fragment f : getSupportFragmentManager().getFragments()) {
+            if (f instanceof FragmentTimeLine) {
+                FragmentTimeLine tlf = (FragmentTimeLine) f;
+                if (tlf.isResumed() && tlf.isHeaderExpanded()) {
+                    tlf.closeHeader();
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
+
+    static class SaveDataTask extends AsyncTask<Object, Integer, Boolean> {
+
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Boolean doInBackground(Object... objects) {
             try {
                 for (Curriculum c : timeTableCore.getAllCurriculum()) {
-                  c.saveToDB();
+                    c.saveToDB();
                 }
                 return timeTableCore.saveDataToCloud();
             } catch (Exception e) {
@@ -663,38 +779,7 @@ public class ActivityMain extends BaseActivity
         }
     }
 
-
-    public static void showUpdateDialog(final Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(context.getString(R.string.update_dialog_title))
-                .setMessage(context.getString(R.string.update_dialog_mes1) + Beta.getUpgradeInfo().versionName + "\n" + context.getString(R.string.update_dialog_mes2) + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Beta.getUpgradeInfo().publishTime))
-                .setCancelable(false)
-                .setPositiveButton(context.getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent it = new Intent(context, ActivityAboutHITA.class);
-                        context.startActivity(it);
-                    }
-                })
-                .setNegativeButton(context.getString(R.string.button_cancel), null);
-        builder.create();
-        builder.show();
-    }
-
-    @Override
-    public void onBackPressed() {
-       if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) mDrawerLayout.closeDrawers();
-        else { //返回桌面而不是退出
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            startActivity(intent);
-        }
-    }
-
-
-
-    public static class loginJWTSInBackgroundTask extends AsyncTask {
+    public static class loginJWTSInBackgroundTask extends AsyncTask<String, Integer, Object> {
 
         String username, password;
 
@@ -704,12 +789,7 @@ public class ActivityMain extends BaseActivity
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(String... strings) {
             try {
                 if(!jwCore.loginCheck()) {
                     Log.e("JW_LOGIN","无登录状态保持，开始重新请求");
@@ -718,13 +798,18 @@ public class ActivityMain extends BaseActivity
                 Log.e("JW_LOGIN","登录状态保持，无需重新请求");
                 return true;
             } catch (JWException e) {
-               return e;
+                return e;
             }
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+
+        @Override
         protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
             if(o instanceof JWException){
                 Intent i = new Intent();
                 i.setAction("COM.STUPIDTREE.HITA.JWTS_LOGIN_FAIL");
@@ -743,129 +828,4 @@ public class ActivityMain extends BaseActivity
             }
         }
     }
-//    public static class loginUTInBackgroundTask extends AsyncTask {
-//
-//        String username, password;
-//       // SwipeRefreshLayout refreshLayout = null;
-//
-//        loginUTInBackgroundTask(String username, String password) {
-//            this.username = username;
-//            this.password = password;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//          //  if(refreshLayout!=null) refreshLayout.setRefreshing(true);
-//        }
-//
-//        @Override
-//        protected Object doInBackground(Object[] objects) {
-//            if(cookies_ut.isEmpty()){
-//                String temped = defaultSP.getString("ut_cookies",null);
-//                if(temped!=null){
-//                    HashMap cookies = new Gson().fromJson(temped,HashMap.class);
-//                    cookies_ut.putAll(cookies);
-//                }
-//            }
-//            if (checkLogin_UT()) return true;
-//            try {
-//                Connection.Response response = Jsoup.connect(UT_login_url)
-//                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-//                        .header("Content-Type", "application/x-www-form-urlencoded")
-//                        .timeout(5000).execute();
-//                cookies_ut.clear();
-//                cookies_ut.putAll(response.cookies());
-//                Document d = Jsoup.connect(UT_login_url)
-//                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-//                        .header("Content-Type", "application/x-www-form-urlencoded")
-//                        .cookies(cookies_ut).get();
-//                //System.out.println(d);
-//                String lt = d.getElementsByAttributeValue("name","lt").first().attr("value");
-//
-//                Document after =  Jsoup.connect(UT_login_url)
-//                        .cookies(cookies_ut).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
-//                        .data("username",username)
-//                        .data("password", Base64.encodeToString(password.getBytes(),Base64.DEFAULT))
-//                        .data("lt",lt)
-//                        .data("Connection","keep-alive")
-//                        .data("_eventId","submit").post();
-//                //System.out.println(after);
-//                //Log.e("cookies", String.valueOf(cookies_ut));
-//                if (after.toString().contains("姓 名：")) return true;
-//                else if(after.toString().contains("您已在别的终端登录"))
-//                {
-//                    Log.e("UT","多终端登录，改变链接");
-//                    Document after2 =  Jsoup.connect(UT_login_url)
-//                            .cookies(cookies_ut).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36")
-//                            .data("username",username)
-//                            .data("password", Base64.encodeToString(password.getBytes(),Base64.DEFAULT))
-//                            .data("Connection","keep-alive")
-//                            .data("lt",lt)
-//                            .data("continueLogin","1")
-//                            .data("_eventId","submit").post();
-//                   if(after2.toString().contains("姓 名：")){
-//                       ut_username = username;
-//                       return true;
-//                   }else return false;
-//                }
-//                else return false;
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                return false;
-//            }
-//          //  return !cookies_ut.isEmpty();
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Object o) {
-//            super.onPostExecute(o);
-//           // if(refreshLayout!=null) refreshLayout.setRefreshing(false);
-//            if ((Boolean) o) {
-//                login_ut = true;
-//                ut_username = username;
-//                Log.e("!", "UT登录成功");
-//                Intent i = new Intent();
-//                i.setAction("COM.STUPIDTREE.HITA.UT_AUTO_LOGIN_DONE");
-//                LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
-//            } else {
-//                cookies_ut.clear();
-//                login_ut = false;
-//                Intent i = new Intent();
-//                i.setAction("COM.STUPIDTREE.HITA.UT_LOGIN_FAIL");
-//                LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
-//            }
-//        }
-//    }
-//
-//
-//
-//    public static boolean checkLogin_UT(){
-//        try {
-//            //  HashMap tempC = new HashMap()
-//            Connection.Response r = Jsoup.connect("http://10.64.1.15/sfrzwhlgportalHome.action")
-//                    .data("errorcode","1")
-//                    .header("Connection","keep-alive")
-//                    .data("continueurl","http://ecard.utsz.edu.cn/accountcardUser.action")
-//                    .data("ssoticketid",ut_username)
-//                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36").header("Connection","keep-alive")
-//                    .execute();
-//            cookies_ut_card.clear();
-//            cookies_ut_card.putAll(r.cookies());
-//            Document d2 = Jsoup.connect("http://10.64.1.15/accountcardUser.action")
-//                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-//                    .header("Connection","keep-alive")
-//                    .header("Host","10.64.1.15")
-//                    .cookies(cookies_ut_card)
-//                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-//                    .header("Content-Type", "application/x-www-form-urlencoded")
-//                    .get();
-//            return  d2.toString().contains("余额");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
 }

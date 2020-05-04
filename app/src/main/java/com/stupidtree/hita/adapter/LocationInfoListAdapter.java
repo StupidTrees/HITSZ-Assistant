@@ -2,14 +2,15 @@ package com.stupidtree.hita.adapter;
 
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.stupidtree.hita.R;
 
@@ -20,12 +21,12 @@ public class LocationInfoListAdapter extends RecyclerView.Adapter<LocationInfoLi
 
     LayoutInflater mInflater;
     ArrayList<HashMap> mBeans;
-    int colorPrimary;
+    int colorAccent;
 
     public LocationInfoListAdapter(Context c, ArrayList<HashMap> x, int colorPrimary){
         mInflater = LayoutInflater.from(c);
         mBeans = x;
-        this.colorPrimary = colorPrimary;
+        this.colorAccent = colorPrimary;
     }
 
     @NonNull
@@ -37,7 +38,7 @@ public class LocationInfoListAdapter extends RecyclerView.Adapter<LocationInfoLi
 
     @Override
     public void onBindViewHolder(@NonNull mViewHolder mViewHolder, int i) {
-        if((Boolean) mBeans.get(i).get("is_colored")) mViewHolder.value.setTextColor(colorPrimary);
+        if ((Boolean) mBeans.get(i).get("is_colored")) mViewHolder.value.setTextColor(colorAccent);
         if(mBeans.get(i).get("is_phonenumber")!=null&&(Boolean) mBeans.get(i).get("is_phonenumber")) mViewHolder.value.setAutoLinkMask(Linkify.PHONE_NUMBERS);
         mViewHolder.value.setText((String)mBeans.get(i).get("value"));
         mViewHolder.key.setText((CharSequence) mBeans.get(i).get("key"));

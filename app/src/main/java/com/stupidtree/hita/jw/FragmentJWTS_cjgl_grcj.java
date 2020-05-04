@@ -1,14 +1,8 @@
 package com.stupidtree.hita.jw;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,20 +12,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.stupidtree.hita.HITAApplication;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.timetable.Curriculum;
-import com.stupidtree.hita.timetable.Subject;
-import com.stupidtree.hita.diy.WrapContentLinearLayoutManager;
+import com.stupidtree.hita.timetable.packable.Curriculum;
+import com.stupidtree.hita.timetable.packable.Subject;
+import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
@@ -67,14 +63,17 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected int getLayoutId() {
+        return R.layout.fragment_jwts_cjgl_grcj;
 
-        View v = inflater.inflate(R.layout.fragment_jwts_cjgl_grcj, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(v, savedInstanceState);
         initPage(v);
         initLists(v);
         initRefresh(v);
-        return v;
     }
 
 
@@ -139,8 +138,8 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
     }
 
     @Override
-    public String getTitle() {
-        return HContext.getString(R.string.jw_tabs_grcj);
+    public int getTitle() {
+        return R.string.jw_tabs_grcj;
     }
 
     @Override

@@ -2,487 +2,564 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ade_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:background="@drawable/bottom_sheet_radius_background"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/material_toolbar_height"
-            android:gravity="center"
-            android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-black"
-                android:text="@string/ade_title"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="20sp" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="start"
+            android:text="@string/ade_title"
+            android:textColor="?attr/text_color_primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:tint="?attr/colorPrimary"
-                android:visibility="gone"
-                app:srcCompat="@drawable/bt_done"
-                app:theme="@style/button_ripple_primary" />
-        </LinearLayout>
-
-        <LinearLayout
+        <RadioGroup
+            android:id="@+id/ade_radiogroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
 
-
-            <RadioGroup
-                android:id="@+id/ade_radiogroup"
+            <RadioButton
+                android:id="@+id/ade_arrange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/select_add_event_arrange"
+                android:drawablePadding="4dp"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/ade_arrangement"
+                android:textColor="?attr/text_color_secondary"
+                android:textColorHighlight="@color/transparent_none" />
 
-                <RadioButton
-                    android:id="@+id/ade_arrange"
+            <RadioButton
+                android:id="@+id/ade_ddl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/select_add_event_ddl"
+                android:drawablePadding="4dp"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/ade_ddl"
+                android:textColor="?attr/text_color_secondary"
+                android:textColorHighlight="@color/transparent_none" />
+
+            <RadioButton
+                android:id="@+id/ade_course"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/select_add_event_course"
+                android:drawablePadding="4dp"
+                android:drawableTintMode="src_in"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/ade_course"
+                android:textColor="?attr/text_color_secondary"
+                android:textColorHighlight="@color/transparent_none" />
+
+            <RadioButton
+                android:id="@+id/ade_exam"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/select_add_event_exam"
+                android:drawablePadding="4dp"
+                android:drawableTintMode="src_in"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/ade_exam"
+                android:textColor="?attr/text_color_secondary"
+                android:textColorHighlight="@color/transparent_none" />
+
+        </RadioGroup>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:orientation="horizontal"
+                android:paddingEnd="24dp">
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/pick_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:drawableTop="@drawable/select_add_event_arrange"
-                    android:drawablePadding="4dp"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="@string/ade_arrangement"
-                    android:textColor="?attr/text_color_secondary"
-                    android:textColorHighlight="@color/transparent_none" />
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
+                    android:backgroundTintMode="src_atop"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    app:cardBackgroundColor="?attr/colorControlNormal"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
 
-                <RadioButton
-                    android:id="@+id/ade_ddl"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/pick_time_icon"
+                            android:layout_width="0dp"
+                            android:layout_height="18dp"
+                            android:layout_weight="1"
+                            android:tint="?attr/colorControlNormal"
+                            android:tintMode="src_in"
+                            app:srcCompat="@drawable/ic_date_range" />
+
+                        <TextView
+                            android:id="@+id/time_show"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
+                            android:fontFamily="sans-serif-black"
+                            android:maxEms="16"
+                            android:singleLine="true"
+                            android:text="@string/ade_pick_time"
+                            android:textColor="?attr/text_color_secondary" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/pick_teacher"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
+                    android:backgroundTintMode="src_atop"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="?attr/colorControlNormal"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/pick_teacher_icon"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:tint="?attr/colorControlNormal"
+                            android:tintMode="src_in"
+                            app:srcCompat="@drawable/ic_dlg_tt_teacher" />
+
+                        <TextView
+                            android:id="@+id/pick_teacher_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:fontFamily="sans-serif-black"
+                            android:maxEms="16"
+                            android:singleLine="true"
+                            android:text="@string/ade_pick_teacher"
+                            android:textColor="?attr/text_color_secondary" />
+
+                        <ImageView
+                            android:id="@+id/pick_teacher_cancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:paddingStart="4dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="12dp"
+                            android:scaleType="centerInside"
+                            android:tint="?attr/colorAccent"
+                            android:visibility="gone"
+                            app:srcCompat="@drawable/bt_addevent_cancel"
+                            app:theme="@style/button_ripple_accent" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/pick_subject"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:drawableTop="@drawable/select_add_event_ddl"
-                    android:drawablePadding="4dp"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="@string/ade_ddl"
-                    android:textColor="?attr/text_color_secondary"
-                    android:textColorHighlight="@color/transparent_none" />
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
+                    android:backgroundTintMode="src_atop"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="?attr/colorControlNormal"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
 
-                <RadioButton
-                    android:id="@+id/ade_course"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:id="@+id/pick_subject_icon"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:padding="2dp"
+                            android:tint="?attr/colorControlNormal"
+                            android:tintMode="src_in"
+                            app:srcCompat="@drawable/ic_menu_subject" />
+
+                        <TextView
+                            android:id="@+id/pick_subject_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
+                            android:fontFamily="sans-serif-black"
+                            android:maxEms="16"
+                            android:singleLine="true"
+                            android:text="@string/ade_pick_subject"
+                            android:textColor="?attr/text_color_secondary" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/pick_task"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
+                    android:backgroundTintMode="src_atop"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="?attr/colorControlNormal"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/pick_task_icon"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:tint="?attr/colorControlNormal"
+                            android:tintMode="src_in"
+                            app:srcCompat="@drawable/bt_timeline_toolbar_task" />
+
+                        <TextView
+                            android:id="@+id/pick_task_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:fontFamily="sans-serif-black"
+                            android:maxEms="16"
+                            android:singleLine="true"
+                            android:text="@string/ade_pick_task"
+                            android:textColor="?attr/text_color_secondary" />
+
+                        <ImageView
+                            android:id="@+id/pick_task_cancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:paddingStart="4dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="12dp"
+                            android:scaleType="centerInside"
+                            android:tint="?attr/colorPrimary"
+                            android:visibility="gone"
+                            app:srcCompat="@drawable/bt_addevent_cancel"
+                            app:theme="@style/button_ripple_accent" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/pick_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="?attr/background_color_bottom_as_tint"
+                    android:backgroundTintMode="src_atop"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="?attr/colorControlNormal"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/pick_location_icon"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:tint="?attr/colorControlNormal"
+                            android:tintMode="src_in"
+                            app:srcCompat="@drawable/ic_location2" />
+
+                        <TextView
+                            android:id="@+id/pick_location_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:fontFamily="sans-serif-black"
+                            android:maxEms="16"
+                            android:singleLine="true"
+                            android:text="@string/ade_pick_location"
+                            android:textColor="?attr/text_color_secondary" />
+
+                        <ImageView
+                            android:id="@+id/pick_location_cancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:paddingStart="4dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="12dp"
+                            android:scaleType="centerInside"
+                            android:tint="?attr/colorAccent"
+                            android:visibility="gone"
+                            app:srcCompat="@drawable/bt_addevent_cancel"
+                            app:theme="@style/button_ripple_accent" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <CheckBox
+                    android:id="@+id/ade_switch_wholeday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:drawableTop="@drawable/select_add_event_course"
-                    android:drawablePadding="4dp"
-                    android:drawableTintMode="src_in"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="@string/ade_course"
+                    android:gravity="center|right"
+                    android:switchPadding="2dp"
+                    android:text="@string/ade_wholeday"
                     android:textColor="?attr/text_color_secondary"
-                    android:textColorHighlight="@color/transparent_none" />
+                    android:textSize="14sp"
+                    tools:ignore="RtlHardcoded" />
 
-                <RadioButton
-                    android:id="@+id/ade_exam"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:drawableTop="@drawable/select_add_event_exam"
-                    android:drawablePadding="4dp"
-                    android:drawableTintMode="src_in"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="@string/ade_exam"
-                    android:textColor="?attr/text_color_secondary"
-                    android:textColorHighlight="@color/transparent_none" />
+            </LinearLayout>
+        </HorizontalScrollView>
 
-            </RadioGroup>
+        <LinearLayout
+            android:id="@+id/ade_extra_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <AutoCompleteTextView
                 android:id="@+id/ade_extra"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparent_none"
-                android:hint="@string/ade_inputhint"
+                android:hint="@string/ade_namehint"
                 android:inputType="text"
                 android:maxLines="1"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:singleLine="true"
+                android:textColor="?attr/text_color_primary"
+                android:textColorHint="?attr/text_color_secondary"
                 android:textSize="18sp"
-                android:visibility="gone"
-                tools:ignore="RtlSymmetry" />
+                tools:ignore="NestedWeights,RtlSymmetry" />
 
-            <LinearLayout
-                android:id="@+id/ade_namelayout"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/ade_extra_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:padding="16dp"
+                android:scaleType="center"
+                android:tint="?attr/colorControlNormal"
+                android:tintMode="src_in"
+                app:srcCompat="@drawable/ic_view_list_black_24dp"
+                app:theme="@style/button_ripple_accent" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ade_namelayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <AutoCompleteTextView
+                android:id="@+id/ade_name"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:background="@color/transparent_none"
+                android:hint="@string/ade_namehint"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
+                android:singleLine="true"
+                android:textColor="?attr/text_color_primary"
+                android:textColorHint="?attr/text_color_secondary"
+                android:textSize="18sp"
+                tools:ignore="NestedWeights,RtlSymmetry" />
+
+            <ImageView
+                android:id="@+id/ade_expand_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:padding="16dp"
+                android:scaleType="center"
+                android:tint="?attr/colorControlNormal"
+                android:tintMode="src_in"
+                app:srcCompat="@drawable/bt_addevent_triangle"
+                app:theme="@style/button_ripple_accent" />
+
+        </LinearLayout>
+
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/ade_expandlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:el_expanded="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <AutoCompleteTextView
-                    android:id="@+id/ade_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:id="@+id/ade_tag2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="@color/transparent_none"
-                    android:hint="@string/ade_namehint"
+                    android:hint="@string/ade_tag2"
                     android:inputType="text"
                     android:maxLines="1"
                     android:paddingTop="16dp"
                     android:paddingEnd="16dp"
                     android:paddingBottom="16dp"
                     android:singleLine="true"
-                    android:textSize="18sp"
-                    tools:ignore="NestedWeights,RtlSymmetry" />
+                    android:textColor="?attr/text_color_primary"
+                    android:textColorHint="?attr/text_color_secondary"
+                    android:textSize="18sp" />
 
-                <ImageView
-                    android:id="@+id/ade_expand_button"
-                    android:layout_width="wrap_content"
+                <AutoCompleteTextView
+                    android:id="@+id/ade_tag3"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:alpha="0.4"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:padding="16dp"
-                    android:scaleType="center"
-                    android:tint="?attr/colorControlNormal"
-                    android:tintMode="src_in"
-                    app:srcCompat="@drawable/bt_addevent_triangle"
-                    app:theme="@style/button_ripple_primary" />
+                    android:background="@color/transparent_none"
+                    android:hint="@string/ade_tag3"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="16dp"
+                    android:singleLine="true"
+                    android:textColor="?attr/text_color_primary"
+                    android:textColorHint="?attr/text_color_secondary"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
-            <net.cachapa.expandablelayout.ExpandableLayout
-                android:id="@+id/ade_expandlayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:el_expanded="false">
+        </net.cachapa.expandablelayout.ExpandableLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/ade_tag2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/transparent_none"
-                        android:hint="@string/ade_tag2"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:paddingTop="16dp"
-                        android:paddingEnd="16dp"
-                        android:paddingBottom="16dp"
-                        android:singleLine="true"
-                        android:textSize="18sp" />
-
-                    <AutoCompleteTextView
-                        android:id="@+id/ade_tag3"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/transparent_none"
-                        android:hint="@string/ade_tag3"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:paddingTop="16dp"
-                        android:paddingEnd="16dp"
-                        android:paddingBottom="16dp"
-                        android:singleLine="true"
-                        android:textColor="?attr/text_color_primary"
-                        android:textSize="18sp" />
-
-                </LinearLayout>
-
-            </net.cachapa.expandablelayout.ExpandableLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <HorizontalScrollView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingBottom="16dp"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    android:paddingEnd="24dp">
-
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/pick_subject"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:backgroundTint="?attr/background_color_bottom_as_tint"
-                        android:backgroundTintMode="src_atop"
-                        android:clickable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:visibility="gone"
-                        app:cardBackgroundColor="?attr/colorControlNormal"
-                        app:cardCornerRadius="24dp"
-                        app:cardElevation="0dp"
-                        android:focusable="true">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="8dp"
-                            android:orientation="horizontal"
-                            tools:ignore="UseCompoundDrawables">
-
-                            <ImageView
-                                android:id="@+id/pick_subject_icon"
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:padding="2dp"
-                                android:tint="?attr/colorControlNormal"
-                                android:tintMode="src_in"
-                                app:srcCompat="@drawable/ic_menu_subject" />
-
-                            <TextView
-                                android:id="@+id/pick_subject_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="sans-serif-black"
-                                android:maxEms="16"
-                                android:singleLine="true"
-                                android:text="@string/ade_pick_subject"
-                                android:textColor="?attr/text_color_secondary" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/pick_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="?attr/background_color_bottom_as_tint"
-                        android:backgroundTintMode="src_atop"
-                        android:clickable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        app:cardBackgroundColor="?attr/colorControlNormal"
-                        app:cardCornerRadius="24dp"
-                        app:cardElevation="0dp"
-                        android:focusable="true">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="8dp"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:id="@+id/pick_time_icon"
-                                android:layout_width="0dp"
-                                android:layout_height="18dp"
-                                android:layout_weight="1"
-                                android:tint="?attr/colorControlNormal"
-                                android:tintMode="src_in"
-                                app:srcCompat="@drawable/ic_date_range" />
-
-                            <TextView
-                                android:id="@+id/time_show"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="4dp"
-                                android:fontFamily="sans-serif-black"
-                                android:maxEms="16"
-                                android:singleLine="true"
-                                android:text="@string/ade_pick_time"
-                                android:textColor="?attr/text_color_secondary" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/pick_task"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="8dp"
-                        android:backgroundTint="?attr/background_color_bottom_as_tint"
-                        android:backgroundTintMode="src_atop"
-                        android:clickable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:visibility="gone"
-                        app:cardBackgroundColor="?attr/colorControlNormal"
-                        app:cardCornerRadius="24dp"
-                        app:cardElevation="0dp"
-                        android:focusable="true">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:id="@+id/pick_task_icon"
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginBottom="8dp"
-                                android:tint="?attr/colorControlNormal"
-                                android:tintMode="src_in"
-                                app:srcCompat="@drawable/bt_timeline_toolbar_task" />
-
-                            <TextView
-                                android:id="@+id/pick_task_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="4dp"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_marginBottom="8dp"
-                                android:fontFamily="sans-serif-black"
-                                android:maxEms="16"
-                                android:singleLine="true"
-                                android:text="@string/ade_pick_task"
-                                android:textColor="?attr/text_color_secondary" />
-
-                            <ImageView
-                                android:id="@+id/pick_task_cancel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:clickable="true"
-                                android:foreground="?attr/selectableItemBackgroundBorderless"
-                                android:paddingStart="4dp"
-                                android:paddingTop="12dp"
-                                android:paddingEnd="8dp"
-                                android:paddingBottom="12dp"
-                                android:scaleType="centerInside"
-                                android:tint="?attr/colorPrimary"
-                                android:visibility="gone"
-                                app:srcCompat="@drawable/bt_addevent_cancel"
-                                app:theme="@style/button_ripple_primary"
-                                android:focusable="true" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/pick_location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="8dp"
-                        android:backgroundTint="?attr/background_color_bottom_as_tint"
-                        android:backgroundTintMode="src_atop"
-                        android:clickable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:visibility="gone"
-                        app:cardBackgroundColor="?attr/colorControlNormal"
-                        app:cardCornerRadius="24dp"
-                        app:cardElevation="0dp"
-                        android:focusable="true">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:id="@+id/pick_location_icon"
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginBottom="8dp"
-                                android:tint="?attr/colorControlNormal"
-                                android:tintMode="src_in"
-                                app:srcCompat="@drawable/ic_location2" />
-
-                            <TextView
-                                android:id="@+id/pick_location_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="4dp"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_marginBottom="8dp"
-                                android:fontFamily="sans-serif-black"
-                                android:maxEms="16"
-                                android:singleLine="true"
-                                android:text="@string/ade_pick_location"
-                                android:textColor="?attr/text_color_secondary" />
-
-                            <ImageView
-                                android:id="@+id/pick_location_cancel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:clickable="true"
-                                android:foreground="?attr/selectableItemBackgroundBorderless"
-                                android:paddingStart="4dp"
-                                android:paddingTop="12dp"
-                                android:paddingEnd="8dp"
-                                android:paddingBottom="12dp"
-                                android:scaleType="centerInside"
-                                android:tint="?attr/colorPrimary"
-                                android:visibility="gone"
-                                app:srcCompat="@drawable/bt_addevent_cancel"
-                                app:theme="@style/button_ripple_primary"
-                                android:focusable="true" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <Switch
-                android:id="@+id/ade_switch_wholeday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="3dp"
-                android:fontFamily="sans-serif-black"
-                android:gravity="center|right"
-                android:switchPadding="2dp"
-                android:text="@string/ade_wholeday"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="14sp"
-                tools:ignore="RtlHardcoded" />
-
-        </LinearLayout>
 
     </LinearLayout>
 
@@ -494,7 +571,7 @@
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="?attr/colorAccent"
-        app:layout_anchor="@+id/linearLayout"
+        app:layout_anchor="@+id/linearLayout3"
         app:layout_anchorGravity="end|top"
         app:srcCompat="@drawable/fab_done" />
 

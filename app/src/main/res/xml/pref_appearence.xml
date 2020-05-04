@@ -1,13 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ListPreference
-        android:dialogTitle="@string/settings_summary_darkmode"
-        android:entries="@array/preference_dark_mode"
-        android:entryValues="@array/preference_dark_mode_values"
-        android:key="dark_mode_mode"
-        android:title="@string/settings_title_darkmode"
-        app:iconSpaceReserved="false" />
 
     <PreferenceCategory
         app:allowDividerAbove="false"

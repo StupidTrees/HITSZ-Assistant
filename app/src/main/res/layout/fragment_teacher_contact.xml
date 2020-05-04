@@ -13,10 +13,10 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_margin="16dp"
-            android:tint="?attr/colorPrimary"
+            android:tint="?attr/colorAccent"
             app:srcCompat="@drawable/ic_local_phone" />
 
         <LinearLayout
@@ -49,10 +49,10 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_margin="16dp"
-            android:tint="?attr/colorPrimary"
+            android:tint="?attr/colorAccent"
             app:srcCompat="@drawable/ic_email" />
 
         <LinearLayout
@@ -86,10 +86,10 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_margin="16dp"
-            android:tint="?attr/colorPrimary"
+            android:tint="?attr/colorAccent"
             app:srcCompat="@drawable/ic_location2" />
 
         <LinearLayout

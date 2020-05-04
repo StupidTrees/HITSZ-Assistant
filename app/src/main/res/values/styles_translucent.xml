@@ -43,7 +43,8 @@
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowDisablePreview">true</item>
     </style>
-    <style name="IndigoTheme_translucent" parent="IndigoTheme">
+
+    <style name="normal_blueTheme_translucent" parent="normal_blueTheme">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowDisablePreview">true</item>

@@ -1,40 +1,38 @@
 package com.stupidtree.hita.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.request.RequestOptions;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.online.Canteen;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.FoodViewHolder> {
+public class CanteenListAdapter extends BaseListAdapter<Canteen, CanteenListAdapter.FoodViewHolder> {
 
-    LayoutInflater mInflater;
-    List<Canteen> mBeans;
-    Context mContext;
-    OnItemClickListener mOnItemClickListener;
-    DecimalFormat df;
-
-    public void setmOnNaviClickListener(OnNaviClickListener mOnNaviClickListener) {
-        this.mOnNaviClickListener = mOnNaviClickListener;
+    private DecimalFormat df;
+    private OnNaviClickListener mOnNaviClickListener;
+    public CanteenListAdapter(Context context, List<Canteen> res) {
+        super(context, res);
+        mInflater = LayoutInflater.from(context);
+        mBeans = res;
+        mContext = context;
+        df = new DecimalFormat("#0.00");
     }
 
-    OnNaviClickListener mOnNaviClickListener;
 
     public interface OnItemClickListener {
-        void OnClick(View v, ImageView transitionImage,int position);
+        void OnClick(View v, ImageView transitionImage, int position);
     }
 
 
@@ -42,51 +40,37 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
         void OnClick(Canteen c);
     }
 
-    public void setOnItemClickListener(OnItemClickListener x) {
-        this.mOnItemClickListener = x;
-
+    public void setOnNavigationClickListener(OnNaviClickListener mOnNaviClickListener) {
+        this.mOnNaviClickListener = mOnNaviClickListener;
     }
 
-    public CanteenListAdapter(Context context, List<Canteen> res) {
-        mInflater = LayoutInflater.from(context);
-        mBeans = res;
-        mContext = context;
-        df = new DecimalFormat("#0.00");
-    }
-
-    @NonNull
     @Override
-    public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = mInflater.inflate(R.layout.dynamic_canteen_item, viewGroup, false);
+    protected int getLayoutId(int viewType) {
+        return R.layout.dynamic_canteen_item;
+    }
+
+    @Override
+    public FoodViewHolder createViewHolder(View v, int viewType) {
         return new FoodViewHolder(v);
     }
 
+
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final FoodViewHolder foodViewHolder, final int i) {
         foodViewHolder.rate.setText(df.format(mBeans.get(i).getRate()) + "/10");
         foodViewHolder.rank.setText((i + 1)+"");
         foodViewHolder.name.setText(mBeans.get(i).getName());
         foodViewHolder.company.setText(mBeans.get(i).getCompany());
-//        if (mOnNaviClickListener != null) {
-//            foodViewHolder.button_navi.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    mOnNaviClickListener.OnClick(mBeans.get(i));
-//                }
-//            });
-//        }
         if (mOnItemClickListener != null) {
             foodViewHolder.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnItemClickListener.OnClick(v,foodViewHolder.image,i);
+                    mOnItemClickListener.onItemClick(v, i);
                 }
             });
         }
         Glide.with(mContext).load(mBeans.get(i).getImageURL()).into(foodViewHolder.image);
-        //Glide.with(mContext).load(mBeans.get(i).getImageURL()).placeholder(R.drawable.gradient_bg).apply(RequestOptions.bitmapTransform(new mBlurTransformation(mContext))).into(foodViewHolder.background);
-        //ImageUtils.loadImage_Bmob(foodViewHolder.image,mBeans.get(i).getImageURL())
-
     }
 
     @Override
@@ -94,18 +78,17 @@ public class CanteenListAdapter extends RecyclerView.Adapter<CanteenListAdapter.
         return mBeans.size();
     }
 
-    class FoodViewHolder extends RecyclerView.ViewHolder {
+    static class FoodViewHolder extends RecyclerView.ViewHolder {
 
         TextView name, rate, rank,company;
         ImageView image,background;
         CardView card;
 
-        public FoodViewHolder(@NonNull View itemView) {
+        FoodViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.canteen_name);
             rank = itemView.findViewById(R.id.canteen_rank);
             rate = itemView.findViewById(R.id.canteen_rate);
-          //  button_navi = itemView.findViewById(R.id.canteen_navi_button);
             card = itemView.findViewById(R.id.canteen_card);
             image = itemView.findViewById(R.id.canteen_img);
             background = itemView.findViewById(R.id.canteen_bg);

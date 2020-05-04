@@ -1,30 +1,28 @@
 package com.stupidtree.hita.activities;
 
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
-import com.stupidtree.hita.BaseActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.adapter.NormalPagerAdapter;
+import com.stupidtree.hita.adapter.BaseTabAdapter;
 import com.stupidtree.hita.fragments.FragmentLogin;
 import com.stupidtree.hita.fragments.FragmentSignup;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.stupidtree.hita.HITAApplication.HContext;
+import com.stupidtree.hita.views.LongStringDialog;
 
 public class ActivityLogin extends BaseActivity {
 
     ViewPager pager;
-    NormalPagerAdapter pagerAdapter;
-    List<Fragment> fragments;
+    BaseTabAdapter pagerAdapter;
     TabLayout tabs;
+    TextView userPro, privacyPro;
 
     @Override
     protected void stopTasks() {
@@ -34,7 +32,7 @@ public class ActivityLogin extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowParams(true,false,false);
+        setWindowParams(true, false, false);
         setContentView(R.layout.activity_login);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         initToolbar();
@@ -59,11 +57,39 @@ public class ActivityLogin extends BaseActivity {
         pager = findViewById(R.id.login_pager);
         tabs = findViewById(R.id.login_tabs);
         tabs.setupWithViewPager(pager);
-        fragments = new ArrayList<>();
-        fragments.add(new FragmentSignup());
-        fragments.add(new FragmentLogin());
-        pagerAdapter = new NormalPagerAdapter(getSupportFragmentManager(), fragments,
-                new String[]{HContext.getString(R.string.sign_up),HContext.getString(R.string.log_in)});
+        userPro = findViewById(R.id.user_protocol);
+        privacyPro = findViewById(R.id.privacy_protocol);
+        userPro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new LongStringDialog(getThis(), R.string.name_user_agreement, R.string.user_agreement, R.string.i_have_read).show();
+            }
+        });
+        privacyPro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new LongStringDialog(getThis(), R.string.name_privacy_agreement, R.string.privacy_policy, R.string.i_have_read).show();
+            }
+        });
+        final int[] tabs = new int[]{R.string.sign_up, R.string.log_in};
+        pagerAdapter = new BaseTabAdapter(getSupportFragmentManager(), 2) {
+            @Nullable
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return getString(tabs[position]);
+            }
+
+            @Override
+            protected Fragment initItem(int position) {
+                switch (position) {
+                    case 0:
+                        return new FragmentSignup();
+                    case 1:
+                        return new FragmentLogin();
+                }
+                return null;
+            }
+        };
         pager.setAdapter(pagerAdapter);
 
     }

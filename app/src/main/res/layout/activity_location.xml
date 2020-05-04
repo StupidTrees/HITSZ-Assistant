@@ -10,6 +10,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="280dp"
+        android:background="@drawable/gradient_bg_reverse"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -35,7 +36,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_marginTop="24dp"
                 app:layout_collapseMode="pin"
-                app:theme="?attr/toolbarStyle" />
+                android:theme="@style/ToolBarTheme_Light" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -52,7 +53,6 @@
         app:layout_anchorGravity="bottom|end" />
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/location_radius_background"
@@ -119,7 +119,7 @@
                     android:layout_gravity="center|left"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="16dp"
-                    android:tint="?attr/colorPrimary"
+                    android:tint="?attr/colorAccent"
                     app:srcCompat="@drawable/ic_star"
                     tools:ignore="ContentDescription" />
 
@@ -137,7 +137,7 @@
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:padding="16dp"
-                    android:tint="?attr/colorPrimary"
+                    android:tint="?attr/colorAccent"
                     app:srcCompat="@drawable/ic_rate_review"
                     tools:ignore="ContentDescription" />
 
@@ -152,37 +152,6 @@
                 android:overScrollMode="never">
 
             </androidx.recyclerview.widget.RecyclerView>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="8dp"
-                android:background="?android:attr/listDivider"
-                android:visibility="gone" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:text="@string/location_laf_title"
-                android:textColor="?attr/text_color_secondary"
-                android:textSize="16sp"
-                android:visibility="gone" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/location_laf_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="8dp"
-                android:nestedScrollingEnabled="false"
-                android:overScrollMode="never"
-                android:visibility="gone" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -15,7 +15,7 @@
 //import android.view.View;
 //import android.view.ViewGroup;
 //
-//import com.stupidtree.hita.BaseFragment;
+//import com.stupidtree.hita.fragments.BaseFragment;
 //import com.stupidtree.hita.HITAApplication;
 //import com.stupidtree.hita.R;
 //import com.stupidtree.hita.activities.ActivityMain;

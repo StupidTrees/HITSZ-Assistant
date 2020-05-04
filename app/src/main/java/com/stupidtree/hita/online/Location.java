@@ -2,12 +2,13 @@ package com.stupidtree.hita.online;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.R;
@@ -19,7 +20,6 @@ import java.util.Objects;
 
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -30,17 +30,17 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 
 public class Location extends BmobObject  implements Comparable{
     String name;
-    String imageURL;
-    String type;
+    private String imageURL;
+    private String type;
     private double latitude;
     private double longitude;
-    String PositionIntroduction;
-    String Record;
+    private String PositionIntroduction;
+    private String Record;
     String address;
-    int studentnum;
-    float rate;
-    int search;
-    String infos;
+    private int studentnum;
+    private float rate;
+    private int search;
+    private String infos;
 
     public Location(String name, String imageURL, String type, double latitude, double longitude, String positionIntroduction, String record, String address, int studentnum, float rate, String infos) {
         this.name = name;
@@ -191,10 +191,7 @@ public class Location extends BmobObject  implements Comparable{
 
     @Override
     public int compareTo(Object o) {
-        if(rate<((Location)o).rate){
-            return 1;
-        }else if(rate>((Location)o).rate) return -1;
-        else return 0;
+        return Float.compare(((Location) o).rate, rate);
     }
 
     public static void showRateDialog(final Context context, final Location t, final SaveListener successListener) {
@@ -257,8 +254,7 @@ public class Location extends BmobObject  implements Comparable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Location location = (Location) o;
-        return Objects.equals(name, location.name) &&
-                Objects.equals(type, location.type);
+        return Objects.equals(getObjectId(), location.getObjectId());
     }
 
     @Override

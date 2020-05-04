@@ -43,7 +43,7 @@
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.8"
                 app:lottie_autoPlay="true"
-                app:lottie_colorFilter="?attr/colorPrimary"
+                app:lottie_colorFilter="?attr/colorAccent"
                 app:lottie_imageAssetsFolder="/hita_animation"
                 app:lottie_loop="true"
                 app:lottie_renderMode="automatic"
@@ -116,7 +116,7 @@
                 android:src="@drawable/bt_chatbot_send"
                 android:tint="?attr/colorControlNormal"
                 android:tintMode="src_in"
-                app:theme="@style/button_ripple_primary" />
+                app:theme="@style/button_ripple_accent" />
         </LinearLayout>
 
     </LinearLayout>

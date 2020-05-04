@@ -40,22 +40,46 @@
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        tools:targetApi="q">
+        <!--        <receiver android:name=".widget.TodayWidget">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
+        <!--            </intent-filter>-->
+
+        <!--            <meta-data-->
+        <!--                android:name="android.appwidget.provider"-->
+        <!--                android:resource="@xml/today_widget_info" />-->
+        <!--        </receiver>-->
+        <!--        <service-->
+        <!--            android:name=".widget.TodayListWidgetService"-->
+        <!--            android:permission="android.permission.BIND_REMOTEVIEWS" />-->
         <service
             android:name=".timetable.TimeWatcherService"
-            android:priority="1000"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:priority="1000" />
 
         <activity android:name=".activities.ActivitySubjectJW" /> <!-- androidQ要加上这句否则读文件失效 -->
         <activity
             android:name=".activities.ActivityTasks"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity android:name=".activities.ActivityUTMood" />
         <activity
             android:name=".activities.ActivityAttitude"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activities.ActivityUTService" />
+        <activity
+            android:name=".community.ActivityCommunity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".community.ActivityPostDetail"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+        <activity
+            android:name=".community.ActivityOneTopic"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".community.ActivityCreatePost"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.ActivitySearch"
             android:label="@string/title_activity_search"
@@ -63,20 +87,19 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.ActivityEmptyClassroomDetail" />
         <activity android:name=".activities.ActivityEmptyClassroom" />
-        <activity android:name=".activities.ActivityPostDetail" />
         <activity
             android:name=".activities.ActivityUserProfile"
             android:label="@string/title_activity_user_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.ActivityLocation" />
 
-        <service android:name=".WidgetService">
-            <intent-filter>
+        <!--        <service android:name=".WidgetService">-->
+        <!--            <intent-filter>-->
 
-                <!-- 用来启动服务 -->
-                <action android:name="android.appwidget.action.APP_WIDGET_SERVICE" />
-            </intent-filter>
-        </service> <!-- <receiver android:name=".TimeLineWidget"> -->
+        <!--                &lt;!&ndash; 用来启动服务 &ndash;&gt;-->
+        <!--                <action android:name="android.appwidget.action.APP_WIDGET_SERVICE" />-->
+        <!--            </intent-filter>-->
+        <!--        </service> &lt;!&ndash; <receiver android:name=".TimeLineWidget"> &ndash;&gt;-->
         <service android:name=".online.DownloadService" /> <!-- <intent-filter> -->
         <!-- <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> -->
         <!-- <action android:name="com.stupidtree.hita.UPDATE_ALL" /> -->
@@ -85,15 +108,14 @@
         <!-- android:name="android.appwidget.provider" -->
         <!-- android:resource="@xml/time_line_widget_info" /> -->
         <!-- </receiver> -->
-        <receiver android:name=".NotificationClickReceiver" />
 
         <activity android:name=".activities.ActivitySetting" />
 
-        <service android:name="com.amap.api.location.APSService" />
 
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="com.stupidtree.hita.BmobContentProvider" />
+            android:authorities="com.stupidtree.hita.BmobContentProvider"
+            android:exported="false" />
 
         <activity
             android:name=".activities.ActivityLeaderBoard"
@@ -134,16 +156,8 @@
             android:name=".activities.ActivityNewsDetail"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.ActivityLostAndFound"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".activities.ActivityLoginJWTS"
             android:label="@string/title_activity_gfh"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activities.ActivityLoginUT"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
@@ -155,29 +169,29 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.ActivityTimeTable"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".activities.ActivitySubject"
             android:label="@string/title_activity_subject"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".activities.ActivityPhotoDetail"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.ActivityNotes"
-            android:label="@string/title_activity_notes"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityMain"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".activities.ActivitySchoolCalendar"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivityCurriculumManager"
             android:label="@string/title_activity_import_data"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ActivitySplash"
@@ -200,13 +214,18 @@
             android:name=".activities.ActivityChatbot"
             android:theme="@style/ChatBotTheme"
             android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".community.ActivityMessageBox" />
+        <activity android:name=".community.ActivityOneUserPostList" />
         <activity
-            android:name=".activities.ActivityExplore"
-            android:theme="@style/AppTheme" />
+            android:name=".activities.ActivityDDLManager"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+        <activity
+            android:name=".activities.ActivityExamCountdown"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="5883fb948ec30c3f56f65e46e65f0b09" />
+        <!--        <meta-data-->
+        <!--            android:name="com.amap.api.v2.apikey"-->
+        <!--            android:value="5883fb948ec30c3f56f65e46e65f0b09" />-->
 
         <provider
             android:name=".MFileProvider"

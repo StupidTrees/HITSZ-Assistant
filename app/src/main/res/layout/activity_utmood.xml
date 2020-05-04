@@ -10,34 +10,45 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00000000"
+        android:background="?attr/color_primary_fade_background"
+        android:fitsSystemWindows="true"
         app:elevation="0dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:minHeight="@dimen/material_appbar_height"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-            app:theme="?toolbarStyle" />
+            android:layout_height="match_parent"
+            app:contentScrim="#00000000"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:statusBarScrim="#00000000"
+            app:titleEnabled="false">
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/linechart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="260dp"
-            app:layout_scrollFlags="scroll" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/material_appbar_height"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                app:theme="@style/ToolBarTheme_Light"
+                app:titleTextColor="@color/material_text_icon_white" />
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/linechart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:layout_marginBottom="24dp"
+                android:minHeight="260dp"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.97"
+                app:layout_scrollFlags="scroll" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <View
+            android:id="@+id/view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:visibility="gone"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-            app:tabIndicatorFullWidth="false"
-            app:tabMode="scrollable" />
+            android:layout_height="24dp"
+            android:background="@drawable/jw_radius_bg_bottom" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

@@ -50,15 +50,14 @@
                 android:id="@+id/done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:alpha="0.6"
                 android:clickable="true"
+                android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
                 android:tint="?attr/colorControlNormal"
                 android:tintMode="src_in"
-                app:theme="@style/button_ripple_primary"
-                app:srcCompat="@drawable/bt_done"
-                android:focusable="true" />
+                app:srcCompat="@drawable/fab_done"
+                app:theme="@style/button_ripple_accent" />
         </LinearLayout>
 
         <LinearLayout
@@ -69,7 +68,7 @@
             android:paddingLeft="24dp"
             android:paddingRight="24dp">
 
-            <com.cncoderx.wheelview.Wheel3DView
+            <com.stupidtree.hita.views.mWheel3DView
                 android:id="@+id/ade_weekpicker_week"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -77,8 +76,8 @@
                 android:layout_weight="1.2"
                 app:cyclic="false"
                 app:divider="@color/transparent_none"
-                app:selectedColor="?attr/colorPrimary"
-                app:textSize="32sp"
+                app:selectedColor="?attr/colorAccent"
+                app:textSize="24sp"
                 app:toward="right"
                 app:unselectedColor="?attr/background_icon_color_second"
                 app:visibleItems="4" />
@@ -92,23 +91,23 @@
                 android:gravity="center"
                 android:text="@string/pick_single_time_label1"
                 android:textColor="@color/material_secondary_text"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
-            <com.cncoderx.wheelview.Wheel3DView
+            <com.stupidtree.hita.views.mWheel3DView
                 android:id="@+id/ade_weekpicker_dow"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="24dp"
-                android:layout_weight="1.0"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1.1"
                 app:cyclic="false"
                 app:divider="@color/transparent_none"
-                app:selectedColor="?attr/colorPrimary"
+                app:selectedColor="?attr/colorAccent"
                 app:textSize="24sp"
                 app:toward="right"
                 app:unselectedColor="?attr/background_icon_color_second"
                 app:visibleItems="4" />
 
-            <com.cncoderx.wheelview.Wheel3DView
+            <com.stupidtree.hita.views.mWheel3DView
                 android:id="@+id/hour"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,8 +115,8 @@
                 android:layout_weight="1.2"
                 app:cyclic="false"
                 app:divider="@color/transparent_none"
-                app:selectedColor="?attr/colorPrimary"
-                app:textSize="32sp"
+                app:selectedColor="?attr/colorAccent"
+                app:textSize="24sp"
                 app:toward="right"
                 app:unselectedColor="?attr/background_icon_color_second"
                 app:visibleItems="4" />
@@ -131,9 +130,9 @@
                 android:gravity="center"
                 android:text="@string/pick_single_time_label2"
                 android:textColor="@color/material_secondary_text"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
-            <com.cncoderx.wheelview.Wheel3DView
+            <com.stupidtree.hita.views.mWheel3DView
                 android:id="@+id/minute"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -141,14 +140,13 @@
                 android:layout_weight="1.2"
                 app:cyclic="false"
                 app:divider="@color/transparent_none"
-                app:selectedColor="?attr/colorPrimary"
-                app:textSize="32sp"
+                app:selectedColor="?attr/colorAccent"
+                app:textSize="24sp"
                 app:toward="right"
                 app:unselectedColor="?attr/background_icon_color_second"
                 app:visibleItems="4" />
 
             <TextView
-                android:id="@+id/textView30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -156,7 +154,7 @@
                 android:gravity="center"
                 android:text="@string/pick_single_time_label3"
                 android:textColor="@color/material_secondary_text"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <!--&lt;!&ndash;<Spinner&ndash;&gt;-->
             <!--&lt;!&ndash;android:id="@+id/ade_weekpicker_dow"&ndash;&gt;-->
