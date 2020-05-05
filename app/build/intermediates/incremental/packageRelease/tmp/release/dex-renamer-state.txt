@@ -1,4 +1,0 @@
-#Mon May 04 23:10:31 CST 2020
-base.0=C\:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\dex\\release\\shrunkDex\\classes.dex
-path.0=classes.dex
-renamed.0=classes.dex

@@ -1,7 +1,0 @@
-#Fri Jan 17 14:03:29 CST 2020
-base.0=C\:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\10
-path.1=classes2.dex
-renamed.1=classes2.dex
-path.0=classes.dex
-renamed.0=classes.dex
-base.1=C\:\\projects\\hita\\HITA_V\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\10
