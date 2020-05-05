@@ -28,8 +28,8 @@ import com.stupidtree.hita.views.TimeTableNowLine;
 import com.stupidtree.hita.views.TimeTableViewGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import tyrantgit.explosionfield.ExplosionField;
@@ -41,7 +41,7 @@ import static com.stupidtree.hita.timetable.TimetableCore.COURSE;
 import static com.stupidtree.hita.timetable.TimetableCore.DDL;
 
 
-public class FragmentTimeTablePage extends BaseFragment implements BasicOperationTask.OperationListener<List> {
+public class FragmentTimeTablePage extends BaseFragment implements BaseOperationTask.OperationListener<List> {
 
     private boolean willRefreshOnResume = false;
     private int pageWeek;
@@ -87,24 +87,24 @@ public class FragmentTimeTablePage extends BaseFragment implements BasicOperatio
         timeTableView.setOnCardClickListener(new TimeTableViewGroup.OnCardClickListener() {
             @Override
             public void onEventClick(View v, EventItem eventItem) {
-                EventsUtils.showEventItem(getContext(), eventItem);
+                EventsUtils.showEventItem(requireContext(), eventItem);
             }
 
             @Override
             public void onDuplicateEventClick(View v, List<EventItem> eventItems) {
-                EventsUtils.showEventItem(getContext(), eventItems);
+                EventsUtils.showEventItem(requireContext(), eventItems);
             }
         });
         timeTableView.setOnCardLongClickListener(new TimeTableViewGroup.OnCardLongClickListener() {
             @Override
             public boolean onEventLongClick(final View v, final EventItem ei) {
-                PopupMenu pm = new PopupMenu(getContext(), v);
+                PopupMenu pm = new PopupMenu(requireContext(), v);
                 pm.inflate(R.menu.menu_opr_timetable);
                 pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getItemId() == R.id.opr_delete) {
-                            AlertDialog ad = new AlertDialog.Builder(getContext()).
+                            AlertDialog ad = new AlertDialog.Builder(requireContext()).
                                     setNegativeButton(R.string.button_cancel, null)
                                     .setPositiveButton(R.string.button_confirm, new DialogInterface.OnClickListener() {
                                         @Override
@@ -130,13 +130,13 @@ public class FragmentTimeTablePage extends BaseFragment implements BasicOperatio
 
             @Override
             public boolean onDuplicateEventClick(final View v, final List<EventItem> eventItems) {
-                PopupMenu pm = new PopupMenu(getContext(), v);
+                PopupMenu pm = new PopupMenu(requireContext(), v);
                 pm.inflate(R.menu.menu_opr_timetable);
                 pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getItemId() == R.id.opr_delete) {
-                            AlertDialog ad = new AlertDialog.Builder(getContext()).
+                            AlertDialog ad = new AlertDialog.Builder(requireContext()).
                                     setNegativeButton(R.string.button_cancel, null)
                                     .setPositiveButton(R.string.button_confirm, new DialogInterface.OnClickListener() {
                                         @Override
@@ -260,7 +260,7 @@ public class FragmentTimeTablePage extends BaseFragment implements BasicOperatio
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onOperationDone(String id, Boolean[] params, List result) {
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, List result) {
         switch (id) {
             case "refresh":
                 if (!timeTableCore.isDataAvailable()) return;
@@ -298,20 +298,19 @@ public class FragmentTimeTablePage extends BaseFragment implements BasicOperatio
                 else allDayLayout.setVisibility(View.GONE);
 
                 if (pageWeek == timeTableCore.getThisWeekOfTerm() && root.drawNowLine() && new HTime(timeTableCore.getNow()).after(root.getStartTime())) {
-                    timeTableView.addView(new TimeTableNowLine(getContext(), getIconColorSecond()));
+                    timeTableView.addView(new TimeTableNowLine(requireContext(), getIconColorSecond()));
                 }
                 break;
             case "delete":
                 Intent i = new Intent(TIMETABLE_CHANGED);
                 LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
-                Toast.makeText(getContext(), R.string.delete_success, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.delete_success, Toast.LENGTH_SHORT).show();
 
         }
-
     }
 
 
-    static class refreshPageTask extends BasicOperationTask<List> {
+    static class refreshPageTask extends BaseOperationTask<List> {
 
         int week;
 
@@ -360,13 +359,13 @@ public class FragmentTimeTablePage extends BaseFragment implements BasicOperatio
 
     }
 
-    static class deleteEventsTask extends BasicOperationTask<Boolean> {
+    static class deleteEventsTask extends BaseOperationTask<Boolean> {
         List<EventItem> eventItems;
 
         deleteEventsTask(OperationListener listRefreshedListener, EventItem eventItem) {
             super(listRefreshedListener);
             id = "delete";
-            this.eventItems = Arrays.asList(eventItem);
+            this.eventItems = Collections.singletonList(eventItem);
         }
 
         deleteEventsTask(OperationListener listRefreshedListener, List<EventItem> eventItem) {

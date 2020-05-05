@@ -62,7 +62,7 @@ public class FragmentRelatedUsers extends FragmentRadiusPopup {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_related_user, null);
+        View view = View.inflate(requireContext(), R.layout.fragment_related_user, null);
         first = true;
         initList(view);
         return view;
@@ -78,7 +78,7 @@ public class FragmentRelatedUsers extends FragmentRadiusPopup {
         followingByMe = new ArrayList<>();
         listAdapter = new RelatedAdapter();
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(requireContext()));
     }
 
     @Override
@@ -102,13 +102,13 @@ public class FragmentRelatedUsers extends FragmentRadiusPopup {
         new UserRelationHelper(CurrentUser).Follow(other, new UserRelationHelper.OnFollowListener() {
             @Override
             public void onDone() {
-                Toast.makeText(getContext(), R.string.followed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.followed, Toast.LENGTH_SHORT).show();
                 RefreshList(true);
             }
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(getContext(), R.string.follow_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.follow_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -117,13 +117,13 @@ public class FragmentRelatedUsers extends FragmentRadiusPopup {
         new UserRelationHelper(CurrentUser).UnFollow(other, new UserRelationHelper.OnFollowListener() {
             @Override
             public void onDone() {
-                Toast.makeText(getContext(), R.string.unfollowed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.unfollowed, Toast.LENGTH_SHORT).show();
                 RefreshList(true);
             }
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(getContext(), R.string.unfollow_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.unfollow_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -226,7 +226,7 @@ public class FragmentRelatedUsers extends FragmentRadiusPopup {
                     ActivityUtils.startUserProfileActivity(getActivity(), user);
                 }
             });
-            Glide.with(getContext()).load(user.getAvatarUri())
+            Glide.with(requireContext()).load(user.getAvatarUri())
                     .apply(RequestOptions.circleCropTransform())
                     .placeholder(R.drawable.ic_account_activated)
                     .into(holder.avatar);

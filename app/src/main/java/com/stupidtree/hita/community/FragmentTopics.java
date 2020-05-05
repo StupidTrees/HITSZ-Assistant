@@ -84,7 +84,7 @@ public class FragmentTopics extends BaseFragment {
         listRes = new ArrayList<>();
         listAdapter = new TopicAdapter();
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(requireContext()));
         refreshLayout.setColorSchemeColors(getColorAccent());
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -151,7 +151,7 @@ public class FragmentTopics extends BaseFragment {
         CornerTransform transform;
 
         TopicAdapter() {
-            transform = new CornerTransform(getContext(), 8f);
+            transform = new CornerTransform(requireContext(), 8f);
             transform.setExceptCorner(false, false, false, false);
         }
 
@@ -173,7 +173,7 @@ public class FragmentTopics extends BaseFragment {
             }
             if (t.getType().equals("basic")) holder.title.setTypeface(Typeface.DEFAULT_BOLD);
             else holder.title.setTypeface(Typeface.DEFAULT);
-            Glide.with(getContext()).load(t.getCover())
+            Glide.with(requireContext()).load(t.getCover())
                     .apply(RequestOptions.bitmapTransform(transform))
                     .placeholder(R.drawable.ic_topic_gradient)
                     .into(holder.image);

@@ -93,12 +93,12 @@ abstract public class FragmentEventItem extends BaseFragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            Toast.makeText(getContext(), getString(R.string.notif_delete_success), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.notif_delete_success), Toast.LENGTH_SHORT).show();
             Intent i = new Intent();
             i.putExtra("week", eventItem.week);
             i.setAction(TIMETABLE_CHANGED);
             //Intent i2 = new Intent();
-            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
             // dialog.dismiss();
             if (popupRoot != null) popupRoot.callDismiss();
         }

@@ -50,11 +50,11 @@ public class FragmentExam extends FragmentEventItem {
             @Override
             public void onClick(View v) {
                 if (eventItem.tag3.startsWith("科目代码：")) {
-                    ActivityUtils.startSubjectActivity_code(getContext(), eventItem.tag3.substring(5));
+                    ActivityUtils.startSubjectActivity_code(requireContext(), eventItem.tag3.substring(5));
                 } else if (eventItem.tag3.startsWith("科目名称：")) {
-                    ActivityUtils.startSubjectActivity_name(getContext(), eventItem.tag3.substring(5));
+                    ActivityUtils.startSubjectActivity_name(requireContext(), eventItem.tag3.substring(5));
                 } else {
-                    ActivityUtils.startSubjectActivity_name(getContext(), eventItem.tag3);
+                    ActivityUtils.startSubjectActivity_name(requireContext(), eventItem.tag3);
                 }
 
             }
@@ -71,7 +71,7 @@ public class FragmentExam extends FragmentEventItem {
             @Override
             public void onClick(View v) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                android.app.AlertDialog ad = new android.app.AlertDialog.Builder(getContext()).
+                android.app.AlertDialog ad = new android.app.AlertDialog.Builder(requireContext()).
                         setNegativeButton(getString(R.string.button_cancel), null)
                         .setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             @Override

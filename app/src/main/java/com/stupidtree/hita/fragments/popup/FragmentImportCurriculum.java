@@ -3,7 +3,6 @@ package com.stupidtree.hita.fragments.popup;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -19,6 +18,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.timetable.CurriculumCreator;
 import com.stupidtree.hita.timetable.packable.Curriculum;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -40,18 +40,15 @@ import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 @SuppressLint("ValidFragment")
-public class FragmentImportCurriculum extends FragmentRadiusPopup {
+public class FragmentImportCurriculum extends FragmentRadiusPopup implements BaseOperationTask.OperationListener<Object> {
 
-    private CardView newC, eas, excel;
     private ExpandableLayout expand;
-    private Button instruction;
-    private Button select;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_import_curriculum, null);
+        View view = View.inflate(requireContext(), R.layout.fragment_import_curriculum, null);
         initViews(view);
         return view;
     }
@@ -66,18 +63,18 @@ public class FragmentImportCurriculum extends FragmentRadiusPopup {
         super.onCreate(savedInstanceState);
     }
 
-    void initViews(View v) {
-        newC = v.findViewById(R.id.newC);
-        eas = v.findViewById(R.id.EAS);
+    private void initViews(View v) {
+        CardView newC = v.findViewById(R.id.newC);
+        CardView eas = v.findViewById(R.id.EAS);
         expand = v.findViewById(R.id.expand);
-        instruction = v.findViewById(R.id.instruction);
-        select = v.findViewById(R.id.pick);
-        excel = v.findViewById(R.id.excel);
+        Button instruction = v.findViewById(R.id.instruction);
+        Button select = v.findViewById(R.id.pick);
+        CardView excel = v.findViewById(R.id.excel);
         newC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                new newTask().execute();
+                new newTask(FragmentImportCurriculum.this).execute();
                 dismiss();
             }
         });
@@ -99,7 +96,7 @@ public class FragmentImportCurriculum extends FragmentRadiusPopup {
             @Override
             public void onClick(View v) {
                 dismiss();
-                FileOperator.chooseFile(getActivity(), getActivity().getExternalFilesDir(null));
+                FileOperator.chooseFile(getActivity(), requireActivity().getExternalFilesDir(null));
             }
         });
 
@@ -112,9 +109,9 @@ public class FragmentImportCurriculum extends FragmentRadiusPopup {
                     @Override
                     public void done(List<BmobArticle> list, BmobException e) {
                         if (list != null && list.size() > 0 && e == null) {
-                            ActivityUtils.openInBrowser(getActivity(), list.get(0).getUrl());
+                            ActivityUtils.openInBrowser(requireActivity(), list.get(0).getUrl());
                         } else {
-                            Toast.makeText(getContext(), R.string.check_your_network, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), R.string.check_your_network, Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -125,10 +122,27 @@ public class FragmentImportCurriculum extends FragmentRadiusPopup {
 
     }
 
-    class newTask extends AsyncTask {
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+
+    }
+
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object result) {
+        Toast.makeText(HContext, getString(R.string.curriculum_created), Toast.LENGTH_SHORT).show();
+        ActivityMain.saveData();
+        Intent i = new Intent(TIMETABLE_CHANGED);
+        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
+    }
+
+    static class newTask extends BaseOperationTask<Object> {
+
+        newTask(OperationListener listRefreshedListener) {
+            super(listRefreshedListener);
+        }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             List<Curriculum> all = timeTableCore.getAllCurriculum();
             int ex = 0;
             String name = "新建课表";
@@ -140,15 +154,6 @@ public class FragmentImportCurriculum extends FragmentRadiusPopup {
             CurriculumCreator cc = CurriculumCreator.create(UUID.randomUUID().toString(), name + "(" + ex + ")", Calendar.getInstance());
             timeTableCore.addCurriculum(cc, true);
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            Toast.makeText(HContext, HContext.getString(R.string.curriculum_created), Toast.LENGTH_SHORT).show();
-            ActivityMain.saveData();
-            Intent i = new Intent(TIMETABLE_CHANGED);
-            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
         }
     }
 

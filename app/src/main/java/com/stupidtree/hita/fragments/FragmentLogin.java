@@ -61,8 +61,10 @@ public class FragmentLogin extends BaseFragment {
             @Override
             public void onClick() {
                 toContinue = false;
-                if(username.getText().toString().isEmpty()) Toast.makeText(getContext(), R.string.enter_username,Toast.LENGTH_SHORT).show();
-                else if(password.getText().toString().isEmpty()) Toast.makeText(getContext(), R.string.enter_password,Toast.LENGTH_SHORT).show();
+                if (username.getText().toString().isEmpty())
+                    Toast.makeText(requireContext(), R.string.enter_username, Toast.LENGTH_SHORT).show();
+                else if (password.getText().toString().isEmpty())
+                    Toast.makeText(requireContext(), R.string.enter_password, Toast.LENGTH_SHORT).show();
                 else{
                     toContinue = true;
                     HITAUser hitau = new HITAUser();
@@ -81,7 +83,7 @@ public class FragmentLogin extends BaseFragment {
                             if (e == null) {
                                 Toast.makeText(HContext, R.string.login_success_syncing, Toast.LENGTH_SHORT).show();
                                 Intent i = new Intent(USER_CHANGED);
-                                LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
+                                LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
                                 CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
                                 timeTableCore.loadDataFromCloud(getActivity());
                             } else {

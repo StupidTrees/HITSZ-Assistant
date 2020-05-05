@@ -17,11 +17,10 @@ import com.stupidtree.hita.R;
 public class FragmentLoading extends FragmentRadiusPopup {
 
 
-    private TextView title;
     private TextView subtitle;
     private String titleS;
 
-    FragmentLoading() {
+    public FragmentLoading() {
 
     }
 
@@ -37,7 +36,7 @@ public class FragmentLoading extends FragmentRadiusPopup {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_loading, null);
+        View view = View.inflate(requireContext(), R.layout.fragment_loading, null);
         initViews(view);
         return view;
     }
@@ -61,8 +60,8 @@ public class FragmentLoading extends FragmentRadiusPopup {
         if (subtitle != null) subtitle.setText(text);
     }
 
-    void initViews(View v) {
-        title = v.findViewById(R.id.title);
+    private void initViews(View v) {
+        TextView title = v.findViewById(R.id.title);
         subtitle = v.findViewById(R.id.subtitle);
         title.setText(titleS);
         subtitle.setText("");

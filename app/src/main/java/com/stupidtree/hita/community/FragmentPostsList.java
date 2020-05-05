@@ -211,7 +211,7 @@ public class FragmentPostsList extends BaseFragment {
         list.setItemViewCacheSize(20);
         listAdapter = new PostListAdapter();
         list.setAdapter(listAdapter);
-        RecyclerView.LayoutManager lm = new WrapContentLinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        RecyclerView.LayoutManager lm = new WrapContentLinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false);
         list.setLayoutManager(lm);
         pullRefreshLayout.setColorSchemeColors(getColorAccent());
         pullRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -367,7 +367,7 @@ public class FragmentPostsList extends BaseFragment {
         CornerTransform transformation;
 
         PostListAdapter() {
-            transformation = new CornerTransform(getContext(), dip2px(getContext(), 10f));
+            transformation = new CornerTransform(requireContext(), dip2px(requireContext(), 10f));
             transformation.setExceptCorner(false, false, false, false);
         }
 
@@ -398,7 +398,7 @@ public class FragmentPostsList extends BaseFragment {
             if (post.getImages() != null && post.getImages().size() == 1) {
                 viewholder.image.setVisibility(View.VISIBLE);
                 viewholder.imageList.setVisibility(View.GONE);
-                Glide.with(getContext()).load(post.getImages().get(0)).apply(RequestOptions.bitmapTransform(transformation)).into(viewholder.image);
+                Glide.with(requireContext()).load(post.getImages().get(0)).apply(RequestOptions.bitmapTransform(transformation)).into(viewholder.image);
             } else if (post.getImages() != null && post.getImages().size() > 1) {
                 viewholder.imageList.setVisibility(View.VISIBLE);
                 viewholder.image.setVisibility(View.GONE);
@@ -413,7 +413,7 @@ public class FragmentPostsList extends BaseFragment {
             final HITAUser author = post.getAuthor();
             if (author != null) {
                 viewholder.author.setText(author.getNick());
-                Glide.with(getContext()).load(author.getAvatarUri())
+                Glide.with(requireContext()).load(author.getAvatarUri())
                         .placeholder(R.drawable.ic_account_activated)
                         .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                         .into(viewholder.avatar);
@@ -595,7 +595,7 @@ public class FragmentPostsList extends BaseFragment {
                 imageListRes = new ArrayList<>();
                 imageListAdapter = new IMGListAdapter(imageListRes);
                 imageList.setAdapter(imageListAdapter);
-                imageList.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                imageList.setLayoutManager(new GridLayoutManager(requireContext(), 3));
                 imageList.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
@@ -614,7 +614,7 @@ public class FragmentPostsList extends BaseFragment {
 
         public IMGListAdapter(List<String> mBeans) {
             this.mBeans = mBeans;
-            transformation = new CornerTransform(getContext(), dip2px(getContext(), 8));
+            transformation = new CornerTransform(requireContext(), dip2px(requireContext(), 8));
             transformation.setExceptCorner(false, false, false, false);
 
         }
@@ -630,7 +630,7 @@ public class FragmentPostsList extends BaseFragment {
 
         @Override
         public void onBindViewHolder(@NonNull IHolder holder, final int position) {
-            Glide.with(getContext()).load(mBeans.get(position))
+            Glide.with(requireContext()).load(mBeans.get(position))
                     .apply(RequestOptions.bitmapTransform(transformation))
                     //.centerCrop().
                     .into(holder.image);

@@ -92,7 +92,7 @@ public class FragmentNavigation extends BaseFragment implements NaviPageAdapter.
         listRes = new ArrayList<>();
         listAdapter = new NaviPageAdapter(listRes, getBaseActivity(), this);
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false));
         NaviPageAdapter.mCallBack mCallBack = new NaviPageAdapter.mCallBack(listAdapter);
         ItemTouchHelper helper = new ItemTouchHelper(mCallBack);
         helper.attachToRecyclerView(list);

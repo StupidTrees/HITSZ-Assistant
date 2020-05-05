@@ -58,7 +58,7 @@ public class FragmentTimetablePanel extends FragmentRadiusPopup {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_timetable_panel, null);
+        View view = View.inflate(requireContext(), R.layout.fragment_timetable_panel, null);
         initViews(view);
 
         return view;
@@ -125,7 +125,7 @@ public class FragmentTimetablePanel extends FragmentRadiusPopup {
             @Override
             public void onClick(View v) {
 
-                new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                new TimePickerDialog(requireContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
@@ -142,7 +142,7 @@ public class FragmentTimetablePanel extends FragmentRadiusPopup {
         manager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getContext(), ActivityCurriculumManager.class);
+                Intent i = new Intent(requireContext(), ActivityCurriculumManager.class);
                 startActivity(i);
             }
         });

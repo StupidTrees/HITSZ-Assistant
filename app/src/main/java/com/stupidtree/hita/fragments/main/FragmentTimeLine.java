@@ -199,7 +199,7 @@ public class FragmentTimeLine extends BaseFragment implements
         mPullNewHeader = v.findViewById(R.id.extend_header);
         mPullExtendLayout = v.findViewById(R.id.pull_extend);
         RecyclerView mListHeader = mPullNewHeader.getRecyclerView();
-        mListHeader.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        mListHeader.setLayoutManager(new GridLayoutManager(requireContext(), 3));
         mPullNewHeader.setOnExpandListener(new ExtendListHeader.OnExpandListener() {
             @Override
             public void onExpand() {
@@ -226,11 +226,11 @@ public class FragmentTimeLine extends BaseFragment implements
         helper.attachToRecyclerView(mListHeader);
 
 
-        LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext());
+        LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(this.requireContext());
         list = v.findViewById(R.id.timelinelist);
         list.setItemViewCacheSize(Integer.MAX_VALUE);
         timelineRes = new ArrayList<>();
-        listAdapter = new TimelineListAdapter(this.getContext(), this, timelineRes);
+        listAdapter = new TimelineListAdapter(this.requireContext(), this, timelineRes);
         list.setAdapter(listAdapter);
         list.setLayoutManager(layoutManager);
         listAdapter.setOnItemClickListener(new BaseListAdapter.OnItemClickListener() {

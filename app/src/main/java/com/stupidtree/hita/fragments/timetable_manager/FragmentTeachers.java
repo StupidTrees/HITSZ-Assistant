@@ -71,7 +71,7 @@ public class FragmentTeachers extends FragmentCurriculumChild {
         listAdapter = new listAdapter();
         listRes = new ArrayList<>();
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(requireContext()));
     }
 
     @Override

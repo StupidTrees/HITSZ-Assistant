@@ -77,9 +77,9 @@ public class FragmentNewsIPNews extends BaseFragment implements FragmentNews {
         pullRefreshLayout.setColorSchemeColors(getColorAccent(), getColorPrimary());
         list = v.findViewById(R.id.list);
         listRes = new ArrayList<>();
-        listAdapter = new NewsIpNewsListAdapter(this.getContext(),listRes);
+        listAdapter = new NewsIpNewsListAdapter(this.requireContext(), listRes);
         list.setAdapter(listAdapter);
-        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext(),RecyclerView.VERTICAL,false);
+        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.requireContext(), RecyclerView.VERTICAL, false);
         list.setLayoutManager(layoutManager);
         list.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

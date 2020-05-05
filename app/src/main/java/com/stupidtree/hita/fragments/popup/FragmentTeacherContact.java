@@ -47,7 +47,7 @@ public class FragmentTeacherContact extends FragmentRadiusPopup {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_teacher_contact, null);
+        View view = View.inflate(requireContext(), R.layout.fragment_teacher_contact, null);
         initViews(view);
         setInfos();
         return view;

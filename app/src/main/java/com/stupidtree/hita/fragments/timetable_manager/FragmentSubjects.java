@@ -79,8 +79,8 @@ public class FragmentSubjects extends FragmentCurriculumChild
         listRes = new ArrayList<>();
         subjectsList = v.findViewById(R.id.usercenter_subjects_list);
         subjectsList.setItemViewCacheSize(20);
-        subjectsAdapter = new SubjectsListAdapter(getContext(), listRes, root.getTimetableSP());
-        subjectsList.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
+        subjectsAdapter = new SubjectsListAdapter(requireContext(), listRes, root.getTimetableSP());
+        subjectsList.setLayoutManager(new WrapContentLinearLayoutManager(requireContext()));
         subjectsList.setAdapter(subjectsAdapter);
         subjectsAdapter.setOnItemClickListener(new BaseListAdapter.OnItemClickListener() {
             @Override
@@ -102,7 +102,7 @@ public class FragmentSubjects extends FragmentCurriculumChild
                 return true;
             }
         });
-        editModeHelper = new EditModeHelper(getContext(), subjectsAdapter, this);
+        editModeHelper = new EditModeHelper(requireContext(), subjectsAdapter, this);
         editModeHelper.init(v, R.id.edit_layout, R.layout.edit_mode_bar_3);
         editModeHelper.setSmoothSwitch(true);
         //
@@ -242,12 +242,12 @@ public class FragmentSubjects extends FragmentCurriculumChild
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             if ((boolean) o) {
-                Toast.makeText(getContext(), R.string.delete_success, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.delete_success, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), R.string.delete_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.delete_failed, Toast.LENGTH_SHORT).show();
             }
             Intent i = new Intent(TIMETABLE_CHANGED);
-            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
         }
     }
 }

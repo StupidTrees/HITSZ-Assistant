@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.fragments.BasicOperationTask;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.EventItemHolder;
@@ -119,7 +119,7 @@ public class SubjectsListAdapter extends BaseCheckableListAdapter<Subject, Subje
         return mBeans.size() + 1;
     }
 
-    static class CalcProgressTask extends BasicOperationTask<Integer> {
+    static class CalcProgressTask extends BaseOperationTask<Integer> {
 
         Subject subject;
 
@@ -151,7 +151,7 @@ public class SubjectsListAdapter extends BaseCheckableListAdapter<Subject, Subje
 
     }
 
-    class SubjectViewHolder extends BaseCheckableListAdapter.CheckableViewHolder implements BasicOperationTask.OperationListener<Integer> {
+    class SubjectViewHolder extends BaseCheckableListAdapter.CheckableViewHolder implements BaseOperationTask.OperationListener<Integer> {
 
         TextView name, progress, label;//,code;
         ImageView icon;
@@ -173,14 +173,13 @@ public class SubjectsListAdapter extends BaseCheckableListAdapter<Subject, Subje
 
         }
 
-        @SuppressLint("SetTextI18n")
         @Override
-        public void onOperationDone(String id, Boolean[] params, Integer result) {
-
+        public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Integer result) {
             ValueAnimator va = ValueAnimator.ofInt(progressBar.getProgress(), result);
             va.setDuration(500);
             va.setInterpolator(new DecelerateInterpolator());
             va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     int curValue = (int) animation.getAnimatedValue();

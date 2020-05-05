@@ -57,7 +57,7 @@ public class FragmentDDL extends FragmentEventItem {
             @Override
             public void onClick(View v) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                android.app.AlertDialog ad = new android.app.AlertDialog.Builder(getContext()).
+                android.app.AlertDialog ad = new android.app.AlertDialog.Builder(requireContext()).
                         setNegativeButton(getString(R.string.button_cancel), null)
                         .setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             @Override

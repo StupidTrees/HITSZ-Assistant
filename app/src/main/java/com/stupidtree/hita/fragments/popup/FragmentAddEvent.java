@@ -35,7 +35,7 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.activities.BaseActivity;
-import com.stupidtree.hita.fragments.BasicOperationTask;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.timetable.TimeTableGenerator;
 import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
@@ -54,8 +54,6 @@ import com.stupidtree.hita.views.PickTimePeriodDialog;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
-import org.apache.commons.lang3.tuple.Triple;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -73,7 +71,7 @@ import static com.stupidtree.hita.timetable.TimetableCore.getNumberAtTime;
 
 @SuppressLint("ValidFragment")
 public class FragmentAddEvent extends FragmentRadiusPopup
-        implements BasicOperationTask.OperationListener<Object> {
+        implements BaseOperationTask.OperationListener<Object> {
     private boolean timeSet = false, subjectSet = false, taskSet = false, locationSet = false, teacherSet = false;
     private String teacher;
     private boolean timeSet_course = false;
@@ -913,7 +911,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
     }
 
     @Override
-    public void onOperationDone(String id, Boolean[] params, Object o) {
+    public void onOperationDone(String id, BaseOperationTask bt, Boolean[] params, Object o) {
         switch (id) {
             case "course":
                 if (o instanceof Boolean && (boolean) o) {
@@ -929,10 +927,11 @@ public class FragmentAddEvent extends FragmentRadiusPopup
                 break;
             case "event":
                 if (o instanceof List) {
-                    List<EventItem> eis = (List<EventItem>) o;
+                    List eis = (List) o;
                     String[] dialogItems = new String[eis.size()];
                     for (int i = 0; i < eis.size(); i++) {
-                        dialogItems[i] = eis.get(i).mainName + " " + eis.get(i).startTime.tellTime() + "-" + eis.get(i).endTime.tellTime();
+                        EventItem ei = (EventItem) eis.get(i);
+                        dialogItems[i] = ei.getMainName() + " " + ei.getStartTime().tellTime() + "-" + ei.getEndTime().tellTime();
                     }
                     AlertDialog ad = new AlertDialog.Builder(requireContext()).setTitle("事件时间与以下事件重叠：").setItems(dialogItems, null).setPositiveButton("修改时间", null).create();
                     ad.show();
@@ -945,13 +944,14 @@ public class FragmentAddEvent extends FragmentRadiusPopup
                 }
                 break;
             case "task":
-                if (o instanceof Triple) {
-                    String[] res = (String[]) ((Triple) o).getMiddle();
-                    final List<Task> tasks = (List<Task>) ((Triple) o).getLeft();
-                    boolean b = (boolean) ((Triple) o).getRight();
+                if (o instanceof Boolean) {
+                    showTasksDialogTask st = (showTasksDialogTask) bt;
+                    String[] res = st.res;
+                    final List<Task> tasks = st.tasks;
+                    boolean b = (boolean) o;
                     if (b) {
                         AlertDialog dialog = new AlertDialog.Builder(FragmentAddEvent.this.requireContext()).
-                                setTitle(getString(R.string.ade_pick_task))
+                                setTitle(R.string.ade_pick_task)
                                 .setItems(res, new DialogInterface.OnClickListener() {
                                     @SuppressLint("SetTextI18n")
                                     @Override
@@ -978,12 +978,12 @@ public class FragmentAddEvent extends FragmentRadiusPopup
     }
 
 
-    static class showTasksDialogTask extends BasicOperationTask<Object> {
+    static class showTasksDialogTask extends BaseOperationTask<Object> {
         ArrayList<Task> tasks;
         String[] res;
         int[] dealtTime;
 
-        showTasksDialogTask(OperationListener<? extends Object> listRefreshedListener) {
+        showTasksDialogTask(OperationListener<?> listRefreshedListener) {
             super(listRefreshedListener);
             id = "task";
         }
@@ -1011,14 +1011,14 @@ public class FragmentAddEvent extends FragmentRadiusPopup
             return res.length != 0;
         }
 
-        @Override
-        protected void onPostExecute(OperationListener<Object> listRefreshedListener, Object ts) {
-            super.onPostExecute(listRefreshedListener, ts);
-            listRefreshedListener.onOperationDone(id, params, Triple.of(tasks, res, ts));
-        }
+//        @Override
+//        protected void onPostExecute(OperationListener<Object> listRefreshedListener, Object ts) {
+//            super.onPostExecute(listRefreshedListener, ts);
+//            listRefreshedListener.onOperationDone(id, params, Triple.of(tasks, res, ts));
+//        }
     }
 
-    static class addEventTask extends BasicOperationTask<Object> {
+    static class addEventTask extends BaseOperationTask<Object> {
         String curriculumCode;
         int type;
         String eventName;
@@ -1034,7 +1034,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
 
         EventItem eventItem = null;
 
-        addEventTask(BasicOperationTask.OperationListener<Object> listener,
+        addEventTask(OperationListener<Object> listener,
                      String curriculumCode, int type, String eventName, String tag2, String tag3, HTime start, HTime end, int week, int DOW, boolean isWholeDay) {
             super(listener);
             this.curriculumCode = curriculumCode;
@@ -1050,7 +1050,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
             id = "event";
         }
 
-        addEventTask(BasicOperationTask.OperationListener<Object> listener,
+        addEventTask(OperationListener<Object> listener,
                      String curriculumCode, int type, String eventName, String tag2, String tag3, HTime start, HTime end, int week, int DOW, boolean isWholeDay, EventItem editItem) {
             super(listener);
             this.curriculumCode = curriculumCode;
@@ -1103,7 +1103,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
 
     }
 
-    static class addCourseTask extends BasicOperationTask<Object> {
+    static class addCourseTask extends BaseOperationTask<Object> {
         String curriculumCode;
         List<Integer> weeks;
         String teacher;
@@ -1115,7 +1115,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
         boolean newSubject = false;
 
 
-        addCourseTask(BasicOperationTask.OperationListener<Object> listener, String curriculumCode, List<Integer> weeks, String name, String location, String teacher, int from, int last, int dow) {
+        addCourseTask(OperationListener<Object> listener, String curriculumCode, List<Integer> weeks, String name, String location, String teacher, int from, int last, int dow) {
             super(listener);
             this.curriculumCode = curriculumCode;
             this.weeks = weeks;

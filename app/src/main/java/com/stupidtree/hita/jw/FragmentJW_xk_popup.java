@@ -78,7 +78,7 @@ public class FragmentJW_xk_popup extends FragmentRadiusPopup {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
-        View view = View.inflate(getContext(), R.layout.fragment_jw_xk_popup, null);
+        View view = View.inflate(requireContext(), R.layout.fragment_jw_xk_popup, null);
         dialog.setContentView(view);
         initList(view);
         return dialog;
@@ -95,7 +95,7 @@ public class FragmentJW_xk_popup extends FragmentRadiusPopup {
         listAdapter = new xkDetailListAdapter();
         RecyclerView list = v.findViewById(R.id.list);
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(requireContext()));
     }
 
     class xkDetailListAdapter extends RecyclerView.Adapter<xkDetailListAdapter.XViewHolder> {
@@ -404,7 +404,7 @@ public class FragmentJW_xk_popup extends FragmentRadiusPopup {
                         items[i] = "第"+xkzys.get(i).toString()+"志愿";
                     }
                     if(items.length>0){
-                        AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle("选择志愿")
+                        AlertDialog ad = new AlertDialog.Builder(requireContext()).setTitle("选择志愿")
                                 .setItems(items, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -418,16 +418,16 @@ public class FragmentJW_xk_popup extends FragmentRadiusPopup {
                                 }).create();
                         ad.show();
                     }else{
-                        Toast.makeText(getContext(),"没有空闲志愿！",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "没有空闲志愿！", Toast.LENGTH_SHORT).show();
                     }
 
                 }else{
-                    Toast.makeText(getContext(),"读取志愿数出错！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "读取志愿数出错！", Toast.LENGTH_SHORT).show();
                 }
                 //getAsJsonArray();
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getContext(),"读取志愿数出错！",Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "读取志愿数出错！", Toast.LENGTH_SHORT).show();
 
             }
         }else{
@@ -470,7 +470,7 @@ public class FragmentJW_xk_popup extends FragmentRadiusPopup {
             loading.setProgress(false);
             xkPageSecond.getXKPageRoot().refreshAllPages();
             if(s.contains("成功")) dismiss();
-            Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
         }
     }
 }

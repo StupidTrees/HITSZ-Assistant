@@ -1,12 +1,11 @@
 package com.stupidtree.hita.fragments;
 
-public class BasicOperationTask<T> extends WeakAsyncTask<Boolean, Integer, T, BasicOperationTask.OperationListener<T>> {
+public class BaseOperationTask<T>
+        extends WeakAsyncTask<Boolean, Integer, T, BaseOperationTask.OperationListener<T>> {
 
-
-    protected Object[] others;
     protected String id = "";
 
-    public BasicOperationTask(OperationListener listRefreshedListener) {
+    public BaseOperationTask(OperationListener listRefreshedListener) {
         super(listRefreshedListener);
     }
 
@@ -26,7 +25,7 @@ public class BasicOperationTask<T> extends WeakAsyncTask<Boolean, Integer, T, Ba
         super.onPostExecute(listRefreshedListener, ts);
         if (listRefreshedListener != null) {
             try {
-                listRefreshedListener.onOperationDone(id, params, ts);
+                listRefreshedListener.onOperationDone(id, this, params, ts);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -36,7 +35,7 @@ public class BasicOperationTask<T> extends WeakAsyncTask<Boolean, Integer, T, Ba
     public interface OperationListener<T> {
         void onOperationStart(String id, Boolean[] params);
 
-        void onOperationDone(String id, Boolean[] params, T result);
+        void onOperationDone(String id, BaseOperationTask task, Boolean[] params, T result);
     }
 
 }

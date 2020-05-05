@@ -76,7 +76,7 @@ public class FragmentJWTS_grkb extends JWFragment {
         xnxq_picker = v.findViewById(R.id.xnxq_picker);
         spinnerItems = new ArrayList<>();
         //xnxnData = new ArrayList<>();
-        xnxqAdapter = new ArrayAdapter(getContext(),R.layout.dynamic_xnxq_spinner_item,spinnerItems);
+        xnxqAdapter = new ArrayAdapter(requireContext(), R.layout.dynamic_xnxq_spinner_item, spinnerItems);
         xnxqAdapter.setDropDownViewResource(R.layout.dynamic_xnxq_spinner_dropdown_item);
         xnxq_picker.setAdapter(xnxqAdapter);
         bt_import_grkb = v.findViewById(R.id.button_import_grkb);
@@ -234,7 +234,7 @@ public class FragmentJWTS_grkb extends JWFragment {
             super.onPostExecute(o);
             bt_import_grkb.setProgress(false);
             Intent i = new Intent(TIMETABLE_CHANGED);
-            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
             if (o != null && o instanceof JWException) {
                 if (((JWException) o).getType() == JWException.DIALOG_MESSAGE) {
                     AlertDialog ad = new AlertDialog.Builder(FragmentJWTS_grkb.this.getActivity()).create();

@@ -73,9 +73,9 @@
 //    void initViews(View v) {
 //        subjectsItems = new ArrayList<>();
 //        zxjxjhList = v.findViewById(R.id.jwts_zxjxjh_lish);
-//        zxjxjhAdapter = new ZXJXJHListAdapter(this.getContext(), subjectsItems);
+//        zxjxjhAdapter = new ZXJXJHListAdapter(this.requireContext(), subjectsItems);
 //        zxjxjhList.setAdapter(zxjxjhAdapter);
-//        zxjxjhList.setLayoutManager(new WrapContentLinearLayoutManager(this.getContext(),RecyclerView.VERTICAL, false));
+//        zxjxjhList.setLayoutManager(new WrapContentLinearLayoutManager(this.requireContext(),RecyclerView.VERTICAL, false));
 //
 //    }
 //

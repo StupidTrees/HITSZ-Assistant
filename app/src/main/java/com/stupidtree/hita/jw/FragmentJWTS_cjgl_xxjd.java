@@ -87,7 +87,7 @@
 //        list = v.findViewById(R.id.xxjd_list);
 //        listAdapter = new xflbListAdapter();
 //        list.setAdapter(listAdapter);
-//        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+//        list.setLayoutManager(new WrapContentLinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false));
 //    }
 //
 //    @Override
@@ -98,7 +98,7 @@
 //    @Override
 //    public void Refresh() {
 //        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
-//        pageTask = new refreshPageTask(getContext());
+//        pageTask = new refreshPageTask(requireContext());
 //        pageTask.executeOnExecutor(HITAApplication.TPE);
 //    }
 //

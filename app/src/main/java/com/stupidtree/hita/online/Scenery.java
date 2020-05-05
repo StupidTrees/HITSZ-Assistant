@@ -1,11 +1,8 @@
 package com.stupidtree.hita.online;
 
-import android.text.TextUtils;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.stupidtree.hita.R;
 
 import java.util.ArrayList;
@@ -14,8 +11,8 @@ import java.util.List;
 
 public class Scenery extends Location {
 
-    String detailImageUrls;
-    String detailIntroduction;
+    private String detailImageUrls;
+    private String detailIntroduction;
 
     public Scenery(Location l) {
         super(l);

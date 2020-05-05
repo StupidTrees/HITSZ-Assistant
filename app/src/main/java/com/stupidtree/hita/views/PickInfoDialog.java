@@ -30,20 +30,17 @@ import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
 
 public class PickInfoDialog extends RoundedCornerDialog {
-    EditText searchview;
-    RecyclerView list;
-    SearchResultAdapter listAdapter;
-    ProgressBar loading;
-    getSuggestionsTask pageTask;
-    int mode;
-    OnPickListener onPickListener;
-    ImageView done;
-    TextView title;
-    String titleStr;
+    private static final int TEACHER = 378;
+    private static final int ALL = 327;
+    private EditText searchView;
+    private SearchResultAdapter listAdapter;
+    private ProgressBar loading;
+    private getSuggestionsTask pageTask;
+    private int mode;
     public static List<BmobObject> listRes;
-    public static final int TEACHER = 378;
+    private OnPickListener onPickListener;
     public static final int LOCATION_ALL = 875;
-    public static final int ALL = 327;
+    private String titleStr;
 
     public interface OnPickListener{
         void OnPick(String title,Object obj);
@@ -75,22 +72,22 @@ public class PickInfoDialog extends RoundedCornerDialog {
     @Override
     protected void onStart() {
         super.onStart();
-        if(searchview!=null){
+        if (searchView != null) {
             if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED){
                 pageTask.cancel(true);
             }
-            pageTask =  new getSuggestionsTask(  searchview.getText().toString());
+            pageTask = new getSuggestionsTask(searchView.getText().toString());
             pageTask.executeOnExecutor(HITAApplication.TPE);
 
         }
 
     }
 
-    void initToolbar(){
+    private void initToolbar() {
         loading = findViewById(R.id.loading);
         loading.setVisibility(View.GONE);
-        searchview = findViewById(R.id.searchview);
-        searchview.addTextChangedListener(new TextWatcher() {
+        searchView = findViewById(R.id.searchview);
+        searchView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -116,13 +113,13 @@ public class PickInfoDialog extends RoundedCornerDialog {
         });
     }
 
-    void initList(){
+    private void initList() {
         listRes = new ArrayList<>();
-        list = findViewById(R.id.list);
-        done = findViewById(R.id.done);
-        title = findViewById(R.id.title);
+        RecyclerView list = findViewById(R.id.list);
+        ImageView done = findViewById(R.id.done);
+        TextView title = findViewById(R.id.title);
         title.setText(titleStr);
-        listAdapter = new SearchResultAdapter(this.getContext(), listRes);
+        listAdapter = new SearchResultAdapter(getContext(), listRes);
         list.setAdapter(listAdapter);
         list.setLayoutManager(new WrapContentLinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
         listAdapter.setOnItemClickListener(new SearchResultAdapter.OnItemClickListener() {
@@ -141,9 +138,10 @@ public class PickInfoDialog extends RoundedCornerDialog {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(TextUtils.isEmpty(searchview.getText().toString())) Toast.makeText(getContext(),"输入地点！",Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(searchView.getText().toString()))
+                    Toast.makeText(getContext(), "输入地点！", Toast.LENGTH_SHORT).show();
                 else{
-                    onPickListener.OnPick(searchview.getText().toString(),null);
+                    onPickListener.OnPick(searchView.getText().toString(), null);
                     dismiss();
                 }
             }
@@ -195,7 +193,6 @@ public class PickInfoDialog extends RoundedCornerDialog {
 
         @Override
         protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
             List<BmobObject> result = (List<BmobObject>) o;
             try {
                 loading.setVisibility(View.GONE);

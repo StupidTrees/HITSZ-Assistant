@@ -377,7 +377,7 @@ public class ActivityDDLManager extends BaseActivity implements
             if (newList.size() == 0)
                 newList.add(EventItem.getTagInstance(getString(R.string.no_ddl_add_some)));
 
-            listAdapter.notifyItemChangedSmooth(newList);
+            listAdapter.notifyItemChangedSmooth(newList, true);
             refreshText(result_todo);
 
         }

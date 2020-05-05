@@ -55,7 +55,7 @@ public class FragmentTopicsPopup extends FragmentRadiusPopup {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_topics_popup, null);
+        View view = View.inflate(requireContext(), R.layout.fragment_topics_popup, null);
         first = true;
         initList(view);
         return view;
@@ -67,7 +67,7 @@ public class FragmentTopicsPopup extends FragmentRadiusPopup {
         listRes = new ArrayList<>();
         listAdapter = new TopicAdapter();
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(requireContext()));
     }
 
     @Override
@@ -112,7 +112,7 @@ public class FragmentTopicsPopup extends FragmentRadiusPopup {
             }
             if (t.getType().equals("basic")) holder.title.setTypeface(Typeface.DEFAULT_BOLD);
             else holder.title.setTypeface(Typeface.DEFAULT);
-            Glide.with(getContext()).load(t.getCover())
+            Glide.with(requireContext()).load(t.getCover())
                     .apply(RequestOptions.circleCropTransform())
                     .placeholder(R.drawable.ic_topic_gradient)
                     .into(holder.image);

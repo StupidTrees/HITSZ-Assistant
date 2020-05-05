@@ -98,7 +98,7 @@
 //    @Override
 //    public void Refresh() {
 //        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
-//        pageTask = new refreshTask(getContext());
+//        pageTask = new refreshTask(requireContext());
 //        pageTask.executeOnExecutor(HITAApplication.TPE);
 //    }
 //

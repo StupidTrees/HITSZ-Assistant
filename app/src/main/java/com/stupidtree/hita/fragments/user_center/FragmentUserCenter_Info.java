@@ -78,7 +78,7 @@ public class FragmentUserCenter_Info extends BaseFragment {
                 @SuppressLint("InflateParams") View lv = getLayoutInflater().inflate(R.layout.dialog_editinfo, null);
                 final EditText et = lv.findViewById(R.id.setinfo_text);
                 et.setText(signature.getText());
-                new AlertDialog.Builder(getContext()).setTitle(R.string.set_signature)
+                new AlertDialog.Builder(requireContext()).setTitle(R.string.set_signature)
                         .setView(lv)
                         .setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -87,10 +87,10 @@ public class FragmentUserCenter_Info extends BaseFragment {
                                     @Override
                                     public void done(BmobException e) {
                                         if (e == null) {
-                                            Toast.makeText(getContext(), R.string.notif_signature_updated, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(requireContext(), R.string.notif_signature_updated, Toast.LENGTH_SHORT).show();
                                             Refresh();
                                         } else {
-                                            Toast.makeText(getContext(), R.string.notif_signature_update_failed, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(requireContext(), R.string.notif_signature_update_failed, Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -108,7 +108,7 @@ public class FragmentUserCenter_Info extends BaseFragment {
                 @SuppressLint("InflateParams") View lv = getLayoutInflater().inflate(R.layout.dialog_editinfo, null);
                 final EditText et = lv.findViewById(R.id.setinfo_text);
                 et.setText(nick.getText());
-                new AlertDialog.Builder(getContext()).setTitle(R.string.notif_set_nick)
+                new AlertDialog.Builder(requireContext()).setTitle(R.string.notif_set_nick)
                         .setView(lv)
                         .setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -117,10 +117,10 @@ public class FragmentUserCenter_Info extends BaseFragment {
                                     @Override
                                     public void done(BmobException e) {
                                         if (e == null) {
-                                            Toast.makeText(getContext(), R.string.notif_nick_updated, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(requireContext(), R.string.notif_nick_updated, Toast.LENGTH_SHORT).show();
                                             Refresh();
                                         } else {
-                                            Toast.makeText(getContext(), R.string.notif_nick_update_failed, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(requireContext(), R.string.notif_nick_update_failed, Toast.LENGTH_SHORT).show();
                                         }
 
                                     }
@@ -146,7 +146,7 @@ public class FragmentUserCenter_Info extends BaseFragment {
                             public void done(BmobException e) {
                                 fbs.dismiss();
                                 if (e == null) {
-                                    Toast.makeText(getContext(), R.string.notif_bind_studentnumber_success, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), R.string.notif_bind_studentnumber_success, Toast.LENGTH_SHORT).show();
                                     studentID.setText(CurrentUser.getStudentnumber());
                                     school.setText(CurrentUser.getSchool());
                                     realName.setText(CurrentUser.getRealname());
@@ -156,9 +156,9 @@ public class FragmentUserCenter_Info extends BaseFragment {
                                     studentID.setText(showText(CurrentUser.getStudentnumber()));
                                     CurrentUser.setStudentnumber(oldStuNumBackUp);
                                     if (e.getErrorCode() == 401)
-                                        Toast.makeText(getContext(), R.string.notif_bind_studentnumber_already, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(requireContext(), R.string.notif_bind_studentnumber_already, Toast.LENGTH_SHORT).show();
                                     else
-                                        Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(requireContext(), e.toString(), Toast.LENGTH_SHORT).show();
                                 }
 
                             }
@@ -171,7 +171,7 @@ public class FragmentUserCenter_Info extends BaseFragment {
 //                View lv = getLayoutInflater().inflate(R.layout.dialog_editinfo,null);
 //                final EditText et = lv.findViewById(R.id.setinfo_text);
 //                et.setText(studentnumber.getText());
-//                new AlertDialog.Builder(getContext()).setTitle("注意：绑定学号后其他账号将无法绑定该学号")
+//                new AlertDialog.Builder(requireContext()).setTitle("注意：绑定学号后其他账号将无法绑定该学号")
 //                        .setView(lv)
 //                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
 //                            public void onClick(DialogInterface dialog, int which) {
@@ -180,11 +180,11 @@ public class FragmentUserCenter_Info extends BaseFragment {
 //                                    @Override
 //                                    public void done(BmobException e) {
 //                                        if(e==null){
-//                                            Toast.makeText(getContext(),"更改绑定学号成功",Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(requireContext(),"更改绑定学号成功",Toast.LENGTH_SHORT).show();
 //                                            studentnumber.setText(CurrentUser.getStudentnumber());
 //                                        }else{
-//                                            if(e.getErrorCode()==401)  Toast.makeText(getContext(),"该学号已与其他账号绑定！",Toast.LENGTH_SHORT).show();
-//                                            else Toast.makeText(getContext(),e.toString(),Toast.LENGTH_SHORT).show();
+//                                            if(e.getErrorCode()==401)  Toast.makeText(requireContext(),"该学号已与其他账号绑定！",Toast.LENGTH_SHORT).show();
+//                                            else Toast.makeText(requireContext(),e.toString(),Toast.LENGTH_SHORT).show();
 //                                        }
 //
 //                                    }
@@ -208,10 +208,10 @@ public class FragmentUserCenter_Info extends BaseFragment {
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
-                                    Toast.makeText(getContext(), R.string.notif_grade_updated, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), R.string.notif_grade_updated, Toast.LENGTH_SHORT).show();
                                     Refresh();
                                 } else {
-                                    Toast.makeText(getContext(), R.string.notif_grade_update_failed, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), R.string.notif_grade_update_failed, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -241,9 +241,9 @@ public class FragmentUserCenter_Info extends BaseFragment {
                             public void done(BmobException e) {
                                 if (e == null) {
                                     Refresh();
-                                    Toast.makeText(getContext(), R.string.notif_policy_updated, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), R.string.notif_policy_updated, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(getContext(), R.string.notif_policy_update_failed, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), R.string.notif_policy_update_failed, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

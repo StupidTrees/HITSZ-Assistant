@@ -33,15 +33,15 @@ import static com.stupidtree.hita.HITAApplication.jwCore;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class FragmentJWTS_cjgl_grcj extends JWFragment {
-    RecyclerView qmcj_list;
-    CJXXListAdapter qmcj_adapter;
-    List<String> xnxqPickerName;
+    private RecyclerView qmcj_list;
+    private CJXXListAdapter qmcj_adapter;
+    private List<String> xnxqPickerName;
    // List<Map<String,String>> xnxqPickerData;
 
-    List<Map<String,String>> qzcj_listRes,qmcj_listRes;
-    Spinner xnxqPicker;
-    ArrayAdapter xnxqAdapter;
-    Set<AsyncTask> taskSet;
+    private List<Map<String, String>> qmcj_listRes;
+    private Spinner xnxqPicker;
+    private ArrayAdapter<? extends String> xnxqAdapter;
+    private Set<AsyncTask> taskSet;
 
     public FragmentJWTS_cjgl_grcj() {
 
@@ -81,16 +81,16 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
         xnxqPickerName = new ArrayList<>();
         //xnxqPickerData = new ArrayList<>();
         xnxqPicker = v.findViewById(R.id.xnxq_picker);
-        xnxqAdapter = new ArrayAdapter(getContext(),R.layout.dynamic_xnxq_spinner_item,xnxqPickerName);
+        xnxqAdapter = new ArrayAdapter<>(requireContext(), R.layout.dynamic_xnxq_spinner_item, xnxqPickerName);
         xnxqPicker.setAdapter(xnxqAdapter);
         xnxqAdapter.setDropDownViewResource(R.layout.dynamic_xnxq_spinner_dropdown_item);
     }
 
-    void initLists(final View v){
+    private void initLists(final View v) {
         qmcj_list = v.findViewById(R.id.qmcj_list);
-        qzcj_listRes = new ArrayList<>();
+        List<Map<String, String>> qzcj_listRes = new ArrayList<>();
         qmcj_listRes = new ArrayList<>();
-        qmcj_adapter = new CJXXListAdapter(v.getContext(),qmcj_listRes);
+        qmcj_adapter = new CJXXListAdapter(requireContext(), qmcj_listRes);
         qmcj_list.setAdapter(qmcj_adapter);
         LinearLayoutManager layoutManager2 = new WrapContentLinearLayoutManager(v.getContext(),RecyclerView.VERTICAL,false);
 
@@ -126,7 +126,8 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
 
     @Override
     protected void stopTasks() {
-        for(AsyncTask at:taskSet) if(at!=null&&at.getStatus()!=AsyncTask.Status.FINISHED) at.cancel(true);
+        for (AsyncTask<? extends Object, ? extends Object, ? extends Object> at : taskSet)
+            if (at != null && at.getStatus() != AsyncTask.Status.FINISHED) at.cancel(true);
     }
 
 
@@ -234,10 +235,10 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
                 try {
                     qmcj_listRes.clear();
                    qmcj_listRes.addAll(jwCore.getGRCJ(xn,xq));
-                    for(Map m:qmcj_listRes){
+                    for (Map<? extends String, ? extends String> m : qmcj_listRes) {
                         for(Curriculum cc:timeTableCore.getAllCurriculum()){
-                            for(Subject s:cc.getSubjectsByCourseCode(m.get("code").toString())){
-                                s.addScore("qm",m.get("final_score").toString());
+                            for (Subject s : cc.getSubjectsByCourseCode(m.get("code"))) {
+                                s.addScore("qm", m.get("final_score"));
                             }
                         }
                     }

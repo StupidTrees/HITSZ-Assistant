@@ -46,7 +46,7 @@ public class FragmentSheetList<T> extends FragmentRadiusPopup {
         RecyclerView list = view.findViewById(R.id.list);
         TextView tt = view.findViewById(R.id.title);
         tt.setText(title);
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
+        list.setLayoutManager(new LinearLayoutManager(requireContext()));
         listAdapter = listLoader.initListAdapter(listRes);
         list.setAdapter(listAdapter);
     }

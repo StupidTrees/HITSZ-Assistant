@@ -86,7 +86,7 @@
 //        }
 //        listAdapter = new UserInfosAdapter(listRes, (BaseActivity) this.getActivity());
 //        list.setAdapter(listAdapter);
-//        RecyclerView.LayoutManager lm = new GridLayoutManager(this.getContext(),2);
+//        RecyclerView.LayoutManager lm = new GridLayoutManager(this.requireContext(),2);
 //        list.setLayoutManager(lm);
 //
 //    }

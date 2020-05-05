@@ -88,7 +88,7 @@ public class FragmentJWTS_xsxk_second extends JWFragment
         list = v.findViewById(R.id.xsxk_list);
         lisRes = new ArrayList<>();
         listResFull = new ArrayList<>();
-        listAdapter = new XSXKListAdapter(v.getContext(), lisRes, false);
+        listAdapter = new XSXKListAdapter(requireContext(), lisRes, false);
         list.setAdapter(listAdapter);
         list.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
         listAdapter.setOnItemClickListener(new XSXKListAdapter.OnItemClickListener() {

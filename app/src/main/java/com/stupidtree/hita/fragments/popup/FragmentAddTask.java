@@ -44,12 +44,12 @@ import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED
 
 @SuppressLint("ValidFragment")
 public class FragmentAddTask extends FragmentRadiusPopup {
-    HTime fT = new HTime(timeTableCore.getNow()), tT = new HTime(timeTableCore.getNow());
+    private HTime fT = new HTime(timeTableCore.getNow()), tT = new HTime(timeTableCore.getNow());
     private int fW;
-     int fDOW;
-     int tDOW ;
-     int tW;
-     boolean fDset = false;
+    private int fDOW;
+    private int tDOW;
+    private int tW;
+    private boolean fDset = false;
     private boolean tDset = false;
     private boolean fTset = false;
     private boolean tTset = false;
@@ -64,11 +64,10 @@ public class FragmentAddTask extends FragmentRadiusPopup {
     private AddTaskDoneListener addTaskDoneListener;
 
 
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof AddTaskDoneListener){
+        if (context instanceof AddTaskDoneListener) {
             addTaskDoneListener = (AddTaskDoneListener) context;
         }
 
@@ -78,7 +77,7 @@ public class FragmentAddTask extends FragmentRadiusPopup {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_add_task, null);
+        View view = View.inflate(requireContext(), R.layout.fragment_add_task, null);
         initViews(view);
         setViewFunctions();
         return view;
@@ -88,7 +87,7 @@ public class FragmentAddTask extends FragmentRadiusPopup {
     @Override
     public void onStart() {
         super.onStart();
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);
         }
@@ -98,7 +97,7 @@ public class FragmentAddTask extends FragmentRadiusPopup {
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
-         super.onDismiss(dialog);
+        super.onDismiss(dialog);
     }
 
     @Override
@@ -108,7 +107,7 @@ public class FragmentAddTask extends FragmentRadiusPopup {
         tT = new HTime(timeTableCore.getNow());
     }
 
-    void initViews(View v){
+    private void initViews(View v) {
         fD_show = v.findViewById(R.id.adt_fdate_show);
         tD_show = v.findViewById(R.id.adt_tdate_show);
         fT_show = v.findViewById(R.id.adt_ftime_show);
@@ -148,28 +147,28 @@ public class FragmentAddTask extends FragmentRadiusPopup {
         adt_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) arrangetime.setVisibility(View.VISIBLE);
+                if (isChecked) arrangetime.setVisibility(View.VISIBLE);
                 else arrangetime.setVisibility(View.GONE);
             }
         });
         adt_switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) arrangelength.setVisibility(View.VISIBLE);
+                if (isChecked) arrangelength.setVisibility(View.VISIBLE);
                 else arrangelength.setVisibility(View.GONE);
             }
         });
         fD_pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PickSingleTimeDialog((BaseActivity) getActivity(),new PickSingleTimeDialog.onDialogConformListener() {
+                new PickSingleTimeDialog((BaseActivity) getActivity(), new PickSingleTimeDialog.onDialogConformListener() {
                     @Override
-                    public void onClick(int week, int dow,int hour,int minute, boolean dateSet) {
+                    public void onClick(int week, int dow, int hour, int minute, boolean dateSet) {
                         fDset = dateSet;
                         fDOW = dow;
                         fW = week;
-                        if(dateSet){
-                            fD_show.setText(week+"周"+ TextTools.words_time_DOW[dow-1]+" "+hour+":"+minute);
+                        if (dateSet) {
+                            fD_show.setText(week + "周" + TextTools.words_time_DOW[dow - 1] + " " + hour + ":" + minute);
                             fD_show.setTextColor(((BaseActivity) getActivity()).getColorAccent());
                         }
                     }
@@ -180,14 +179,14 @@ public class FragmentAddTask extends FragmentRadiusPopup {
         tD_pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PickSingleTimeDialog((BaseActivity) getActivity(),new PickSingleTimeDialog.onDialogConformListener() {
+                new PickSingleTimeDialog((BaseActivity) getActivity(), new PickSingleTimeDialog.onDialogConformListener() {
                     @Override
-                    public void onClick(int week, int dow,int hour,int minute, boolean dateSet) {
+                    public void onClick(int week, int dow, int hour, int minute, boolean dateSet) {
                         tDset = dateSet;
                         tDOW = dow;
                         tW = week;
-                        if(dateSet){
-                            tD_show.setText(week+"周"+ TextTools.words_time_DOW[dow-1]+" "+hour+":"+minute);
+                        if (dateSet) {
+                            tD_show.setText(week + "周" + TextTools.words_time_DOW[dow - 1] + " " + hour + ":" + minute);
                             tD_show.setTextColor(((BaseActivity) getActivity()).getColorAccent());
                         }
                     }
@@ -198,10 +197,10 @@ public class FragmentAddTask extends FragmentRadiusPopup {
         fT_pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialog TPD = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog TPD = new TimePickerDialog(requireContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        fT.setTime(hourOfDay,minute);
+                        fT.setTime(hourOfDay, minute);
                         fT_show.setText(fT.tellTime());
                         fT_show.setTextColor(((BaseActivity) getActivity()).getColorAccent());
                         fTset = true;
@@ -220,7 +219,7 @@ public class FragmentAddTask extends FragmentRadiusPopup {
                 TimePickerDialog TPD = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        tT.setTime(hourOfDay,minute);
+                        tT.setTime(hourOfDay, minute);
                         tT_show.setText(fT.tellTime());
                         tT_show.setTextColor(((BaseActivity) getActivity()).getColorAccent());
                         tTset = true;
@@ -232,23 +231,23 @@ public class FragmentAddTask extends FragmentRadiusPopup {
 
             }
         });
-        bt_done.setOnClickListener( new View.OnClickListener() {
+        bt_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(adt_switch.isChecked()&&(!fDset||!tDset)){
-                    Toast.makeText(getContext(),"请设置任务期限！",Toast.LENGTH_SHORT).show();
-                }else if(name.getText().toString().isEmpty()) {
-                    Toast.makeText(getContext(),"请输入任务名称！",Toast.LENGTH_SHORT).show();
-                }else{
-                    Task t = new Task(timeTableCore.getCurrentCurriculum().getCurriculumCode(),name.getText().toString());
-                    if(adt_switch.isChecked()){
+                if (adt_switch.isChecked() && (!fDset || !tDset)) {
+                    Toast.makeText(requireContext(), "请设置任务期限！", Toast.LENGTH_SHORT).show();
+                } else if (name.getText().toString().isEmpty()) {
+                    Toast.makeText(requireContext(), "请输入任务名称！", Toast.LENGTH_SHORT).show();
+                } else {
+                    Task t = new Task(timeTableCore.getCurrentCurriculum().getCurriculumCode(), name.getText().toString());
+                    if (adt_switch.isChecked()) {
                         String ddlUUID = timeTableCore.addEvent(tW, tDOW, TimetableCore.DDL,
-                                "DDL:"+name.getText().toString(),"任务截至","Deadline",t.getUuid(),tT,tT,false);
-                      //  timeTableCore.addTask(name.getText().toString(),fW,fDOW,tW,tDOW,fT,tT,"DDL:"+name.getText().toString());
-                        t.arrangeTime(fW,fDOW,tW,tDOW,fT,tT,ddlUUID+":::"+tW);
+                                "DDL:" + name.getText().toString(), "任务截至", "Deadline", t.getUuid(), tT, tT, false);
+                        //  timeTableCore.addTask(name.getText().toString(),fW,fDOW,tW,tDOW,fT,tT,"DDL:"+name.getText().toString());
+                        t.arrangeTime(fW, fDOW, tW, tDOW, fT, tT, ddlUUID + ":::" + tW);
                     }
                     //else  timeTableCore.addTask(name.getText().toString());
-                    if(adt_switch2.isChecked()){
+                    if (adt_switch2.isChecked()) {
                         t.setLength(adt_lengthpicker.getValue());
                     }
                     t.setEvery_day(adt_switch3.isChecked());
@@ -258,11 +257,11 @@ public class FragmentAddTask extends FragmentRadiusPopup {
                     //Intent mes = new Intent(TASK_REFRESH);
                     //Intent mes2 = new Intent(TIMELINE_REFRESH);
                     //Intent mes3 = new Intent(WATCHER_REFRESH);
-                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes);
-//                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes2);
-//                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(mes3);
+                    LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(mes);
+//                    LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(mes2);
+//                    LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(mes3);
                     ActivityMain.saveData();
-                    if(addTaskDoneListener!=null)addTaskDoneListener.OnDone();
+                    if (addTaskDoneListener != null) addTaskDoneListener.OnDone();
                 }
             }
         });
@@ -275,8 +274,7 @@ public class FragmentAddTask extends FragmentRadiusPopup {
     }
 
 
- 
-    public interface AddTaskDoneListener{
+    public interface AddTaskDoneListener {
         void OnDone();
     }
 

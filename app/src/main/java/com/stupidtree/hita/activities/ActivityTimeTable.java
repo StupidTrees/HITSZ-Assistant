@@ -25,7 +25,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.TimeTablePagerAdapter;
-import com.stupidtree.hita.fragments.BasicOperationTask;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.popup.FragmentTimetablePanel;
 import com.stupidtree.hita.timetable.packable.HTime;
 import com.stupidtree.hita.timetable.packable.Subject;
@@ -38,7 +38,7 @@ import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 public class ActivityTimeTable extends BaseActivity implements
-        BasicOperationTask.OperationListener<Object>,
+        BaseOperationTask.OperationListener<Object>,
         FragmentTimetablePanel.PanelRoot, TimeTableBlockView.TimeTablePreferenceRoot {
 
     public static final String TIMETABLE_REFRESH = "COM.STUPIDTREE.HITA.TIMETABLE_ACTIVITY_REFRESH";
@@ -376,11 +376,12 @@ public class ActivityTimeTable extends BaseActivity implements
     }
 
     @Override
-    public void onOperationDone(String id, Boolean[] params, Object result) {
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object result) {
         if ("reset_color".equals(id)) {
             pagerAdapter.notifyAllFragments();
         }
     }
+
 
 
     @Override
@@ -416,7 +417,7 @@ public class ActivityTimeTable extends BaseActivity implements
     }
 
 
-    static class resetColorTask extends BasicOperationTask<Object> {
+    static class resetColorTask extends BaseOperationTask<Object> {
 
         SharedPreferences sharedPreferences;
 

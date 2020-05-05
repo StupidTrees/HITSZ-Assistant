@@ -159,7 +159,7 @@ public class ButtonLoading extends View {
                 break;
             case 2:
                 this.paint.setColor(this.attribute.getCircleColor());
-                this.point.set(canvas.getWidth() / 2, canvas.getHeight() / 2);
+                this.point.set(getWidth() / 2, canvas.getHeight() / 2);
                 rectWAlpha = this.valueAnimation1;
                 rectHAlpha = this.height;
                 leftAlpha = this.point.x - rectWAlpha / 2;

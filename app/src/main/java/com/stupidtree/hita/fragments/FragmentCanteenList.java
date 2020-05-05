@@ -72,8 +72,8 @@ public class FragmentCanteenList extends BaseFragment {
         rank_board = v.findViewById(R.id.canteen_subtitle);
         head_bg = v.findViewById(R.id.head_bg);
         listRes = new ArrayList<>();
-        listAdapter = new CanteenListAdapter(this.getContext(), listRes);
-        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false);
+        listAdapter = new CanteenListAdapter(this.requireContext(), listRes);
+        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.requireContext(), RecyclerView.VERTICAL, false);
         list.setAdapter(listAdapter);
         list.setLayoutManager(layoutManager);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

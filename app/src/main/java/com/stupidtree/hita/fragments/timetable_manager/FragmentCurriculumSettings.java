@@ -22,7 +22,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.BaseActivity;
-import com.stupidtree.hita.fragments.BasicOperationTask;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.timetable.packable.Curriculum;
 import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.util.ColorBox;
@@ -40,7 +40,7 @@ import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED
 
 
 public class FragmentCurriculumSettings extends FragmentCurriculumChild
-        implements BasicOperationTask.OperationListener<Object> {
+        implements BaseOperationTask.OperationListener<Object> {
     private TextView totalWeeks, nameText;
     private ExpandableLayout expandableLayout;
     private TextView from;
@@ -88,7 +88,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
             @Override
             public void onClick(View v) {
                 v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.dialog_title_random_allocate))
+                AlertDialog ad = new AlertDialog.Builder(requireContext()).setTitle(getString(R.string.dialog_title_random_allocate))
                         .setNegativeButton(getString(R.string.button_cancel), null).setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -104,7 +104,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
                 @SuppressLint("InflateParams") View lv = getLayoutInflater().inflate(R.layout.dialog_editinfo, null);
                 final EditText et = lv.findViewById(R.id.setinfo_text);
                 et.setText(root.getCurriculum().getName());
-                new AlertDialog.Builder(getContext()).setTitle(R.string.notifi_curriculum_set_name)
+                new AlertDialog.Builder(requireContext()).setTitle(R.string.notifi_curriculum_set_name)
                         .setView(lv)
                         .setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -162,7 +162,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
             @Override
             public void onClick(View view) {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.attention)).setMessage(getString(R.string.dialog_message_delete_curriculum)).
+                AlertDialog ad = new AlertDialog.Builder(requireContext()).setTitle(getString(R.string.attention)).setMessage(getString(R.string.dialog_message_delete_curriculum)).
                         setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -198,7 +198,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
         card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog ad = new AlertDialog.Builder(getContext()).setTitle(getString(R.string.dialog_title_curriculum_detail)).
+                AlertDialog ad = new AlertDialog.Builder(requireContext()).setTitle(getString(R.string.dialog_title_curriculum_detail)).
                         setMessage(String.format(getString(R.string.dialog_message_curriculum_detail), curriculum.getName(), curriculum.getCurriculumCode())).create();
                 ad.show();
             }
@@ -224,7 +224,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
     }
 
     @Override
-    public void onOperationDone(String id, Boolean[] params, Object result) {
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object result) {
         Intent i = new Intent(TIMETABLE_CHANGED);
         switch (id) {
             case "reset":
@@ -235,7 +235,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
                 root.onModifiedCurriculumRefresh();
                 Refresh();
                 LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
-                Toast.makeText(getContext(), R.string.curriculum_updated, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.curriculum_updated, Toast.LENGTH_SHORT).show();
                 break;
             case "delete":
                 if ((Boolean) result) {
@@ -247,16 +247,15 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
                 root.onCurriculumDeleteRefresh();
                 break;
         }
-
     }
 
 
-    static class enableColorTask extends BasicOperationTask<Object> {
+    static class enableColorTask extends BaseOperationTask<Object> {
 
         boolean enable;
         SharedPreferences sharedPreferences;
 
-        enableColorTask(OperationListener listRefreshedListener, Boolean enable, SharedPreferences sp) {
+        enableColorTask(OperationListener<?> listRefreshedListener, Boolean enable, SharedPreferences sp) {
             super(listRefreshedListener);
             this.enable = enable;
             id = "enable";
@@ -266,25 +265,25 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
 
         @SuppressLint("ApplySharedPref")
         @Override
-        protected Object doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             sharedPreferences.edit().putBoolean("subjects_color_enable", enable).commit();
             return super.doInBackground(listRefreshedListener, booleans);
         }
     }
 
 
-    static class resetColorTask extends BasicOperationTask<Object> {
+    static class resetColorTask extends BaseOperationTask<Object> {
 
         SharedPreferences sharedPreferences;
 
-        resetColorTask(OperationListener listRefreshedListener, SharedPreferences sharedPreferences) {
+        resetColorTask(OperationListener<?> listRefreshedListener, SharedPreferences sharedPreferences) {
             super(listRefreshedListener);
             this.sharedPreferences = sharedPreferences;
             id = "reset";
         }
 
         @Override
-        protected Object doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             for (Subject s : timeTableCore.getCurrentCurriculum().getSubjects()) {
                 editor.putInt("color:" + s.getName(), ColorBox.getRandomColor_Material());
@@ -295,7 +294,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
 
     }
 
-    static class saveCurriculumTask extends BasicOperationTask<Object> {
+    static class saveCurriculumTask extends BaseOperationTask<Object> {
 
         Curriculum curriculum;
 
@@ -307,7 +306,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
 
 
         @Override
-        protected Object doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             if (curriculum != null) curriculum.saveToDB();
             if (timeTableCore.getCurrentCurriculum() != null &&
                     timeTableCore.getCurrentCurriculum().getCurriculumCode().equals(curriculum.getCurriculumCode())) {
@@ -317,7 +316,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
         }
     }
 
-    static class deleteTask extends BasicOperationTask<Boolean> {
+    static class deleteTask extends BaseOperationTask<Boolean> {
 
         String curriculumCode;
 

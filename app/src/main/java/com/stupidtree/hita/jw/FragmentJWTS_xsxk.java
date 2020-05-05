@@ -33,7 +33,6 @@ public class FragmentJWTS_xsxk extends JWFragment implements FragmentJW_xk_popup
     private Spinner spinnerXNXQ;
     private String xn, xq;
     private boolean filter_no_vacancy, filter_conflict;
-    private ViewGroup optionsButton;
 
     public FragmentJWTS_xsxk() {
         /* Required empty public constructor */
@@ -121,7 +120,7 @@ public class FragmentJWTS_xsxk extends JWFragment implements FragmentJW_xk_popup
     }
 
     private void initPage(View v) {
-        optionsButton = v.findViewById(R.id.more);
+        ViewGroup optionsButton = v.findViewById(R.id.more);
         final ImageView optionsArrow = v.findViewById(R.id.more_arrow);
         final ExpandableLayout expandableLayout = v.findViewById(R.id.expand);
         optionsButton.setOnClickListener(new View.OnClickListener() {

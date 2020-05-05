@@ -49,7 +49,7 @@ public class FragmentJWTS_xsxk_second_yx extends FragmentJWTS_xsxk_second {
         list = v.findViewById(R.id.xsxk_list);
         lisRes = new ArrayList<>();
         listResFull = new ArrayList<>();
-        listAdapter = new XSXKListAdapter(v.getContext(), lisRes, true);
+        listAdapter = new XSXKListAdapter(requireContext(), lisRes, true);
         list.setAdapter(listAdapter);
         list.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
         listAdapter.setOnItemClickListener(new XSXKListAdapter.OnItemClickListener() {
@@ -224,9 +224,9 @@ public class FragmentJWTS_xsxk_second_yx extends FragmentJWTS_xsxk_second {
             super.onPostExecute(o);
             bt.setProgress(false);
             if ((boolean) o) {
-                Toast.makeText(getContext(), String.format(getString(R.string.subject_sync_success), number), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), String.format(getString(R.string.subject_sync_success), number), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), R.string.subject_sync_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.subject_sync_failed, Toast.LENGTH_SHORT).show();
             }
         }
     }

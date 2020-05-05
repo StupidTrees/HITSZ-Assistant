@@ -339,7 +339,7 @@ public class ActivityExamCountdown extends BaseActivity implements
             newList.addAll(result_passed);
             if (newList.size() == 0)
                 newList.add(EventItem.getTagInstance(getString(R.string.no_exam_add_some)));
-            listAdapter.notifyItemChangedSmooth(newList);
+            listAdapter.notifyItemChangedSmooth(newList, true);
             refreshText(result_todo);
 
         }

@@ -40,12 +40,12 @@ public class FragmentUserCenter_sync extends BaseFragment {
                 timeTableCore.saveDataToCloud(new TimetableCore.OnDoneListener() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(getContext(), R.string.upload_done, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.upload_done, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailed(Exception e) {
-                        Toast.makeText(getContext(), R.string.upload_failed, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.upload_failed, Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 });

@@ -71,9 +71,9 @@
 //    void initViews(View v) {
 //        subjectsItems = new ArrayList<>();
 //        pyjhList = v.findViewById(R.id.jwts_pyjh_lish);
-//        pyjhAdapter = new PYJHListAdapter(this.getContext(), subjectsItems);
+//        pyjhAdapter = new PYJHListAdapter(this.requireContext(), subjectsItems);
 //        pyjhList.setAdapter(pyjhAdapter);
-//        pyjhList.setLayoutManager(new WrapContentLinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false));
+//        pyjhList.setLayoutManager(new WrapContentLinearLayoutManager(this.requireContext(), RecyclerView.VERTICAL, false));
 //
 //    }
 //
@@ -111,7 +111,7 @@
 //    @Override
 //    public void Refresh() {
 //        stopTasks();
-//        pageTask = new getPYJHTask(getContext());
+//        pageTask = new getPYJHTask(requireContext());
 //        pageTask.executeOnExecutor(HITAApplication.TPE);
 //    }
 //

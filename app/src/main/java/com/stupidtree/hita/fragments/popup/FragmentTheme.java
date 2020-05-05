@@ -43,7 +43,7 @@ public class FragmentTheme extends FragmentRadiusPopup {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_theme, null);
+        View view = View.inflate(requireContext(), R.layout.fragment_theme, null);
         initViews(view);
         initList(view);
         loadThemes();
@@ -79,7 +79,7 @@ public class FragmentTheme extends FragmentRadiusPopup {
         list = v.findViewById(R.id.list);
         listAdapter = new listAdapter();
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new GridLayoutManager(getContext(),2));
+        list.setLayoutManager(new GridLayoutManager(requireContext(), 2));
     }
     
 

@@ -22,7 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.BaseTabAdapter;
-import com.stupidtree.hita.fragments.BasicOperationTask;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.jw.FragmentJWTS_cjgl;
 import com.stupidtree.hita.jw.FragmentJWTS_grkb;
 import com.stupidtree.hita.jw.FragmentJWTS_xsxk;
@@ -42,7 +42,7 @@ import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 
-public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot, BasicOperationTask.OperationListener<Pair<List<Map<String, String>>, HashMap<String, String>>> {
+public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot, BaseOperationTask.OperationListener<Pair<List<Map<String, String>>, HashMap<String, String>>> {
     public static final String EXTRA_CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
     public static final String EXTRA_CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
     ViewPager pager;
@@ -70,15 +70,6 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot, Bas
         initPager();
         new loadBasicInfoTask(this).executeOnExecutor(TPE);
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        new checkLoginTask().executeOnExecutor(
-//                TPE);
-//    }
-
-
     void initViews() {
         loading = findViewById(R.id.loading);
         rootLayout = findViewById(R.id.jwts_root);
@@ -187,7 +178,7 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot, Bas
     }
 
     @Override
-    public void onOperationDone(String id, Boolean[] params, Pair<List<Map<String, String>>, HashMap<String, String>> result) {
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Pair<List<Map<String, String>>, HashMap<String, String>> result) {
         MaterialCircleAnimator.animHide(loading);
         pager.setVisibility(View.VISIBLE);
         if (result == null) {
@@ -218,7 +209,7 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot, Bas
     }
 
 
-    static class loadBasicInfoTask extends BasicOperationTask<Pair<List<Map<String, String>>, HashMap<String, String>>> {
+    static class loadBasicInfoTask extends BaseOperationTask<Pair<List<Map<String, String>>, HashMap<String, String>>> {
 
         loadBasicInfoTask(OperationListener listRefreshedListener) {
             super(listRefreshedListener);

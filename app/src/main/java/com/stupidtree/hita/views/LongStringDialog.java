@@ -1,5 +1,6 @@
 package com.stupidtree.hita.views;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,14 +13,13 @@ import com.stupidtree.hita.R;
 
 public class LongStringDialog extends RoundedCornerDialog {
 
-    TextView content;
-    int stringId;
+    private int stringId;
 
     public LongStringDialog(Context context, int title, int stringId, int confirmId) {
         super(context);
         this.stringId = stringId;
         setTitle(title);
-        View v = getLayoutInflater().inflate(R.layout.dialog_long_string, null, false);
+        @SuppressLint("InflateParams") View v = getLayoutInflater().inflate(R.layout.dialog_long_string, null, false);
         setView(v);
         setButton(Dialog.BUTTON_POSITIVE, context.getText(confirmId), new OnClickListener() {
             @Override
@@ -33,7 +33,7 @@ public class LongStringDialog extends RoundedCornerDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        content = findViewById(R.id.content);
+        TextView content = findViewById(R.id.content);
         content.setText(Html.fromHtml(getContext().getString(stringId)));
     }
 }

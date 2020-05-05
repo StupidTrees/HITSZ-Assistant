@@ -98,7 +98,7 @@ public abstract class FragmentSearchResult<T> extends BaseFragment
     protected void initList(View v, RecyclerView.Adapter<SearchListAdapter.SimpleHolder> adapter) {
         list = v.findViewById(R.id.list);
         list.setAdapter(adapter);
-        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(requireContext()));
         result = v.findViewById(R.id.result);
         swipeRefreshLayout = v.findViewById(R.id.refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -184,7 +184,7 @@ public abstract class FragmentSearchResult<T> extends BaseFragment
             }
             if (listRes.size() == 0) result.setText(R.string.nothing_found);
             else updateHintText(reload, l.size());
-            //if(!reload&&l.size()==0) Toast.makeText(getContext(), getString(R.string.no_more_content), Toast.LENGTH_SHORT).show();
+            //if(!reload&&l.size()==0) Toast.makeText(requireContext(), getString(R.string.no_more_content), Toast.LENGTH_SHORT).show();
         }
 
 

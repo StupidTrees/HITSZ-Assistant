@@ -62,7 +62,7 @@ public class FragmentEvent extends FragmentRadiusPopup implements FragmentEventI
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_event_popup, null);
+        View view = View.inflate(requireContext(), R.layout.fragment_event_popup, null);
         initViews(view);
         return view;
     }

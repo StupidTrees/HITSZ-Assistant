@@ -87,7 +87,7 @@ public class FragmentEmptyClassroomDialog extends FragmentRadiusPopup {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = View.inflate(getContext(),R.layout.dialog_emptyclassroom_detail,null);
+        View v = View.inflate(requireContext(), R.layout.dialog_emptyclassroom_detail, null);
         initList(v);
         return v;
 
@@ -106,7 +106,7 @@ public class FragmentEmptyClassroomDialog extends FragmentRadiusPopup {
         loading =v.findViewById(R.id.detail_loading);
         detailAdapter = new detailListAdapter(lhValue,detailRes);
         detailPlaces.setAdapter(detailAdapter);
-        detailPlaces.setLayoutManager(new GridLayoutManager(getContext(),2));
+        detailPlaces.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         title.setText(getArguments().getString("lhName")+"教室情况");
        }
 

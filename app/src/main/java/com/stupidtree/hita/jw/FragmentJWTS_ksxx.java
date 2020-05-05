@@ -98,12 +98,12 @@
 //            @Override
 //            public void onClick() {
 //                if(!isDataAvailable()){
-//                    Toast.makeText(FragmentJWTS_ksxx.this.getContext(),"请先导入一个课表！",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(FragmentJWTS_ksxx.this.requireContext(),"请先导入一个课表！",Toast.LENGTH_SHORT).show();
 //                }else{
 //                    if(exams!=null&&exams.size()>0){
 //                        new addExamsTask().executeOnExecutor(HITAApplication.TPE);
 //                    }else{
-//                        Toast.makeText(FragmentJWTS_ksxx.this.getContext(),"没有可导入的考试信息！",Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(FragmentJWTS_ksxx.this.requireContext(),"没有可导入的考试信息！",Toast.LENGTH_SHORT).show();
 //                    }
 //                }
 //
@@ -125,9 +125,9 @@
 //        exams = new ArrayList<>();
 //        list = v.findViewById(R.id.ksxx_list);
 //        lisRes = new ArrayList<>();
-//        listAdapter = new KSXXListAdapter(v.getContext(),lisRes,false);
+//        listAdapter = new KSXXListAdapter(v.requireContext(),lisRes,false);
 //        list.setAdapter(listAdapter);
-//        LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(v.getContext(),RecyclerView.VERTICAL,false);
+//        LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(v.requireContext(),RecyclerView.VERTICAL,false);
 //        list.setLayoutManager(layoutManager);
 //        listAdapter.setmOnOperateClickListsner(new KSXXListAdapter.OnOperateClickListener() {
 //            @Override
@@ -317,10 +317,10 @@
 //            super.onPostExecute(o);
 //            if(bt_import_exam!=null) bt_import_exam.setProgress(false);
 //            if((Boolean) o){
-//                Toast.makeText(FragmentJWTS_ksxx.this.getContext(),"导入成功！",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(FragmentJWTS_ksxx.this.requireContext(),"导入成功！",Toast.LENGTH_SHORT).show();
 //                ActivityMain.saveData();
 //            }else{
-//                Toast.makeText(FragmentJWTS_ksxx.this.getContext(),"导入失败！",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(FragmentJWTS_ksxx.this.requireContext(),"导入失败！",Toast.LENGTH_SHORT).show();
 //            }
 //        }
 //    }

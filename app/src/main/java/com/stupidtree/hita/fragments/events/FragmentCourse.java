@@ -22,7 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivitySubject;
-import com.stupidtree.hita.fragments.BasicOperationTask;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -42,7 +42,7 @@ import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class FragmentCourse extends FragmentEventItem
-        implements BasicOperationTask.OperationListener<Map<String, Integer>> {
+        implements BaseOperationTask.OperationListener<Map<String, Integer>> {
     private TextView value2, value3, value4, value5, name;
     private ImageView classroom_detail_icon;
     private LinearLayout teacher_detail, classroom_detail;
@@ -88,11 +88,11 @@ public class FragmentCourse extends FragmentEventItem
         subject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getContext() instanceof ActivitySubject) {
-                    Toast.makeText(getContext(), "禁止套娃！", Toast.LENGTH_SHORT).show();
+                if (requireContext() instanceof ActivitySubject) {
+                    Toast.makeText(requireContext(), "禁止套娃！", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                ActivityUtils.startSubjectActivity_name(getContext(), eventItem.mainName);
+                ActivityUtils.startSubjectActivity_name(requireContext(), eventItem.mainName);
             }
         });
 
@@ -107,7 +107,7 @@ public class FragmentCourse extends FragmentEventItem
             @Override
             public void onClick(View v) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                android.app.AlertDialog ad = new android.app.AlertDialog.Builder(getContext()).
+                android.app.AlertDialog ad = new android.app.AlertDialog.Builder(requireContext()).
                         setNegativeButton(getString(R.string.button_cancel), null)
                         .setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             @Override
@@ -138,7 +138,7 @@ public class FragmentCourse extends FragmentEventItem
             @Override
             public void onClick(final View v) {
                 if (TextUtils.isEmpty(eventItem.tag3)) return;
-                ActivityUtils.searchFor(getContext(), eventItem.tag3, "teacher");
+                ActivityUtils.searchFor(requireContext(), eventItem.tag3, "teacher");
 
             }
         });
@@ -168,12 +168,12 @@ public class FragmentCourse extends FragmentEventItem
                         AlertDialog ad = new AlertDialog.Builder(requireContext()).setTitle(HContext.getString(R.string.pick_classroom)).setItems(classRoomItems, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityUtils.searchFor(getContext(), classRooms.get(i), "location");
-                                //ActivityUtils.startLocationActivity_name(getContext(), classRooms.get(i));
+                                ActivityUtils.searchFor(requireContext(), classRooms.get(i), "location");
+                                //ActivityUtils.startLocationActivity_name(requireContext(), classRooms.get(i));
                             }
                         }).create();
                         ad.show();
-                    } else ActivityUtils.searchFor(getContext(), eventItem.tag2, "location");
+                    } else ActivityUtils.searchFor(requireContext(), eventItem.tag2, "location");
 //                    Intent i = new Intent(a,ActivityExplore.class);
 //                    i.putExtra("terminal",eventItem.tag2);
 //                    a.startActivity(i);
@@ -209,7 +209,7 @@ public class FragmentCourse extends FragmentEventItem
     }
 
     @Override
-    public void onOperationDone(String id, Boolean[] params, Map<String, Integer> res) {
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Map<String, Integer> res) {
         if (null == res) {
             popupRoot.callDismiss();
             return;
@@ -240,7 +240,7 @@ public class FragmentCourse extends FragmentEventItem
     }
 
 
-    static class RefreshTask extends BasicOperationTask<Map<String, Integer>> {
+    static class RefreshTask extends BaseOperationTask<Map<String, Integer>> {
 
         //  double rate = 0;
         EventItem eventItem;

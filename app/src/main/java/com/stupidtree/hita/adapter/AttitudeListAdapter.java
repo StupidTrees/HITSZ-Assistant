@@ -4,7 +4,6 @@ import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Pair;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.fragments.BasicOperationTask;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.popup.FragmentAddAttitude;
 import com.stupidtree.hita.online.Attitude;
 import com.stupidtree.hita.online.HITAUser;
@@ -36,7 +35,7 @@ import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.TPE;
 
 public class AttitudeListAdapter extends BaseListAdapter<Attitude, AttitudeListAdapter.ViewH>
-        implements BasicOperationTask.OperationListener<Pair<String, AttitudeListAdapter.ViewH>> {
+        implements BaseOperationTask.OperationListener<String> {
 
     private FragmentAddAttitude.AttachedActivity attachedActivity;
 
@@ -80,10 +79,10 @@ public class AttitudeListAdapter extends BaseListAdapter<Attitude, AttitudeListA
     }
 
     @Override
-    public void onOperationDone(String id, Boolean[] params, Pair<String, ViewH> result) {
-        final ViewH holder = result.second;
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, final String str) {
+        refreshItemTask t = (refreshItemTask) task;
+        final ViewH holder = t.holder;
         final Attitude attitude = holder.attitude;
-        final String str = result.first;
         ValueAnimator vo = ValueAnimator.ofFloat(1f, 0f);
         vo.setDuration(200);
         vo.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -127,10 +126,10 @@ public class AttitudeListAdapter extends BaseListAdapter<Attitude, AttitudeListA
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    Triple<Integer, Integer, Integer> t = (Triple<Integer, Integer, Integer>) animation.getAnimatedValue();
+                    Triple t = (Triple) animation.getAnimatedValue();
                     holder.upT.setText(t.getRight() + "");
                     holder.downT.setText(t.getLeft() + "");
-                    holder.result.setProgress(t.getMiddle());
+                    holder.result.setProgress((Integer) t.getMiddle());
                 }
             });
             va.start();
@@ -179,6 +178,7 @@ public class AttitudeListAdapter extends BaseListAdapter<Attitude, AttitudeListA
     }
 
 
+
     static class ViewH extends RecyclerView.ViewHolder {
         TextView title, upT, downT, time;
         FrameLayout voted;
@@ -204,13 +204,13 @@ public class AttitudeListAdapter extends BaseListAdapter<Attitude, AttitudeListA
         }
     }
 
-    static class refreshItemTask extends BasicOperationTask<Pair<String, ViewH>> {
+    static class refreshItemTask extends BaseOperationTask<String> {
 
         ViewH holder;
         Attitude attitude;
         HITAUser user;
 
-        refreshItemTask(OperationListener<? extends Pair<String, ViewH>> listRefreshedListener, ViewH holder, Attitude attitude, HITAUser user) {
+        refreshItemTask(OperationListener<String> listRefreshedListener, ViewH holder, Attitude attitude, HITAUser user) {
             super(listRefreshedListener);
             this.holder = holder;
             this.attitude = attitude;
@@ -218,10 +218,11 @@ public class AttitudeListAdapter extends BaseListAdapter<Attitude, AttitudeListA
         }
 
         @Override
-        protected Pair<String, ViewH> doInBackground(OperationListener<Pair<String, ViewH>> listRefreshedListener, Boolean... booleans) {
+        protected String doInBackground(OperationListener<String> listRefreshedListener, Boolean... booleans) {
             if (user == null) return null;
-            return new Pair<>(attitude.voted(CurrentUser), holder);
+            return attitude.voted(CurrentUser);
         }
+
     }
 
 

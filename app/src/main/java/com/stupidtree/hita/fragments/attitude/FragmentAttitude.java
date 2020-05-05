@@ -82,7 +82,7 @@ public class FragmentAttitude extends BaseFragment implements BasicRefreshTask.L
         listRes = new ArrayList<>();
         listAdapter = new AttitudeListAdapter(getActivity(), listRes);
         list.setAdapter(listAdapter);
-        list.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
+        list.setLayoutManager(new WrapContentLinearLayoutManager(requireContext()));
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

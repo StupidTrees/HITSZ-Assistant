@@ -59,9 +59,9 @@ public class FragmentNewsLecture extends BaseFragment {
         pullRefreshLayout.setColorSchemeColors(getColorAccent(), getColorAccent());
         list = v.findViewById(R.id.list);
         listRes = new ArrayList<>();
-        listAdapter = new NewsLectureListAdapter(this.getContext(), listRes);
+        listAdapter = new NewsLectureListAdapter(this.requireContext(), listRes);
         list.setAdapter(listAdapter);
-        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new WrapContentLinearLayoutManager(this.requireContext(), RecyclerView.VERTICAL, false);
         list.setLayoutManager(layoutManager);
         list.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

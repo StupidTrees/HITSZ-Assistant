@@ -60,8 +60,8 @@ public class FragmentNewsBulletin extends BaseFragment implements FragmentNews {
         pullRefreshLayout.setColorSchemeColors(getColorAccent(), getColorPrimary());
         list = v.findViewById(R.id.list);
         listRes = new ArrayList<>();
-        listAdapter = new NewsBulletinRecyclerAdapter(this.getContext(), listRes);
-        RecyclerView.LayoutManager manager = new WrapContentLinearLayoutManager(this.getContext(), RecyclerView.VERTICAL, false);
+        listAdapter = new NewsBulletinRecyclerAdapter(this.requireContext(), listRes);
+        RecyclerView.LayoutManager manager = new WrapContentLinearLayoutManager(this.requireContext(), RecyclerView.VERTICAL, false);
         list.setLayoutManager(manager);
         listAdapter.setmOnItemClickListener(new NewsBulletinRecyclerAdapter.OnItemClickListener() {
             @Override

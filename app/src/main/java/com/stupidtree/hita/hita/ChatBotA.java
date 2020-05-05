@@ -306,10 +306,6 @@ public class ChatBotA {
             case FUN_QUERY_SUBJECTS:
                 System.out.println("识别为课程查询");
                 return Chat_QuerySubject.Process(mResult,text);
-            case FUN_ADD_EVENT_REMIND:
-                System.out.println("识别为添加提醒");
-                Chat_AddEvent_Remind CAER = new Chat_AddEvent_Remind();
-                return CAER.Process(mResult);
             case FUN_SEARCH_TASK:
                 System.out.println("识别为任务查询");
                 JsonObject joT = new JsonObject();

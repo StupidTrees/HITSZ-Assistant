@@ -91,7 +91,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
                 Intent i = new Intent(WATCHER_REFRESH);
                 int flag = (boolean) newValue ? NOTIFICATION_ON : NOTIFICATION_OFF;
                 i.putExtra("switch_notification", flag);
-                LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
+                LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
                 return true;
             }
         });
@@ -149,7 +149,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     String mode = (String) newValue;
                     if (mode.equals("dark_mode_follow") || mode.equals("dark_mode_auto")) {
-                        // Toast.makeText(getContext(),getString(R.string.notif_effect_after_restart),Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(requireContext(),getString(R.string.notif_effect_after_restart),Toast.LENGTH_SHORT).show();
                         //SP.edit().putBoolean("is_dark_mode",false).commit();
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                     } else {
@@ -173,15 +173,15 @@ public class FragmentSettings extends PreferenceFragmentCompat {
     private void setTimetablePreference(SharedPreferences SP) {
 
         Objects.requireNonNull(findPreference("timetable_animation_enable"))
-                .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
+                .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext()));
         Objects.requireNonNull(findPreference("timetable_card_opacity"))
-                .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
+                .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext()));
         Objects.requireNonNull(findPreference("timetable_card_text_bold"))
-                .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
+                .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext()));
         Objects.requireNonNull(findPreference("timetable_card_title_alpha"))
-                .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
+                .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext()));
         Objects.requireNonNull(findPreference("timetable_card_subtitle_alpha"))
-                .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
+                .setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext()));
 
         final SeekBarPreference sbp = findPreference("timetable_card_height");
         sbp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -192,7 +192,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
                 return true;
             }
         });
-        sbp.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
+        sbp.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext()));
 
         final ListPreference dropDownPreference = findPreference("timetable_card_title_gravity");
         String vl = SP.getString("timetable_card_title_gravity", "top");
@@ -203,13 +203,13 @@ public class FragmentSettings extends PreferenceFragmentCompat {
                 return dropDownPreference.getEntry();
             }
         });
-        dropDownPreference.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
+        dropDownPreference.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext()));
 
 
         final ListPreference cdBg = findPreference("timetable_card_background");
         String bgV = SP.getString("timetable_card_background", "gradient");
         cdBg.setValue(bgV);
-        cdBg.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
+        cdBg.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext()));
         cdBg.setSummaryProvider(new Preference.SummaryProvider() {
             @Override
             public CharSequence provideSummary(Preference preference) {
@@ -220,7 +220,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         final ListPreference ttColor = findPreference("timetable_card_title_color");
         String clV = SP.getString("timetable_card_title_color", "white");
         ttColor.setValue(clV);
-        ttColor.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
+        ttColor.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext()));
         ttColor.setSummaryProvider(new Preference.SummaryProvider() {
             @Override
             public CharSequence provideSummary(Preference preference) {
@@ -231,7 +231,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         final ListPreference sbttColor = findPreference("timetable_card_subtitle_color");
         String sbclV = SP.getString("timetable_card_title_color", "white");
         sbttColor.setValue(sbclV);
-        sbttColor.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
+        sbttColor.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext()));
         sbttColor.setSummaryProvider(new Preference.SummaryProvider() {
             @Override
             public CharSequence provideSummary(Preference preference) {
@@ -242,7 +242,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         final ListPreference iconColor = findPreference("timetable_card_icon_color");
         String iconV = SP.getString("timetable_card_icon_color", "white");
         iconColor.setValue(iconV);
-        iconColor.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext()));
+        iconColor.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext()));
         iconColor.setSummaryProvider(new Preference.SummaryProvider() {
             @Override
             public CharSequence provideSummary(Preference preference) {
@@ -251,7 +251,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         });
 
         final SwitchPreference enableColor = findPreference("subjects_color_enable");
-        enableColor.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext(), new TimeTablePreferenceChangeListener.ChangeAction() {
+        enableColor.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext(), new TimeTablePreferenceChangeListener.ChangeAction() {
             @Override
             public boolean OnChanged(Preference preference, Object newValue) {
                 boolean val = (boolean) newValue;
@@ -292,7 +292,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
 
 
         final SwitchPreference iconEnable = findPreference("timetable_card_icon_enable");
-        iconEnable.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext(), new TimeTablePreferenceChangeListener.ChangeAction() {
+        iconEnable.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext(), new TimeTablePreferenceChangeListener.ChangeAction() {
             @Override
             public boolean OnChanged(Preference preference, Object newValue) {
                 boolean val = (boolean) newValue;
@@ -303,7 +303,7 @@ public class FragmentSettings extends PreferenceFragmentCompat {
         iconEnable.callChangeListener(iconEnable.isChecked());
 
         final ListPreference preset = findPreference("timetable_preset");
-        preset.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(getContext(), new TimeTablePreferenceChangeListener.ChangeAction() {
+        preset.setOnPreferenceChangeListener(new TimeTablePreferenceChangeListener(requireContext(), new TimeTablePreferenceChangeListener.ChangeAction() {
             @Override
             public boolean OnChanged(Preference preference, Object newValue) {
                 String value = (String) newValue;

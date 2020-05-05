@@ -38,7 +38,7 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.BaseListAdapter;
 import com.stupidtree.hita.adapter.SubjectsManagerPagerAdapter;
-import com.stupidtree.hita.fragments.BasicOperationTask;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.BasicRefreshTask;
 import com.stupidtree.hita.fragments.popup.FragmentImportCurriculum;
 import com.stupidtree.hita.fragments.timetable_manager.FragmentCurriculumChild;
@@ -64,7 +64,7 @@ import static com.stupidtree.hita.activities.ActivityMain.saveData;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 public class ActivityCurriculumManager extends BaseActivity implements FragmentCurriculumSettings.CurriculumPageRoot
-        , BasicOperationTask.OperationListener<Object>
+        , BaseOperationTask.OperationListener<Object>
         , BasicRefreshTask.ListRefreshedListener<List<Curriculum>> {
 
     private static final int CHOOSE_FILE_CODE = 0;
@@ -340,8 +340,9 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
 
     }
 
+    @SuppressLint("StringFormatMatches")
     @Override
-    public void onOperationDone(String id, Boolean[] params, Object resObject) {
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object resObject) {
         if (resObject instanceof Boolean) {
             boolean result = (boolean) resObject;
             switch (id) {
@@ -374,6 +375,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
             saveData();
         }
     }
+
 
     @Override
     public void onRefreshStart(String id, Boolean[] params) {
@@ -414,7 +416,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
         }
     }
 
-    static class loadCurriculumTask extends BasicOperationTask<Pair<Boolean, Integer>> {
+    static class loadCurriculumTask extends BaseOperationTask<Pair<Boolean, Integer>> {
 
         Calendar startDate;
         File file;
@@ -429,7 +431,6 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
 
         @Override
         protected Pair<Boolean, Integer> doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
-            super.doInBackground(listRefreshedListener, booleans);
             try {
                 boolean result = true;
                 List<Curriculum> all = timeTableCore.getAllCurriculum();
@@ -466,11 +467,11 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
 
     }
 
-    static class deleteTask extends BasicOperationTask<Boolean> {
+    static class deleteTask extends BaseOperationTask<Boolean> {
 
         String curriculumCode;
 
-        deleteTask(OperationListener listRefreshedListener, String curriculumCode) {
+        deleteTask(OperationListener<?> listRefreshedListener, String curriculumCode) {
             super(listRefreshedListener);
             this.curriculumCode = curriculumCode;
             id = "delete";
@@ -484,11 +485,11 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
 
     }
 
-    static class changeTask extends BasicOperationTask<Boolean> {
+    static class changeTask extends BaseOperationTask<Boolean> {
 
         String newID;
 
-        changeTask(OperationListener listRefreshedListener, String newID) {
+        changeTask(OperationListener<?> listRefreshedListener, String newID) {
             super(listRefreshedListener);
             this.newID = newID;
             id = "change";

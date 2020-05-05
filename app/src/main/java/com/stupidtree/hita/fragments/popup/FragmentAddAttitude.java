@@ -30,26 +30,23 @@ public class FragmentAddAttitude extends FragmentRadiusPopup {
     private Attitude attitude;
     private AttachedActivity mAttachedActivity;
 
+    public static FragmentAddAttitude newInstance() {
+        return new FragmentAddAttitude();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_add_attitude, container);
+        View view = View.inflate(requireContext(), R.layout.fragment_add_attitude, container);
         initViews(view);
         return view;
-    }
-
-    public static FragmentAddAttitude newInstance(){
-        FragmentAddAttitude r = new FragmentAddAttitude();
-        return r;
     }
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-      //  Log.e("attatch", String.valueOf(context));
         if(context instanceof AttachedActivity){
             mAttachedActivity = (AttachedActivity) context;
         }
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -57,7 +54,6 @@ public class FragmentAddAttitude extends FragmentRadiusPopup {
         Button post = adv.findViewById(R.id.post);
         Button cancel = adv.findViewById(R.id.cancel);
         title = adv.findViewById(R.id.edit_title);
-        ImageView clear_image = adv.findViewById(R.id.image_clear);
         ImageView image = adv.findViewById(R.id.laf_image);
         image.setVisibility(View.GONE);
 
@@ -71,7 +67,7 @@ public class FragmentAddAttitude extends FragmentRadiusPopup {
             @Override
             public void onClick(View view) {
                 if(TextUtils.isEmpty(title.getText())){
-                    Toast.makeText(getContext(),"请输入标题！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "请输入标题！", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 attitude.setTitle(title.getText().toString());

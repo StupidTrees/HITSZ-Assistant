@@ -59,7 +59,7 @@ public class FragmentAddComment extends FragmentRadiusPopup {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(), R.layout.fragment_add_comment, null);
+        View view = View.inflate(requireContext(), R.layout.fragment_add_comment, null);
         initViews(view);
 
         setData();
@@ -82,7 +82,7 @@ public class FragmentAddComment extends FragmentRadiusPopup {
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(content.getText())) {
-                    Toast.makeText(getContext(), getString(R.string.please_input), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.please_input), Toast.LENGTH_SHORT).show();
                 } else {
 
                     new commentTask(content.getText().toString()).executeOnExecutor(TPE);
@@ -94,7 +94,7 @@ public class FragmentAddComment extends FragmentRadiusPopup {
     @Override
     public void onStart() {
         super.onStart();
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);
         }
@@ -156,7 +156,7 @@ public class FragmentAddComment extends FragmentRadiusPopup {
             super.onPostExecute(o);
             onDoneListener.onDone();
             dismiss();
-            Toast.makeText(getContext(), R.string.comment_added, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.comment_added, Toast.LENGTH_SHORT).show();
         }
     }
 }
