@@ -1,10 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: com.cncoderx.wheelview:library:1.2.2@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9daa38074b58de3a0be372830d28e545/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/9daa38074b58de3a0be372830d28e545/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c51e5f26c13e1c8345e30fd42a806721/jetified-library-1.2.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c51e5f26c13e1c8345e30fd42a806721/jetified-library-1.2.2/res" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.cncoderx.wheelview/library/1.2.2/328c77e6cc683d9f91d0e61017377abb06c37272/library-1.2.2-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.cncoderx.wheelview/library/1.2.2/cb3d6a28d3dbc5992f8bdeddeca581f8816dded1/library-1.2.2-sources.jar!/" />
     </SOURCES>

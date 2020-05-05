@@ -205,7 +205,6 @@
     <string name="menu_timeable_color">科目颜色</string>
     <string name="menu_timeable_random_allocate">随机分配颜色</string>
     <string name="dialog_title_random_allocate">是否随机生成各科目颜色？</string>
-    <string name="dialog_title_set_to_theme">是否将各科目颜色设置为主题色？</string>
     <string name="dialog_title_set_total_weeks">设置总周数</string>
     <string name="attention">注意</string>
     <string name="dialog_message_delete_curriculum">删除课表将删除一切与之关联的事件、科目、任务，确定吗？</string>
@@ -213,7 +212,6 @@
     <string name="curriculum_manager_total">%d周</string>
     <string name="curriculum_manager_enable_color">启用科目颜色</string>
     <string name="curriculum_manager_randomly_allocate_color">随机分配颜色</string>
-    <string name="curriculum_manager_set_theme_color">全部设为主题色</string>
     <string name="menu_timeable_curriculum">课表管理</string>
     <string name="snack_semester_notstarted">这个学期还没有开始哟</string>
     <string name="dialog_tag1">标签1</string>
@@ -229,7 +227,6 @@
     <string name="dialog_course_rate_s">这堂课学得怎么样？</string>
     <string name="notif_delete_success">删除成功！</string>
     <string name="dialog_title_sure_delete">确定删除吗？</string>
-    <string name="dialog_message_sure_delete">删除课程后,可以通过导入课表或同步云端数据恢复初始课表</string>
     <string name="none">无</string>
     <string name="pick_teacher">选择教师</string>
     <string name="pick_classroom">选择教室</string>
@@ -239,7 +236,6 @@
     <string name="menu_search_teacher_website">查找教师网站</string>
     <string name="menu_logout">注销</string>
     <string name="menu_delete">删除</string>
-    <string name="menu_show_subject">查看科目</string>
     <string name="settings_category_functions">功能开关</string>
     <string name="settings_summary_task">开启后方可使用学习助手</string>
     <string name="settings_title_task">任务模块(开发阶段)</string>
@@ -1033,7 +1029,6 @@
     <string name="name_this_week">这周</string>
     <string name="name_next_week">下周</string>
     <string name="name_last_week">上周</string>
-    <string name="no_more_content">没有更多内容啦</string>
     <string name="ade_title_edit">编辑%s</string>
     <string name="edit_event_done">已保存</string>
 

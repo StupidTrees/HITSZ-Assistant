@@ -1,11 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: net.opacapp:multiline-collapsingtoolbar:27.1.1@aar">
     <ANNOTATIONS>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e9dbb72c0f4edcbec3bfee03ce97bb58/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/caabea77990e0fc04ae5cbf87c29f5ca/jetified-multiline-collapsingtoolbar-27.1.1/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e9dbb72c0f4edcbec3bfee03ce97bb58/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e9dbb72c0f4edcbec3bfee03ce97bb58/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/caabea77990e0fc04ae5cbf87c29f5ca/jetified-multiline-collapsingtoolbar-27.1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/caabea77990e0fc04ae5cbf87c29f5ca/jetified-multiline-collapsingtoolbar-27.1.1/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

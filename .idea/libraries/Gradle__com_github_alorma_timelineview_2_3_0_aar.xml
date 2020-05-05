@@ -1,13 +1,15 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.alorma:timelineview:2.3.0@aar">
     <ANNOTATIONS>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/66c7804b1a2f14ff2802cfb4bad92edf/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/20addb40089a46448c9017d45666fda8/jetified-timelineview-2.3.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/66c7804b1a2f14ff2802cfb4bad92edf/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/66c7804b1a2f14ff2802cfb4bad92edf/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/20addb40089a46448c9017d45666fda8/jetified-timelineview-2.3.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/20addb40089a46448c9017d45666fda8/jetified-timelineview-2.3.0/res" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.alorma/timelineview/2.3.0/7e4fb84ab1753833dd7f20a575a0aa754cec2b0/timelineview-2.3.0-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.alorma/timelineview/2.3.0/ec6b932382cc259fdace7251ec26ca6da212e486/timelineview-2.3.0-sources.jar!/" />
     </SOURCES>

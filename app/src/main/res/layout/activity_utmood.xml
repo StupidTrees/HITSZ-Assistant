@@ -45,7 +45,6 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <View
-            android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="24dp"
             android:background="@drawable/jw_radius_bg_bottom" />

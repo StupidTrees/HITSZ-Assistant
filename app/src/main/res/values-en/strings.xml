@@ -287,7 +287,6 @@
     <string name="menu_timeable_color">Enable colors</string>
     <string name="menu_timeable_random_allocate">Randomly assign colors</string>
     <string name="dialog_title_random_allocate">Randomly generate colors for each subject?</string>
-    <string name="dialog_title_set_to_theme">Apply theme colors to all subjects?</string>
     <string name="dialog_title_set_total_weeks">Set the total number of weeks</string>
     <string name="attention">Attention</string>
     <string name="dialog_message_delete_curriculum">Deleting a schedule will delete all events, subjects, and tasks associated with it. Are you sure?</string>
@@ -295,7 +294,6 @@
     <string name="curriculum_manager_total">%d weeks</string>
     <string name="curriculum_manager_enable_color">Enable subject color</string>
     <string name="curriculum_manager_randomly_allocate_color">Randomly assign colors</string>
-    <string name="curriculum_manager_set_theme_color">Apply theme color to all</string>
     <string name="menu_timeable_curriculum">Timetable Manager</string>
     <string name="snack_semester_notstarted">This semester has not started yet</string>
     <string name="dialog_tag1">Tag1</string>
@@ -311,7 +309,6 @@
     <string name="dialog_course_rate_s">How do I feel about this class?</string>
     <string name="notif_delete_success">Successfully deleted!</string>
     <string name="dialog_title_sure_delete">Confirm to delete?</string>
-    <string name="dialog_message_sure_delete">After deleting a course, you can restore the original schedule by importing the schedule or syncing the cloud data</string>
     <string name="none">None</string>
     <string name="pick_teacher">Which teacher?</string>
     <string name="pick_classroom">Which classroom?</string>
@@ -321,7 +318,6 @@
     <string name="menu_search_teacher_website">Search for teacher\'s website</string>
     <string name="menu_logout">Log out</string>
     <string name="menu_delete">Delete</string>
-    <string name="menu_show_subject">View subject</string>
     <string name="settings_category_functions">Function switches</string>
     <string name="settings_summary_task">Learning assistant will be available only if task module is enabled</string>
     <string name="settings_title_task">Task section</string>
@@ -742,7 +738,6 @@
     <string name="name_this_week">This Week</string>
     <string name="name_next_week">"Next Week"</string>
     <string name="name_last_week">"Last Week"</string>
-    <string name="no_more_content">No more content</string>
     <string name="ade_title_edit">Edit %s</string>
     <string name="edit_event_done">Saved</string>
     <string-array name="preference_dark_mode">

@@ -1,10 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: com.tencent.bugly:nativecrashreport:3.7.1@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1be59ee523b5e7fda7ba5e4d0dfe4975/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1be59ee523b5e7fda7ba5e4d0dfe4975/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fc1929607cecc540307d57b1ead1269f/jetified-nativecrashreport-3.7.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fc1929607cecc540307d57b1ead1269f/jetified-nativecrashreport-3.7.1/res" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.tencent.bugly/nativecrashreport/3.7.1/7fbe98954155ac4766fd9039b9a463fa6139403/nativecrashreport-3.7.1-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.tencent.bugly/nativecrashreport/3.7.1/7fbe98954155ac4766fd9039b9a463fa6139403/nativecrashreport-3.7.1-sources.jar!/" />
     </SOURCES>
