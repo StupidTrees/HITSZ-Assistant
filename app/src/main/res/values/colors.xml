@@ -117,11 +117,11 @@
         #215CC1</color>
     <color name="hit_fade">
         #215CC1</color>
-    <color name="cruelsummer_primary">#8849FF</color>
-    <color name="cruelsummer_primary_dark">#22269E</color>
-    <color name="cruelsummer_accent">
+    <color name="cruel_summer_primary">#8849FF</color>
+    <color name="cruel_summer_primary_dark">#22269E</color>
+    <color name="cruel_summer_accent">
         #5E9CFE</color>
-    <color name="cruelsummer_fade">
+    <color name="cruel_summer_fade">
         #5E9CFE</color>
 
     <color name="mi_primary">#2c3e50</color>

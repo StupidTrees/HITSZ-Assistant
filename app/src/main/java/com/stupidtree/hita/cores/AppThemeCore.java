@@ -40,7 +40,7 @@ public class AppThemeCore {
                 new ThemeItem(R.string.theme_name_purple, R.style.DeepPurpleTheme, R.color.deep_purple_primary, R.color.deep_purple_accent, R.color.deep_purple_fade, R.style.DeepPurpleTheme_translucent),
                 new ThemeItem(R.string.theme_name_brown, R.style.BrownTheme, R.color.brown_primary, R.color.brown_accent, R.color.brown_fade, R.style.BrownTheme_translucent),
                 new ThemeItem(R.string.theme_name_grey, R.style.BlueGreyTheme, R.color.blue_grey_primary, R.color.blue_grey_accent, R.color.blue_grey_fade, R.style.BlueGreyTheme_translucent),
-                new ThemeItem(R.string.theme_name_cruelsummer, R.style.CruelSummerTheme, R.color.cruelsummer_primary, R.color.cruelsummer_accent, R.color.cruelsummer_fade, R.style.CruelSummerTheme_translucent),
+                new ThemeItem(R.string.theme_name_cruelsummer, R.style.CruelSummerTheme, R.color.cruel_summer_primary, R.color.cruel_summer_accent, R.color.cruel_summer_fade, R.style.CruelSummerTheme_translucent),
                 new ThemeItem(R.string.theme_name_normal_blue, R.style.normal_blueTheme, R.color.normal_blue_primary, R.color.normal_blue_accent, R.color.normal_blue_fade, R.style.normal_blueTheme_translucent),
                 new ThemeItem(R.string.theme_name_mi, R.style.MITheme, R.color.mi_primary, R.color.mi_accent, R.color.mi_fade, R.style.MITheme_translucent),
                 new ThemeItem(R.string.theme_name_p30, R.style.P30Theme, R.color.p30_primary, R.color.p30_accent, R.color.p30_fade, R.style.P30Theme_translucent),

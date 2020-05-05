@@ -319,10 +319,10 @@
     </style>
 
     <style name="CruelSummerTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/cruelsummer_primary</item>
-        <item name="colorPrimaryDark">@color/cruelsummer_primary_dark</item>
-        <item name="colorAccent">@color/cruelsummer_accent</item>
-        <item name="colorFade">@color/cruelsummer_fade</item>
+        <item name="colorPrimary">@color/cruel_summer_primary</item>
+        <item name="colorPrimaryDark">@color/cruel_summer_primary_dark</item>
+        <item name="colorAccent">@color/cruel_summer_accent</item>
+        <item name="colorFade">@color/cruel_summer_fade</item>
     </style>
 
     <style name="MITheme" parent="AppTheme">
