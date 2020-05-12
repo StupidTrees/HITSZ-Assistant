@@ -6,9 +6,6 @@ import android.util.Log;
 import com.stupidtree.hita.R;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
@@ -301,8 +298,8 @@ public class TextTools {
         int result = 0;
         if (!isName) {
             for (Term t : x) {
-                for (int i = 0; i < base.length; i++) {
-                    if (t.getTag().equals(base[i])) {
+                for (String s : base) {
+                    if (t.getTag().equals(s)) {
                         result++;
                         break;
                     }
@@ -310,8 +307,8 @@ public class TextTools {
             }
         } else {
             for (Term t : x) {
-                for (int i = 0; i < base.length; i++) {
-                    if (t.getContent().equals(base[i])) {
+                for (String s : base) {
+                    if (t.getContent().equals(s)) {
                         result++;
                         break;
                     }
@@ -326,8 +323,8 @@ public class TextTools {
         int result = 0;
         if (!isName) {
             for (Term t : x) {
-                for (int i = 0; i < base.length; i++) {
-                    if (t.getTag().equals(base[i])) {
+                for (String s : base) {
+                    if (t.getTag().equals(s)) {
                         result++;
                         break;
                     }
@@ -335,8 +332,8 @@ public class TextTools {
             }
         } else {
             for (Term t : x) {
-                for (int i = 0; i < base.length; i++) {
-                    if (t.getContent().equals(base[i])) {
+                for (String s : base) {
+                    if (t.getContent().equals(s)) {
                         result++;
                         break;
                     }

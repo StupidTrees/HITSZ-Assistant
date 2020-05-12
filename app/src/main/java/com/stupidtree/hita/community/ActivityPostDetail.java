@@ -95,10 +95,6 @@ public class ActivityPostDetail extends BaseActivity {
         LoadPage();
     }
 
-    @Override
-    protected void stopTasks() {
-
-    }
 
     //加载Post对象
     void LoadPage() {

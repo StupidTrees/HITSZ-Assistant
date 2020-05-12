@@ -1,7 +1,5 @@
 package com.stupidtree.hita.timetable;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -19,33 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class TimeTableGenerator {
-//    public static void Dynamic_PreviewPlan(Calendar present, TimeTable timeTable) {
-//        int minDURATION = 40;
-//        Calendar from = (Calendar) present.clone();
-//        Calendar to = (Calendar) present.clone();
-//        from.set(Calendar.HOUR_OF_DAY, 0);
-//        from.set(Calendar.MINUTE, 0);
-//        to.set(Calendar.HOUR_OF_DAY, 23);
-//        to.set(Calendar.MINUTE, 59);
-//        TimetableCore.deleteEvent(from, to, TimetableCore.DYNAMIC);
-//        List<TimePeriod> breakTime = getBreakTime();
-//        for (TimePeriod tp : breakTime) {
-//            timeTableCore.addEvent(thisWeekOfTerm, TimetableCore.getDOW(timeTableCore.getNow()), TimetableCore.DYNAMIC, "%%%break", "", "", "", tp.start, tp.end, false);
-//        }
-//        List<TimePeriod> spaces = TimetableCore.getSpaces(from, to, minDURATION, -1);
-//        TimetableCore.clearEvent(TimetableCore.DYNAMIC, "%%%break");
-//        Collections.sort(spaces);
-//        for (TimePeriod tp : spaces) {
-//            timeTableCore.addEvent(thisWeekOfTerm, TimetableCore.getDOW(timeTableCore.getNow()), TimetableCore.DYNAMIC, "动态", "", "", "", tp.start, tp.end, false);
-//        }
-//        Log.e("after:", String.valueOf(spaces));
-//    }
 
-    public static void Dynamic_PreviewPlan(Calendar present) {
+    static void Dynamic_PreviewPlan(Calendar present) {
         int totalLength =  defaultSP.getInt("dtt_preview_length",60); //每天花一小时预习
         Calendar from = (Calendar) present.clone();
         Calendar to = (Calendar) present.clone();
@@ -61,14 +37,13 @@ public class TimeTableGenerator {
         if(courses==null||courses.size()==0) return;
         boolean skipNoExam = defaultSP.getBoolean("dtt_preview_skip_no_exam",true);
         for(EventItem ei:courses){
-            Subject subject = timeTableCore.getCurrentCurriculum().getSubjectByCourse(ei);
+            Subject subject = timeTableCore.getSubjectByCourse(ei);
             if(subject==null) continue;
             if((!subject.isExam())&&skipNoExam)  toRemove.add(ei);
             else courseMap.put(ei,subject.getPriority());
         }
         float total = 0;
         for(Float f:courseMap.values()) total+=f;
-        SQLiteDatabase sdb = mDBHelper.getWritableDatabase();
         for(Map.Entry<EventItem,Float> entry:courseMap.entrySet()){
             Task t = new Task(timeTableCore.getCurrentCurriculum().getCurriculumCode(),"预习"+entry.getKey().mainName);
             t.setType(Task.TYPE_DYNAMIC);
@@ -77,12 +52,8 @@ public class TimeTableGenerator {
             t.setPriority(entry.getValue().intValue());
             String tag = entry.getKey().getUuid()+":::"+entry.getKey().week;
             t.setTag(tag);
-            Cursor c = sdb.query("task",null,"tag=?",new String[]{tag},null,null,null);
-            if(c.moveToNext()){
-                c.close();
-            }else{
+            if(timeTableCore.getTaskByTag(tag)==null){
                 timeTableCore.addTask(t);
-                c.close();
             }
         }
 
@@ -114,13 +85,13 @@ public class TimeTableGenerator {
         //timeTableCore.clearEvent(TimetableCore.DYNAMIC, "%%%break");
         Collections.sort(spaces);
        // Log.e( "autoAdd_getTime:the free time is: ",spaces.toString() );
-        if(spaces==null||spaces.size()==0) return null;
+        if(spaces.size() == 0) return null;
         TimePeriod tp = spaces.get(spaces.size()-1);
         String uuid = null;
         for(int i = spaces.size()-1;i>=0;i--){
             if(spaces.get(i).getLength()>duration){
                 int x = spaces.get(i).getLength()/4;
-                int padding =x >5?5:x;
+                int padding = Math.min(x, 5);
                 HTime start = tp.start.getAdded(padding);
                 HTime end = tp.start.getAdded(duration);
                 SparseArray<HTime> result = new SparseArray<>(2);
@@ -225,7 +196,6 @@ public class TimeTableGenerator {
                 if (tempSum + tp.getLength() < clip) {
                     Log.e("add1", String.valueOf(tp));
                     tempQueue.add(tp);
-                    continue;
                 } else {
                     result.addAll(tempQueue);
                     tempQueue.clear();
@@ -260,7 +230,7 @@ public class TimeTableGenerator {
     private static List<TimePeriod> getBreakTime() {
         List<TimePeriod> breakT = new ArrayList<>();
         TimePeriod m0 = new TimePeriod();
-        m0.start = new HTime(0, 00);
+        m0.start = new HTime(0, 0);
         m0.end = new HTime(8, 10);
         TimePeriod m = new TimePeriod();
         m.start = new HTime(12, 30);

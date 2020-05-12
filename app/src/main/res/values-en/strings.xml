@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">HITSZ Assistant</string>
+    <string name="app_name">HITA</string>
     <string name="app_notification_channel_id">hita_channel</string>
 
 
@@ -176,11 +176,20 @@
     <string name="tt_saturday">Sat</string>
     <string name="tt_sunday">Sun</string>
     <string name="tt_wholeday">All day</string>
-    <string name="user_center_you_have_punched">A total of %d days MOOD</string>
+    <plurals name="user_center_you_have_punched">
+        <item quantity="one">A total of %d day MOOD</item>
+        <item quantity="other">A total of %d days MOOD</item>
+    </plurals>
     <string name="date_day">" %d"</string>
     <string name="week">Week %d</string>
-    <string name="count_week">"%d weeks "</string>
-    <string name="count_week_simplified">"%d weeks "</string>
+    <plurals name="count_week">
+        <item quantity="one">"%d week "</item>
+        <item quantity="other">"%d weeks "</item>
+    </plurals>
+    <plurals name="count_week_simplified">
+        <item quantity="one">"%d week "</item>
+        <item quantity="other">"%d weeks "</item>
+    </plurals>
     <string name="navi_semister_not_begun">Semester has not started</string>
     <string name="navi_semister_no_data">No semester data</string>
     <string name="navi_settings_title">Set navigation page content</string>
@@ -192,7 +201,6 @@
     <string name="ade_set_date">Pick date</string>
     <string-array name="user_center_tabs">
         <item> Campus </item>
-        <item> Profile </item>
         <item> Profile </item>
         <item> Sync </item>
     </string-array>

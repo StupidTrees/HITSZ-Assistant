@@ -28,10 +28,6 @@ public class ActivityNews extends BaseActivity {
     Toolbar toolbar;
 
 
-    @Override
-    protected void stopTasks() {
-
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

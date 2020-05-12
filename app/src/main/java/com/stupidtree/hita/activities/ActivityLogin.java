@@ -13,8 +13,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.BaseTabAdapter;
-import com.stupidtree.hita.fragments.FragmentLogin;
-import com.stupidtree.hita.fragments.FragmentSignup;
+import com.stupidtree.hita.fragments.user.FragmentLogin;
+import com.stupidtree.hita.fragments.user.FragmentSignup;
 import com.stupidtree.hita.views.LongStringDialog;
 
 public class ActivityLogin extends BaseActivity {
@@ -24,10 +24,6 @@ public class ActivityLogin extends BaseActivity {
     TabLayout tabs;
     TextView userPro, privacyPro;
 
-    @Override
-    protected void stopTasks() {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -16,7 +16,7 @@ import static com.stupidtree.hita.HITAApplication.themeCore;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    abstract protected void stopTasks();
+  //  abstract protected void stopTasks();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,11 +125,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         return typedValue.data;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopTasks();
-        //Log.e("onDestroy","Activity销毁");
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        stopTasks();
+//        //Log.e("onDestroy","Activity销毁");
+//    }
 
 }

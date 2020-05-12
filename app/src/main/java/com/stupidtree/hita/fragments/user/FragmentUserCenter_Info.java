@@ -1,4 +1,4 @@
-package com.stupidtree.hita.fragments.user_center;
+package com.stupidtree.hita.fragments.user;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

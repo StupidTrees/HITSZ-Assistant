@@ -24,13 +24,11 @@ import java.util.List;
 import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 
 public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.RecyclerHolder> {
-    public static final int TYPE_RIGHT = -11;
-    public static final int TYPE_LEFT = -10;
+    private static final int TYPE_RIGHT = -11;
+    private static final int TYPE_LEFT = -10;
     private List<ChatBotMessageItem> mMsgList;
     private LayoutInflater mInflater;//布局装载器对象
     private Context mContext;
-    private OnUserAvatarClickListener mOnUserAvatarClickListener;
-
     public ChatBotListAdapter(Context context, List<ChatBotMessageItem> items) {
         super();
         mContext = context;
@@ -42,9 +40,6 @@ public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.
         void onClick(View v,int position);
     }
 
-    public void setOnUserAvatarClickListener(OnUserAvatarClickListener mOnUserAvatarClickListener) {
-        this.mOnUserAvatarClickListener = mOnUserAvatarClickListener;
-    }
 
     @NonNull
     @Override
@@ -52,7 +47,7 @@ public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.
         View v;
         if(type == TYPE_LEFT) v = mInflater.inflate(R.layout.dynamic_chatbot_left,viewGroup,false);
         else v = mInflater.inflate(R.layout.dynamic_chatbot_right,viewGroup,false);
-        return new RecyclerHolder(v,type);
+        return new RecyclerHolder(v, type);
     }
 
     @Override
@@ -126,7 +121,7 @@ public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.
 
     }
 
-    class RecyclerHolder extends RecyclerView.ViewHolder {
+    static class RecyclerHolder extends RecyclerView.ViewHolder {
         TextView textView,hint;
         RecyclerView resultRecy;
         ChatBotItemsAdapter resultEventAdapter;

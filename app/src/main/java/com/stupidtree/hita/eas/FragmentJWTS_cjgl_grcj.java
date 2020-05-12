@@ -1,4 +1,4 @@
-package com.stupidtree.hita.jw;
+package com.stupidtree.hita.eas;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -126,7 +126,7 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
 
     @Override
     protected void stopTasks() {
-        for (AsyncTask<? extends Object, ? extends Object, ? extends Object> at : taskSet)
+        for (AsyncTask at : taskSet)
             if (at != null && at.getStatus() != AsyncTask.Status.FINISHED) at.cancel(true);
     }
 
@@ -237,7 +237,7 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
                    qmcj_listRes.addAll(jwCore.getGRCJ(xn,xq));
                     for (Map<? extends String, ? extends String> m : qmcj_listRes) {
                         for(Curriculum cc:timeTableCore.getAllCurriculum()){
-                            for (Subject s : cc.getSubjectsByCourseCode(m.get("code"))) {
+                            for (Subject s : timeTableCore.getSubjectsByCourseCode(cc.getCurriculumCode(),m.get("code"))) {
                                 s.addScore("qm", m.get("final_score"));
                             }
                         }

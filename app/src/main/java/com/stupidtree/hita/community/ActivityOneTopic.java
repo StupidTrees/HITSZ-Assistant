@@ -53,10 +53,7 @@ public class ActivityOneTopic extends BaseActivity {
     TextView title, subtitle;
     ImageView cover, headBG;
 
-    @Override
-    protected void stopTasks() {
 
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

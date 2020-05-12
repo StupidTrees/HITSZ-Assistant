@@ -41,10 +41,7 @@ public class ActivityOneUserPostList extends BaseActivity {
     ImageView cover, headBG;
     HITAUser user;
 
-    @Override
-    protected void stopTasks() {
 
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

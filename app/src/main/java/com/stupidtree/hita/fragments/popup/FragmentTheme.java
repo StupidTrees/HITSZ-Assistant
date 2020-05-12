@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.cores.AppThemeCore;
+import com.stupidtree.hita.AppThemeCore;
 
 import java.util.ArrayList;
 import java.util.List;

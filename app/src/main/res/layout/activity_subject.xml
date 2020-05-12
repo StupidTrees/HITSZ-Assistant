@@ -123,7 +123,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginStart="16dp"
@@ -191,7 +191,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_weight="1"
@@ -199,7 +199,8 @@
                             android:textColor="?attr/text_color_primary"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:visibility="visible" />
+                            android:visibility="visible"
+                            tools:ignore="NestedWeights" />
 
                         <ImageView
                             android:id="@+id/edit_info"
@@ -226,7 +227,8 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="16dp"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
 
                         <LinearLayout
                             android:layout_width="match_parent"

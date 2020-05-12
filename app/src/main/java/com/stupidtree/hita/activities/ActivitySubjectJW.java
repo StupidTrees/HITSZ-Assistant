@@ -3,7 +3,6 @@ package com.stupidtree.hita.activities;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.Html;
@@ -20,7 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.jw.JWException;
+import com.stupidtree.hita.fragments.BaseOperationTask;
+import com.stupidtree.hita.eas.JWException;
 import com.stupidtree.hita.online.DownloadService;
 import com.stupidtree.hita.online.DownloadTask;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -35,13 +35,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 
-public class ActivitySubjectJW extends BaseActivity {
+public class ActivitySubjectJW extends BaseActivity implements BaseOperationTask.OperationListener<Object> {
 
     String subjectId;
 
@@ -61,10 +62,7 @@ public class ActivitySubjectJW extends BaseActivity {
     DownloadService.DownloadBinder mBinder;
     ServiceConnection mConnection;
 
-    @Override
-    protected void stopTasks() {
-        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +100,7 @@ public class ActivitySubjectJW extends BaseActivity {
             }
         });
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
@@ -150,7 +148,7 @@ public class ActivitySubjectJW extends BaseActivity {
                 if (mBinder != null) {
                     Toast.makeText(getThis(), R.string.subject_jw_download_begin, Toast.LENGTH_SHORT).show();
                     mBinder.startDownLoad(new downloadGuidelineFileTask(
-                            getExternalFilesDir(null).getAbsolutePath() + "/jw/",
+                            Objects.requireNonNull(getExternalFilesDir(null)).getAbsolutePath() + "/jw/",
                             guidelineS, subjectId, "zwfj"));
                 }
             }
@@ -161,7 +159,7 @@ public class ActivitySubjectJW extends BaseActivity {
                 if (mBinder != null) {
                     Toast.makeText(getThis(), R.string.subject_jw_download_begin, Toast.LENGTH_SHORT).show();
                     mBinder.startDownLoad(new downloadGuidelineFileTask(
-                            getExternalFilesDir(null).getAbsolutePath() + "/jw/",
+                            Objects.requireNonNull(getExternalFilesDir(null)).getAbsolutePath() + "/jw/",
                             guidelineS, subjectId, "ywfj"));
                 }
 //                new downloadGuidelineFileTask(guidelineS,subjectId,"ywfj").executeOnExecutor(TPE);
@@ -174,51 +172,91 @@ public class ActivitySubjectJW extends BaseActivity {
 
     void Refresh() {
         if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
-        pageTask = new refreshTask();
+        pageTask = new refreshTask(this,subjectId);
         pageTask.executeOnExecutor(TPE);
     }
 
-    class refreshTask extends AsyncTask {
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+        refresh.setRefreshing(true);
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            refresh.setRefreshing(true);
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object o) {
+        refreshTask rt = (refreshTask) task;
+        Map<String,String> basicInfo = rt.basicInfo;
+        if (basicInfo != null) {
+            nameS = basicInfo.get("name");
+            name_enS = basicInfo.get("name_en");
+            departmentS = basicInfo.get("department");
+            codeS = basicInfo.get("code");
+            typeS = basicInfo.get("type");
+            languageS = basicInfo.get("lang");
+            creditS = basicInfo.get("credit");
+            tagS = basicInfo.get("tag");
+        }
+        Map<String,String> dscrps = rt.description;
+        if (dscrps != null) {
+            descriptionS = dscrps.get("ch");
+            description_enS = dscrps.get("en");
+            guidelineS = dscrps.get("file_ch_name");
+            guideline_enS = dscrps.get("file_en_name");
+            guidelineUrl = dscrps.get("file_ch_url");
+            guidelineUrl_en = dscrps.get("file_en_url");
+        }
+        listRes_team.clear();
+        listRes_team.addAll(rt.listRes_team);
+        listRes_xs.clear();
+        listRes_xs.addAll(rt.listRes_xs);
+        
+        refresh.setRefreshing(false);
+        if (o instanceof JWException) {
+            Toast.makeText(getThis(), "加载出错！", Toast.LENGTH_SHORT).show();
+        } else if ((boolean) o) {
+            listAdapter_team.notifyDataSetChanged();
+            listAdapter_xs.notifyDataSetChanged();
+            setOrNone(name, nameS);
+            setOrNone(name_en, name_enS);
+            setOrNone(department, departmentS);
+            setOrNone(code, codeS);
+            setOrNone(type, typeS);
+            setOrNone(language, languageS);
+            setOrNone(credit, creditS);
+            setOrNone(tag, tagS);
+            setOrNone(description, descriptionS);
+            setOrNone(description_en, description_enS);
+            setOrHide(guideline, guidelineS);
+            setOrHide(guideline_en, guideline_enS);
+        }
+    }
+
+    static class refreshTask extends BaseOperationTask<Object> {
+
+        String subjectId;
+        List<Map<String,String>> listRes_team;
+        List<Map<String,String>> listRes_xs;
+        Map<String, String> basicInfo;
+        Map<String, String> description;
+        refreshTask(OperationListener<?> listRefreshedListener, String subjectId) {
+            super(listRefreshedListener);
+            this.subjectId = subjectId;
+            listRes_team = new ArrayList<>();
+            listRes_xs = new ArrayList<>();
         }
 
+
+
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             try {
                 Map map = jwCore.getSubjectDetail(subjectId);
-                Log.e("map", String.valueOf(map));
-                listRes_team.clear();
+               // Log.e("map", String.valueOf(map));
                 listRes_team.addAll((Collection<? extends Map<String, String>>) map.get("team"));
-                listRes_xs.clear();
                 listRes_xs.addAll((Collection<? extends Map<String, String>>) map.get("xs"));
-                Map<String, String> basicInfo = (Map<String, String>) map.get("basicInfo");
-                if (basicInfo != null) {
-                    nameS = basicInfo.get("name");
-                    name_enS = basicInfo.get("name_en");
-                    departmentS = basicInfo.get("department");
-                    codeS = basicInfo.get("code");
-                    typeS = basicInfo.get("type");
-                    languageS = basicInfo.get("lang");
-                    creditS = basicInfo.get("credit");
-                    tagS = basicInfo.get("tag");
-                }
-
-                Map<String, String> description = (Map<String, String>) map.get("description");
-
-                if (description != null) {
-                    descriptionS = description.get("ch");
-                    description_enS = description.get("en");
-                    guidelineS = description.get("file_ch_name");
-                    guideline_enS = description.get("file_en_name");
-                    guidelineUrl = description.get("file_ch_url");
-                    guidelineUrl_en = description.get("file_en_url");
-                }
-                listRes_team.clear();
-                listRes_team.addAll((Collection<? extends Map<String, String>>) map.get("team"));
+                basicInfo = (Map<String, String>) map.get("basicInfo");
+                description = (Map<String, String>) map.get("description");
+//                listRes_team.clear();
+//                listRes_team.addAll((Collection<? extends Map<String, String>>) map.get("team"));
                 return true;
             } catch (JWException e) {
                 return e;
@@ -226,29 +264,7 @@ public class ActivitySubjectJW extends BaseActivity {
 
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            refresh.setRefreshing(false);
-            if (o instanceof JWException) {
-                Toast.makeText(getThis(), "加载出错！", Toast.LENGTH_SHORT);
-            } else if ((boolean) o) {
-                listAdapter_team.notifyDataSetChanged();
-                listAdapter_xs.notifyDataSetChanged();
-                setOrNone(name, nameS);
-                setOrNone(name_en, name_enS);
-                setOrNone(department, departmentS);
-                setOrNone(code, codeS);
-                setOrNone(type, typeS);
-                setOrNone(language, languageS);
-                setOrNone(credit, creditS);
-                setOrNone(tag, tagS);
-                setOrNone(description, descriptionS);
-                setOrNone(description_en, description_enS);
-                setOrHide(guideline, guidelineS);
-                setOrHide(guideline_en, guideline_enS);
-            }
-        }
+
     }
 
     private void setOrNone(TextView textView, String s) {
@@ -293,7 +309,7 @@ public class ActivitySubjectJW extends BaseActivity {
         class XSHolder extends RecyclerView.ViewHolder {
             TextView key, value;
 
-            public XSHolder(@NonNull View itemView) {
+            XSHolder(@NonNull View itemView) {
                 super(itemView);
                 key = itemView.findViewById(R.id.key);
                 value = itemView.findViewById(R.id.value);
@@ -327,7 +343,7 @@ public class ActivitySubjectJW extends BaseActivity {
                     if (mBinder != null) {
                         Toast.makeText(getThis(), R.string.subject_jw_download_begin, Toast.LENGTH_SHORT).show();
                         mBinder.startDownLoad(new downloadTeamFileTask(
-                                getExternalFilesDir(null).getAbsolutePath() + "/jw/",
+                                Objects.requireNonNull(getExternalFilesDir(null)).getAbsolutePath() + "/jw/",
                                 listRes_team.get(position).get("file"),
                                 listRes_team.get(position).get("id"),
                                 listRes_team.get(position).get("downloadFlag")));
@@ -350,7 +366,7 @@ public class ActivitySubjectJW extends BaseActivity {
 
             TextView name, resp, file;
 
-            public THolder(@NonNull View itemView) {
+            THolder(@NonNull View itemView) {
                 super(itemView);
                 name = itemView.findViewById(R.id.name);
                 resp = itemView.findViewById(R.id.responsible);
@@ -361,13 +377,13 @@ public class ActivitySubjectJW extends BaseActivity {
 
     }
 
-    class downloadGuidelineFileTask extends DownloadTask {
+    static class downloadGuidelineFileTask extends DownloadTask {
         String fileName;
         String subjectId;
         String fjflag;
         String folder;
 
-        public downloadGuidelineFileTask(String folder, String fileName, String subjectId, String fjflag) {
+        downloadGuidelineFileTask(String folder, String fileName, String subjectId, String fjflag) {
             this.fileName = fileName;
             this.folder = folder;
             this.subjectId = subjectId;
@@ -462,13 +478,13 @@ public class ActivitySubjectJW extends BaseActivity {
         }
     }
 
-    class downloadTeamFileTask extends DownloadTask {
+    static class downloadTeamFileTask extends DownloadTask {
         String fileName;
         String id;
         String downloadFlag;
         String folder;
 
-        public downloadTeamFileTask(String folder, String fileName, String Id, String downloadflag) {
+        downloadTeamFileTask(String folder, String fileName, String Id, String downloadflag) {
             this.fileName = fileName;
             this.folder = folder;
             this.id = Id;
@@ -566,6 +582,7 @@ public class ActivitySubjectJW extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (pageTask != null && !pageTask.isCancelled()) pageTask.cancel(true);
         if (mBinder.getTaskNumber() == 0) {
             Intent intent = new Intent(getThis(), DownloadService.class);
             stopService(intent);

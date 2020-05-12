@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,6 +24,8 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.BaseListAdapter;
 import com.stupidtree.hita.adapter.DDLItemAdapter;
+import com.stupidtree.hita.fragments.BaseOperationTask;
+import com.stupidtree.hita.fragments.BasicRefreshTask;
 import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
 import com.stupidtree.hita.fragments.popup.FragmentAddTask;
 import com.stupidtree.hita.timetable.packable.EventItem;
@@ -36,13 +39,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 import static com.stupidtree.hita.timetable.TimetableCore.DDL;
 
 public class ActivityDDLManager extends BaseActivity implements
-        FragmentAddTask.AddTaskDoneListener, EditModeHelper.EditableContainer {
+        FragmentAddTask.AddTaskDoneListener, EditModeHelper.EditableContainer
+,BasicRefreshTask.ListRefreshedListener<Pair<List<EventItem>,List<EventItem>>>,
+BaseOperationTask.OperationListener<Object>{
 
 
     public boolean hasInit = false;
@@ -105,7 +111,7 @@ public class ActivityDDLManager extends BaseActivity implements
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.label_activity_ddl_manager));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,7 +206,6 @@ public class ActivityDDLManager extends BaseActivity implements
                 }
                 if (toShow == null) showTodayWholeday = true;//否则，显示全天
             } else if (notToday.size() > 0) {
-                showTodayWholeday = false;
                 toShow = notToday.get(0); //否则，选择非今天的第一个事件
             }
 
@@ -283,17 +288,12 @@ public class ActivityDDLManager extends BaseActivity implements
     }
 
 
-    @Override
-    protected void stopTasks() {
-        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask.cancel(true);
-    }
 
     public void Refresh() {
         // Log.e("refresh", "tasks");
         if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
             pageTask.cancel(true);
-        pageTask = new refreshListTask();
+        pageTask = new refreshListTask(this);
         pageTask.executeOnExecutor(HITAApplication.TPE);
     }
 
@@ -320,7 +320,7 @@ public class ActivityDDLManager extends BaseActivity implements
 
     @Override
     public void onDelete(Collection toDelete) {
-        new deleteDDLTask().execute();
+        new deleteDDLTask(this,listAdapter.getCheckedItem()).execute();
     }
 
     @Override
@@ -329,21 +329,56 @@ public class ActivityDDLManager extends BaseActivity implements
         Refresh();
     }
 
-    @SuppressLint("StaticFieldLeak")
-    class refreshListTask extends AsyncTask {
+    @Override
+    public void onRefreshStart(String id, Boolean[] params) {
 
-        List<EventItem> result_todo;
-        List<EventItem> result_passed;
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            result_todo = new ArrayList<>();
-            result_passed = new ArrayList<>();
+    @Override
+    public void onListRefreshed(String id, Boolean[] params, Pair<List<EventItem>, List<EventItem>> result) {
+        List<EventItem> result_todo = result.first;
+        List<EventItem> result_passed = result.second;
+        List<EventItem> newList = new ArrayList<>();
+        if (result_todo.size() > 0)
+            newList.add(EventItem.getTagInstance(getString(R.string.ddl_todo)));
+        newList.addAll(result_todo);
+        if (result_passed.size() > 0)
+            newList.add(EventItem.getTagInstance(getString(R.string.ddl_passed_tag)));
+        newList.addAll(result_passed);
+        if (newList.size() == 0)
+            newList.add(EventItem.getTagInstance(getString(R.string.no_ddl_add_some)));
+
+        listAdapter.notifyItemChangedSmooth(newList, true);
+        refreshText(result_todo);
+
+    }
+
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+
+    }
+
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object result) {
+        Refresh();
+        editModeHelper.closeEditMode();
+        Toast.makeText(getThis(), R.string.delete_success, Toast.LENGTH_SHORT).show();
+    }
+
+    static class refreshListTask extends BasicRefreshTask<Pair<List<EventItem>,List<EventItem>>> {
+
+
+
+        refreshListTask(ListRefreshedListener listRefreshedListener) {
+            super(listRefreshedListener);
         }
 
+
+
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Pair<List<EventItem>, List<EventItem>> doInBackground(ListRefreshedListener listRefreshedListener, Boolean... booleans) {
+            List<EventItem> result_todo = new ArrayList<>();
+            List<EventItem> result_passed = new ArrayList<>();
             List<EventItem> res = timeTableCore.getAllEvents(DDL);
             for (EventItem ei : res) {
                 if (ei.hasPassed(System.currentTimeMillis())) result_passed.add(ei);
@@ -361,47 +396,30 @@ public class ActivityDDLManager extends BaseActivity implements
                     return o1.compareTo(o2);
                 }
             });
-            return null;
+            return new Pair<>(result_todo,result_passed);
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            List<EventItem> newList = new ArrayList<>();
-            if (result_todo.size() > 0)
-                newList.add(EventItem.getTagInstance(getString(R.string.ddl_todo)));
-            newList.addAll(result_todo);
-            if (result_passed.size() > 0)
-                newList.add(EventItem.getTagInstance(getString(R.string.ddl_passed_tag)));
-            newList.addAll(result_passed);
-            if (newList.size() == 0)
-                newList.add(EventItem.getTagInstance(getString(R.string.no_ddl_add_some)));
-
-            listAdapter.notifyItemChangedSmooth(newList, true);
-            refreshText(result_todo);
-
-        }
     }
 
-    class deleteDDLTask extends AsyncTask {
+    static class deleteDDLTask extends BaseOperationTask<Object> {
+
+        Collection<EventItem> toDelete;
+
+        deleteDDLTask(OperationListener listRefreshedListener, Collection<EventItem> toDelete) {
+            super(listRefreshedListener);
+            this.toDelete = toDelete;
+        }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
-            if (listAdapter.getCheckedItem() != null) {
-                for (EventItem ei : listAdapter.getCheckedItem()) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
+            if (toDelete!=null) {
+                for (EventItem ei : toDelete) {
                     timeTableCore.deleteEvent(ei, true);
                 }
             }
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            Refresh();
-            editModeHelper.closeEditMode();
-            Toast.makeText(getThis(), R.string.delete_success, Toast.LENGTH_SHORT).show();
-        }
     }
 
 

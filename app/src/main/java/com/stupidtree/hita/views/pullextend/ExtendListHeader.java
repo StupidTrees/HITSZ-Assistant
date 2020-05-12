@@ -1,6 +1,7 @@
 package com.stupidtree.hita.views.pullextend;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.HapticFeedbackConstants;
@@ -81,6 +82,7 @@ public class ExtendListHeader extends ExtendLayout {
         return mRecyclerView;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     protected View createLoadingView(Context context, AttributeSet attrs) {
         return LayoutInflater.from(context).inflate(R.layout.extend_header, null);
@@ -137,7 +139,7 @@ public class ExtendListHeader extends ExtendLayout {
                     expanded = false;
                 }
                 mExpendPoint.setPercent(percent);
-                mExpendPoint.setTranslationY(-Math.abs(offset) / 2 + mExpendPoint.getHeight() / 2);
+                mExpendPoint.setTranslationY((float) (-Math.abs(offset) / 2.0 + mExpendPoint.getHeight() / 2.0));
                 mRecyclerView.setTranslationY(-containerHeight);
             } else {
                 if (!expanded) {

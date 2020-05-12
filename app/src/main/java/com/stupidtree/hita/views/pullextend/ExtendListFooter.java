@@ -104,12 +104,12 @@ public class ExtendListFooter extends ExtendLayout {
             float percent = Math.abs(offset) / containerHeight;
             if (percent <= 1.0f) {
                 mExpendPoint.setPercent(percent);
-                mExpendPoint.setTranslationY(Math.abs(offset) / 2 - mExpendPoint.getHeight() / 2);
+                mExpendPoint.setTranslationY((float) (Math.abs(offset) / 2.0 - mExpendPoint.getHeight() / 2.0));
                 mRecyclerView.setTranslationY(containerHeight);
             } else {
                 float subPercent = (moreOffset) / (listHeight - containerHeight);
                 subPercent = Math.min(1.0f, subPercent);
-                mExpendPoint.setTranslationY((int) containerHeight / 2 - mExpendPoint.getHeight() / 2 - (int) containerHeight * subPercent / 2);
+                mExpendPoint.setTranslationY((float) ((int) containerHeight / 2.0 - mExpendPoint.getHeight() / 2.0 - (int) containerHeight * subPercent / 2));
                 mExpendPoint.setPercent(1.0f);
                 float alpha = (1 - subPercent * 2);
                 mExpendPoint.setAlpha(Math.max(alpha, 0));

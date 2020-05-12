@@ -1,9 +1,7 @@
 package com.stupidtree.hita.activities;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
@@ -20,6 +18,7 @@ import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.BaseListAdapter;
 import com.stupidtree.hita.adapter.DDLItemAdapter;
 import com.stupidtree.hita.adapter.TaskListAdapter;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.popup.FragmentAddTask;
 import com.stupidtree.hita.timetable.packable.Task;
 import com.stupidtree.hita.views.EditModeHelper;
@@ -36,13 +35,12 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class ActivityTasks extends BaseActivity implements
-        FragmentAddTask.AddTaskDoneListener, EditModeHelper.EditableContainer {
+        FragmentAddTask.AddTaskDoneListener, EditModeHelper.EditableContainer, BaseOperationTask.OperationListener<Object> {
     RecyclerView tasksList_now;
     TaskListAdapter listAdapter_now;
     FloatingActionButton fab;
     ArrayList<Task> listRes_now;
     ImageView none;
-    refreshListTask pageTask;
     Toolbar toolbar;
     CollapsingToolbarLayout collapsingToolbarLayout;
     EditModeHelper editModeHelper;
@@ -62,7 +60,7 @@ public class ActivityTasks extends BaseActivity implements
         collapsingToolbarLayout = findViewById(R.id.collapse);
         toolbar.setTitle(getString(R.string.label_activity_tasks));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +130,7 @@ public class ActivityTasks extends BaseActivity implements
             @Override
             public boolean OnClick(View v, Task t, int position) {
                 v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                new finishTask(t, !t.isFinished(), position, listRes_now, listAdapter_now).execute();
+                new finishTask(ActivityTasks.this,t, !t.isFinished(), position, listRes_now, listAdapter_now).execute();
                 return true;
             }
 
@@ -159,18 +157,9 @@ public class ActivityTasks extends BaseActivity implements
     }
 
 
-    @Override
-    protected void stopTasks() {
-        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask.cancel(true);
-    }
 
     public void Refresh() {
-        // Log.e("refresh", "tasks");
-        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask.cancel(true);
-        pageTask = new refreshListTask();
-        pageTask.executeOnExecutor(HITAApplication.TPE);
+        new refreshListTask(this).executeOnExecutor(HITAApplication.TPE);
     }
 
 
@@ -200,38 +189,64 @@ public class ActivityTasks extends BaseActivity implements
 
     @Override
     public void onDelete(Collection toDelete) {
-        new deleteTasks().execute();
+        new deleteTasks(this,listAdapter_now.getCheckedItem()).execute();
+    }
+
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+
+    }
+
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object o) {
+        switch (id){
+            case "finish":
+                if (o instanceof String && o.equals("dialog")) {
+                    AlertDialog ad = new AlertDialog.Builder(ActivityTasks.this).setMessage("任务未完成，请添加对应处理事件！").setTitle("任务进度尚未完成").create();
+                    ad.show();
+                } else {
+                    ActivityMain.saveData();
+                    if (o instanceof Boolean &&(Boolean) o) {
+                        Refresh();
+                    } else
+                        Toast.makeText(HContext, R.string.operation_failed, Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+            case "delete":
+                Refresh();
+                editModeHelper.closeEditMode();
+                Toast.makeText(getThis(), R.string.delete_success, Toast.LENGTH_SHORT).show();
+                break;
+            case "refresh":
+                refreshListTask rt = (refreshListTask) task;
+                List<Task> newL = new ArrayList<>(rt.nowRes);
+                if (rt.finishedRes.size() > 0)
+                    newL.add(Task.getTagInstance(getString(R.string.task_finished_name)));
+                newL.addAll(rt.finishedRes);
+                listAdapter_now.notifyItemChangedSmooth(newL);
+                refreshText();
+        }
+
     }
 
 
-    @SuppressLint("StaticFieldLeak")
-    class refreshListTask extends AsyncTask {
+    static class refreshListTask extends BaseOperationTask<Object> {
         List<Task> nowRes;
         List<Task> finishedRes;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        refreshListTask(OperationListener listRefreshedListener) {
+            super(listRefreshedListener);
+            id = "refresh";
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             nowRes = timeTableCore.getUnfinishedTasks();
             finishedRes = timeTableCore.getFinishedTasks();
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            List<Task> newL = new ArrayList<>();
-            newL.addAll(nowRes);
-            if (finishedRes.size() > 0)
-                newL.add(Task.getTagInstance(getString(R.string.task_finished_name)));
-            newL.addAll(finishedRes);
-            listAdapter_now.notifyItemChangedSmooth(newL);
-            refreshText();
-        }
     }
 
 
@@ -241,51 +256,27 @@ public class ActivityTasks extends BaseActivity implements
         Refresh();
     }
 
-    class deleteTask extends AsyncTask {
-        int position;
-        RecyclerView list;
-        TaskListAdapter listAdapter;
-        List<Task> listRes;
 
-        deleteTask(int position, TaskListAdapter adapter, List<Task> listRes) {
-            this.position = position;
-            listAdapter = adapter;
-            this.listRes = listRes;
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            timeTableCore.deleteTask(listRes.get(position));
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            if (isDestroyed()) return;
-            ActivityMain.saveData();
-            Refresh();
-            // if(ftl!=null&&ftl.hasInit) ftl.Refresh(FragmentTimeLine.TL_REFRESH_FROM_UNHIDE);
-        }
-    }
-
-    class finishTask extends AsyncTask {
+    static class finishTask extends BaseOperationTask<Object> {
         int position;
         List<Task> listRes;
         Task t;
         TaskListAdapter listAdapter;
         boolean finished;
 
-        public finishTask(Task t, boolean finished, int position, List<Task> listRes, TaskListAdapter listAdapter) {
+
+        finishTask(OperationListener<Object> listener,Task t, boolean finished, int position, List<Task> listRes, TaskListAdapter listAdapter) {
+            super(listener);
             this.t = t;
             this.position = position;
             this.listRes = listRes;
             this.listAdapter = listAdapter;
             this.finished = finished;
+            id = "finish";
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             if (t.isHas_length() && t.getProgress() < 100) {
                 return "dialog";
             } else {
@@ -293,43 +284,27 @@ public class ActivityTasks extends BaseActivity implements
             }
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            if (isDestroyed()) return;
-            if (o instanceof String && o.equals("dialog")) {
-                AlertDialog ad = new AlertDialog.Builder(ActivityTasks.this).setMessage("任务未完成，请添加对应处理事件！").setTitle("任务进度尚未完成").create();
-                ad.show();
-            } else {
-                ActivityMain.saveData();
-                if ((Boolean) o) {
-                    Refresh();
-                } else
-                    Toast.makeText(HContext, R.string.operation_failed, Toast.LENGTH_SHORT).show();
 
-            }
-
-        }
     }
 
-    class deleteTasks extends AsyncTask {
+    static class deleteTasks extends BaseOperationTask<Object> {
+        Collection<Task> toDelete;
+
+        deleteTasks(OperationListener listRefreshedListener, Collection<Task> toDelete) {
+            super(listRefreshedListener);
+            this.toDelete = toDelete;
+            id = "delete";
+        }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
-            if (listAdapter_now.getCheckedItem() != null) {
-                for (Task t : listAdapter_now.getCheckedItem()) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
+            if (toDelete != null) {
+                for (Task t : toDelete) {
                     timeTableCore.deleteTask(t);
                 }
             }
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            Refresh();
-            editModeHelper.closeEditMode();
-            Toast.makeText(getThis(), R.string.delete_success, Toast.LENGTH_SHORT).show();
-        }
     }
 }

@@ -1,6 +1,5 @@
 package com.stupidtree.hita.online;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobObject;

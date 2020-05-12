@@ -32,7 +32,7 @@ import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 
-public class FragmentSubjects extends FragmentCurriculumChild
+public class FragmentSubjects extends FragmentTimeTableChild
         implements EditModeHelper.EditableContainer,
         BasicRefreshTask.ListRefreshedListener<List<Subject>> {
 
@@ -193,7 +193,7 @@ public class FragmentSubjects extends FragmentCurriculumChild
             super.doInBackground(listRefreshedListener, booleans);
             List<Subject> newList = new ArrayList<>();
             if (!timeTableCore.isDataAvailable()) return newList;
-            List<Subject> all = timeTableCore.getCurrentCurriculum().getSubjects();
+            List<Subject> all = timeTableCore.getSubjects(null);
             //timeTableCore.getAllEvents();
             List<Subject> exam = new ArrayList<>();
             List<Subject> other = new ArrayList<>();

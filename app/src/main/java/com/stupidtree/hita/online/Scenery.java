@@ -30,18 +30,7 @@ public class Scenery extends Location {
     }
 
 
-    List<String> getImageUris(){
-        List<String> res = new ArrayList<>();
-      for(String s:detailImageUrls.split("\\$")) res.add(s);
-      return res;
-    }
-    void setImageUrls(List<String> imageList){
-        StringBuilder sb = new StringBuilder();
-        for(String s:imageList){
-            sb.append(s).append("$");
-        }
-        detailImageUrls = sb.toString();
-    }
+
     @Override
     public ArrayList<HashMap> getInfoListArray() {
         ArrayList<HashMap> result = new ArrayList();

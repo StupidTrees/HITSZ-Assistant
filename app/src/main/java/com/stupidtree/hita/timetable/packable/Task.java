@@ -12,8 +12,9 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
-import static com.stupidtree.hita.HITAApplication.mDBHelper;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.timetable.TimetableCore.uri_task;
 
 public class Task {
     public static final int TAG = 931;
@@ -265,10 +266,10 @@ public class Task {
         this.finished = finished;
     }
 
+    @WorkerThread
     public void putEventMap(String key, Boolean value){ //耗时
         event_map.put(key,value);
-        SQLiteDatabase sdb = mDBHelper.getWritableDatabase();
-        sdb.update("task",getContentValues(),"uuid=?",new String[]{uuid});
+        HContext.getContentResolver().update(uri_task,getContentValues(),"uuid=?",new String[]{uuid});
     }
 
     public HashMap<String,Boolean> getEvent_map() {
@@ -277,8 +278,7 @@ public class Task {
 
     public void updateProgress(int progress){ //耗时
         this.progress = progress;
-        SQLiteDatabase sdb = mDBHelper.getWritableDatabase();
-        sdb.update("task",getContentValues(),"uuid=?",new String[]{uuid});
+        HContext.getContentResolver().update(uri_task,getContentValues(),"uuid=?",new String[]{uuid});
     }
     @Override
     public String toString() {

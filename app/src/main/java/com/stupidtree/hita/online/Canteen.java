@@ -10,8 +10,6 @@ import com.stupidtree.hita.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import cn.bmob.v3.BmobObject;
-
 public class Canteen extends Location {
     String company;
     String telephone;

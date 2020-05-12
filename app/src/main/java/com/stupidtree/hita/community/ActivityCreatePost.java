@@ -35,6 +35,7 @@ import com.stupidtree.hita.views.CornerTransform;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import cn.bmob.v3.BmobUser;
@@ -67,17 +68,14 @@ public class ActivityCreatePost extends BaseActivity {
         initToolbar();
     }
 
-    @Override
-    protected void stopTasks() {
 
-    }
 
     void initToolbar() {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.label_activity_create_post);
         toolbar.inflateMenu(R.menu.toolbar_create_post);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,33 +107,32 @@ public class ActivityCreatePost extends BaseActivity {
             //Toast.makeText(this, "操作取消", Toast.LENGTH_SHORT).show();
             return;
         }
-        switch (requestCode) {
-            case RC_CHOOSE_PHOTO:
-                if (null == data) {
-                    Toast.makeText(this, R.string.no_image_fetched, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Uri uri = data.getData();
-                if (null == uri) { //如果单个Uri为空，则可能是1:多个数据 2:没有数据
-                    ClipData clipData = data.getClipData();
-                    if (clipData == null || clipData.getItemCount() == 0) { //没有数据，弹出提示
-                        Toast.makeText(this, R.string.no_image_selected, Toast.LENGTH_SHORT).show();
-                    } else { //否则，加入多个图片
-                        List<String> toAdd = new ArrayList<>();
-                        int vacancy = 9 - listRes.size();
-                        for (int i = 0; i < clipData.getItemCount() && i < vacancy; i++) {
-                            ClipData.Item item = clipData.getItemAt(i);
-                            toAdd.add(FileProviderUtils.getFilePathByUri(this, item.getUri()));
-                        }
-                        listRes.addAll(toAdd);
-                        listAdapter.notifyItemRangeInserted(listRes.size() - toAdd.size(), toAdd.size());
-                        listAdapter.notifyItemRangeChanged(listRes.size() - 1, 2);
+        if (requestCode == RC_CHOOSE_PHOTO) {
+            if (null == data) {
+                Toast.makeText(this, R.string.no_image_fetched, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Uri uri = data.getData();
+            if (null == uri) { //如果单个Uri为空，则可能是1:多个数据 2:没有数据
+                ClipData clipData = data.getClipData();
+                if (clipData == null || clipData.getItemCount() == 0) { //没有数据，弹出提示
+                    Toast.makeText(this, R.string.no_image_selected, Toast.LENGTH_SHORT).show();
+                } else { //否则，加入多个图片
+                    List<String> toAdd = new ArrayList<>();
+                    int vacancy = 9 - listRes.size();
+                    for (int i = 0; i < clipData.getItemCount() && i < vacancy; i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        toAdd.add(FileProviderUtils.getFilePathByUri(this, item.getUri()));
                     }
-                    return;
-                } else {
-                    listRes.add(FileProviderUtils.getFilePathByUri(this, uri));
-                    listAdapter.notifyItemInserted(listRes.size() - 1);
+                    listRes.addAll(toAdd);
+                    listAdapter.notifyItemRangeInserted(listRes.size() - toAdd.size(), toAdd.size());
+                    listAdapter.notifyItemRangeChanged(listRes.size() - 1, 2);
                 }
+                return;
+            } else {
+                listRes.add(FileProviderUtils.getFilePathByUri(this, uri));
+                listAdapter.notifyItemInserted(listRes.size() - 1);
+            }
 //                // 剪裁图片
 //               galleryUtils.cropPhoto(FileProviderUtils.getFilePathByUri(this, uri), 200);
 //                break;
@@ -145,8 +142,6 @@ public class ActivityCreatePost extends BaseActivity {
 //                break;
 //            case RC_CROP_PHOTO:
 //                // 显示图片
-
-                break;
         }
     }
 

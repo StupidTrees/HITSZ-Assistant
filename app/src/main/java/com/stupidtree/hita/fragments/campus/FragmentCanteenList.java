@@ -1,4 +1,4 @@
-package com.stupidtree.hita.fragments;
+package com.stupidtree.hita.fragments.campus;
 
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.BaseListAdapter;
 import com.stupidtree.hita.adapter.CanteenListAdapter;
+import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.online.Canteen;
 import com.stupidtree.hita.online.Infos;
 import com.stupidtree.hita.online.Location;

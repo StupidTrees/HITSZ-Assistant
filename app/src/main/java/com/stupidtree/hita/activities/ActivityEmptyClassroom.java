@@ -1,7 +1,6 @@
 package com.stupidtree.hita.activities;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,9 +17,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BasicRefreshTask;
 import com.stupidtree.hita.fragments.popup.FragmentEmptyClassroomDialog;
-import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.timetable.TimetableCore;
+import com.stupidtree.hita.util.EventsUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,27 +28,25 @@ import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
-public class ActivityEmptyClassroom extends BaseActivity {
+public class ActivityEmptyClassroom extends BaseActivity implements BasicRefreshTask.ListRefreshedListener<List<Map<String,String>>> {
     Toolbar toolbar;
-    ArrayList<Map> listRes;
+    ArrayList<Map<String,String>> listRes;
     placesListAdapter listAdapter;
     RecyclerView list;
     SwipeRefreshLayout refresh;
     TextView pageXnxq_Text,pageTime_Text;
     int pageCourseNumber;
-    refreshListTask pageTask;
     LinearLayout invalid;
 
 
 
-    @Override
-    protected void stopTasks() {
-        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
-          }
+//
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +109,7 @@ public class ActivityEmptyClassroom extends BaseActivity {
     void initToolbar(){
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,29 +138,47 @@ public class ActivityEmptyClassroom extends BaseActivity {
     }
 
     void Refresh(){
-        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
-        pageTask =  new refreshListTask();
-        pageTask.executeOnExecutor(HITAApplication.TPE);
+        new refreshListTask(this).executeOnExecutor(HITAApplication.TPE);
     }
-    class refreshListTask extends AsyncTask{
 
-        @SuppressLint("SetTextI18n")
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onRefreshStart(String id, Boolean[] params) {
+        invalid.setVisibility(View.GONE);
+        pageXnxq_Text.setText(timeTableCore.getCurrentCurriculum().getCurriculumCode());
+        pageCourseNumber = TimetableCore.getNumberAtTime(timeTableCore.getNow());
+        String nowNumber;
+        if(pageCourseNumber<0)nowNumber = "课间/课后";
+        else nowNumber = "第"+pageCourseNumber+"节课";
+        pageTime_Text.setText(
+                EventsUtils.getWeekDowString(timeTableCore.getThisWeekOfTerm(),TimetableCore.getDOW(timeTableCore.getNow()),false,EventsUtils.TTY_NONE)+" " + nowNumber);
+        refresh.setRefreshing(true);
+    }
+
+    @Override
+    public void onListRefreshed(String id, Boolean[] params, List<Map<String,String>> result) {
+        refresh.setRefreshing(false);
+        if(result!=null){
+            listRes.clear();
+            listRes.addAll(result);
             invalid.setVisibility(View.GONE);
-            pageXnxq_Text.setText(timeTableCore.getCurrentCurriculum().getCurriculumCode());
-            pageCourseNumber = TimetableCore.getNumberAtTime(timeTableCore.getNow());
-            String nowNumber;
-            if(pageCourseNumber<0)nowNumber = "课间/课后";
-            else nowNumber = "第"+pageCourseNumber+"节课";
-            pageTime_Text.setText("第" + timeTableCore.getThisWeekOfTerm() + "周 " + TextTools.words_time_DOW[TimetableCore.getDOW(timeTableCore.getNow()) - 1] + " " + nowNumber);
+            listAdapter.notifyDataSetChanged();
+            list.scheduleLayoutAnimation();
+        }else{
+            invalid.setVisibility(View.VISIBLE);
+        }
+    }
 
-            refresh.setRefreshing(true);
+
+    static class refreshListTask extends BasicRefreshTask<List<Map>> {
+
+        refreshListTask(ListRefreshedListener listRefreshedListener) {
+            super(listRefreshedListener);
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected List<Map> doInBackground(ListRefreshedListener listRefreshedListener, Boolean... booleans) {
+            List<Map> result = new ArrayList<>();
             try {
                 Document page = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kjscx/queryKjs_wdl")
                         //.data("pageXnxq",timeTableCore.getCurrentCurriculum().curriculumCode)
@@ -175,35 +191,21 @@ public class ActivityEmptyClassroom extends BaseActivity {
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
                         .post();
                 Element lhs = page.getElementById("pageLhdm");
-                listRes.clear();
                 for(Element lh:lhs.select("option")){
                     if(TextUtils.isEmpty(lh.attr("value"))) continue;
-                    Map m = new HashMap();
+                    Map<String, String> m = new HashMap<>();
                     m.put("name",lh.text());
                     m.put("value",lh.attr("value"));
-                    listRes.add(m);
+                    result.add(m);
                 }
-               // System.out.println(page);
-                return listRes.size()>0;
             } catch (Exception e) {
                 e.printStackTrace();
-                return false;
+                return null;
             }
+            return result;
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            refresh.setRefreshing(false);
-            if((boolean)o){
-                invalid.setVisibility(View.GONE);
-                listAdapter.notifyDataSetChanged();
-                list.scheduleLayoutAnimation();
-            }else{
-                invalid.setVisibility(View.VISIBLE);
-            }
 
-        }
     }
 
 
@@ -215,7 +217,7 @@ public class ActivityEmptyClassroom extends BaseActivity {
         @Override
         public placesHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             View v = getLayoutInflater().inflate(R.layout.dynamic_emptyclassroom_places,viewGroup,false);
-            return new placesHolder(v, (String) listRes.get(i).get("value"));
+            return new placesHolder(v, listRes.get(i).get("value"));
         }
 
         @Override
@@ -225,12 +227,12 @@ public class ActivityEmptyClassroom extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull final placesHolder placesHolder, final int i) {
-            placesHolder.domainName.setText((CharSequence) listRes.get(i).get("name"));
+            placesHolder.domainName.setText(listRes.get(i).get("name"));
             placesHolder.card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     FragmentEmptyClassroomDialog.getInstance(
-                            listRes.get(i).get("name").toString(),listRes.get(i).get("value").toString(),pageCourseNumber).show(getSupportFragmentManager(),"aecd");
+                            listRes.get(i).get("name"), listRes.get(i).get("value"),pageCourseNumber).show(getSupportFragmentManager(),"aecd");
                 }
             });
 
@@ -244,7 +246,7 @@ public class ActivityEmptyClassroom extends BaseActivity {
         class placesHolder extends RecyclerView.ViewHolder{
             TextView domainName;
             CardView card;
-            public placesHolder(@NonNull View itemView,String lh) {
+            placesHolder(@NonNull View itemView, String lh) {
                 super(itemView);
                 domainName = itemView.findViewById(R.id.domain_name);
                 card = itemView.findViewById(R.id.card);

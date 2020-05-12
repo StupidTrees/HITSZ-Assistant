@@ -9,9 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -38,6 +36,8 @@ import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.BaseListAdapter;
 import com.stupidtree.hita.adapter.SubjectCoursesListAdapter;
+import com.stupidtree.hita.fragments.BaseOperationTask;
+import com.stupidtree.hita.fragments.BasicRefreshTask;
 import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.Subject;
@@ -53,16 +53,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.activities.ActivityMain.saveData;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 
-public class ActivitySubject extends BaseActivity implements EditModeHelper.EditableContainer {
+public class ActivitySubject extends BaseActivity implements EditModeHelper.EditableContainer, BaseOperationTask.OperationListener, BasicRefreshTask.ListRefreshedListener<List<EventItem>> {
 
     boolean isFirst = true;
     public static final int RESULT_COLOR_CHANGED = 817;
@@ -72,15 +72,13 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
     List<EventItem> courseListRes;
     SubjectCoursesListAdapter listAdapter;
     ArcProgress arcProgress;
-    TextView name, point, attr, totalcourses, exam, school, xnxq, type, code, score_qz, score_qm, score_none, mooc;
-    EditText pointEdit, attrEdit, totalcoursesEdit, schoolEdit, xnxqEdit, typeEdit, codeEdit;
+    TextView name, point, attr, totalCourses, exam, school, xnxq, type, code, score_qz, score_qm, score_none, mooc;
+    EditText pointEdit, attrEdit, totalCoursesEdit, schoolEdit, xnxqEdit, typeEdit, codeEdit;
     Switch examEdit, moocEdit;
     ViewGroup card_all_courses;
     View card_rate, card_color;
     LinearLayout qz_score_layout, qm_score_layout;
-    //RefreshRatingTask pageTask_rating;
-    ImageView pickColor, colorSample, editInfos, addCourse;
-    RefreshCourseListTask pageTask_courseList;
+    ImageView pickColor, colorSample, editInfo, addCourse;
     DecimalFormat df = new DecimalFormat("#0.00");
     CardView jw_detail_entrance;
     CardView jw_detail_button;
@@ -98,12 +96,6 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
     SharedPreferences SP;
     EditModeHelper editModeHelper;
 
-    @Override
-    protected void stopTasks() {
-        if (pageTask_courseList != null && pageTask_courseList.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask_courseList.cancel(true);
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +133,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
     void initViews() {
         arcProgress = findViewById(R.id.subject_progress);
         delete = findViewById(R.id.delete);
-        editInfos = findViewById(R.id.edit_info);
+        editInfo = findViewById(R.id.edit_info);
         addCourse = findViewById(R.id.course_add);
         jw_detail_entrance = findViewById(R.id.jw_subject_entrance);
         jw_detail_button = findViewById(R.id.jw_subject_button);
@@ -162,16 +154,16 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         codeEdit = findViewById(R.id.edit_code);
         typeEdit = findViewById(R.id.edit_type);
         xnxqEdit = findViewById(R.id.edit_xnxq);
-        totalcoursesEdit = findViewById(R.id.edit_totalcourse);
+        totalCoursesEdit = findViewById(R.id.edit_totalcourse);
         moocEdit = findViewById(R.id.edit_mooc);
-        
+
         pickColor = findViewById(R.id.pick_color);
         colorSample = findViewById(R.id.color_sample);
         qz_score_layout = findViewById(R.id.score_qz_layout);
         qm_score_layout = findViewById(R.id.score_qm_layout);
         score_qz = findViewById(R.id.score_qz);
         score_qm = findViewById(R.id.score_qm);
-        totalcourses = findViewById(R.id.subject_totalcourses);
+        totalCourses = findViewById(R.id.subject_totalcourses);
         card_all_courses = findViewById(R.id.subject_card_allcourses);
         //course_expand = findViewById(R.id.course_expand);
         card_rate = findViewById(R.id.subject_card_rate);
@@ -186,7 +178,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
                         setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                new deleteSubjectTask(subject.getName()).execute();
+                                new deleteSubjectTask(ActivitySubject.this, subject.getName()).execute();
                             }
                         }).setNegativeButton(getString(R.string.button_cancel), null).
                         create();
@@ -221,6 +213,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
                         .setInitialTag2(first.getTag2())
                         .setInitialTag3(first.getTag3())
                         .setInitialExtraName(subject.getName())
+                        .setTabSwitchable(false)
                         .setExtraEditable(false)
                         .show(getSupportFragmentManager(), "fae");
             }
@@ -234,7 +227,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         codeEdit.setVisibility(View.GONE);
         typeEdit.setVisibility(View.GONE);
         xnxqEdit.setVisibility(View.GONE);
-        totalcoursesEdit.setVisibility(View.GONE);
+        totalCoursesEdit.setVisibility(View.GONE);
 
         point.setVisibility(View.VISIBLE);
         exam.setVisibility(View.VISIBLE);
@@ -244,7 +237,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         code.setVisibility(View.VISIBLE);
         type.setVisibility(View.VISIBLE);
         xnxq.setVisibility(View.VISIBLE);
-        totalcourses.setVisibility(View.VISIBLE);
+        totalCourses.setVisibility(View.VISIBLE);
 //        course_expand.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -252,17 +245,17 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
 //            }
 //        });
 
-        editInfos.setOnClickListener(new View.OnClickListener() {
+        editInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editMode = !editMode;
                 switchEditMode();
                 if (!editMode) {
-                    editInfos.setImageResource(R.drawable.bt_edit);
+                    editInfo.setImageResource(R.drawable.bt_edit);
                     saveEditInfo();
-                    new saveTask().executeOnExecutor(TPE);
+                    new saveTask(ActivitySubject.this, subject).executeOnExecutor(TPE);
                 } else {
-                    editInfos.setImageResource(R.drawable.fab_done);
+                    editInfo.setImageResource(R.drawable.fab_done);
                 }
             }
         });
@@ -279,7 +272,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
             codeEdit.setVisibility(View.GONE);
             typeEdit.setVisibility(View.GONE);
             xnxqEdit.setVisibility(View.GONE);
-            totalcoursesEdit.setVisibility(View.GONE);
+            totalCoursesEdit.setVisibility(View.GONE);
             point.setVisibility(View.VISIBLE);
             exam.setVisibility(View.VISIBLE);
             mooc.setVisibility(View.VISIBLE);
@@ -288,7 +281,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
             code.setVisibility(View.VISIBLE);
             type.setVisibility(View.VISIBLE);
             xnxq.setVisibility(View.VISIBLE);
-            totalcourses.setVisibility(View.VISIBLE);
+            totalCourses.setVisibility(View.VISIBLE);
         } else {
             pointEdit.setVisibility(View.VISIBLE);
             examEdit.setVisibility(View.VISIBLE);
@@ -298,7 +291,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
             codeEdit.setVisibility(View.VISIBLE);
             typeEdit.setVisibility(View.VISIBLE);
             xnxqEdit.setVisibility(View.VISIBLE);
-            totalcoursesEdit.setVisibility(View.VISIBLE);
+            totalCoursesEdit.setVisibility(View.VISIBLE);
 
             pointEdit.setText(point.getText());
             examEdit.setChecked(subject.isExam());
@@ -308,7 +301,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
             codeEdit.setText(code.getText());
             typeEdit.setText(type.getText());
             xnxqEdit.setText(xnxq.getText());
-            totalcoursesEdit.setText(totalcourses.getText());
+            totalCoursesEdit.setText(totalCourses.getText());
 
             point.setVisibility(View.GONE);
             exam.setVisibility(View.GONE);
@@ -318,9 +311,10 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
             code.setVisibility(View.GONE);
             type.setVisibility(View.GONE);
             xnxq.setVisibility(View.GONE);
-            totalcourses.setVisibility(View.GONE);
+            totalCourses.setVisibility(View.GONE);
         }
     }
+
     void initToolBar() {
 //        toolbarLayout = findViewById(R.id.toolbarlayout);
 //        toolbarLayout.setExpandedTitleColor(getTextColorPrimary());
@@ -331,7 +325,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         ratingText = findViewById(R.id.text_rate);
         //toolbar.setTitle(subject.getName());
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -359,7 +353,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         subject.setMOOC(moocEdit.isChecked());
         subject.setCompulsory(attrEdit.getText().toString());
         subject.setCredit(pointEdit.getText().toString());
-        subject.setTotalCourses(totalcoursesEdit.getText().toString());
+        subject.setTotalCourses(totalCoursesEdit.getText().toString());
         subject.setCode(codeEdit.getText().toString());
         subject.setType(typeEdit.getText().toString());
         subject.setXnxq(xnxqEdit.getText().toString());
@@ -367,14 +361,16 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
     }
 
     void Refresh() {
-        new InitSubjectTask().executeOnExecutor(TPE);
+        new InitSubjectTask(this, subjectKey, useCode).executeOnExecutor(TPE);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_subject, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressLint("SetTextI18n")
     void setInfo() {
         if (subject == null) return;
 //        Log.e("id",subject.getId());
@@ -387,7 +383,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         xnxq.setText(subject.getXnxq());
         type.setText(subject.getType());
         colorSample.setColorFilter(SP.getInt("color:" + subject.getName(), Color.YELLOW));
-        totalcourses.setText(subject.getTotalCourses());
+        totalCourses.setText(subject.getTotalCourses());
         exam.setText(subject.isExam() ? getString(R.string.yes) : getString(R.string.no));
         mooc.setText(subject.isMOOC() ? getString(R.string.yes) : getString(R.string.no));
         if (subject.isMOOC()) {
@@ -418,7 +414,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
                 qm_score_layout.setVisibility(View.GONE);
             }
         }
-        Double rate = 0.0;
+        double rate;
         Double sum = 0.0;
         int size = 0;
         for (Double f : subject.getRatingMap().values()) {
@@ -443,7 +439,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
     @Override
     public void onBackPressed() {
         if (editModeHelper.isEditMode()) editModeHelper.closeEditMode();
-        else if (editMode) editInfos.callOnClick();
+        else if (editMode) editInfo.callOnClick();
         else super.onBackPressed();
     }
 
@@ -491,10 +487,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
     }
 
     void refreshCourseList() {
-        if (pageTask_courseList != null && pageTask_courseList.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask_courseList.cancel(true);
-        pageTask_courseList = new RefreshCourseListTask();
-        pageTask_courseList.executeOnExecutor(HITAApplication.TPE);
+        new RefreshCourseListTask(this, subject).executeOnExecutor(HITAApplication.TPE);
     }
 
     @Override
@@ -514,7 +507,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
 
     @Override
     public void onDelete(Collection toDelete) {
-        new deleteCoursesTask(toDelete).execute();
+        new deleteCoursesTask(this, toDelete).execute();
     }
 
     void toggleCourseExpand() {
@@ -553,172 +546,224 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         Refresh();
     }
 
-    class RefreshCourseListTask extends AsyncTask<String, Integer, ArrayList<EventItem>> {
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
 
-        float percentage;
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            arcProgress.setMax(100);
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object result) {
+
+        switch (id) {
+            case "init":
+                subject = ((InitSubjectTask) task).subject;
+                isFirst = false;
+                if (isDestroyed() || isFinishing()) return;
+                if ((boolean) result) {
+                    setInfo();
+                    double rate;
+                    Double sum = 0.0;
+                    int size = 0;
+                    for (Double f : subject.getRatingMap().values()) {
+                        if (f < 0) continue;
+                        sum += f;
+                        size++;
+                    }
+                    if (size == 0) rate = 0.0;
+                    else rate = sum / size;
+                    ratingText.setText(df.format(rate) + "/5");
+                    if (!jwCore.hasLogin() || TextUtils.isEmpty(subject.getId())) {
+                        jw_detail_entrance.setVisibility(View.GONE);
+                    } else {
+                        jw_detail_entrance.setVisibility(View.VISIBLE);
+                        jw_detail_button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ActivityUtils.startJWSubjectActivity(getThis(), subject.getId());
+                            }
+                        });
+                    }
+                    refreshCourseList();
+                } else {
+                    Toast.makeText(getThis(), "数据库版本过低，请清除APP数据！", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+            case "save":
+                Intent i = new Intent(TIMETABLE_CHANGED);
+                LocalBroadcastManager.getInstance(getThis()).sendBroadcast(i);
+                setInfo();
+                saveData();
+                break;
+            case "delete_course":
+                Refresh();
+                break;
+            case "delete_subject":
+                if ((boolean) result) {
+                    Toast.makeText(getThis(), R.string.delete_success, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getThis(), R.string.delete_failed, Toast.LENGTH_SHORT).show();
+                }
+                Intent i2 = new Intent(TIMETABLE_CHANGED);
+                LocalBroadcastManager.getInstance(getThis()).sendBroadcast(i2);
+                finish();
+                break;
+
+        }
+    }
+
+    @Override
+    public void onRefreshStart(String id, Boolean[] params) {
+        arcProgress.setMax(100);
+    }
+
+    @Override
+    public void onListRefreshed(String id, Boolean[] params, List<EventItem> result) {
+        tempWholeCourses.clear();
+        tempWholeCourses.addAll(result);
+        if (isCourseExpanded) {
+            List<EventItem> temp = new ArrayList<>(tempWholeCourses);
+            temp.add(EventItem.getTagInstance("less"));
+            listAdapter.notifyItemChangedSmooth(temp);
+        } else {
+            int max = Math.min(tempWholeCourses.size(), 5);
+            List<EventItem> temp = new ArrayList<>(tempWholeCourses.subList(0, max));
+            if (tempWholeCourses.size() > 5) temp.add(EventItem.getTagInstance("more"));
+            if (max > 0)
+                listAdapter.notifyItemChangedSmooth(temp, true, new Comparator<EventItem>() {
+                    @Override
+                    public int compare(EventItem o1, EventItem o2) {
+                        if (o1.getEventType() == EventItem.TAG && o2.getEventType() == EventItem.TAG)
+                            return 0;
+                        else return o1.compareTo(o2);
+                    }
+                });
+        }
+        int finished = 0, unfinished = 0;
+        for (EventItem ei : result) {
+            if (ei.hasPassed(timeTableCore.getNow())) finished++;
+            else unfinished++;
+        }
+        float percentage = ((float) finished) * 100.0f / (float) (finished + unfinished);
+        ValueAnimator va = ValueAnimator.ofInt(arcProgress.getProgress(), (int) percentage);
+        va.setDuration(500);
+        va.setInterpolator(new DecelerateInterpolator());
+        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                arcProgress.setProgress((int) animation.getAnimatedValue());
+            }
+        });
+        va.start();
+
+    }
+
+
+    static class RefreshCourseListTask extends BasicRefreshTask<List<EventItem>> {
+
+        // float percentage;
+        Subject subject;
+
+        RefreshCourseListTask(ListRefreshedListener<? extends List<EventItem>> listRefreshedListener, Subject subject) {
+            super(listRefreshedListener);
+            this.subject = subject;
         }
 
+
         @Override
-        protected ArrayList<EventItem> doInBackground(String... strings) {
-            ArrayList<EventItem> result = subject.getCourses();
+        protected List<EventItem> doInBackground(ListRefreshedListener listRefreshedListener, Boolean... booleans) {
+            ArrayList<EventItem> result = timeTableCore.getCourses(subject);
             Collections.sort(result, new Comparator<EventItem>() {
                 @Override
                 public int compare(EventItem o1, EventItem o2) {
                     return o1.compareTo(o2);
                 }
             });
-            int finished = 0, unfinished = 0;
-            for (EventItem ei : result) {
-                if (ei.hasPassed(timeTableCore.getNow())) finished++;
-                else unfinished++;
-            }
-            percentage = ((float) finished) * 100.0f / (float) (finished + unfinished);
+
             return result;
         }
 
-        @Override
-        protected void onPostExecute(final ArrayList<EventItem> eventItems) {
-            super.onPostExecute(eventItems);
-            tempWholeCourses.clear();
-            tempWholeCourses.addAll(eventItems);
-            if (isCourseExpanded) {
-                List<EventItem> temp = new ArrayList<>(tempWholeCourses);
-                temp.add(EventItem.getTagInstance("less"));
-                listAdapter.notifyItemChangedSmooth(temp);
-            } else {
-                int max = Math.min(tempWholeCourses.size(), 5);
-                List<EventItem> temp = new ArrayList<>(tempWholeCourses.subList(0, max));
-                if (tempWholeCourses.size() > 5) temp.add(EventItem.getTagInstance("more"));
-                if (max > 0)
-                    listAdapter.notifyItemChangedSmooth(temp, true, new Comparator<EventItem>() {
-                        @Override
-                        public int compare(EventItem o1, EventItem o2) {
-                            if (o1.getEventType() == EventItem.TAG && o2.getEventType() == EventItem.TAG)
-                                return 0;
-                            else return o1.compareTo(o2);
-                        }
-                    });
-            }
-
-            ValueAnimator va = ValueAnimator.ofInt(arcProgress.getProgress(), (int) percentage);
-            va.setDuration(500);
-            va.setInterpolator(new DecelerateInterpolator());
-            va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    arcProgress.setProgress((int) animation.getAnimatedValue());
-                }
-            });
-            va.start();
-
-        }
     }
 
-    @SuppressLint("StaticFieldLeak")
-    class InitSubjectTask extends AsyncTask {
+    static class InitSubjectTask extends BaseOperationTask<Object> {
+
+        boolean useCode;
+        String subjectKey;
+        Subject subject;
+
+        InitSubjectTask(OperationListener listRefreshedListener, String subjectKey, boolean useCode) {
+            super(listRefreshedListener);
+            id = "init";
+            this.subjectKey = subjectKey;
+            this.useCode = useCode;
+        }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             if (!useCode) {
-                subject = timeTableCore.getCurrentCurriculum().getSubjectByName(subjectKey);
+                subject = timeTableCore.getSubjectByName(null,subjectKey);
             } else {
-                subject = timeTableCore.getCurrentCurriculum().getSubjectByCourseCode(subjectKey);
+                subject = timeTableCore.getSubjectByCourseCode(null,subjectKey);
             }
             return subject != null;
         }
 
-        @SuppressLint("SetTextI18n")
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            isFirst = false;
-            if (isDestroyed() || isFinishing()) return;
-            if ((boolean) o) {
-                setInfo();
-                Double rate = 0.0;
-                Double sum = 0.0;
-                int size = 0;
-                for (Double f : subject.getRatingMap().values()) {
-                    if (f < 0) continue;
-                    sum += f;
-                    size++;
-                }
-                if (size == 0) rate = 0.0;
-                else rate = sum / size;
-                ratingText.setText(df.format(rate) + "/5");
-                if (!jwCore.hasLogin() || TextUtils.isEmpty(subject.getId())) {
-                    jw_detail_entrance.setVisibility(View.GONE);
-                } else {
-                    jw_detail_entrance.setVisibility(View.VISIBLE);
-                    jw_detail_button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ActivityUtils.startJWSubjectActivity(getThis(), subject.getId());
-                        }
-                    });
-                }
-                refreshCourseList();
-            } else {
-                Toast.makeText(getThis(), "数据库版本过低，请清除APP数据！", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
+
     }
 
-    class saveTask extends AsyncTask {
+    static class saveTask extends BaseOperationTask<Object> {
+
+        Subject subject;
+
+        saveTask(OperationListener listRefreshedListener, Subject subject) {
+            super(listRefreshedListener);
+            this.subject = subject;
+            id = "save";
+        }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
-            SQLiteDatabase sql = mDBHelper.getWritableDatabase();
-            sql.update("subject", subject.getContentValues(), "uuid=?", new String[]{subject.getUUID()});
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
+            if (subject == null) return null;
+            timeTableCore.saveSubject(subject);
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            Intent i = new Intent(TIMETABLE_CHANGED);
-            LocalBroadcastManager.getInstance(getThis()).sendBroadcast(i);
-            setInfo();
-            saveData();
-        }
     }
 
-    class deleteCoursesTask extends AsyncTask {
-        Collection<EventItem> target;
+    static class deleteCoursesTask extends BaseOperationTask<Object> {
+        Collection target;
 
-        public deleteCoursesTask(Collection<EventItem> target) {
+        deleteCoursesTask(OperationListener listRefreshedListener, Collection target) {
+            super(listRefreshedListener);
             this.target = target;
+            id = "delete_course";
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
-            for (EventItem ei : target) timeTableCore.deleteEvent(ei, true);
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
+            for (Object ei : target) {
+                if(ei instanceof EventItem){
+                    timeTableCore.deleteEvent((EventItem) ei, true);
+                }
+
+            }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            Refresh();
         }
     }
 
-    class deleteSubjectTask extends AsyncTask {
+    static class deleteSubjectTask extends BaseOperationTask<Object> {
 
         String name;
 
-        public deleteSubjectTask(String name) {
+        deleteSubjectTask(OperationListener listRefreshedListener, String name) {
+            super(listRefreshedListener);
             this.name = name;
+            id = "delete_subject";
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             try {
                 timeTableCore.deleteSubject(name, timeTableCore.getCurrentCurriculum().getCurriculumCode());
             } catch (Exception e) {
@@ -728,17 +773,5 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
             return true;
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            if ((boolean) o) {
-                Toast.makeText(getThis(), R.string.delete_success, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getThis(), R.string.delete_failed, Toast.LENGTH_SHORT).show();
-            }
-            Intent i = new Intent(TIMETABLE_CHANGED);
-            LocalBroadcastManager.getInstance(getThis()).sendBroadcast(i);
-            finish();
-        }
     }
 }

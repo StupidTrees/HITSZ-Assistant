@@ -159,7 +159,7 @@ public class FileOperator {
 
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                        Uri.parse("content://downloads/public_downloads"), Long.parseLong(id));
 
                 return getDataColumn(context, contentUri, null, null);
             }
@@ -244,7 +244,7 @@ public class FileOperator {
             List<Map<String, String>> ccData = new ArrayList<>();
             CurriculumCreator cc = CurriculumCreator.create(UUID.randomUUID().toString(), sheetName, date);
             for (int j = 1; j < sheet.getRows(); j++) {
-                Map<String, String> m = new HashMap();
+                Map<String, String> m = new HashMap<>();
                 Cell[] sheetRow = sheet.getRow(j);
                 String name = sheetRow[0].getContents();
                 String classroom = sheetRow[1].getContents();

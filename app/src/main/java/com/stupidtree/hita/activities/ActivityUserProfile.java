@@ -63,10 +63,6 @@ public class ActivityUserProfile extends BaseActivity {
     private ImageView[] icons;
     private ProgressBar[] progressBars;
 
-    @Override
-    protected void stopTasks() {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -353,7 +349,7 @@ public class ActivityUserProfile extends BaseActivity {
                 //icons[i].setImageTintList(ColorStateList.valueOf(HContext.getColor(tintID)));
 
             }
-            punchLabel.setText(getString(R.string.user_center_you_have_punched, all));
+            punchLabel.setText(getResources().getQuantityString(R.plurals.user_center_you_have_punched, all,all));
 
         } catch (Exception e) {
             e.printStackTrace();

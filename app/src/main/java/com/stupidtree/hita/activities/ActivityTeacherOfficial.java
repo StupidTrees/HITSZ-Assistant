@@ -26,6 +26,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.popup.FragmentTeacherContact;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.HTMLUtils;
@@ -39,10 +40,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
 
-public class ActivityTeacherOfficial extends BaseActivity {
+public class ActivityTeacherOfficial extends BaseActivity implements BaseOperationTask.OperationListener {
 
 
     boolean isFirst = true;
@@ -67,12 +69,12 @@ public class ActivityTeacherOfficial extends BaseActivity {
 
 
     @Override
-    protected void stopTasks() {
+    protected void onDestroy() {
+        super.onDestroy();
         if (pageTask1 != null && pageTask1.getStatus() != AsyncTask.Status.FINISHED)
             pageTask1.cancel(true);
         if (pageTask2 != null && pageTask2.getStatus() != AsyncTask.Status.FINISHED)
             pageTask2.cancel(true);
-
     }
 
     @Override
@@ -109,7 +111,7 @@ public class ActivityTeacherOfficial extends BaseActivity {
         toolbar.setTitle("");
         toolbar.inflateMenu(R.menu.toolbar_teacher_official);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -128,13 +130,13 @@ public class ActivityTeacherOfficial extends BaseActivity {
             }
         });
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            private float mHeadImgScale = 0;
 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 float scale = 1.0f + (verticalOffset) / ((float) appBarLayout.getHeight());
                 teacherAvatar.setScaleX(scale);
                 teacherAvatar.setScaleY(scale);
+                float mHeadImgScale = 0;
                 teacherAvatar.setTranslationY(mHeadImgScale * verticalOffset);
                 avatar_card.setScaleX(scale);
                 avatar_card.setScaleY(scale);
@@ -160,9 +162,10 @@ public class ActivityTeacherOfficial extends BaseActivity {
             }
 
             //设置viewpage内部东西的方法，如果viewpage内没有子空间滑动产生不了动画效果
+            @NonNull
             @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                View v = getLayoutInflater().inflate(R.layout.dynamic_teacher_official_info_page, null, false);
+            public Object instantiateItem(@NonNull ViewGroup container, int position) {
+                @SuppressLint("InflateParams") View v = getLayoutInflater().inflate(R.layout.dynamic_teacher_official_info_page, null, false);
                 TextView textView = v.findViewById(R.id.text);
                 textView.setText(Html.fromHtml(teacherInfo.get(tabTitles.get(position))));
                 container.addView(v);
@@ -171,7 +174,7 @@ public class ActivityTeacherOfficial extends BaseActivity {
             }
 
             @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
+            public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
                 container.removeView((View) object);
             }
 
@@ -234,9 +237,9 @@ public class ActivityTeacherOfficial extends BaseActivity {
             pageTask1.cancel(true);
         if (pageTask2 != null && pageTask2.getStatus() != AsyncTask.Status.FINISHED)
             pageTask2.cancel(true);
-        pageTask1 = new LoadTeacherPageTask();
+        pageTask1 = new LoadTeacherPageTask(this,teacherId);
         pageTask1.executeOnExecutor(TPE);
-        pageTask2 = new LoadTeacherProfileTask();
+        pageTask2 = new LoadTeacherProfileTask(this,teacherId,teacherUrl);
         pageTask2.executeOnExecutor(TPE);
     }
 
@@ -246,19 +249,79 @@ public class ActivityTeacherOfficial extends BaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    class LoadTeacherProfileTask extends AsyncTask {
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+        if(id.equals("page")){
+            fab.hide();
+            refresh.setRefreshing(true);
+        }
+    }
 
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object result) {
+        switch (id){
+            case "page":
+                LoadTeacherPageTask ltpt = (LoadTeacherPageTask) task;
+                teacherInfo.clear();
+                tabTitles.clear();
+                teacherInfo.putAll(ltpt.infoToAdd);
+                tabTitles.addAll(ltpt.titleToAdd);
+                if (teacherInfo.size() > 0) {
+                    noneView.setVisibility(View.GONE);
+                    pager.setVisibility(View.VISIBLE);
+                } else {
+                    pager.setVisibility(View.GONE);
+                    noneView.setVisibility(View.VISIBLE);
+                }
+                pagerAdapter.notifyDataSetChanged();
+                pager.scheduleLayoutAnimation();
+                refresh.setRefreshing(false);
+                fab.show();
+                break;
+            case "profile":
+                LoadTeacherProfileTask pt = (LoadTeacherProfileTask) task;
+                teacherProfile.clear();
+                teacherProfile.putAll(pt.teacherProfile);
+                String pos = teacherProfile.get("post");
+                if (TextUtils.isEmpty(pos)) post.setVisibility(View.GONE);
+                else {
+                    post.setVisibility(View.VISIBLE);
+                    post.setText(pos);
+                }
+                String posi = teacherProfile.get("position");
+                if (TextUtils.isEmpty(posi)) position.setVisibility(View.GONE);
+                else {
+                    position.setVisibility(View.VISIBLE);
+                    position.setText(posi);
+                }
+                String lab = teacherProfile.get("label");
+                if (TextUtils.isEmpty(lab)) label.setVisibility(View.GONE);
+                else {
+                    label.setVisibility(View.VISIBLE);
+                    label.setText(lab);
+                }
+                break;
         }
 
+    }
+
+    static class LoadTeacherProfileTask extends BaseOperationTask<Object> {
+
+        Map<String,String> teacherProfile;
+        String teacherId;
+        String teacherUrl;
+        LoadTeacherProfileTask(OperationListener listRefreshedListener, String teacherId,String teacherUrl) {
+            super(listRefreshedListener);
+            id = "profile";
+            this.teacherUrl = teacherUrl;
+            this.teacherId = teacherId;
+            teacherProfile = new HashMap<>();
+        }
+
+
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             try {
-                teacherProfile.clear();
                 Document d = Jsoup.connect("http://faculty.hitsz.edu.cn/" + teacherUrl)
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
                         .data("id", teacherId)
@@ -286,46 +349,28 @@ public class ActivityTeacherOfficial extends BaseActivity {
             }
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            String pos = teacherProfile.get("post");
-            if (TextUtils.isEmpty(pos)) post.setVisibility(View.GONE);
-            else {
-                post.setVisibility(View.VISIBLE);
-                post.setText(pos);
-            }
-            String posi = teacherProfile.get("position");
-            if (TextUtils.isEmpty(posi)) position.setVisibility(View.GONE);
-            else {
-                position.setVisibility(View.VISIBLE);
-                position.setText(posi);
-            }
-            String lab = teacherProfile.get("label");
-            if (TextUtils.isEmpty(lab)) label.setVisibility(View.GONE);
-            else {
-                label.setVisibility(View.VISIBLE);
-                label.setText(lab);
-            }
-        }
+
+
     }
 
-    class LoadTeacherPageTask extends AsyncTask {
+    static class LoadTeacherPageTask extends BaseOperationTask<Object> {
         List<String> titleToAdd;
         HashMap<String, String> infoToAdd;
 
+        String teacherId;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            fab.hide();
-            refresh.setRefreshing(true);
+        LoadTeacherPageTask(OperationListener listRefreshedListener, String teacherId) {
+            super(listRefreshedListener);
+            this.teacherId = teacherId;
             titleToAdd = new ArrayList<>();
             infoToAdd = new HashMap<>();
+            id = "page";
         }
 
+
+
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             try {
                 Document teachersPage = Jsoup.connect("http://faculty.hitsz.edu.cn/TeacherHome/teacherBody.do")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
@@ -352,25 +397,6 @@ public class ActivityTeacherOfficial extends BaseActivity {
 
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            teacherInfo.clear();
-            tabTitles.clear();
-            teacherInfo.putAll(infoToAdd);
-            tabTitles.addAll(titleToAdd);
-            if (teacherInfo.size() > 0) {
-                noneView.setVisibility(View.GONE);
-                pager.setVisibility(View.VISIBLE);
-            } else {
-                pager.setVisibility(View.GONE);
-                noneView.setVisibility(View.VISIBLE);
-            }
-            pagerAdapter.notifyDataSetChanged();
-            pager.scheduleLayoutAnimation();
-            refresh.setRefreshing(false);
-            fab.show();
-        }
     }
 
 

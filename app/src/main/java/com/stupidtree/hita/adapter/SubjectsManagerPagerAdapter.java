@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.stupidtree.hita.fragments.timetable_manager.FragmentCurriculumSettings;
+import com.stupidtree.hita.fragments.timetable_manager.FragmentTimeTableSettings;
 import com.stupidtree.hita.fragments.timetable_manager.FragmentSubjects;
 import com.stupidtree.hita.fragments.timetable_manager.FragmentTeachers;
 
@@ -34,7 +34,7 @@ public class SubjectsManagerPagerAdapter extends BaseTabAdapter {
                 fragment = new FragmentTeachers();
                 break;
             case 2:
-                fragment = new FragmentCurriculumSettings();
+                fragment = new FragmentTimeTableSettings();
         }
         return fragment;
     }

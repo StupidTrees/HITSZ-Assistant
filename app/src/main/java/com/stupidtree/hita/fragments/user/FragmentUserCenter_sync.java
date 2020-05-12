@@ -1,4 +1,4 @@
-package com.stupidtree.hita.fragments.user_center;
+package com.stupidtree.hita.fragments.user;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

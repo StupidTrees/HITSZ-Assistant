@@ -187,7 +187,10 @@ public class CurriculumCreator implements Serializable {
             Subject tempS = new Subject(curriculum.getCurriculumCode(), cit.name, cit.tag);
             boolean contains = false;
             for (Subject s : Subjects) {
-                if (s.getName().equals(tempS.getName())) contains = true;
+                if (s.getName().equals(tempS.getName())) {
+                    contains = true;
+                    break;
+                }
             }
             if (!contains) {
                 Subjects.add(tempS);

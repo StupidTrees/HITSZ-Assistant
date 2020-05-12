@@ -75,7 +75,7 @@ public class FragmentImportCurriculum extends FragmentRadiusPopup implements Bas
             public void onClick(View v) {
                 v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                 new newTask(FragmentImportCurriculum.this).execute();
-                dismiss();
+
             }
         });
 
@@ -129,10 +129,11 @@ public class FragmentImportCurriculum extends FragmentRadiusPopup implements Bas
 
     @Override
     public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object result) {
-        Toast.makeText(HContext, getString(R.string.curriculum_created), Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), getString(R.string.curriculum_created), Toast.LENGTH_SHORT).show();
         ActivityMain.saveData();
         Intent i = new Intent(TIMETABLE_CHANGED);
         LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
+        dismiss();
     }
 
     static class newTask extends BaseOperationTask<Object> {

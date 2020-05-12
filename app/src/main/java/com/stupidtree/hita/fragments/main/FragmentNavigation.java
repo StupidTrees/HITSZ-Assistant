@@ -20,7 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.BaseListAdapter;
-import com.stupidtree.hita.adapter.NaviPageAdapter;
+import com.stupidtree.hita.adapter.NavigationListAdapter;
 import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.fragments.BasicRefreshTask;
 import com.stupidtree.hita.online.BannerItem;
@@ -41,24 +41,24 @@ import cn.bmob.v3.listener.FindListener;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_BOARD_JW;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_HINT;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_HITA;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_MOOD;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_NEWS;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_NOTIFICATION;
+import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_BOARD_JW;
+import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_HINT;
+import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_CAMPUS;
+import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_MOOD;
+import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_NEWS;
+import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_NOTIFICATION;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 import static com.stupidtree.hita.timetable.TimeWatcherService.USER_CHANGED;
 
-public class FragmentNavigation extends BaseFragment implements NaviPageAdapter.NaviRoot, BasicRefreshTask.ListRefreshedListener2<List<NavigationCardItem>> {
+public class FragmentNavigation extends BaseFragment implements NavigationListAdapter.NaviRoot, BasicRefreshTask.ListRefreshedListener2<List<NavigationCardItem>> {
 
     public static String[] cardNames = new String[]{"mood", "jw", "news", "life"};
-    public static Integer[] cardType = new Integer[]{TYPE_MOOD, TYPE_BOARD_JW, TYPE_NEWS, TYPE_HITA};
+    public static Integer[] cardType = new Integer[]{TYPE_MOOD, TYPE_BOARD_JW, TYPE_NEWS, TYPE_CAMPUS};
     private boolean timeTableChangedOnResume = false;
     private boolean userChangedOnResume = false;
     private List<NavigationCardItem> listRes;
     private RecyclerView list;
-    private NaviPageAdapter listAdapter;
+    private NavigationListAdapter listAdapter;
     private SwipeRefreshLayout refreshLayout;
     private List<BannerItem> bannerItemList;
     private Calendar firstEnterTime;
@@ -90,10 +90,10 @@ public class FragmentNavigation extends BaseFragment implements NaviPageAdapter.
         list = v.findViewById(R.id.navipage_list);
         list.setVisibility(View.INVISIBLE);
         listRes = new ArrayList<>();
-        listAdapter = new NaviPageAdapter(listRes, getBaseActivity(), this);
+        listAdapter = new NavigationListAdapter(listRes, getBaseActivity(), this);
         list.setAdapter(listAdapter);
         list.setLayoutManager(new WrapContentLinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false));
-        NaviPageAdapter.mCallBack mCallBack = new NaviPageAdapter.mCallBack(listAdapter);
+        NavigationListAdapter.mCallBack mCallBack = new NavigationListAdapter.mCallBack(listAdapter);
         ItemTouchHelper helper = new ItemTouchHelper(mCallBack);
         helper.attachToRecyclerView(list);
     }

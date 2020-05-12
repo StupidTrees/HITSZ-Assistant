@@ -1,4 +1,4 @@
-package com.stupidtree.hita.jw;
+package com.stupidtree.hita.eas;
 
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -914,7 +914,7 @@ public class JWCore {
     }
 
 
-    public void loadCookies(HashMap<? extends String, ? extends String> hm) {
+    public void loadCookies(HashMap hm) {
         cookies.clear();
         cookies.putAll(hm);
     }

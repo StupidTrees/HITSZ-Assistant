@@ -10,6 +10,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.util.HTMLUtils;
 
 import org.jsoup.Jsoup;
@@ -17,26 +18,22 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.Objects;
+
 import static com.stupidtree.hita.HITAApplication.TPE;
 
 public class ActivityTeacherOfficial_External extends ActivityTeacherOfficial {
 
-
-
     @Override
-    protected void stopTasks() {
-        if (pageTask1 != null && pageTask1.getStatus() != AsyncTask.Status.FINISHED)
-        pageTask1.cancel(true);
-        if (pageTask2 != null && pageTask2.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask2.cancel(true);
-
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            teacherId = getIntent().getData().toString().split("userid=")[1];
+            teacherId = Objects.requireNonNull(getIntent().getData()).toString().split("userid=")[1];
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,24 +47,94 @@ public class ActivityTeacherOfficial_External extends ActivityTeacherOfficial {
 
 
     @Override
+    public void onOperationStart(String id, Boolean[] params) {
+       // super.onOperationStart(id, params);
+        switch (id){
+            case "page":
+                fab.hide();
+                refresh.setRefreshing(true);
+                break;
+            case "profile":
+        }
+    }
+
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object result) {
+       // super.onOperationDone(id, task, params, result);
+        switch (id){
+            case "page":
+                LoadTeacherPageTask pt = (LoadTeacherPageTask) task;
+                teacherName = pt.teacherName;
+                teacherUrl = pt.teacherUrl;
+                teacherInfo.clear();
+                tabTitles.clear();
+                tabTitles.addAll(pt.titleToAdd);
+                teacherInfo.putAll(pt.infoToAdd);
+                if (teacherInfo.size() > 0) {
+                    noneView.setVisibility(View.GONE);
+                    pager.setVisibility(View.VISIBLE);
+                } else {
+                    pager.setVisibility(View.GONE);
+                    noneView.setVisibility(View.VISIBLE);
+                }
+                pagerAdapter.notifyDataSetChanged();
+                pager.scheduleLayoutAnimation();
+                fab.show();
+                refresh.setRefreshing(false);
+                name.setText(teacherName);
+                if(pageTask2!=null&&pageTask2.getStatus() != AsyncTask.Status.FINISHED) pageTask2.cancel(true);
+                pageTask2 = new LoadTeacherProfileTask(this,teacherId,teacherUrl);
+                pageTask2.executeOnExecutor(TPE);
+                break;
+            case "profile":
+                LoadTeacherProfileTask lt = (LoadTeacherProfileTask) task;
+                teacherProfile.clear();
+                teacherProfile.putAll(lt.teacherProfile);
+                String pos = teacherProfile.get("post");
+                if (TextUtils.isEmpty(pos)) post.setVisibility(View.GONE);
+                else {
+                    post.setVisibility(View.VISIBLE);
+                    post.setText(pos);
+                }
+                String posi = teacherProfile.get("position");
+                if (TextUtils.isEmpty(posi)) position.setVisibility(View.GONE);
+                else {
+                    position.setVisibility(View.VISIBLE);
+                    position.setText(posi);
+                }
+                String lab = teacherProfile.get("label");
+                if (TextUtils.isEmpty(lab)) label.setVisibility(View.GONE);
+                else {
+                    label.setVisibility(View.VISIBLE);
+                    label.setText(lab);
+                }
+                Glide.with(getThis()).load("http://faculty.hitsz.edu.cn/file/showHP.do?d=" +
+                        teacherId + "&&w=200&&h=200&&prevfix=200-")
+                        .apply(RequestOptions.circleCropTransform())
+                        .placeholder(R.drawable.ic_account_activated)
+                        .into(teacherAvatar);
+                break;
+        }
+    }
+
+    @Override
     void Refresh() {
         if(pageTask1!=null&&pageTask1.getStatus()!=AsyncTask.Status.FINISHED) pageTask1.cancel(true);
-        pageTask1 = new LoadTeacherPageTask();
+        pageTask1 = new LoadTeacherPageTask(this,teacherId);
         pageTask1.executeOnExecutor(TPE);
     }
 
 
-    class LoadTeacherProfileTask extends ActivityTeacherOfficial.LoadTeacherProfileTask {
+    static class LoadTeacherProfileTask extends ActivityTeacherOfficial.LoadTeacherProfileTask {
 
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
+        LoadTeacherProfileTask(OperationListener listRefreshedListener, String teacherId, String teacherUrl) {
+            super(listRefreshedListener, teacherId, teacherUrl);
+            id = "profile";
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             try {
                 teacherProfile.clear();
                 Document d = Jsoup.connect("http://faculty.hitsz.edu.cn/" + teacherUrl)
@@ -97,51 +164,21 @@ public class ActivityTeacherOfficial_External extends ActivityTeacherOfficial {
             }
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            String pos = teacherProfile.get("post");
-            if (TextUtils.isEmpty(pos)) post.setVisibility(View.GONE);
-            else {
-                post.setVisibility(View.VISIBLE);
-                post.setText(pos);
-            }
-            String posi = teacherProfile.get("position");
-            if (TextUtils.isEmpty(posi)) position.setVisibility(View.GONE);
-            else {
-                position.setVisibility(View.VISIBLE);
-                position.setText(posi);
-            }
-            String lab = teacherProfile.get("label");
-            if (TextUtils.isEmpty(lab)) label.setVisibility(View.GONE);
-            else {
-                label.setVisibility(View.VISIBLE);
-                label.setText(lab);
-            }
-            Glide.with(getThis()).load("http://faculty.hitsz.edu.cn/file/showHP.do?d=" +
-                    teacherId + "&&w=200&&h=200&&prevfix=200-")
-                    .apply(RequestOptions.circleCropTransform())
-                    .placeholder(R.drawable.ic_account_activated)
-                    .into(teacherAvatar);
-        }
+
     }
 
-    class LoadTeacherPageTask extends ActivityTeacherOfficial.LoadTeacherPageTask {
+    static class LoadTeacherPageTask extends ActivityTeacherOfficial.LoadTeacherPageTask {
 
-
-        public LoadTeacherPageTask() {
-            super();
+        String teacherName;
+        String teacherUrl;
+        LoadTeacherPageTask(OperationListener listRefreshedListener, String teacherId) {
+            super(listRefreshedListener, teacherId);
+            id = "page";
         }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            fab.hide();
-            refresh.setRefreshing(true);
-        }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             try {
                 Document teachersInfo = Jsoup.connect("http://faculty.hitsz.edu.cn/TeacherHome/queryTeacherOne.do")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
@@ -179,32 +216,8 @@ public class ActivityTeacherOfficial_External extends ActivityTeacherOfficial {
                 e.printStackTrace();
                 return false;
             }
-
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            teacherInfo.clear();
-            tabTitles.clear();
-            tabTitles.addAll(titleToAdd);
-            teacherInfo.putAll(infoToAdd);
-            if (teacherInfo.size() > 0) {
-                noneView.setVisibility(View.GONE);
-                pager.setVisibility(View.VISIBLE);
-            } else {
-                pager.setVisibility(View.GONE);
-                noneView.setVisibility(View.VISIBLE);
-            }
-            pagerAdapter.notifyDataSetChanged();
-            pager.scheduleLayoutAnimation();
-            fab.show();
-            refresh.setRefreshing(false);
-            name.setText(teacherName);
-            if(pageTask2!=null&&pageTask2.getStatus() != AsyncTask.Status.FINISHED) pageTask2.cancel(true);
-            pageTask2 = new LoadTeacherProfileTask();
-            pageTask2.executeOnExecutor(TPE);
-        }
     }
 
 

@@ -725,8 +725,8 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend, Nes
                     int[] lastPositions = layoutManager.findFirstVisibleItemPositions(new int[layoutManager.getSpanCount()]);
                     int size = lastPositions.length;
                     int minPosition = Integer.MAX_VALUE;
-                    for (int i = 0; i < size; i++) {
-                        minPosition = Math.min(minPosition, lastPositions[i]);
+                    for (int lastPosition : lastPositions) {
+                        minPosition = Math.min(minPosition, lastPosition);
                     }
                     position = minPosition;
                 } else {
@@ -776,8 +776,8 @@ public class PullExtendLayout extends LinearLayout implements IPullToExtend, Nes
                     int[] lastPositions = layoutManager.findLastVisibleItemPositions(new int[layoutManager.getSpanCount()]);
                     int size = lastPositions.length;
                     int maxPosition = Integer.MAX_VALUE;
-                    for (int i = 0; i < size; i++) {
-                        maxPosition = Math.max(maxPosition, lastPositions[i]);
+                    for (int lastPosition : lastPositions) {
+                        maxPosition = Math.max(maxPosition, lastPosition);
                     }
                     position = maxPosition;
                 } else {

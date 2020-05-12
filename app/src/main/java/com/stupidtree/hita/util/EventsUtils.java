@@ -40,8 +40,10 @@ public class EventsUtils {
             minutes %= 1440;
             int hours = (int) (minutes / 60);
             minutes %= 60;
-            String weekS = weeks > 0 ? HContext.getString(simplified ? R.string.count_week_simplified : R.string.count_week, weeks) : "";
-            if (weeks == 1) weekS = weekS.replace("ks", "k"); //英文去掉复数
+            String weekS = HContext.getResources().getQuantityString(
+                    simplified?R.plurals.count_week_simplified:R.plurals.count_week, weeks,weeks);
+            weekS = weeks > 0 ? weekS : "";
+//            if (weeks == 1) weekS = weekS.replace("ks", "k"); //英文去掉复数
             String dayS = days > 0 ? String.format(HContext.getString(R.string.days), days) : "";
             if (days == 1) dayS = dayS.replace("ys", "y");
             String hourS, minuteS;

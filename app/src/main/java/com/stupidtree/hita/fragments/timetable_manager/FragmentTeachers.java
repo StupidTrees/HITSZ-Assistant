@@ -1,13 +1,10 @@
 package com.stupidtree.hita.fragments.timetable_manager;
 
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -25,17 +23,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 
-public class FragmentTeachers extends FragmentCurriculumChild {
-    RecyclerView list;
-    List<Map<String, String>> listRes;
-    listAdapter listAdapter;
-    refreshListTask pageTask;
+public class FragmentTeachers extends FragmentTimeTableChild implements BaseOperationTask.OperationListener<List<Map<String,String>>> {
+    private RecyclerView list;
+    private List<Map<String, String>> listRes;
+    private listAdapter listAdapter;
 
-    boolean firstResume = true;
+    private boolean firstResume = true;
 
     public FragmentTeachers() {
         // Required empty public constructor
@@ -66,7 +62,7 @@ public class FragmentTeachers extends FragmentCurriculumChild {
         if(firstResume) firstResume = false;
     }
 
-    void initList(View v) {
+    private void initList(View v) {
         list = v.findViewById(R.id.teachers_list);
         listAdapter = new listAdapter();
         listRes = new ArrayList<>();
@@ -76,8 +72,7 @@ public class FragmentTeachers extends FragmentCurriculumChild {
 
     @Override
     protected void stopTasks() {
-        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
-    }
+          }
 
     @Override
     public void Refresh() {
@@ -88,57 +83,53 @@ public class FragmentTeachers extends FragmentCurriculumChild {
             willRefreshOnResume = true;
             return;
         }
-        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
-        pageTask =  new refreshListTask(anim);
-        pageTask.executeOnExecutor(HITAApplication.TPE);
+        new refreshListTask(this,root.getCurriculum().getCurriculumCode(),anim).executeOnExecutor(HITAApplication.TPE);
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+
     }
 
-    class refreshListTask extends AsyncTask {
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, List<Map<String, String>> result) {
+        refreshListTask rt = (refreshListTask) task;
+        listRes.clear();
+        listRes.addAll(result);
+        listAdapter.notifyDataSetChanged();
+        if(rt.anim) list.scheduleLayoutAnimation();
+    }
 
+
+    static class refreshListTask extends BaseOperationTask<List< Map<String, String>>> {
+        String curriculumCode;
         boolean anim;
 
-        public refreshListTask(boolean anim) {
+        refreshListTask(OperationListener listRefreshedListener, String curriculumCode, boolean anim) {
+            super(listRefreshedListener);
+            this.curriculumCode = curriculumCode;
             this.anim = anim;
         }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            listRes.clear();
-        }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
-            if (!timeTableCore.isDataAvailable()) return false;
-            List<Subject> sl = root.getCurriculum().getSubjects();
+        protected List< Map<String, String>> doInBackground(OperationListener<List< Map<String, String>>> listRefreshedListener, Boolean... booleans) {
+            List<Map<String, String>> result = new ArrayList<>();
+            if (!timeTableCore.isDataAvailable()) return result;
+            List<Subject> sl = timeTableCore.getSubjects(curriculumCode);
             for (Subject s : sl) {
-                EventItem ei = s.getFirstCourse();
+                EventItem ei = timeTableCore.getFirstCourse(s);
                 if (ei == null) continue;
                 if(TextUtils.isEmpty(ei.getTag3())) continue;
                 for (String name : ei.getTag3().split("，")) {
-                    Map m = new HashMap();
+                    Map<String, String> m = new HashMap<>();
                     m.put("name", name);
                     m.put("subject", s.getName());
-                    listRes.add(m);
+                    result.add(m);
                 }
             }
 
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            if (!(Boolean) o) {
-                Toast.makeText(HContext, "无教师信息", Toast.LENGTH_SHORT).show();
-            }
-            listAdapter.notifyDataSetChanged();
-            if(anim) list.scheduleLayoutAnimation();
+            return  result;
         }
     }
 
@@ -172,7 +163,7 @@ public class FragmentTeachers extends FragmentCurriculumChild {
             TextView name, subject;
             View card;
 
-            public viewHolder(@NonNull View itemView) {
+            viewHolder(@NonNull View itemView) {
                 super(itemView);
                 name = itemView.findViewById(R.id.teacher_name);
                 subject = itemView.findViewById(R.id.teacher_subject);

@@ -1,7 +1,7 @@
 package com.stupidtree.hita.online;
 
+import android.content.ContentResolver;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -21,58 +21,66 @@ import java.util.UUID;
 import cn.bmob.v3.BmobObject;
 
 import static com.stupidtree.hita.timetable.TimetableCore.COURSE;
+import static com.stupidtree.hita.timetable.TimetableCore.uri_subject;
+import static com.stupidtree.hita.timetable.TimetableCore.uri_task;
+import static com.stupidtree.hita.timetable.TimetableCore.uri_timetable;
 
 public class UserData {
     private ArrayList<EventItemHolder> events;
     private ArrayList<Task> tasks;
     private ArrayList<Subject> subjects;
     private ArrayList<Curriculum> curriculum;
-    private SQLiteDatabase database;
+    private ContentResolver resolver;
 
-    public UserData(SQLiteDatabase database){
-        this.database = database;
+    private UserData(ContentResolver resolver){
+        this.resolver = resolver;
         events = new ArrayList<>();
         tasks = new ArrayList<>();
         curriculum = new ArrayList<>();
         subjects = new ArrayList<>();
     }
-    public static UserData create(SQLiteDatabase sqLiteDatabase){
-        UserData data = new UserData(sqLiteDatabase);
-        return data;
+    public static UserData create(ContentResolver contentResolver){
+        return new UserData(contentResolver);
     }
     @WorkerThread
     public UserData loadTimetableData(){
         events.clear();
-        final Cursor c = database.query("timetable", null, null, null, null, null, null);
-        while (c.moveToNext()) {
+        final Cursor c = resolver.query(uri_timetable,  null, null, null, null, null);
+        while (c != null && c.moveToNext()) {
             EventItemHolder eih = new EventItemHolder(c);
             if (eih.eventType == COURSE)
                 continue;
             else events.add(eih);
         }
-        c.close();
+        if (c != null) {
+            c.close();
+        }
         return this;
     }
     @WorkerThread
     public UserData loadTaskData(){
-        Cursor c2 = database.query("task", null, null, null, null, null, null);
+        Cursor c2 = resolver.query(uri_task, null,  null, null, null, null);
         tasks.clear();
-        while (c2.moveToNext()) {
+        while (c2 != null && c2.moveToNext()) {
             Task t = new Task(c2);
             if (!t.isFinished() && t.getType() != Task.TYPE_DYNAMIC) tasks.add(t);
         }
-        c2.close();
+        if (c2 != null) {
+            c2.close();
+        }
         return this;
     }
     @WorkerThread
     public UserData loadSubjectData(){
-        Cursor c2 = database.query("subject", null, null, null, null, null, null);
+        Cursor c2 = resolver.query(uri_subject, null, null, null, null, null);
         subjects.clear();
-        while (c2.moveToNext()) {
+        while (c2 != null && c2.moveToNext()) {
             Subject s = new Subject(c2);
             subjects.add(s);
         }
-        c2.close();
+        if (c2 != null) {
+            c2.close();
+        }
         return this;
     }
     @WorkerThread

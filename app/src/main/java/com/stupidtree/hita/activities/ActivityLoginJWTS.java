@@ -16,20 +16,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.jw.JWException;
+import com.stupidtree.hita.fragments.BaseOperationTask;
+import com.stupidtree.hita.eas.JWException;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.views.ButtonLoading;
 
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.List;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.X509TrustManager;
+import java.util.Objects;
 
 import cn.bmob.v3.BmobArticle;
 import cn.bmob.v3.BmobQuery;
@@ -41,15 +34,17 @@ import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 
-public class ActivityLoginJWTS extends BaseActivity {
+public class ActivityLoginJWTS extends BaseActivity implements BaseOperationTask.OperationListener<Object>{
     EditText username, password;
     ButtonLoading login;
     LinearLayout loginCard;
     ImageView vpnHint;
     loginTask pageTask_login;
 
+
     @Override
-    protected void stopTasks() {
+    protected void onDestroy() {
+        super.onDestroy();
         if (pageTask_login != null && pageTask_login.getStatus()!=AsyncTask.Status.FINISHED) pageTask_login.cancel(true);
     }
 
@@ -61,7 +56,7 @@ public class ActivityLoginJWTS extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +90,7 @@ public class ActivityLoginJWTS extends BaseActivity {
             public void onClick() {
                 if (pageTask_login != null && pageTask_login.getStatus()!=AsyncTask.Status.FINISHED)
                     pageTask_login.cancel(true);
-                pageTask_login = new loginTask(username.getText().toString(), password.getText().toString(), true);
+                pageTask_login = new loginTask(ActivityLoginJWTS.this,username.getText().toString(), password.getText().toString(), true);
                 pageTask_login.executeOnExecutor(TPE);
             }
 
@@ -136,104 +131,80 @@ public class ActivityLoginJWTS extends BaseActivity {
         finish();
     }
 
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+        login.setProgress(true);
+    }
 
-    class loginTask extends AsyncTask<Object, Integer, Object> {
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object o) {
+        login.setProgress(false);
+        loginTask lt = (loginTask) task;
+        boolean toast = lt.toast;
+
+        String password = lt.password;
+        if(o instanceof JWException){
+            ((JWException) o).printStackTrace();
+            JWException jwe = (JWException) o;
+            AlertDialog ad = new AlertDialog.Builder(ActivityLoginJWTS.this).create();
+            ad.setTitle("提示");
+            String message = "登录失败！";
+            if(jwe.getType()==JWException.CONNECT_ERROR) message = "网络连接错误";
+            else if(jwe.getType()==JWException.LOGIN_FAILED||jwe.getType()==JWException.FORMAT_ERROR) message = "登录失败！";
+            else if(jwe.getType()==JWException.DIALOG_MESSAGE) message = jwe.getDialogMessage();
+            ad.setMessage(message);
+            ad.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            ad.show();
+        }
+        else if(o instanceof Boolean){
+            if ((boolean)o) {
+                presentActivity(ActivityLoginJWTS.this,login);
+                if (CurrentUser != null)
+                    defaultSP.edit().putString(CurrentUser.getStudentnumber() + ".password", password).apply();
+            } else {
+                if (toast) {
+                    AlertDialog ad = new AlertDialog.Builder(ActivityLoginJWTS.this)
+                            .setTitle("提示")
+                            .setMessage("登录失败,请检查账号密码")
+                            .setPositiveButton(R.string.button_confirm, null).create();
+                    ad.show();
+                }
+
+            }
+        }
+    }
+
+
+    static class loginTask extends BaseOperationTask<Object> {
 
         String username, password;
         boolean toast;
 
-        loginTask(String username, String password, boolean toast) {
+
+        loginTask(OperationListener listRefreshedListener, String username, String password, boolean toast) {
+            super(listRefreshedListener);
             this.username = username;
             this.password = password;
             this.toast = toast;
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            login.setProgress(true);
-        }
-
-        @Override
-        protected Object doInBackground(Object... strings) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             try {
                 return jwCore.login(username,password);
             } catch (JWException e) {
-              return e;
+                return e;
             }
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            login.setProgress(false);
-            if(o instanceof JWException){
-                ((JWException) o).printStackTrace();
-                JWException jwe = (JWException) o;
-                AlertDialog ad = new AlertDialog.Builder(ActivityLoginJWTS.this).create();
-                ad.setTitle("提示");
-                String message = "登录失败！";
-                if(jwe.getType()==JWException.CONNECT_ERROR) message = "网络连接错误";
-                else if(jwe.getType()==JWException.LOGIN_FAILED||jwe.getType()==JWException.FORMAT_ERROR) message = "登录失败！";
-                else if(jwe.getType()==JWException.DIALOG_MESSAGE) message = jwe.getDialogMessage();
-                ad.setMessage(message);
-                ad.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                ad.show();
-            }
-            else if(o instanceof Boolean){
-                if ((boolean)o) {
-                    presentActivity(ActivityLoginJWTS.this,login);
-                    if (CurrentUser != null)
-                        defaultSP.edit().putString(CurrentUser.getStudentnumber() + ".password", password).commit();
-                    //defaultSP.edit().putString("username",username).commit();
-                    //defaultSP.edit().putString("userpassword",password).commit();
-                    //finish();
-                } else {
-                    if (toast) {
-                        AlertDialog ad = new AlertDialog.Builder(ActivityLoginJWTS.this)
-                                .setTitle("提示")
-                                .setMessage("登录失败,请检查账号密码")
-                                .setPositiveButton("好哒", null).create();
-                        ad.show();
-                    }
-
-                }
-            }
-
-        }
     }
 
 
-    public static void trustEveryone() {
-        try {
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-
-            SSLContext context = SSLContext.getInstance("TLS");
-            context.init(null, new X509TrustManager[]{new X509TrustManager() {
-                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                }
-
-                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                }
-
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-            }}, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
-        } catch (Exception e) {
-            // e.printStackTrace();
-        }
-    }
 
 
 

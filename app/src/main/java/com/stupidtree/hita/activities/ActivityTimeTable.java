@@ -270,9 +270,6 @@ public class ActivityTimeTable extends BaseActivity implements
         return timetableSP;
     }
 
-    @Override
-    protected void stopTasks() {
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -431,7 +428,7 @@ public class ActivityTimeTable extends BaseActivity implements
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            for (Subject s : timeTableCore.getCurrentCurriculum().getSubjects()) {
+            for (Subject s : timeTableCore.getSubjects(null)) {
                 editor.putInt("color:" + s.getName(), ColorBox.getRandomColor_Material());
             }
             editor.commit();

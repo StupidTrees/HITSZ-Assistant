@@ -253,7 +253,8 @@
         android:layout_gravity="bottom"
         android:background="?attr/background_color_second"
         android:orientation="horizontal"
-        app:layout_behavior=".views.mBottomHideBehavior">
+        app:layout_behavior=".views.mBottomHideBehavior"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/comment"
@@ -264,7 +265,8 @@
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="12dp">
+            android:padding="12dp"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="16dp"

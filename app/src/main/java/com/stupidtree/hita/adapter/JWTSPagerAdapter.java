@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.stupidtree.hita.jw.JWFragment;
+import com.stupidtree.hita.eas.JWFragment;
 
 import java.util.List;
 

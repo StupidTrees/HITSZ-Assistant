@@ -1,5 +1,6 @@
 package com.stupidtree.hita.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -102,6 +103,7 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
             bindHeaderHolder((timelineHeaderHolder) holder);
     }
 
+    @SuppressLint("SetTextI18n")
     private void bindTimelineHolder(final timelineHolder timelineHolder, final int position) {
         try {
             if (timelineHolder.timeline != null) {
@@ -260,7 +262,7 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
 
     }
 
-    class timelineHolder extends RecyclerView.ViewHolder {
+    static class timelineHolder extends RecyclerView.ViewHolder {
         int type;
         TextView tv_time;
         TextView tv_name;
@@ -272,7 +274,7 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
         com.alorma.timeline.TimelineView timeline;
 
         //LinearLayout naviButton;
-        public timelineHolder(@NonNull View itemView, int type) {
+        timelineHolder(@NonNull View itemView, int type) {
             super(itemView);
             this.type = type;
             tv_time = itemView.findViewById(R.id.tl_tv_time);
@@ -292,6 +294,7 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
         ExpandableLayout head_expand;
         ViewGroup head_counting_layout;
         ImageView head_image, head_counting_image;
+        ImageView head_bg;
         TextView head_title, head_subtitle;
         CardView head_card;
         TextView head_counting_time, head_counting_name,
@@ -302,8 +305,9 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
         View[] heads;
         headCardClickListener headCardClickListener;
 
-        public timelineHeaderHolder(@NonNull View v) {
+        timelineHeaderHolder(@NonNull View v) {
             super(v);
+            head_bg = v.findViewById(R.id.bg);
             head_counting_layout = v.findViewById(R.id.head_counting);
             head_expand = v.findViewById(R.id.head_expand);
             head_card = v.findViewById(R.id.timeline_head_card);
@@ -340,32 +344,23 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
             });
         }
 
-        private void setExpand(boolean expand) {
-            if (expand && !head_expand.isExpanded()) {
-                head_counting_layout.setVisibility(View.INVISIBLE);
-                MaterialCircleAnimator.animShow(head_counting_layout, 500);
-            }
+        private void collapseCard() {
             if (timeTableCore.isDataAvailable()) {
                 float fromD, toD;
-                if (expand) {
-                    fromD = 0f;
-                    toD = 180f;
-                } else {
-                    fromD = 180f;
-                    toD = 0f;
-                }
+                fromD = 180f;
+                toD = 0f;
                 RotateAnimation ra = new RotateAnimation(fromD, toD, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 ra.setInterpolator(new DecelerateInterpolator());
                 ra.setDuration(200);//设置动画持续周期
                 ra.setRepeatCount(0);//设置重复次数
                 ra.setFillAfter(true);//动画执行完后是否停留在执行完的状态
-                if (head_expand.isExpanded() && !expand || !head_expand.isExpanded() && expand) {
+                if (head_expand.isExpanded()) {
                     bt_bar_timetable.setAnimation(ra);
                     bt_bar_addEvent.setAnimation(ra);
                     bt_bar_timetable.startAnimation(ra);
                     bt_bar_addEvent.startAnimation(ra);
                 }
-                head_expand.setExpanded(expand);
+                head_expand.setExpanded(false);
             } else {
                 head_expand.collapse();
             }
@@ -401,6 +396,20 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
             }
         }
 
+        public void showHeadView() {
+//            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f,32f);
+//            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                @Override
+//                public void onAnimationUpdate(ValueAnimator animation) {
+//                    head_card.setCardElevation((Float) animation.getAnimatedValue());
+//                }
+//            });
+//            valueAnimator.setDuration(600);
+//            valueAnimator.start();
+//            MaterialCircleAnimator.animShow(head_bg, 600);
+        }
+
+        @SuppressLint("SetTextI18n")
         public void UpdateHeadView() {
             String titleToSet, subtitltToSet;
             if (CurrentUser == null) {
@@ -441,12 +450,12 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
                     titleToSet = mContext.getString(R.string.timeline_head_goodnight_title);
                     subtitltToSet = mContext.getString(R.string.timeline_head_goodnight_subtitle);
                     headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.SHOW_NEXT);
-                } else if (new HTime(timeTableCore.getNow()).compareTo(new HTime(8, 15)) < 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(5, 00)) > 0) {
+                } else if (new HTime(timeTableCore.getNow()).compareTo(new HTime(8, 15)) < 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(5, 0)) > 0) {
                     switchHeadView(head_image, R.drawable.ic_sunny);
                     titleToSet = mContext.getString(R.string.timeline_head_goodmorning_title);
                     subtitltToSet = String.format(mContext.getString(R.string.timelinr_goodmorning_subtitle), timeLineSelf.getTodayCourseNum());
                     headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.SHOW_NEXT);
-                } else if (new HTime(timeTableCore.getNow()).compareTo(new HTime(12, 15)) > 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(13, 00)) < 0) {
+                } else if (new HTime(timeTableCore.getNow()).compareTo(new HTime(12, 15)) > 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(13, 0)) < 0) {
                     switchHeadView(head_image, R.drawable.ic_lunch);
                     titleToSet = mContext.getString(R.string.timeline_head_lunch_title);
                     subtitltToSet = mContext.getString(R.string.timeline_head_lunch_subtitle);
@@ -471,7 +480,7 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
                         headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.SHOW_NEXT);
                     }
                 } else {
-                    if (new HTime(timeTableCore.getNow()).compareTo(new HTime(23, 00)) > 0 || new HTime(timeTableCore.getNow()).compareTo(new HTime(5, 0)) < 0) {
+                    if (new HTime(timeTableCore.getNow()).compareTo(new HTime(23, 0)) > 0 || new HTime(timeTableCore.getNow()).compareTo(new HTime(5, 0)) < 0) {
                         switchHeadView(head_image, R.drawable.ic_moon);
                         titleToSet = mContext.getString(R.string.timeline_head_goodnight_title);
                         subtitltToSet = mContext.getString(R.string.timeline_head_goodnight_subtitle);
@@ -506,29 +515,24 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
             }
             head_title.setText(titleToSet);
             head_subtitle.setText(subtitltToSet);
+
         }
 
+
         void switchHeadView(View view, int imageId) {
-            for (int i = 0; i < heads.length; i++) {
-                if (heads[i] == view) heads[i].setVisibility(View.VISIBLE);
-                else heads[i].setVisibility(View.GONE);
+            for (View head : heads) {
+                if (head == view) head.setVisibility(View.VISIBLE);
+                else head.setVisibility(View.GONE);
             }
             if (view instanceof ImageView) ((ImageView) view).setImageResource(imageId);
-            setExpand(false);
-//        head_counting.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                MaterialCircleAnimator.animHide(head_counting);
-//            }
-//        });
-
+            collapseCard();
         }
     }
 
 
-    class emptyHolder extends RecyclerView.ViewHolder {
+    static class emptyHolder extends RecyclerView.ViewHolder {
 
-        public emptyHolder(@NonNull View itemView) {
+        emptyHolder(@NonNull View itemView) {
             super(itemView);
 
         }

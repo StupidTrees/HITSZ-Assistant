@@ -58,12 +58,6 @@ public class ActivitySearch extends BaseActivity implements TransparentActivity,
 
 
     @Override
-    protected void stopTasks() {
-//        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
-//            pageTask.cancel(true);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true, true, false);

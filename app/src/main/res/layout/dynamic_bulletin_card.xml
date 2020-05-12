@@ -16,80 +16,75 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="0dp">
 
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/bulletin_card_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif-black"
+            android:singleLine="false"
+            android:text="母猪上树啦"
+            android:textColor="?attr/text_color_primary"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/bulletin_card_title"
-                android:layout_width="match_parent"
+                android:id="@+id/bulletin_card_time"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="sans-serif-black"
-                android:singleLine="false"
-                android:text="母猪上树啦"
-                android:textColor="?attr/text_color_primary"
-                android:textSize="16sp" />
+                android:layout_gravity="center"
+                android:background="@drawable/radius_grey_lgiht_button_bg"
+                android:backgroundTint="?attr/background_color_bottom_as_tint"
+                android:backgroundTintMode="src_over"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:singleLine="true"
+                android:text="2019-04-02"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="14sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="16dp"
-                android:orientation="horizontal">
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
-                <TextView
-                    android:id="@+id/bulletin_card_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/radius_grey_lgiht_button_bg"
-                    android:backgroundTint="?attr/background_color_bottom_as_tint"
-                    android:backgroundTintMode="src_over"
-                    android:paddingStart="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="4dp"
-                    android:singleLine="true"
-                    android:text="2019-04-02"
-                    android:textColor="?attr/text_color_secondary"
-                    android:textSize="14sp" />
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="6dp"
+                app:srcCompat="@drawable/ic_view" />
 
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="6dp"
-                    app:srcCompat="@drawable/ic_view" />
-
-                <TextView
-                    android:id="@+id/bulletin_card_views"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:singleLine="true"
-                    android:text="3400"
-                    android:textColor="?attr/text_color_secondary"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/bulletin_card_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:text="3400"
+                android:textColor="?attr/text_color_secondary"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
     </LinearLayout>
+
 
 </androidx.cardview.widget.CardView>

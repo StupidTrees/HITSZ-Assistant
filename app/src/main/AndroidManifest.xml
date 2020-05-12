@@ -59,7 +59,9 @@
             android:enabled="true"
             android:exported="false"
             android:priority="1000" />
-
+        <provider android:name=".HITAContentProvider"
+            android:authorities="com.stupidtree.hita.provider"
+            android:exported="false" />
         <activity android:name=".activities.ActivitySubjectJW" /> <!-- androidQ要加上这句否则读文件失效 -->
         <activity
             android:name=".activities.ActivityTasks"

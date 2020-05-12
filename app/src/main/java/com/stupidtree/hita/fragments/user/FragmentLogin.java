@@ -1,4 +1,4 @@
-package com.stupidtree.hita.fragments;
+package com.stupidtree.hita.fragments.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.views.ButtonLoading;
 
@@ -29,8 +30,8 @@ import static com.stupidtree.hita.timetable.TimeWatcherService.USER_CHANGED;
 
 public class FragmentLogin extends BaseFragment {
     
-    EditText username,password;
-    ButtonLoading login;
+    private EditText username,password;
+    private ButtonLoading login;
    // TextInputLayout usernameLayout,passwordLayout;
 
 

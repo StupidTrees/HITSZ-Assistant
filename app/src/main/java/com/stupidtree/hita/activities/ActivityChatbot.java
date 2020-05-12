@@ -1,7 +1,7 @@
 package com.stupidtree.hita.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,7 +76,6 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
     LottieAnimationView animationView;
     ChatBotA chatbotA;
     ChatBotB chatbotB;
-    ChatBotIteractTask pageTask;
     JsonObject chatBotInfos;
     List<ChatBotMessageItem> ChatBotListRes;
 
@@ -92,10 +92,6 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
     CoordinatorLayout rootLayout;
 
 
-    @Override
-    protected void stopTasks() {
-        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +116,7 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                 if (e == null && list != null && list.size() > 0) {
                     chatBotInfos = list.get(0).getJson();
                 } else {
+                    assert e != null;
                     Log.e("Bmob错误", e.toString());
                     chatBotInfos = new JsonObject();
                     chatBotInfos.addProperty("message_show", "你好，我是希塔");
@@ -196,21 +193,21 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
         ChatList.setLayoutManager(layoutManager);
         ChatList.setAdapter(ListAdapter);
         ChatList.scrollToPosition(ListAdapter.getItemCount() - 1);
-        ListAdapter.setOnUserAvatarClickListener(new ChatBotListAdapter.OnUserAvatarClickListener() {
-            @Override
-            public void onClick(View v, int position) {
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ActivityChatbot.this, v, "useravatar");
-                Intent i = new Intent(ActivityChatbot.this, ActivityUserCenter.class);
-                ActivityChatbot.this.startActivity(i, options.toBundle());
-            }
-        });
+//        ListAdapter.setOnUserAvatarClickListener(new ChatBotListAdapter.OnUserAvatarClickListener() {
+//            @Override
+//            public void onClick(View v, int position) {
+//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ActivityChatbot.this, v, "useravatar");
+//                Intent i = new Intent(ActivityChatbot.this, ActivityUserCenter.class);
+//                ActivityChatbot.this.startActivity(i, options.toBundle());
+//            }
+//        });
     }
 
 
     private void initToolBar() {
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,9 +239,7 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
 
     //把消息post给聊天机器人线程
     private void postToChatBot(final String raw) {
-        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
-        pageTask = new ChatBotIteractTask(raw, ActivityChatbot.this);
-        pageTask.executeOnExecutor(
+        new ChatBotIteractTask(raw, ActivityChatbot.this).executeOnExecutor(
                 HITAApplication.TPE);
 
 
@@ -260,197 +255,16 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
     private void addMessageView(ChatBotMessageItem message, String textOnShow,
                                 String textToRead) {
         if (textToRead == null) textToRead = textOnShow;
-        /*语音广播*/
         if (message.type == VIEW_TYPE_RIGHT) message.setMessage("“" + textOnShow + "”");
         else message.setMessage(textOnShow);
         ListAdapter.addMessage(message);
         if (message.type == VIEW_TYPE_RIGHT) {
             ListAdapter.deleteBefore(ChatBotListRes.size() - 1);
         }
-       // ChatList.scrollToPosition(ListAdapter.getItemCount() - 1);
     }
 
 
-//    private EventItem propcessAddRemind(JsonObject values) {
-//        String name = values.get("name").getAsString();
-//        int fromW = values.get("fW").getAsInt();
-//        int toW = values.get("tW").getAsInt();
-//        int fromDOW = values.get("fDOW").getAsInt();
-//        int toDOW = values.get("tDOW").getAsInt();
-//        HTime fromT = new HTime(values.get("fH").getAsInt(), values.get("fM").getAsInt());
-//        HTime toT = new HTime(values.get("tH").getAsInt(), values.get("tM").getAsInt());
-//        int thisDOW = timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) == 1 ? 7 : timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) - 1;
-//        if (fromW == BEFORE) fromW = timeTableCore.getThisWeekOfTerm() - 1 <= 0 ? 1 : timeTableCore.getThisWeekOfTerm() - 1;
-//        if (fromW == THIS) fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
-//        if (fromW == NEXT)
-//            fromW = timeTableCore.isThisTerm() ? ((timeTableCore.getThisWeekOfTerm() + 1 > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : timeTableCore.getThisWeekOfTerm() + 1) : 2;
-//        if (toW == BEFORE) toW = timeTableCore.getThisWeekOfTerm() - 1 <= 0 ? 1 : timeTableCore.getThisWeekOfTerm() - 1;
-//        if (toW == THIS) toW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
-//        if (toW == NEXT)
-//            toW = timeTableCore.isThisTerm() ? ((timeTableCore.getThisWeekOfTerm() + 1 > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : timeTableCore.getThisWeekOfTerm() + 1) : 2;
-//
-//        if (fromW == -1) {
-//            if (fromDOW == BEFORE) {
-//                if (thisDOW < 2) {
-//                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
-//                    fromDOW = 7;
-//                } else {
-//                    fromW = timeTableCore.getThisWeekOfTerm();
-//                    fromDOW = thisDOW - 1;
-//                }
-//            } else if (fromDOW == T_BEFORE) {
-//                if (thisDOW < 3) {
-//                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
-//                    if (thisDOW == 2) fromDOW = 7;
-//                    else if (thisDOW == 1) fromDOW = 6;
-//                } else {
-//                    fromW = timeTableCore.getThisWeekOfTerm();
-//                    fromDOW = thisDOW - 2;
-//                }
-//            } else if (fromDOW == TT_BEFORE) {
-//                if (thisDOW < 4) {
-//                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
-//                    if (thisDOW == 3) fromDOW = 7;
-//                    else if (thisDOW == 2) fromDOW = 6;
-//                    else if (thisDOW == 1) fromDOW = 5;
-//                } else {
-//                    fromW = timeTableCore.getThisWeekOfTerm();
-//                    fromDOW = thisDOW - 3;
-//                }
-//            } else if (fromDOW == THIS) {
-//                fromW = timeTableCore.getThisWeekOfTerm();
-//                fromDOW = thisDOW;
-//            } else if (fromDOW == NEXT) {
-//                if (thisDOW == 7) {
-//                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    fromDOW = 1;
-//                } else {
-//                    fromW = timeTableCore.getThisWeekOfTerm();
-//                    fromDOW = thisDOW + 1;
-//                }
-//            } else if (fromDOW == T_NEXT) {
-//                if (thisDOW == 6) {
-//                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    fromDOW = 1;
-//                } else if (thisDOW == 7) {
-//                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    fromDOW = 2;
-//                } else {
-//                    fromW = timeTableCore.getThisWeekOfTerm();
-//                    fromDOW = thisDOW + 2;
-//                }
-//            } else if (fromDOW == TT_NEXT) {
-//                if (thisDOW == 5) {
-//                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    fromDOW = 1;
-//                } else if (thisDOW == 6) {
-//                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    fromDOW = 2;
-//                } else if (thisDOW == 7) {
-//                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    fromDOW = 3;
-//                } else {
-//                    fromW = timeTableCore.getThisWeekOfTerm();
-//                    fromDOW = thisDOW + 3;
-//                }
-//            }
-//        }
-//        if (toW == -1) {
-//            if (toDOW == BEFORE) {
-//                if (thisDOW < 2) {
-//                    toW = timeTableCore.getThisWeekOfTerm() - 1;
-//                    toDOW = 7;
-//                } else {
-//                    toW = timeTableCore.getThisWeekOfTerm();
-//                    toDOW = thisDOW - 1;
-//                }
-//            } else if (toDOW == T_BEFORE) {
-//                if (thisDOW < 3) {
-//                    toW = timeTableCore.getThisWeekOfTerm() - 1;
-//                    if (thisDOW == 2) toDOW = 7;
-//                    else if (thisDOW == 1) toDOW = 6;
-//                } else {
-//                    toW = timeTableCore.getThisWeekOfTerm();
-//                    toDOW = thisDOW - 2;
-//                }
-//            } else if (toDOW == TT_BEFORE) {
-//                if (thisDOW < 4) {
-//                    toW = timeTableCore.getThisWeekOfTerm() - 1;
-//                    if (thisDOW == 3) toDOW = 7;
-//                    else if (thisDOW == 2) toDOW = 6;
-//                    else if (thisDOW == 1) toDOW = 5;
-//                } else {
-//                    toW = timeTableCore.getThisWeekOfTerm();
-//                    toDOW = thisDOW - 3;
-//                }
-//            } else if (toDOW == THIS) {
-//                toW = timeTableCore.getThisWeekOfTerm();
-//                toDOW = thisDOW;
-//            } else if (toDOW == NEXT) {
-//                if (thisDOW == 7) {
-//                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    toDOW = 1;
-//                } else {
-//                    toW = timeTableCore.getThisWeekOfTerm();
-//                    toDOW = thisDOW + 1;
-//                }
-//            } else if (toDOW == T_NEXT) {
-//                if (thisDOW == 6) {
-//                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    toDOW = 1;
-//                } else if (thisDOW == 7) {
-//                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    toDOW = 2;
-//                } else {
-//                    toW = timeTableCore.getThisWeekOfTerm();
-//                    toDOW = thisDOW + 2;
-//                }
-//            } else if (toDOW == TT_NEXT) {
-//                if (thisDOW == 5) {
-//                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    toDOW = 1;
-//                } else if (thisDOW == 6) {
-//                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    toDOW = 2;
-//                } else if (thisDOW == 7) {
-//                    toW = timeTableCore.getThisWeekOfTerm() + 1;
-//                    toDOW = 3;
-//                } else {
-//                    toW = timeTableCore.getThisWeekOfTerm();
-//                    toDOW = thisDOW + 3;
-//                }
-//            }
-//        }
-//
-//
-//        if (toDOW == -1 || fromDOW == -1) {
-//            if (fromDOW != -1) toDOW = fromDOW;
-//            else if (fromW == -1 && toW == -1) {
-//                fromDOW = thisDOW;
-//                toDOW = fromDOW;
-//            } else {
-//                fromDOW = 1;
-//                toDOW = 7;
-//            }
-//        }
-//        if (fromW == -1 || toW == -1) {
-//            if (fromW == toW) toW = fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
-//            else if (fromW == -1) fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : toW;
-//            else if (toW == -1) toW = fromW;
-//        }
-//        boolean wholeday = false;
-//        if (fromT.hour == -1) {
-//            wholeday = true;
-//        }
-//        if (toT.hour == -1) {
-//            wholeday = true;
-//        }
-//        if (toW > timeTableCore.getCurrentCurriculum().getTotalWeeks())
-//            toW = timeTableCore.getCurrentCurriculum().getTotalWeeks();
-//        toW = (toW > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : toW;
-//        System.out.println("解析出的待添加DDL为：name=" + name + "fW=" + fromW + ",fDOW=" + fromDOW + ",fT=" + fromT.tellTime() + ",tW=" + toW + ",tDOW=" + toDOW + ",tT=" + toT.tellTime());
-//        return new EventItem(null, timeTableCore.getCurrentCurriculum().getCurriculumCode(), TIMETABLE_EVENT_TYPE_REMIND, name, "提醒", "无注释", "无注释", fromT, fromT, fromW, fromDOW, wholeday);
-//    }
+
 
 
     class ChatBotIteractTask extends AsyncTask<String, Integer, JsonObject> {
@@ -591,7 +405,10 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                             textOnShow = "没有" + textTemp_onlyOne + "哦！";
                         } else {
                             if (courseList.size() > 1) State = STATE_SEARCH_COURSE_LIST;
-                            else if (courseList.size() == 1) State = STATE_SEARCH_COURSE_SINGLE;
+                            else {
+                                courseList.size();
+                                State = STATE_SEARCH_COURSE_SINGLE;
+                            }
                             StateEventList = courseList;
                             Collections.sort(courseList);
                             if (courseList.size() == 1) {
@@ -794,25 +611,25 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                    String desc = "课";
                    if(type!=null){
                        if(type.equals("exam")){
-                           result = timeTableCore.getCurrentCurriculum().getSubjects_Exam();
+                           result = timeTableCore.getSubjects_Exam(null);
                            //Log.e("exam---", String.valueOf(result));
                            desc = "考试课";
                        }else if(type.equals("mooc")){
-                           result = timeTableCore.getCurrentCurriculum().getSubjects_Mooc();
+                           result = timeTableCore.getSubjects_Mooc(null);
                            desc = "慕课";
                        }else if(type.equals("no_exam")){
-                           result = timeTableCore.getCurrentCurriculum().getSubjects_No_Exam();
+                           result = timeTableCore.getSubjects_No_Exam(null);
                            desc = "考查课";
                        }else if(type.equals("comp")){
-                           result = timeTableCore.getCurrentCurriculum().getSubjects_Comp();
+                           result = timeTableCore.getSubjects_Comp(null);
                            desc = "必修课";
                        }else if(type.equals("alt")){
-                           result = timeTableCore.getCurrentCurriculum().getSubjects_Alt();
+                           result = timeTableCore.getSubjects_Alt(null);
                            desc = "选秀课";
                        }else if(type.equals("wtv")){
-                           result = timeTableCore.getCurrentCurriculum().getSubjects_WTV();
+                           result = timeTableCore.getSubjects_WTV(null);
                            desc = "任选课";
-                       }else result = timeTableCore.getCurrentCurriculum().getSubjects();
+                       }else result = timeTableCore.getSubjects(null);
                    }
                     if(result!=null&&result.size()>0){
                         messagge.setSubjectList(result);
@@ -924,11 +741,12 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     class uploadMessageTask extends AsyncTask{
         String query,show;
         BottomSheetDialog ad;
 
-        public uploadMessageTask(String query, String show, BottomSheetDialog ad) {
+        uploadMessageTask(String query, String show, BottomSheetDialog ad) {
             this.query = query;
             this.show = show;
             this.ad = ad;
@@ -977,7 +795,6 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
 
         @Override
         protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
             if ((boolean)o) {
                 Toast.makeText(ActivityChatbot.this, "上传成功！", Toast.LENGTH_SHORT).show();
                 ad.dismiss();

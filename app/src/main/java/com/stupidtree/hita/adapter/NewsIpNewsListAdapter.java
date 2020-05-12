@@ -18,15 +18,16 @@ import com.stupidtree.hita.views.CornerTransform;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class NewsIpNewsListAdapter extends RecyclerView.Adapter<NewsIpNewsListAdapter.NewsViewHolder> {
 
-    Context mContext;
-    List<Map<String,String>> mBeans;
-    LayoutInflater mInflater;
-    OnItemClickListener mOnItemClickListener;
+    private Context mContext;
+    private List<Map<String,String>> mBeans;
+    private LayoutInflater mInflater;
+    private OnItemClickListener mOnItemClickListener;
 
-    CornerTransform transformation;
+    private CornerTransform transformation;
 
 
     public interface OnItemClickListener{
@@ -62,7 +63,7 @@ public class NewsIpNewsListAdapter extends RecyclerView.Adapter<NewsIpNewsListAd
         newsViewHolder.title.setText(mBeans.get(i).get("title"));
         newsViewHolder.time.setText(mBeans.get(i).get("time"));
         //newsViewHolder.views.setText(mBeans.get(i).get("views"));
-        if(mBeans.get(i).get("image")==null||mBeans.get(i).get("image").isEmpty()){
+        if(mBeans.get(i).get("image")==null|| Objects.requireNonNull(mBeans.get(i).get("image")).isEmpty()){
             newsViewHolder.image.setVisibility(View.GONE);
             //newsViewHolder.image.setImageResource(R.drawable.gradient_bg);
         }else{
@@ -83,7 +84,7 @@ public class NewsIpNewsListAdapter extends RecyclerView.Adapter<NewsIpNewsListAd
         return (int) (dpValue * scale + 0.5f);
     }
 
-    class NewsViewHolder extends RecyclerView.ViewHolder{
+    static class NewsViewHolder extends RecyclerView.ViewHolder{
         TextView title;
         TextView subtitle;
         TextView time;
@@ -92,7 +93,7 @@ public class NewsIpNewsListAdapter extends RecyclerView.Adapter<NewsIpNewsListAd
         ImageView image;
        // ImageView channelLogo;
 
-        public NewsViewHolder(@NonNull View itemView) {
+        NewsViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.news_title);
             time = itemView.findViewById(R.id.news_time);

@@ -313,7 +313,6 @@ public class Chat_SearchEvent {
             else if(TextTools.mEquals(pureText,new String[]{"昨天"})) result = BEFORE;
             else if(TextTools.mEquals(pureText,new String[]{"前天"})) result = T_BEFORE;
             else if(TextTools.mEquals(pureText,new String[]{"大前天"})) result = TT_BEFORE;
-            else if(TextTools.mEquals(pureText,new String[]{"大前天"})) result = TT_BEFORE;
             else if(TextTools.mEquals(pureText,new String[]{"后天"})) result = T_NEXT;
             else if(TextTools.mEquals(pureText,new String[]{"大后天"})) result = TT_NEXT;
             else if(TextTools.mEquals(pureText,new String[]{"今天"})) result = THIS;

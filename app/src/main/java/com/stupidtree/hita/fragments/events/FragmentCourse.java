@@ -77,13 +77,13 @@ public class FragmentCourse extends FragmentEventItem
         ratingBar = dlgView.findViewById(R.id.ratingBar);
         courseProgressBar.setMax(100);
         ratingBar.setStepSize(0.5f);
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                //System.out.println(rating);
-                timeTableCore.getCurrentCurriculum().getSubjectByCourse(eventItem).setRate(courseNumber, Float.valueOf(rating).doubleValue());
-            }
-        });
+//        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+//            @Override
+//            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+//                //System.out.println(rating);
+//                timeTableCore.getSubjectByCourse(eventItem).setRate(courseNumber, Float.valueOf(rating).doubleValue());
+//            }
+//        });
 
         subject.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,14 +254,15 @@ public class FragmentCourse extends FragmentEventItem
         protected Map<String, Integer> doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
             Map<String, Integer> res = new HashMap<>();
             try {
-                Subject subject = timeTableCore.getCurrentCurriculum().getSubjectByCourse(eventItem);
-                List courses = subject.getCourses();
+                Subject subject = timeTableCore.getSubjectByCourse(eventItem);
+                List courses = timeTableCore.getCourses(subject);
                 res.put("total", courses.size());
                 Collections.sort(courses);
                 int now = courses.indexOf(eventItem) + 1;
                 res.put("now", now);
                 //rate = timeTableCore.getCurrentCurriculum().getSubjectByCourse(eventItem).getRate(courseNumber);
             } catch (Exception e) {
+                e.printStackTrace();
                 return null;
             }
             return res;

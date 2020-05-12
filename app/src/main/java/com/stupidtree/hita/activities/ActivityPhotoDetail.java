@@ -31,10 +31,6 @@ public class ActivityPhotoDetail extends BaseActivity {
     ViewPager pager;
     int initIndex;
 
-    @Override
-    protected void stopTasks() {
-
-    }
 
     @SuppressLint("SetTextI18n")
     @Override

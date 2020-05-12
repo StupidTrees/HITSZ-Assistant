@@ -19,6 +19,8 @@ import com.stupidtree.hita.R;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import java.util.Objects;
+
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.timeServiceBinder;
 import static com.stupidtree.hita.timetable.TimeWatcherService.WATCHER_REFRESH;
@@ -30,10 +32,7 @@ public class ActivityDynamicTable extends BaseActivity {
     NumberPicker preview_length_picker,auto_mute_before_picker;
     ExpandableLayout preview_expand,mute_expand;
     CollapsingToolbarLayout collapsingToolbarLayout;
-    @Override
-    protected void stopTasks() {
 
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +48,7 @@ public class ActivityDynamicTable extends BaseActivity {
         //toolbar.setBackgroundColor(getColorPrimary());
         toolbar.setTitleTextColor(ContextCompat.getColor(this,R.color.material_text_icon_white));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,12 +56,6 @@ public class ActivityDynamicTable extends BaseActivity {
                 onBackPressed();
             }
         });
-//        switchButton.setChecked();
-//        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//             }
-//        });
         initEventsNotify();
         initAutoMute();
         initPreview();
@@ -100,7 +93,7 @@ public class ActivityDynamicTable extends BaseActivity {
                             NotificationManager notificationManager =
                                     (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-                            if(!notificationManager.isNotificationPolicyAccessGranted()) {
+                            if(notificationManager!=null&&!notificationManager.isNotificationPolicyAccessGranted()) {
                                 auto_mute.setChecked(false);
                                 Intent intent = new Intent(
                                         android.provider.Settings

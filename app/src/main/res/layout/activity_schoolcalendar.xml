@@ -13,9 +13,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="snapMargins|scroll|enterAlwaysCollapsed"
-            app:scrimAnimationDuration="300"
             app:toolbarId="@+id/toolbar">
 
             <ImageView
@@ -29,9 +27,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="24dp"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="96dp"
                 android:layout_marginRight="24dp"
-                android:layout_marginBottom="56dp"
+                android:layout_marginBottom="80dp"
                 android:fontFamily="sans-serif-black"
                 android:gravity="clip_horizontal|center"
                 android:textColor="@color/material_text_icon_white"
@@ -44,6 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_marginTop="24dp"
+                app:layout_collapseMode="pin"
                 app:theme="@style/ToolBarTheme_Light" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -52,15 +51,16 @@
         android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:behavior_overlapTop="30dp"
+        app:behavior_overlapTop="36dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layoutAnimation="@anim/recycler_layout_animation_slide_from_right"
-            android:nestedScrollingEnabled="true" />
+            android:layoutAnimation="@anim/recycler_layout_animation_falls_down"
+            android:nestedScrollingEnabled="true"
+            android:overScrollMode="never" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
@@ -71,8 +71,9 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:clickable="true"
+        android:tint="@color/white"
         app:layout_anchorGravity="end|center"
         app:layout_behavior=".views.mBottomHideBehavior"
-        app:srcCompat="@drawable/ic_more" />
+        app:srcCompat="@drawable/ic_hint" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

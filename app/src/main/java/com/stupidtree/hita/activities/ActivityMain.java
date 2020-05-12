@@ -62,7 +62,7 @@ import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.MainPagerAdapter;
 import com.stupidtree.hita.fragments.main.FragmentTimeLine;
 import com.stupidtree.hita.fragments.popup.FragmentTheme;
-import com.stupidtree.hita.jw.JWException;
+import com.stupidtree.hita.eas.JWException;
 import com.stupidtree.hita.online.errorTableText;
 import com.stupidtree.hita.timetable.packable.Curriculum;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -111,30 +111,8 @@ public class ActivityMain extends BaseActivity
     boolean isFirst;
     boolean willRecreateOnResume = false;
 
-    View.OnClickListener click_timetable, click_search = new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-            Intent i = new Intent(getThis(), ActivitySearch.class);
-            startActivity(i);
-//                v.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        int[] location = new int[2] ;
-//                        v.getLocationInWindow(location);
-//                        int x = location[0]+v.getWidth()/4;
-//                        int y = location[1]+v.getHeight()/2;
-//                        presentActivity(getThis(),x,y);
-//                    }
-//                });
+    View.OnClickListener click_timetable, click_search;
 
-            //ActivityUtils.search(getThis(),"");
-        }
-    };
-
-    @Override
-    protected void stopTasks() {
-
-    }
 
     public static void showUpdateDialog(final Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -172,12 +150,19 @@ public class ActivityMain extends BaseActivity
         click_timetable = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(timeTableCore.isDataAvailable()){
+                if (timeTableCore.isDataAvailable()) {
                     Intent i = new Intent(ActivityMain.this, ActivityTimeTable.class);
                     startActivity(i);
-                }else{
+                } else {
                     Snackbar.make(fabMain, getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
                 }
+            }
+        };
+        click_search = new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                Intent i = new Intent(getThis(), ActivitySearch.class);
+                startActivity(i);
             }
         };
         if (defaultSP.getBoolean("autoCheckUpdate", true)) checkUpdate(this);
@@ -195,17 +180,18 @@ public class ActivityMain extends BaseActivity
             UpdateGuide20200420();
         }
     }
+
     public static void autoLogin() {
 
         if (!defaultSP.getBoolean("jwts_autologin", true)) return;
         if (CurrentUser != null) {
             String stun = CurrentUser.getStudentnumber();
             String password = null;
-            String cookie = defaultSP.getString("jw_cookie",null);
-            if(cookie!=null){
-                Log.e("JW_LOGIN","有本地cookie，进行载入");
+            String cookie = defaultSP.getString("jw_cookie", null);
+            if (cookie != null) {
+                //Log.e("JW_LOGIN","有本地cookie，进行载入");
                 Gson gson = new Gson();
-                jwCore.loadCookies(gson.fromJson(cookie,jwCore.getCookies().getClass()));
+                jwCore.loadCookies(gson.fromJson(cookie, jwCore.getCookies().getClass()));
             }
             if (!TextUtils.isEmpty(stun)) password = defaultSP.getString(stun + ".password", null);
             if (password != null) {
@@ -214,7 +200,7 @@ public class ActivityMain extends BaseActivity
         }
 
 
-     }
+    }
 
     void initBroadcast() {
         BroadcastReceiver br = new BroadcastReceiver() {
@@ -417,7 +403,6 @@ public class ActivityMain extends BaseActivity
     }
 
 
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         return false;
@@ -516,7 +501,7 @@ public class ActivityMain extends BaseActivity
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 buttonView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                themeCore.switchDarkMode(getThis(),isChecked);
+                themeCore.switchDarkMode(getThis(), isChecked);
             }
         });
         darkModeMenu.setOnClickListener(new View.OnClickListener() {
@@ -542,8 +527,8 @@ public class ActivityMain extends BaseActivity
         drawer_card_dynamic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Intent pp = new Intent(ActivityMain.this, ActivityDynamicTable.class);
-                    ActivityMain.this.startActivity(pp);
+                Intent pp = new Intent(ActivityMain.this, ActivityDynamicTable.class);
+                ActivityMain.this.startActivity(pp);
             }
         });
         avatar_card.setOnClickListener(new onUserAvatarClickListener());
@@ -605,13 +590,13 @@ public class ActivityMain extends BaseActivity
                         break;
                     case R.id.drawer_nav_report:
                         try {
-                         // Toast.makeText(HContext,"发")
+                            // Toast.makeText(HContext,"发")
                             //第二种方式：可以跳转到添加好友，如果qq号是好友了，直接聊天
                             String url = "mqqwpa://im/chat?chat_type=wpa&uin=1012124511";
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(HContext,getString(R.string.notif_installQQ),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HContext, getString(R.string.notif_installQQ), Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -629,14 +614,14 @@ public class ActivityMain extends BaseActivity
             drawerUserName.setText(getString(R.string.drawer_username_null));
             drawerSignature.setText(getString(R.string.drawer_signature_null));
         } else {
-                Glide.with(ActivityMain.this)
-                        .load(CurrentUser.getAvatarUri())
-                        .placeholder(R.drawable.ic_account_activated)
-                        //.skipMemoryCache(false)
-                        //.dontAnimate()
-                        //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
-                        .apply(RequestOptions.bitmapTransform(new CircleCrop()))
-                        .into(drawerUserAvatar);
+            Glide.with(ActivityMain.this)
+                    .load(CurrentUser.getAvatarUri())
+                    .placeholder(R.drawable.ic_account_activated)
+                    //.skipMemoryCache(false)
+                    //.dontAnimate()
+                    //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
+                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                    .into(drawerUserAvatar);
 //                Glide.with(ActivityMain.this).load(CurrentUser.getAvatarUri())
 //                        //.signature(new ObjectKey(Objects.requireNonNull(defaultSP.getString("avatarGlideSignature", String.valueOf(System.currentTimeMillis())))))
 //                        //.placeholder(R.drawable.ic_account_activated)
@@ -644,11 +629,11 @@ public class ActivityMain extends BaseActivity
 //                        .into(drawer_bg);
 
             drawerUserName.setText(CurrentUser.getNick());
-            drawerSignature.setText(TextUtils.isEmpty(CurrentUser.getSignature()) ?getString(R.string.drawer_signature_none) : CurrentUser.getSignature());
+            drawerSignature.setText(TextUtils.isEmpty(CurrentUser.getSignature()) ? getString(R.string.drawer_signature_none) : CurrentUser.getSignature());
         }
 
         if (!themeCore.isCurrentDarkTheme()
-                &&defaultSP.getString("dark_mode_mode", "dark_mode_normal").equals("dark_mode_normal")) {
+                && defaultSP.getString("dark_mode_mode", "dark_mode_normal").equals("dark_mode_normal")) {
             darkModeMenu.setVisibility(View.VISIBLE);
             darkModeMenu.setClickable(true);
         } else {
@@ -668,13 +653,13 @@ public class ActivityMain extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if(willRecreateOnResume){
+        if (willRecreateOnResume) {
             willRecreateOnResume = false;
             recreate();
         }
         refreshDrawerHeader();
         try {
-            if(!jwCore.hasLogin()) autoLogin();
+            if (!jwCore.hasLogin()) autoLogin();
         } catch (Exception e) {
             e.printStackTrace();
             new errorTableText("自动登录错误", e).save(new SaveListener<String>() {
@@ -698,8 +683,10 @@ public class ActivityMain extends BaseActivity
 
     @Override
     public void fabRise() {
-        if (fabBehavior != null && fabMain != null)
+        if (fabBehavior != null && fabMain != null) {
             fabBehavior.slideUp((FrameLayout) fabMain.getParent());
+        }
+
     }
 
     @Override
@@ -769,7 +756,7 @@ public class ActivityMain extends BaseActivity
         protected Boolean doInBackground(Object... objects) {
             try {
                 for (Curriculum c : timeTableCore.getAllCurriculum()) {
-                    c.saveToDB();
+                    timeTableCore.saveCurriculum(c);
                 }
                 return timeTableCore.saveDataToCloud();
             } catch (Exception e) {
@@ -791,11 +778,11 @@ public class ActivityMain extends BaseActivity
         @Override
         protected Object doInBackground(String... strings) {
             try {
-                if(!jwCore.loginCheck()) {
-                    Log.e("JW_LOGIN","无登录状态保持，开始重新请求");
-                    return jwCore.login(username,password);
+                if (!jwCore.loginCheck()) {
+                    Log.e("JW_LOGIN", "无登录状态保持，开始重新请求");
+                    return jwCore.login(username, password);
                 }
-                Log.e("JW_LOGIN","登录状态保持，无需重新请求");
+                Log.e("JW_LOGIN", "登录状态保持，无需重新请求");
                 return true;
             } catch (JWException e) {
                 return e;
@@ -810,11 +797,11 @@ public class ActivityMain extends BaseActivity
 
         @Override
         protected void onPostExecute(Object o) {
-            if(o instanceof JWException){
+            if (o instanceof JWException) {
                 Intent i = new Intent();
                 i.setAction("COM.STUPIDTREE.HITA.JWTS_LOGIN_FAIL");
                 LocalBroadcastManager.getInstance(HContext).sendBroadcast(i);
-            }else if(o instanceof Boolean){
+            } else if (o instanceof Boolean) {
                 if ((Boolean) o) {
                     Log.e("!", "登录成功");
                     Intent i = new Intent();

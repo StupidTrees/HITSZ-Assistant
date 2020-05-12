@@ -39,8 +39,10 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
     int pageDow;
     getResultTask pageTask;
 
+
     @Override
-    protected void stopTasks() {
+    protected void onDestroy() {
+        super.onDestroy();
         if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 

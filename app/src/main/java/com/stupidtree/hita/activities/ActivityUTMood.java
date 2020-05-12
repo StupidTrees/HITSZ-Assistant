@@ -29,7 +29,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.fragments.FragmentUTMoodDay;
+import com.stupidtree.hita.fragments.campus.FragmentUTMoodDay;
 import com.stupidtree.hita.online.Infos;
 
 import java.text.ParseException;
@@ -39,6 +39,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobDate;
@@ -54,12 +55,7 @@ public class ActivityUTMood extends BaseActivity {
     LineChart lineChart;
     SwipeRefreshLayout swipeRefreshLayout;
     LineDataSet lineDataSet;
-    //Infos utMood;
 
-    @Override
-    protected void stopTasks() {
-
-    }
 
     @Override
     protected void onResume() {
@@ -174,6 +170,7 @@ public class ActivityUTMood extends BaseActivity {
                 if (Math.floor(value) != value || value >= pagerRes.size()) return "";
                 try {
                     Date d = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(pagerRes.get((int) value).getName().replaceAll("ut_mood_", ""));
+                    if(d==null) return "";
                     return new SimpleDateFormat(getString(R.string.date_format_4), Locale.getDefault()).format(d);
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -190,7 +187,7 @@ public class ActivityUTMood extends BaseActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.label_activity_utmood));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,7 +258,7 @@ public class ActivityUTMood extends BaseActivity {
     class pagerAdapter extends FragmentStatePagerAdapter {
 
         public pagerAdapter(@NonNull FragmentManager fm) {
-            super(fm);
+            super(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @NonNull

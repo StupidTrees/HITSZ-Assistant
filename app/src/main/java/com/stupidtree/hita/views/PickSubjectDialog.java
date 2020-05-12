@@ -2,8 +2,6 @@ package com.stupidtree.hita.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -15,26 +13,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.timetable.packable.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
-public class PickSubjectDialog extends RoundedCornerDialog {
+public class PickSubjectDialog extends RoundedCornerDialog implements BaseOperationTask.OperationListener<List<Subject>> {
     public static List<Subject> listRes;
-    RecyclerView list;
-    SearchResultAdapter listAdapter;
-    getSuggestionsTask pageTask;
-    OnPickListener onPickListener;
-    TextView title;
-    String titleStr;
+    private SearchResultAdapter listAdapter;
+    private getSuggestionsTask pageTask;
+    private OnPickListener onPickListener;
+    private String titleStr;
 
     public PickSubjectDialog(@NonNull Context context, String title, OnPickListener onPickListener) {
         super(context);
-        View v = getLayoutInflater().inflate(R.layout.dialog_pick_subject, null, false);
+        @SuppressLint("InflateParams") View v = getLayoutInflater().inflate(R.layout.dialog_pick_subject, null, false);
         setView(v);
         this.titleStr = title;
         this.onPickListener = onPickListener;
@@ -59,16 +55,16 @@ public class PickSubjectDialog extends RoundedCornerDialog {
         if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED) {
             pageTask.cancel(true);
         }
-        pageTask = new getSuggestionsTask();
+        pageTask = new getSuggestionsTask(this);
         pageTask.executeOnExecutor(HITAApplication.TPE);
 
 
     }
 
-    void initList() {
+    private void initList() {
         listRes = new ArrayList<>();
-        list = findViewById(R.id.list);
-        title = findViewById(R.id.title);
+        RecyclerView list = findViewById(R.id.list);
+        TextView title = findViewById(R.id.title);
         title.setText(titleStr);
         listAdapter = new SearchResultAdapter();
         list.setAdapter(listAdapter);
@@ -83,6 +79,18 @@ public class PickSubjectDialog extends RoundedCornerDialog {
 
     }
 
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+
+    }
+
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, List<Subject> result) {
+        listRes.clear();
+        listRes.addAll(result);
+        listAdapter.notifyDataSetChanged();
+    }
+
     public interface OnPickListener {
         void OnPick(Subject subject);
     }
@@ -91,41 +99,19 @@ public class PickSubjectDialog extends RoundedCornerDialog {
         void Onlick(View v, int position);
     }
 
-    class getSuggestionsTask extends AsyncTask {
+    static class getSuggestionsTask extends BaseOperationTask<List<Subject>> {
+
+
+        getSuggestionsTask(OperationListener listRefreshedListener) {
+            super(listRefreshedListener);
+        }
 
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        protected List<Subject> doInBackground(OperationListener<List<Subject>> listRefreshedListener, Boolean... booleans) {
+            return timeTableCore.getSubjects(null);
         }
 
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            listRes.clear();
-            if (!timeTableCore.isDataAvailable()) return null;
-            SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-            Cursor c = sd.query("subject", null, "curriculum_code=?", new String[]{timeTableCore.getCurrentCurriculum().getCurriculumCode()}, null, null, null);
-            while (c.moveToNext()) {
-                Subject s = new Subject(c);
-                listRes.add(s);
-            }
-            c.close();
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            listAdapter.notifyDataSetChanged();
-//            try {
-//                loading.setVisibility(View.GONE);
-//                listRes.addAll(result);
-//                listAdapter.notifyItemRangeInserted(0,result.size());
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-        }
     }
 
     public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.holder1> {
@@ -168,7 +154,7 @@ public class PickSubjectDialog extends RoundedCornerDialog {
             TextView name;
             ViewGroup item;
 
-            public holder1(@NonNull View itemView) {
+            holder1(@NonNull View itemView) {
                 super(itemView);
                 name = itemView.findViewById(R.id.name);
                 item = itemView.findViewById(R.id.item);

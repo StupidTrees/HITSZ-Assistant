@@ -45,10 +45,7 @@ public class ActivityMessageBox extends BaseActivity {
     SwipeRefreshLayout refresh;
     int pageNum;
 
-    @Override
-    protected void stopTasks() {
 
-    }
 
 
     @Override

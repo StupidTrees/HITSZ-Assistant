@@ -31,7 +31,7 @@ import java.util.List;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.integerToString;
+import static com.stupidtree.hita.adapter.NavigationListAdapter.integerToString;
 
 public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapter.BaseHolder> {
     public static final int TYPE_TASK = 8;

@@ -2,9 +2,9 @@ package com.stupidtree.hita.timetable.packable;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import com.google.gson.Gson;
@@ -17,8 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.stupidtree.hita.HITAApplication.mDBHelper;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.timetable.TimetableCore.COURSE;
+import static com.stupidtree.hita.timetable.TimetableCore.uri_timetable;
 
 /*课表类*/
 public class Curriculum {
@@ -103,23 +104,7 @@ public class Curriculum {
         startDate = c;
     }
 
-    @WorkerThread
-    public static ArrayList<Subject> getSubjects(String curriculumCode) {
-        ArrayList<Subject> res = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        try {
-            Cursor c = sd.query("subject", null, "curriculum_code=?", new String[]{curriculumCode}, null, null, null);
-            while (c.moveToNext()) {
-                Subject s = new Subject(c);
-                res.add(s);
-            }
-            c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            sd.delete("subject", null, null);
-        }
-        return res;
-    }
+
 
     public void setCurriculumCode(String code) {
         curriculumCode = code;
@@ -127,16 +112,15 @@ public class Curriculum {
 
     @WorkerThread
     public void generateCurriculumText() {
-        SQLiteDatabase sqd = mDBHelper.getReadableDatabase();
-        Cursor c = sqd.query("timetable", null, "curriculum_code=? and type=?", new String[]{curriculumCode, String.valueOf(COURSE)}, null, null, null);
+        Cursor c = HContext.getContentResolver().query(uri_timetable, null, "curriculum_code=? and type=?", new String[]{curriculumCode, String.valueOf(COURSE)}, null, null);
         List<EventItemHolder> eihs = new ArrayList<>();
-        while (c.moveToNext()) {
+        while (c != null && c.moveToNext()) {
             eihs.add(new EventItemHolder(c));
         }
         c.close();
         List<Map<String, String>> data = new ArrayList<>();
         for (EventItemHolder eih : eihs) {
-            Map<String, String> m = new HashMap();
+            Map<String, String> m = new HashMap<>();
             m.put("name", eih.getMainName());
             m.put("teacher", eih.tag3);
             m.put("dow", String.valueOf(eih.DOW));
@@ -154,220 +138,19 @@ public class Curriculum {
         this.curriculumText = DeflaterUtils.zipString(curriculumText);
     }
 
-    @WorkerThread
-    public Subject getSubjectByCourse(EventItem ei) {
-        return getSubjectByName(ei.getMainName());
-    }
 
-    @WorkerThread
-    public Subject getSubjectByName(String name) {
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        Cursor c = sd.query("subject", null, "name=? and curriculum_code=?", new String[]{name, curriculumCode}, null, null, null);
-        if (c.moveToNext()) {
-            Subject s = new Subject(c);
-            c.close();
-            return s;
-        }
-        c.close();
-        //找不到，则必须重新生成科目表了
-        recreateSubjects();
-        Cursor c2 = sd.query("subject", null, "name=? and curriculum_code=?", new String[]{name, curriculumCode}, null, null, null);
-        if (c2.moveToNext()) {
-            Subject s = new Subject(c2);
-            c2.close();
-            return s;
-        }
-        c2.close();
-        return null;
-    }
 
-    @WorkerThread
-    public Subject getSubjectByCourseCode(String code) {
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        Cursor c = sd.query("subject", null, "code=? and curriculum_code=?", new String[]{code, curriculumCode}, null, null, null);
-        while (c.moveToNext()) {
-            Subject s = new Subject(c);
-            c.close();
-            return s;
-        }
-        return null;
-    }
 
-    @WorkerThread
-    public List<Subject> getSubjectsByCourseCode(String code) {
-        List<Subject> result = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        Cursor c = sd.query("subject", null, "code=? and curriculum_code=?", new String[]{code, curriculumCode}, null, null, null);
-        while (c.moveToNext()) {
-            Subject s = new Subject(c);
-            result.add(s);
-        }
-        c.close();
-        return result;
-    }
 
-    @WorkerThread
-    public ArrayList<Subject> getSubjects() {
-        ArrayList<Subject> res = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        try {
-            Cursor c = sd.query("subject", null, "curriculum_code=?", new String[]{curriculumCode}, null, null, null);
-            while (c.moveToNext()) {
-                Subject s = new Subject(c);
-                res.add(s);
-            }
-            c.close();
-            if (res.size() == 0) {
-                Cursor c2 = sd.query("timetable", null, "curriculum_code=? AND type=?", new String[]{curriculumCode, String.valueOf(COURSE)}, null, null, null);
-                if (c2.moveToNext()) { //如果科目表空，但是时间表里存在同名课程的话，说明科目需要重新创建
-                    res.addAll(recreateSubjects());
-                }
-                c2.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            sd.delete("subject", null, null);
-        }
-        return res;
-    }
 
-    @WorkerThread
-    private List<Subject> recreateSubjects() {
-        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-        sd.delete("subject", "curriculum_code=?", new String[]{curriculumCode});
-        Cursor c = sd.query("timetable", null, "curriculum_code=? AND type=?", new String[]{curriculumCode, String.valueOf(COURSE)}, null, null, null);
-        List<Subject> subjects = new ArrayList<>();
-        while (c.moveToNext()) {
-            EventItemHolder eih = new EventItemHolder(c);
-            String name = eih.getMainName();
-            boolean contains = false;
-            for (Subject s : subjects) {
-                if (s.getName().equals(name)) contains = true;
-            }
-            if (!contains) {
-                subjects.add(new Subject(curriculumCode, name, eih.tag3));
-            }
-        }
-        for (Subject s : subjects) {
-            sd.insert("subject", null, s.getContentValues());
-        }
-        return subjects;
-    }
 
-    @WorkerThread
-    public ArrayList<Subject> getSubjects_Exam() {
-        ArrayList<Subject> res = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        try {
-            Cursor c = sd.query("subject", null, "curriculum_code=? and is_exam = ?", new String[]{curriculumCode, 1 + ""}, null, null, null);
-            while (c.moveToNext()) {
-                Subject s = new Subject(c);
-                res.add(s);
-            }
-            c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            sd.delete("subject", null, null);
-        }
-        return res;
-    }
-
-    @WorkerThread
-    public ArrayList<Subject> getSubjects_No_Exam() {
-        ArrayList<Subject> res = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        try {
-            Cursor c = sd.query("subject", null, "curriculum_code=? and is_exam = ?", new String[]{curriculumCode, 0 + ""}, null, null, null);
-            while (c.moveToNext()) {
-                Subject s = new Subject(c);
-                res.add(s);
-            }
-            c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            sd.delete("subject", null, null);
-        }
-        return res;
-    }
-
-    @WorkerThread
-    public ArrayList<Subject> getSubjects_Mooc() {
-        ArrayList<Subject> res = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        try {
-            Cursor c = sd.query("subject", null, "curriculum_code=? and is_mooc = ?", new String[]{curriculumCode, 1 + ""}, null, null, null);
-            while (c.moveToNext()) {
-                Subject s = new Subject(c);
-                res.add(s);
-            }
-            c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            sd.delete("subject", null, null);
-        }
-        return res;
-    }
-
-    @WorkerThread
-    public ArrayList<Subject> getSubjects_Comp() {
-        ArrayList<Subject> res = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        try {
-            Cursor c = sd.query("subject", null, "curriculum_code=? and compulsory = ?", new String[]{curriculumCode, "必修"}, null, null, null);
-            while (c.moveToNext()) {
-                Subject s = new Subject(c);
-                res.add(s);
-            }
-            c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            sd.delete("subject", null, null);
-        }
-        return res;
-    }
-
-    @WorkerThread
-    public ArrayList<Subject> getSubjects_Alt() {
-        ArrayList<Subject> res = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        try {
-            Cursor c = sd.query("subject", null, "curriculum_code=? and compulsory = ?", new String[]{curriculumCode, "选修"}, null, null, null);
-            while (c.moveToNext()) {
-                Subject s = new Subject(c);
-                res.add(s);
-            }
-            c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            sd.delete("subject", null, null);
-        }
-        return res;
-    }
-
-    @WorkerThread
-    public ArrayList<Subject> getSubjects_WTV() {
-        ArrayList<Subject> res = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        try {
-            Cursor c = sd.query("subject", null, "curriculum_code=? and compulsory = ?", new String[]{curriculumCode, "任选"}, null, null, null);
-            while (c.moveToNext()) {
-                Subject s = new Subject(c);
-                res.add(s);
-            }
-            c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            sd.delete("subject", null, null);
-        }
-        return res;
-    }
 
     public int getWeekOfTerm(Calendar c) {
         HDate temp = new HDate(c);
         if (temp.compareTo(new HDate(startDate)) < 0) {
             return -1;
         } else {
-            double tempDay = (c.getTimeInMillis() - startDate.getTimeInMillis()) / (1000 * 3600 * 24);
+            double tempDay = (c.getTimeInMillis() - startDate.getTimeInMillis()) / (1000.0 * 3600 * 24);
             return (int) (tempDay / 7) + 1;
         }
     }
@@ -413,6 +196,7 @@ public class Curriculum {
         temp.set(Calendar.MINUTE, ei.getStartTime().minute);
         return temp;
     }
+
     /*函数功能：判断某年某月某日是否在这个课表的时间范围内*/
     public boolean Within(int year, int month, int day) {
         if (new HDate(year, month, day).compareTo(this.new HDate(startDate)) < 0) return false;
@@ -431,7 +215,6 @@ public class Curriculum {
         int year;
         int month;
         int dayOfMonth;
-        int number;
         int dayOfWeek;
         int weekOfTerm;
 
@@ -444,7 +227,7 @@ public class Curriculum {
             this.year = year;
             this.month = month;
             dayOfMonth = dOM;
-            dayOfWeek = c.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : c.get(Calendar.DAY_OF_WEEK) - 1;
+            dayOfWeek = c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ? 7 : c.get(Calendar.DAY_OF_WEEK) - 1;
 
 
         }
@@ -452,7 +235,7 @@ public class Curriculum {
         HDate(Calendar c) {
             year = c.get(Calendar.YEAR);
             month = c.get(Calendar.MONTH) + 1;
-            dayOfWeek = c.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : c.get(Calendar.DAY_OF_WEEK) - 1;
+            dayOfWeek = c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ? 7 : c.get(Calendar.DAY_OF_WEEK) - 1;
             dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
             long tempDay = (c.getTimeInMillis() - startDate.getTimeInMillis()) / (1000 * 3600 * 24);
             weekOfTerm = (int) (tempDay / 7) + 1;
@@ -463,14 +246,12 @@ public class Curriculum {
         }
 
         @Override
-        public int compareTo(Object o) {
+        public int compareTo(@NonNull Object o) {
             if (this.year > ((HDate) o).year) return 1;
             else if (this.year < ((HDate) o).year) return -1;
             else if (this.month > ((HDate) o).month) return 1;
             else if (this.month < ((HDate) o).month) return -1;
-            else if (this.dayOfMonth > ((HDate) o).dayOfMonth) return 1;
-            else if (this.dayOfMonth < ((HDate) o).dayOfMonth) return -1;
-            else return 0;
+            else return Integer.compare(this.dayOfMonth, ((HDate) o).dayOfMonth);
         }
 
         @Override
@@ -581,13 +362,7 @@ public class Curriculum {
     }
 
 
-    @WorkerThread
-    public void saveToDB() {
-        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-        if (sd.update("curriculum", getContentValues(), "curriculum_code=?", new String[]{getCurriculumCode()}) == 0) {
-            sd.insert("curriculum", null, getContentValues());
-        }
-    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -598,26 +373,11 @@ public class Curriculum {
     }
 
 
+    @NonNull
     @Override
     public String toString() {
         Gson gson = new Gson();
-        return gson.toJson(this);
-//        JsonObject jo = new JsonObject();
-//        JsonParser jp = new JsonParser();
-//        int y = startDate.get(Calendar.YEAR);
-//        int m = startDate.get(Calendar.MONTH)+1;
-//        int d = startDate.get(Calendar.DAY_OF_MONTH);
-//        jo.addProperty("start_year",y);
-//        jo.addProperty("start_month",m);
-//        jo.addProperty("start_day",d);
-//        jo.addProperty("total_week",totalWeeks);
-//        jo.addProperty("name",name);
-//        jo.addProperty("curriculum_code",curriculumCode);
-//        jo.addProperty("curriculum_text",curriculumText);
-//        jo.add("subjects",jp.parse(subjectsText));
-//        return jo.toString();
-        // return  start_year+"@@"+start_month+"@@"+start_day+"@@"+totalWeeks+"@@"+name+"@@"+curriculumCode+"@@"+curriculumText+"@@"+subjectsText;
-    }
+        return gson.toJson(this); }
 }
 
 

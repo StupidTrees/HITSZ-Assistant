@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +60,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 import static com.stupidtree.hita.timetable.TimetableCore.ARRANGEMENT;
@@ -81,7 +81,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
     private FloatingActionButton done;
     private String subjectCode, subjectName;
     private String init_name = null, init_tag2 = null, init_tag3 = null, init_extraName = null;
-    private boolean extra_editable = true, init_all_day = false;
+    private boolean extra_editable = true, init_all_day = false, tab_switchable = true;
     private Task task;
     private LinearLayout nameLayout;
     private LinearLayout extraLayout;
@@ -163,7 +163,14 @@ public class FragmentAddEvent extends FragmentRadiusPopup
         }
         extra.setEnabled(extra_editable);
         if (!extra_editable) extra_button.setVisibility(View.GONE);
-        else extra_button.setVisibility(View.VISIBLE);
+        else if(initIndex.equals("course"))extra_button.setVisibility(View.VISIBLE);
+        mRadioGroup.setEnabled(tab_switchable);
+        for (int i = 0; i < mRadioGroup.getChildCount(); i++) {
+            View v = mRadioGroup.getChildAt(i);
+            if (v instanceof RadioButton) {
+                v.setEnabled(tab_switchable);
+            }
+        }
         if (init_name != null) name.setText(init_name);
         if (init_tag2 != null) {
             tag2.setText(init_tag2);
@@ -649,7 +656,6 @@ public class FragmentAddEvent extends FragmentRadiusPopup
     }
 
     public FragmentAddEvent setInitialDate(Calendar c) {
-        Log.e("calendar", c.toString());
         int week = timeTableCore.getCurrentCurriculum().getWeekOfTerm(c);
         int DOW = c.get(Calendar.DAY_OF_WEEK);
         int dow = DOW == 1 ? 7 : DOW - 1;
@@ -683,6 +689,11 @@ public class FragmentAddEvent extends FragmentRadiusPopup
         this.weeks.clear();
         this.weeks.addAll(weeks);
         timeSet_course = true;
+        return this;
+    }
+
+    public FragmentAddEvent setTabSwitchable(boolean switchable) {
+        tab_switchable = switchable;
         return this;
     }
 
@@ -1135,10 +1146,10 @@ public class FragmentAddEvent extends FragmentRadiusPopup
                 sb.append(i + from);
                 if (i != last - 1) sb.append(",");
             }
-            if (timeTableCore.getSubjectByName(name) == null) {
+            if (timeTableCore.getSubjectByName(null, name) == null) {
                 newSubject = true;
                 Subject s = new Subject(timeTableCore.getCurrentCurriculum().getCurriculumCode(), name, teacher);
-                mDBHelper.getWritableDatabase().insert("subject", null, s.getContentValues());
+                timeTableCore.insertSubject(s);
             }
             timeTableCore.addEvents(weeks, dow, COURSE, name, location, teacher, sb.toString(), from, last, false);
             return newSubject;

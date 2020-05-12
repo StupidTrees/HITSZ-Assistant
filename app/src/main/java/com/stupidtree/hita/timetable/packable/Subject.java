@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import com.google.gson.Gson;
@@ -20,8 +21,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.mDBHelper;
+import static com.stupidtree.hita.timetable.TimetableCore.uri_subject;
+//import static com.stupidtree.hita.HITAApplication.mDBHelper;
 
 public class Subject implements Comparable {
     public static final String TAG = "SUBJECT_TYPE_TAG";
@@ -91,66 +94,24 @@ public class Subject implements Comparable {
         return s;
     }
 
-//    public Subject(String x){
-//        JsonObject jo = new JsonParser().parse(x).getAsJsonObject();
-//        ratingMap = new HashMap<>();
-//        Scores = new HashMap<>();
-//        name = jo.get("name").getAsString();
-//        type = jo.get("type").getAsString();
-//        isMOOC = jo.get("is_mooc").getAsBoolean();
-//        exam = jo.get("is_exam").getAsBoolean();
-//        Default = jo.get("default").getAsBoolean();
-//        xnxq = jo.get("xnxq").getAsString();
-//        school = jo.get("school").getAsString();
-//        credit = jo.get("credit").getAsString();
-//        compulsory = jo.get("compulsory").getAsString();
-//        totalCourses = jo.get("total_courses").getAsString();
-//        code = jo.get("code")==null?null:jo.get("code").getAsString();
-//        id = jo.get("id")==null?null:jo.get("id").getAsString();
-//        curriculumCode = jo.get("curriculum_code").getAsString();
-//        getScroesFromString(jo.get("scores").toString());
-//        getRatesFromString(jo.get("rates").toString());
-//        if(jo.get("color")!=null){
-//            if(jo.get("color").getAsInt()!=-1){
-//                defaultSP.edit().putInt("color:"+name,jo.get("color").getAsInt()).apply();
-//            }else{
-//                defaultSP.edit().putInt("color:"+name, ColorBox.getRandomColor_Material()).apply();
-//            }
-//        }
-//
-//    }
 
+    @NonNull
     @Override
     public String toString() {
         Gson gson = new Gson();
         JsonObject jo = gson.toJsonTree(this, Subject.class).getAsJsonObject();
-//        JsonObject jo = new JsonObject();
-//        jo.addProperty("name", name);
-//        jo.addProperty("type",type);
-//        jo.addProperty("is_mooc",isMOOC);
-//        jo.addProperty("is_exam", exam);
-//        jo.addProperty("default" ,Default);
-//        jo.addProperty("xnxq",xnxq);
-//        jo.addProperty("school",school);
-//        jo.addProperty("credit", credit);
-//        jo.addProperty("compulsory",compulsory);
-//        jo.addProperty("total_courses",totalCourses);
-//        jo.addProperty("code", code);
-//        jo.addProperty("curriculum_code",curriculumCode);
-//        jo.addProperty("id",id);
-//        Gson gson = new Gson();
         jo.add("scores", gson.toJsonTree(Scores));
         jo.add("rates", gson.toJsonTree(ratingMap));
         jo.addProperty("color", defaultSP.getInt("color:" + name, -1));
         return jo.toString();
     }
-
-    @WorkerThread
-    public void setRate(Integer courseNumber, Double rate) {
-        ratingMap.put(courseNumber, rate);
-        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-        sd.replace("subject", "scores", getContentValues());
-    }
+//
+//    @WorkerThread
+//    public void setRate(Integer courseNumber, Double rate) {
+//        ratingMap.put(courseNumber, rate);
+//        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
+//        sd.replace("subject", "scores", getContentValues());
+//    }
 
     public Double getRate(int number) {
         if (ratingMap.get(number) == null) return 0.0;
@@ -165,20 +126,19 @@ public class Subject implements Comparable {
         this.uuid = uuid;
     }
 
-    public double getRank() {
-        Double rateSum = 0.0;
-        for (Double f : ratingMap.values()) {
-            rateSum += f;
-        }
-        rateSum /= ratingMap.size();
-        float Point = 0;
-        try {
-            Point = Float.valueOf(Point);
-        } catch (Exception e) {
-            Point = 2.0f;
-        }
-        return Point * rateSum;
-    }
+//    public double getRank() {
+//        Double rateSum = 0.0;
+//        for (Double f : ratingMap.values()) {
+//            rateSum += f;
+//        }
+//        rateSum /= ratingMap.size();
+//        float Point = 0;
+//        try {
+//        } catch (Exception e) {
+//            Point = 2.0f;
+//        }
+//        return Point * rateSum;
+//    }
 
     public ContentValues getContentValues() {
         ContentValues cv = new ContentValues();
@@ -202,36 +162,9 @@ public class Subject implements Comparable {
         return cv;
     }
 
-    public ArrayList<EventItem> getCourses() {
-        ArrayList<EventItem> result = new ArrayList<>();
-        SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-        Cursor c = sd.query("timetable", null, "name=? and type=?",
-                new String[]{name, TimetableCore.COURSE + ""}, null, null, null);
-        while (c.moveToNext()) {
-            EventItemHolder eih = new EventItemHolder(c);
-            result.addAll(eih.getAllEvents());
-        }
-        c.close();
-        return result;
-    }
 
-    @WorkerThread
-    public EventItem getFirstCourse() {
-        EventItem result = null;
-        try {
-            SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-            Cursor c = sd.query("timetable", null, "name=? and type=?",
-                    new String[]{name, TimetableCore.COURSE + ""}, null, null, null);
-            if (c.moveToNext()) {
-                EventItemHolder eih = new EventItemHolder(c);
-                result = eih.getAllEvents().get(0);
-            }
-            c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -270,34 +203,16 @@ public class Subject implements Comparable {
     }
 
     private String ratesToString() {
-//        StringBuilder sb = new StringBuilder();
-//        for(Map.Entry e:ratingMap.entrySet()){
-//            sb.append(e.getKey()).append("__").append(e.getValue()).append("&&&");
-//        }
-//        return sb.toString();
-        //Log.e("ratingMap",String.valueOf(ratingMap));
         Gson gson = new Gson();
-        String rates = gson.toJson(ratingMap);
-        // Log.e("rateToStr", rates);
-        return rates;
+        return gson.toJson(ratingMap);
     }
 
     private void getRatesFromString(String s) {
-        //Log.e("scores",s);
-//        ratingMap.clear();
-//        String[] x = s.split("&&&");
-//        for(String k:x){
-//            String []p = k.split("__");
-//            if(p.length==2)ratingMap.put(Integer.parseInt(p[0]),Float.parseFloat(p[1]));
-//        }
         JsonParser jp = new JsonParser();
         JsonObject jo = jp.parse(s).getAsJsonObject();
         for (Map.Entry e : jo.entrySet()) {
             ratingMap.put(Integer.parseInt(e.getKey().toString()), Double.valueOf(e.getValue().toString()));
         }
-//        Log.e("rate", String.valueOf(ratingMap));
-//        Gson gson = new Gson();
-//        ratingMap = gson.fromJson(s,HashMap.class);
     }
 
     public String getId() {
@@ -409,9 +324,7 @@ public class Subject implements Comparable {
     @WorkerThread
     public void addScore(final String name, String score) {
         Scores.put(name, score);
-        SQLiteDatabase sd = mDBHelper.getWritableDatabase();
-        sd.replace("subject", "rates", getContentValues());
-        Log.e("addScore", name + "," + score);
+        HContext.getContentResolver().update(uri_subject,  getContentValues(),"uuid=?",new String[]{getUUID()});
     }
 
     public HashMap<String, String> getScores() {
@@ -448,7 +361,7 @@ public class Subject implements Comparable {
 
 
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(@NonNull Object o) {
         return (int) (getPriority() - ((Subject) o).getPriority());
     }
 

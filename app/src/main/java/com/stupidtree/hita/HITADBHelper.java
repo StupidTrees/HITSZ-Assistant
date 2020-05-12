@@ -1,4 +1,4 @@
-package com.stupidtree.hita.cores;
+package com.stupidtree.hita;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -15,9 +15,15 @@ import java.util.List;
 
 public class HITADBHelper extends SQLiteOpenHelper {
 
-    public static final int DB_VERSION = 50;
-    public static final String CREATE_TABLE_SUBJECT =
-            "create table subject ("
+
+    private static final int DB_VERSION = 50;
+    public static final String SUBJECT_TABLE_NAME = "subject";
+    public static final String TIMETABLE_TABLE_NAME = "timetable";
+    public static final String TASK_TABLE_NAME = "task";
+    public static final String CURRICULUM_TABLE_NAME = "curriculum";
+
+    private static final String CREATE_TABLE_SUBJECT =
+            "create table "+SUBJECT_TABLE_NAME+" ("
                     + "name text not null,"
                     + " type text not null,"
                     + "is_mooc integer not null,"
@@ -36,7 +42,7 @@ public class HITADBHelper extends SQLiteOpenHelper {
                     + "uuid text primary key"
                     + ");";
     private static final String CREATE_TABLE_TIMETABLE =
-            "create table timetable("
+            "create table "+TIMETABLE_TABLE_NAME+"("
                     + "name text  not null,"
                     + " type integer not null,"
                     + "weeks text not null,"
@@ -53,7 +59,7 @@ public class HITADBHelper extends SQLiteOpenHelper {
                     + "uuid text primary key"
                     + ");";
     private static final String CREATE_TABLE_TASK =
-            "create table task ("
+            "create table "+TASK_TABLE_NAME+" ("
                     + "name text  not null,"
                     + " has_ddl integer not null,"
                     + "ddl_name text ,"
@@ -79,7 +85,7 @@ public class HITADBHelper extends SQLiteOpenHelper {
                     + ");";
 
     private static final String CREATE_TABLE_CURRICULUM =
-            "create table curriculum("
+            "create table "+CURRICULUM_TABLE_NAME+"("
                     + "name text  not null,"
                     + "curriculum_code text primary key not null,"
                     + "total_weeks integer not null,"
@@ -203,15 +209,9 @@ public class HITADBHelper extends SQLiteOpenHelper {
     }
 
     static boolean isTableExist(SQLiteDatabase db, String tableName) {
-        Cursor cursor = null;
-        try {
-            cursor = db.rawQuery("SELECT count(*) FROM sqlite_master WHERE type='table' AND name=?", new String[]{tableName});
+        try (Cursor cursor = db.rawQuery("SELECT count(*) FROM sqlite_master WHERE type='table' AND name=?", new String[]{tableName})) {
             boolean hasNext = cursor.moveToNext();
             return hasNext && cursor.getInt(0) > 0;
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
         }
     }
 

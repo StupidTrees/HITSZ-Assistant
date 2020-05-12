@@ -30,6 +30,7 @@ import com.stupidtree.hita.views.BadgeActionProvider;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -57,10 +58,6 @@ public class ActivityCommunity extends BaseActivity implements FragmentTopicsPag
     String[] titles;
     BadgeActionProvider mBadgeActionProvider;
 
-    @Override
-    protected void stopTasks() {
-
-    }
 
 
     @Override
@@ -100,7 +97,7 @@ public class ActivityCommunity extends BaseActivity implements FragmentTopicsPag
         mToolbar = findViewById(R.id.toolbar);
         mToolbar.inflateMenu(R.menu.toolbar_community);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

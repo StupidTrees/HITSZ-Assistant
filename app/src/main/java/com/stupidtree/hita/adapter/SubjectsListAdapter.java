@@ -4,8 +4,6 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,14 +17,11 @@ import androidx.annotation.NonNull;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.BaseOperationTask;
-import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
-import com.stupidtree.hita.timetable.packable.EventItemHolder;
 import com.stupidtree.hita.timetable.packable.Subject;
 
 import java.util.ArrayList;
 
-import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 
@@ -131,16 +126,7 @@ public class SubjectsListAdapter extends BaseCheckableListAdapter<Subject, Subje
         @Override
         protected Integer doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
             int finished = 0, unfinished = 0;
-            ArrayList<EventItem> result = new ArrayList<>();
-            SQLiteDatabase sd = mDBHelper.getReadableDatabase();
-            Cursor c = sd.query("timetable", null, "name=? and type=?",
-                    new String[]{subject.getName(), TimetableCore.COURSE + ""}, null, null, null);
-
-
-            while (c.moveToNext()) {
-                EventItemHolder eih = new EventItemHolder(c);
-                result.addAll(eih.getAllEvents());
-            }
+            ArrayList<EventItem> result = timeTableCore.getCourses(subject);
             for (EventItem ei : result) {
                 if (ei.hasPassed(timeTableCore.getNow())) finished++;
                 else unfinished++;

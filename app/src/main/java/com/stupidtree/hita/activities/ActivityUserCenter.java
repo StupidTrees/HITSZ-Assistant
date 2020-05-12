@@ -36,9 +36,9 @@ import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.fragments.popup.FragmentLoading;
 import com.stupidtree.hita.fragments.popup.FragmentRelatedUsers;
 import com.stupidtree.hita.fragments.timetable_manager.FragmentSubjects;
-import com.stupidtree.hita.fragments.user_center.FragmentUserCenter_Info;
-import com.stupidtree.hita.fragments.user_center.FragmentUserCenter_sync;
-import com.stupidtree.hita.fragments.user_center.FragmentUserCenter_ut;
+import com.stupidtree.hita.fragments.user.FragmentUserCenter_Info;
+import com.stupidtree.hita.fragments.user.FragmentUserCenter_sync;
+import com.stupidtree.hita.fragments.user.FragmentUserCenter_ut;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.util.FileProviderUtils;
 import com.stupidtree.hita.util.GalleryPicker;
@@ -83,11 +83,6 @@ public class ActivityUserCenter extends BaseActivity implements FragmentSubjects
     TextView fans, following, newFansNum;
     Uri cropImgUri;
 
-
-    @Override
-    protected void stopTasks() {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -2,10 +2,8 @@
 package com.stupidtree.hita.hita;
 
 
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.airbnb.lottie.L;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

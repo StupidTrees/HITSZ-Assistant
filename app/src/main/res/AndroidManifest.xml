@@ -29,10 +29,6 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> <!-- 用于申请获取蓝牙信息进行室内定位 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
-    <meta-data
-        android:name="IFLYTEK_APPKEY"
-        android:value="5c4aa1d3" /> <!-- To auto-complete the email text field in the login_jwts form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
 
@@ -47,20 +43,19 @@
 
         <activity android:name=".activities.ActivityEmptyClassroomDetail" />
         <activity android:name=".activities.ActivityEmptyClassroom" />
-        <activity android:name=".activities.ActivityPostDetail" />
         <activity
             android:name=".activities.ActivityUserProfile"
             android:label="@string/title_activity_user_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.ActivityLocation" />
 
-        <service android:name=".widget.WidgetService">
-            <action-filter>
+<!--        <service android:name=".widget.WidgetService">-->
+<!--            <action-filter>-->
 
-                <!-- 用来启动服务 -->
-                <action android:name="android.appwidget.action.APP_WIDGET_SERVICE" />
-            </action-filter>
-        </service>
+<!--                &lt;!&ndash; 用来启动服务 &ndash;&gt;-->
+<!--                <action android:name="android.appwidget.action.APP_WIDGET_SERVICE" />-->
+<!--            </action-filter>-->
+<!--        </service>-->
 
         <!--        <receiver android:name=".TimeLineWidget">-->
         <!--            <action-filter>-->
@@ -75,7 +70,6 @@
 
         <activity android:name=".activities.ActivitySetting" />
 
-        <service android:name="com.amap.api.location.APSService" />
 
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
@@ -139,15 +133,16 @@
         <activity
             android:name=".activities.ActivitySplash"
             android:theme="@style/SplashTheme">
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
-
             <action-filter>
                 <action android:name="android.action.action.MAIN" />
 
                 <category android:name="android.action.category.LAUNCHER" />
             </action-filter>
+
         </activity>
         <activity
             android:name=".activities.ActivityUserCenter"
@@ -156,11 +151,6 @@
         <activity
             android:name=".activities.ActivityChatbot"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity
-            android:name=".activities.ActivityExplore"
-            android:exported="true"
-            android:theme="@style/AppTheme" >
-        </activity>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"

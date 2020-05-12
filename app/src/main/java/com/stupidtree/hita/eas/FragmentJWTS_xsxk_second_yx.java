@@ -1,4 +1,4 @@
-package com.stupidtree.hita.jw;
+package com.stupidtree.hita.eas;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,11 +23,9 @@ import java.util.UUID;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-import static com.stupidtree.hita.HITAApplication.mDBHelper;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
 
 public class FragmentJWTS_xsxk_second_yx extends FragmentJWTS_xsxk_second {
-
 
 
     public FragmentJWTS_xsxk_second_yx() {
@@ -171,7 +169,7 @@ public class FragmentJWTS_xsxk_second_yx extends FragmentJWTS_xsxk_second {
             try {
                 for (Map<String, String> d : jwCore.getChosenSubjectsInfo(xkPageRoot.getXn(), xkPageRoot.getXq())) {
                     boolean found = false;
-                    for (Subject s : timeTableCore.getCurrentCurriculum().getSubjects()) {
+                    for (Subject s : timeTableCore.getSubjects(null)) {
                         if (TextTools.equals(s.getName(), Objects.requireNonNull(d.get("name")), "【实验】")) {
                             found = true;
                             s.setCode(d.get("code"));
@@ -183,13 +181,13 @@ public class FragmentJWTS_xsxk_second_yx extends FragmentJWTS_xsxk_second {
                             s.setTeacher(d.get("teacher"));
                             s.setXnxq(d.get("xnxq"));
                             s.setId(d.get("id"));
-                            s.setMOOC(d.get("type").equals("MOOC"));
+                            s.setMOOC(Objects.equals(d.get("type"), "MOOC"));
                             if (TextUtils.isEmpty(s.getUUID())) {
                                 s.setUUID(UUID.randomUUID().toString());
-                                mDBHelper.getWritableDatabase().update("subject", s.getContentValues(), "name=? AND curriculum_code=?", new String[]{s.getName(), s.getCurriculumId()});
+                                timeTableCore.saveSubject(s, "name=? AND curriculum_code=?", new String[]{s.getName(), s.getCurriculumId()});
                             } else {
-                                mDBHelper.getWritableDatabase().update("subject", s.getContentValues(), "uuid=?", new String[]{s.getUUID()});
-                            }
+                                timeTableCore.saveSubject(s);
+                                     }
                             number++;
                         }
                     }
@@ -206,7 +204,7 @@ public class FragmentJWTS_xsxk_second_yx extends FragmentJWTS_xsxk_second {
                             s.setTeacher(d.get("teacher"));
                             s.setXnxq(d.get("xnxq"));
                             s.setId(d.get("id"));
-                            mDBHelper.getWritableDatabase().insert("subject", null, s.getContentValues());
+                            timeTableCore.insertSubject(s);
                             number++;
                         }
                     }

@@ -39,13 +39,13 @@ import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 
-public class FragmentCurriculumSettings extends FragmentCurriculumChild
+public class FragmentTimeTableSettings extends FragmentTimeTableChild
         implements BaseOperationTask.OperationListener<Object> {
     private TextView totalWeeks, nameText;
     private ExpandableLayout expandableLayout;
     private TextView from;
 
-    public FragmentCurriculumSettings() {
+    public FragmentTimeTableSettings() {
         // Required empty public constructor
     }
 
@@ -92,7 +92,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
                         .setNegativeButton(getString(R.string.button_cancel), null).setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                new resetColorTask(FragmentCurriculumSettings.this, root.getTimetableSP()).executeOnExecutor(TPE);
+                                new resetColorTask(FragmentTimeTableSettings.this, root.getTimetableSP()).executeOnExecutor(TPE);
                             }
                         }).create();
                 ad.show();
@@ -109,7 +109,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
                         .setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 root.getCurriculum().setName(et.getText().toString());
-                                new saveCurriculumTask(FragmentCurriculumSettings.this, root.getCurriculum()).executeOnExecutor(TPE);
+                                new saveCurriculumTask(FragmentTimeTableSettings.this, root.getCurriculum()).executeOnExecutor(TPE);
                             }
                         })
                         .setNegativeButton(getString(R.string.button_cancel), null)
@@ -128,7 +128,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
                 buttonView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                 if (isChecked) expandableLayout.expand();
                 else expandableLayout.collapse();
-                new enableColorTask(FragmentCurriculumSettings.this, isChecked, root.getTimetableSP()).execute();
+                new enableColorTask(FragmentTimeTableSettings.this, isChecked, root.getTimetableSP()).execute();
             }
         });
         setTotalWeek.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +139,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
                     @Override
                     public void onClick(int number) {
                         root.getCurriculum().setTotalWeeks(number);
-                        new saveCurriculumTask(FragmentCurriculumSettings.this, root.getCurriculum()).executeOnExecutor(TPE);
+                        new saveCurriculumTask(FragmentTimeTableSettings.this, root.getCurriculum()).executeOnExecutor(TPE);
                     }
                 }).setInitialValue(root.getCurriculum().getTotalWeeks()).show();
             }
@@ -152,7 +152,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
                     @Override
                     public void onConfirm(Calendar date) {
                         root.getCurriculum().setStartDate(date);
-                        new saveCurriculumTask(FragmentCurriculumSettings.this, root.getCurriculum()).executeOnExecutor(TPE);
+                        new saveCurriculumTask(FragmentTimeTableSettings.this, root.getCurriculum()).executeOnExecutor(TPE);
                     }
                 }).setInitialValue(root.getCurriculum().getStartDate())
                         .show();
@@ -166,7 +166,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
                         setPositiveButton(getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                new deleteTask(FragmentCurriculumSettings.this, root.getCurriculum().getCurriculumCode()).executeOnExecutor(TPE);
+                                new deleteTask(FragmentTimeTableSettings.this, root.getCurriculum().getCurriculumCode()).executeOnExecutor(TPE);
                             }
                         }).setNegativeButton(getString(R.string.button_cancel), null).
                         create();
@@ -285,7 +285,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            for (Subject s : timeTableCore.getCurrentCurriculum().getSubjects()) {
+            for (Subject s : timeTableCore.getSubjects(null)) {
                 editor.putInt("color:" + s.getName(), ColorBox.getRandomColor_Material());
             }
             editor.apply();
@@ -307,7 +307,7 @@ public class FragmentCurriculumSettings extends FragmentCurriculumChild
 
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
-            if (curriculum != null) curriculum.saveToDB();
+            if (curriculum != null) timeTableCore.saveCurriculum(curriculum);
             if (timeTableCore.getCurrentCurriculum() != null &&
                     timeTableCore.getCurrentCurriculum().getCurriculumCode().equals(curriculum.getCurriculumCode())) {
                 timeTableCore.updateCurrentCurriculumInfo(curriculum);

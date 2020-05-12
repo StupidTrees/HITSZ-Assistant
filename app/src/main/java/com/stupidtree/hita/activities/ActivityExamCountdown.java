@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.BaseListAdapter;
 import com.stupidtree.hita.adapter.DDLItemAdapter;
 import com.stupidtree.hita.adapter.ExamCDItemAdapter;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
 import com.stupidtree.hita.fragments.popup.FragmentAddTask;
 import com.stupidtree.hita.timetable.packable.EventItem;
@@ -36,6 +36,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
@@ -43,7 +44,8 @@ import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED
 import static com.stupidtree.hita.timetable.TimetableCore.EXAM;
 
 public class ActivityExamCountdown extends BaseActivity implements
-        FragmentAddTask.AddTaskDoneListener, EditModeHelper.EditableContainer {
+        FragmentAddTask.AddTaskDoneListener, EditModeHelper.EditableContainer,
+BaseOperationTask.OperationListener<Object>{
 
 
     public boolean hasInit = false;
@@ -52,7 +54,6 @@ public class ActivityExamCountdown extends BaseActivity implements
     FloatingActionButton fab;
     ArrayList<EventItem> listRes;
     ImageView none;
-    refreshListTask pageTask;
     Toolbar toolbar;
     BroadcastReceiver receiver;
     ViewGroup countDownLayout;
@@ -107,7 +108,7 @@ public class ActivityExamCountdown extends BaseActivity implements
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.label_activity_exam_countdown));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,18 +247,10 @@ public class ActivityExamCountdown extends BaseActivity implements
     }
 
 
-    @Override
-    protected void stopTasks() {
-        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask.cancel(true);
-    }
+
 
     public void Refresh() {
-        // Log.e("refresh", "tasks");
-        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask.cancel(true);
-        pageTask = new refreshListTask();
-        pageTask.executeOnExecutor(TPE);
+        new refreshListTask(this).executeOnExecutor(TPE);
     }
 
 
@@ -283,7 +276,7 @@ public class ActivityExamCountdown extends BaseActivity implements
 
     @Override
     public void onDelete(Collection toDelete) {
-        new deleteDDLTask().executeOnExecutor(TPE);
+        new deleteDDLTask(this,listAdapter.getCheckedItem()).executeOnExecutor(TPE);
     }
 
     @Override
@@ -292,21 +285,50 @@ public class ActivityExamCountdown extends BaseActivity implements
         Refresh();
     }
 
-    @SuppressLint("StaticFieldLeak")
-    class refreshListTask extends AsyncTask {
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+
+    }
+
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object result) {
+        switch (id){
+            case "refresh":
+                refreshListTask rt = (refreshListTask) task;
+                List<EventItem> newList = new ArrayList<>();
+                if (rt.result_todo.size() > 0)
+                    newList.add(EventItem.getTagInstance(getString(R.string.exam_todo)));
+                newList.addAll(rt.result_todo);
+                if (rt.result_passed.size() > 0)
+                    newList.add(EventItem.getTagInstance(getString(R.string.exam_passed)));
+                newList.addAll(rt.result_passed);
+                if (newList.size() == 0)
+                    newList.add(EventItem.getTagInstance(getString(R.string.no_exam_add_some)));
+                listAdapter.notifyItemChangedSmooth(newList, true);
+                refreshText(rt.result_todo);
+                break;
+            case "delete":
+                Refresh();
+                editModeHelper.closeEditMode();
+                Toast.makeText(getThis(), R.string.delete_success, Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    static class refreshListTask extends BaseOperationTask<Object> {
 
         List<EventItem> result_todo;
         List<EventItem> result_passed;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        refreshListTask(OperationListener listRefreshedListener) {
+            super(listRefreshedListener);
             result_todo = new ArrayList<>();
             result_passed = new ArrayList<>();
+            id = "refresh";
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             List<EventItem> res = timeTableCore.getAllEvents(EXAM);
             for (EventItem ei : res) {
                 if (ei.hasPassed(System.currentTimeMillis())) result_passed.add(ei);
@@ -327,43 +349,30 @@ public class ActivityExamCountdown extends BaseActivity implements
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            List<EventItem> newList = new ArrayList<>();
-            if (result_todo.size() > 0)
-                newList.add(EventItem.getTagInstance(getString(R.string.exam_todo)));
-            newList.addAll(result_todo);
-            if (result_passed.size() > 0)
-                newList.add(EventItem.getTagInstance(getString(R.string.exam_passed)));
-            newList.addAll(result_passed);
-            if (newList.size() == 0)
-                newList.add(EventItem.getTagInstance(getString(R.string.no_exam_add_some)));
-            listAdapter.notifyItemChangedSmooth(newList, true);
-            refreshText(result_todo);
 
-        }
+
     }
 
-    class deleteDDLTask extends AsyncTask {
+    static class deleteDDLTask extends BaseOperationTask<Object> {
+
+        Collection<EventItem> toDelete;
+
+        deleteDDLTask(OperationListener listRefreshedListener, Collection<EventItem> toDelete) {
+            super(listRefreshedListener);
+            this.toDelete = toDelete;
+            id = "delete";
+        }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
-            if (listAdapter.getCheckedItem() != null) {
-                for (EventItem ei : listAdapter.getCheckedItem()) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
+            if (toDelete != null) {
+                for (EventItem ei : toDelete) {
                     timeTableCore.deleteEvent(ei, true);
                 }
             }
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            Refresh();
-            editModeHelper.closeEditMode();
-            Toast.makeText(getThis(), R.string.delete_success, Toast.LENGTH_SHORT).show();
-        }
     }
 
 

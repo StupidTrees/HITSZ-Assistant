@@ -33,6 +33,7 @@ import com.stupidtree.hita.timetable.packable.HTime;
 import com.stupidtree.hita.timetable.packable.Task;
 import com.stupidtree.hita.util.EventsUtils;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
@@ -149,6 +151,7 @@ public class TimeWatcherService extends Service {
             TimeTableGenerator.Dynamic_PreviewPlan(timeTableCore.getNow());
         } else if (timeTableCore.isDataAvailable()) {
             timeTableCore.clearTask(":::");
+           // timeTableCore.clearTask("");
             // timeTableCore.clearEvent(TimetableCore.DYNAMIC);
         }
         refreshTodaysEvents();
@@ -551,10 +554,10 @@ public class TimeWatcherService extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e("WatcherService收到广播", intent.getAction());
+            Log.e("WatcherService收到广播", Objects.requireNonNull(intent.getAction()));
             int switchNotification = intent.getIntExtra("switch_notification", NOTIFICATION_NOT_SPECIFIC);
             //boolean call = intent.getBooleanExtra("call_everyone",false);
-            new refreshProgressTask(switchNotification).executeOnExecutor(TPE);
+            new refreshProgressTask(switchNotification,TimeWatcherService.this).executeOnExecutor(TPE);
         }
     }
 
@@ -563,17 +566,27 @@ public class TimeWatcherService extends Service {
         return mBinder;
     }
 
-    class refreshProgressTask extends AsyncTask {
+    static class refreshProgressTask extends AsyncTask<Object,Object,Object> {
 
         int switchNotification;
+        WeakReference<TimeWatcherService> timeWatcherService;
 
-        public refreshProgressTask(int s) {
-            this.switchNotification = s;
+        refreshProgressTask(int switchNotification, TimeWatcherService timeWatcherService) {
+            this.switchNotification = switchNotification;
+            this.timeWatcherService = new WeakReference<>(timeWatcherService);
         }
+
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            refreshProgress(switchNotification);
+            try {
+                if(timeWatcherService.get()!=null){
+                    timeWatcherService.get().refreshProgress(switchNotification);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
@@ -624,7 +637,7 @@ public class TimeWatcherService extends Service {
             TimeWatcherService.this.refreshProgress(NOTIFICATION_NOT_SPECIFIC);
         }
 
-        public void refreshNowAndNextEvent() {
+        void refreshNowAndNextEvent() {
             TimeWatcherService.this.refreshNowAndNextEvent();
         }
 

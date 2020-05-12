@@ -11,7 +11,7 @@ import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.timetable.packable.Curriculum;
 
 
-public abstract class FragmentCurriculumChild extends BaseFragment {
+public abstract class FragmentTimeTableChild extends BaseFragment {
     CurriculumPageRoot root;
     boolean willRefreshOnResume = true;
 

@@ -8,7 +8,7 @@ import com.stupidtree.hita.online.BannerItem;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.stupidtree.hita.adapter.NaviPageAdapter.TYPE_NOTIFICATION;
+import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_NOTIFICATION;
 
 public class NavigationCardItem implements Comparable {
     private String type_name;

@@ -43,6 +43,7 @@ import com.stupidtree.hita.activities.ActivityNews;
 import com.stupidtree.hita.activities.ActivitySchoolCalendar;
 import com.stupidtree.hita.activities.ActivityUTMood;
 import com.stupidtree.hita.activities.BaseActivity;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.main.NavigationCardItem;
 import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
 import com.stupidtree.hita.online.BannerItem;
@@ -88,19 +89,19 @@ import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 import static com.stupidtree.hita.fragments.main.FragmentNavigation.cardNames;
 import static com.stupidtree.hita.fragments.main.FragmentNavigation.cardType;
 
-public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPageAdapter.NaviViewHolder> {
+public class NavigationListAdapter extends BaseListAdapter<NavigationCardItem, NavigationListAdapter.NaviViewHolder>
+        implements BaseOperationTask.OperationListener<Object> {
     private static final int HEADER = 190;
     public static final int TYPE_BOARD_JW = 2;
     public static final int TYPE_NEWS = 4;
     public static final int TYPE_HINT = 5;
-    private static final int TYPE_JWTS_FUN = 6;
-    public static final int TYPE_HITA = 7;
+    public static final int TYPE_CAMPUS = 7;
     public static final int TYPE_MOOD = 9;
     public static final int TYPE_NOTIFICATION = 10;
     private NaviRoot root;
 
 
-    public NaviPageAdapter(List<NavigationCardItem> res, BaseActivity c, NaviRoot root) {
+    public NavigationListAdapter(List<NavigationCardItem> res, BaseActivity c, NaviRoot root) {
         super(c, res);
         this.root = root;
     }
@@ -132,12 +133,10 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
                 return R.layout.dynamic_navipage_news;
             case TYPE_BOARD_JW:
                 return R.layout.dynamic_navipage_board_jw;
-            case TYPE_HINT:
-                return R.layout.dynamic_navipage_hint;
             case TYPE_NOTIFICATION:
                 return R.layout.dynamic_navipage_notification;
-            case TYPE_HITA:
-                return R.layout.dynamic_navipage_hita;
+            case TYPE_CAMPUS:
+                return R.layout.dynamic_navipage_campus;
             case TYPE_MOOD:
                 return R.layout.dynamic_navipage_mood;
             default:
@@ -163,7 +162,7 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
             return new ViewHolder_Hint(v);
         } else if (viewType == TYPE_NOTIFICATION) {
             return new ViewHolder_Notification(v);
-        } else if (viewType == TYPE_HITA) {
+        } else if (viewType == TYPE_CAMPUS) {
             return new ViewHolder_Hita(v);
         } else if (viewType == TYPE_MOOD) {
             return new ViewHolder_Mood(v);
@@ -193,7 +192,8 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
     }
 
     private void bindNews(ViewHolder_News vn) {
-        new refreshNewsListTask(vn.top, vn.second, vn.third, vn.loading).executeOnExecutor(TPE);
+        vn.loading.setVisibility(View.VISIBLE);
+        new refreshNewsListTask(this, vn).executeOnExecutor(TPE);
         vn.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,22 +204,21 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
     }
 
     private void bindJWBoard(ViewHolder_Board_jw holder) {
-        ViewHolder_Board_jw vb = holder;
-        vb.card_xl.setOnClickListener(new View.OnClickListener() {
+        holder.card_xl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mContext, ActivitySchoolCalendar.class);
                 mContext.startActivity(i);
             }
         });
-        View.OnClickListener jwtsClick = new View.OnClickListener() {
+        View.OnClickListener jwClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityUtils.startJWTSActivity(mContext);
             }
         };
-        vb.card_jwts.setOnClickListener(jwtsClick);
-        vb.card_emptyclassroom.setOnClickListener(new View.OnClickListener() {
+        holder.card_jwts.setOnClickListener(jwClick);
+        holder.card_emptyclassroom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(mContext, ActivityEmptyClassroom.class);
@@ -260,7 +259,7 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
                         });
                     }
 
-                } catch (Exception e) {
+                } catch (Exception ignored) {
 
                 }
 
@@ -277,48 +276,40 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
     }
 
     private void bindService(ViewHolder_Hita holder) {
-        ViewHolder_Hita vb = holder;
-        View.OnClickListener ol = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(mContext, ActivityChatbot.class);
-                mContext.startActivity(i);
-            }
-        };
-//        vb.card.setOnClickListener(ol);
-        vb.card_explore.setOnClickListener(new View.OnClickListener() {
+        /* vb.card.setOnClickListener(ol); */
+        holder.card_explore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityUtils.startAttitudeActivity(mContext);
             }
         });
-        vb.card_canteen.setOnClickListener(new View.OnClickListener() {
+        holder.card_canteen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent g = new Intent(mContext, ActivityLeaderBoard.class);
                 mContext.startActivity(g);
             }
         });
-        vb.card_lostandfound.setOnClickListener(new View.OnClickListener() {
+        holder.card_lostandfound.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityUtils.startCommunityActivity(mContext);
             }
         });
-        vb.card_ut.setOnClickListener(new View.OnClickListener() {
+        holder.card_ut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ActivityUtils.startUTActivity(mContext);
             }
         });
-        vb.card_hita.setOnClickListener(new View.OnClickListener() {
+        holder.card_hita.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent pp = new Intent(mContext, ActivityChatbot.class);
                 mContext.startActivity(pp);
             }
         });
-        vb.card_search.setOnClickListener(new View.OnClickListener() {
+        holder.card_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mContext instanceof ActivityMain) {
@@ -360,21 +351,21 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
                             @Override
                             public void onClick(View view) {
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                                new punchTask(1, mContext.getString(R.string.punch_success_normal), position).executeOnExecutor(TPE);
+                                new punchTask(NavigationListAdapter.this, 1, mContext.getString(R.string.punch_success_normal), position).executeOnExecutor(TPE);
                             }
                         });
                         vm.happy.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                                new punchTask(0, mContext.getString(R.string.punch_success_happy), position).executeOnExecutor(TPE);
+                                new punchTask(NavigationListAdapter.this, 0, mContext.getString(R.string.punch_success_happy), position).executeOnExecutor(TPE);
                             }
                         });
                         vm.sad.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                                new punchTask(2, mContext.getString(R.string.punch_success_sad), position).executeOnExecutor(TPE);
+                                new punchTask(NavigationListAdapter.this, 2, mContext.getString(R.string.punch_success_sad), position).executeOnExecutor(TPE);
 
                             }
                         });
@@ -429,17 +420,17 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
         saveOrders();
     }
 
-    public void addItem(NavigationCardItem item, int position) {
-        mBeans.add(position, item);
-        notifyItemChanged(0);
-        notifyItemInserted(position + 1);
-        notifyItemRangeChanged(position + 1, mBeans.size());
-        if (item.getType() == TYPE_JWTS_FUN) {
-            saveOrders();
-        }
-    }
+//    public void addItem(NavigationCardItem item, int position) {
+//        mBeans.add(position, item);
+//        notifyItemChanged(0);
+//        notifyItemInserted(position + 1);
+//        notifyItemRangeChanged(position + 1, mBeans.size());
+//        if (item.getType() == TYPE_JWTS_FUN) {
+//            saveOrders();
+//        }
+//    }
 
-    public void saveOrders() {
+    private void saveOrders() {
         SharedPreferences.Editor editor = root.getPreferences().edit();
         for (int i = 0; i < mBeans.size(); i++) {
             NavigationCardItem m = mBeans.get(i);
@@ -465,22 +456,65 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
 //        naviSP.edit().putString(ORDER_NAME,new Gson().toJson(toWrite)).apply();
     }
 
-    class NaviViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+
+    }
+
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object o) {
+        switch (id) {
+            case "punch":
+                punchTask pt = (punchTask) task;
+                if ((boolean) o) {
+                    Toast.makeText(mContext, pt.hint, Toast.LENGTH_SHORT).show();
+                    notifyItemChanged(pt.position);
+                    //removeItem(TYPE_MOOD);
+                } else {
+                    Toast.makeText(mContext, HContext.getString(R.string.punch_failed), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case "news":
+                refreshNewsListTask nt = (refreshNewsListTask) task;
+                ViewHolder_News hd = nt.holder;
+                hd.loading.setVisibility(View.GONE);
+                hd.first.setVisibility(View.VISIBLE);
+                hd.second.setVisibility(View.VISIBLE);
+                hd.third.setVisibility(View.VISIBLE);
+
+                if (nt.titleRes.get("news") == null)
+                    hd.third.setText(HContext.getString(R.string.load_news_failed));
+                else hd.third.setText(nt.titleRes.get("news"));
+
+                if (nt.titleRes.get("lecture") == null)
+                    hd.second.setText(HContext.getString(R.string.load_lecture_failed));
+                else hd.second.setText(nt.titleRes.get("lecture"));
+
+
+                if (nt.titleRes.get("announce") == null)
+                    hd.first.setText(HContext.getString(R.string.load_annouce_failed));
+                else hd.first.setText(nt.titleRes.get("announce"));
+                break;
+
+        }
+    }
+
+    static class NaviViewHolder extends RecyclerView.ViewHolder {
         CardView card;
 
-        public NaviViewHolder(@NonNull View itemView) {
+        NaviViewHolder(@NonNull View itemView) {
             super(itemView);
             card = itemView.findViewById(R.id.card);
         }
     }
 
-    class ViewHolder_Hita extends NaviViewHolder {
+    static class ViewHolder_Hita extends NaviViewHolder {
         TextView hint, hint_second;
         // Button button;
         LinearLayout card_explore, card_lostandfound, card_canteen, card_ut, card_hita, card_search;
         //card_locations;
 
-        public ViewHolder_Hita(@NonNull View itemView) {
+        ViewHolder_Hita(@NonNull View itemView) {
             super(itemView);
             hint = itemView.findViewById(R.id.hint);
             hint_second = itemView.findViewById(R.id.hint_second);
@@ -496,14 +530,14 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
     }
 
 
-    class ViewHolder_News extends NaviViewHolder {
-        TextView top, second, third;
+    static class ViewHolder_News extends NaviViewHolder {
+        TextView first, second, third;
         ProgressBar loading;
         //ImageView image;
 
-        public ViewHolder_News(@NonNull View itemView) {
+        ViewHolder_News(@NonNull View itemView) {
             super(itemView);
-            top = itemView.findViewById(R.id.top_news);
+            first = itemView.findViewById(R.id.top_news);
             second = itemView.findViewById(R.id.second_news);
             loading = itemView.findViewById(R.id.loading);
             third = itemView.findViewById(R.id.third_news);
@@ -511,17 +545,17 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
         }
     }
 
-    boolean arrayContains(Integer[] arr, int ele) {
+    private boolean arrayContains(Integer[] arr, int ele) {
         for (int x : arr) {
             if (ele == x) return true;
         }
         return false;
     }
 
-    class ViewHolder_Board_jw extends NaviViewHolder {
+    static class ViewHolder_Board_jw extends NaviViewHolder {
         LinearLayout card_jwts, card_emptyclassroom, card_xl;
 
-        public ViewHolder_Board_jw(@NonNull View itemView) {
+        ViewHolder_Board_jw(@NonNull View itemView) {
             super(itemView);
 
             card_jwts = itemView.findViewById(R.id.jwts);
@@ -609,12 +643,12 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
         }
     }
 
-    class ViewHolder_Notification extends NaviViewHolder {
+    static class ViewHolder_Notification extends NaviViewHolder {
         Button button;
         TextView title, subtitle;
         ImageView image;
 
-        public ViewHolder_Notification(@NonNull View itemView) {
+        ViewHolder_Notification(@NonNull View itemView) {
             super(itemView);
             button = itemView.findViewById(R.id.button);
             title = itemView.findViewById(R.id.title);
@@ -632,10 +666,10 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
     }
 
     public static class mCallBack extends ItemTouchHelper.Callback {
-        NaviPageAdapter mAdapter;
-        NaviViewHolder focusedHolder = null;
+        NavigationListAdapter mAdapter;
+        //NaviViewHolder focusedHolder = null;
 
-        public mCallBack(NaviPageAdapter mAdapter) {
+        public mCallBack(NavigationListAdapter mAdapter) {
             this.mAdapter = mAdapter;
         }
 
@@ -669,14 +703,14 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
 //            Log.e("clearView", String.valueOf(viewHolder));
             if (viewHolder instanceof HeaderHolder) return;
             NaviViewHolder holder = (NaviViewHolder) viewHolder;
-            if (holder == null || holder.card == null) return;
+            if (holder.card == null) return;
             holder.itemView.setAlpha(1.0f);
-            holder.card.setCardElevation(dip2px(HContext, 0));
+            //holder.card.setCardElevation(dip2px(HContext, 0));
 
-            if (focusedHolder != null) {
-                focusedHolder.itemView.setAlpha(1f);
-                focusedHolder.card.setCardElevation(dip2px(HContext, 0));
-            }
+//            if (focusedHolder != null) {
+//                focusedHolder.itemView.setAlpha(1f);
+//                //focusedHolder.card.setCardElevation(dip2px(HContext, 0));
+//            }
             try {
                 if (mAdapter != null) {
                     mAdapter.notifyDataSetChanged();
@@ -694,10 +728,10 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
             //Log.e("selectedChanged",viewHolder==null?"null":String.valueOf(viewHolder));
             NaviViewHolder holder = (NaviViewHolder) viewHolder;
             if (holder == null || holder.card == null) return;
-            if (actionState == 2 && holder != null) {
-                focusedHolder = holder;
+            if (actionState == 2) {
+                // focusedHolder = holder;
                 holder.itemView.setAlpha(0.8f);
-                holder.card.setCardElevation(dip2px(HContext, 6));
+                //  holder.card.setCardElevation(dip2px(HContext, 6));
 //                holder.card.refreshDrawableState();
 //                Log.e("elevation_changed", String.valueOf(holder.card.getCardElevation()));
             }
@@ -707,7 +741,7 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
 
     }
 
-    static class refreshUTMoodTask extends AsyncTask {
+    static class refreshUTMoodTask extends AsyncTask<Object,Object,Object> {
         ViewHolder_Mood holder;
         int totalNumber;
         float score;
@@ -821,7 +855,7 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
         }
     }
 
-    class ViewHolder_Mood extends NaviViewHolder {
+    static class ViewHolder_Mood extends NaviViewHolder {
         ImageView happy, normal, sad;
         LinearLayout vote, ut;
         ImageView icon;
@@ -831,7 +865,7 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
         private ImageView[] icons;
         private ProgressBar[] progressBars;
 
-        public ViewHolder_Mood(@NonNull View v) {
+        ViewHolder_Mood(@NonNull View v) {
             super(v);
             happy = v.findViewById(R.id.happy);
             normal = v.findViewById(R.id.normal);
@@ -841,7 +875,6 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
             // image = v.findViewById(R.id.image);
             scoreT = v.findViewById(R.id.score);
             icon = v.findViewById(R.id.icon);
-            TextView score_comment = v.findViewById(R.id.score_comment);
             ImageView firstI = v.findViewById(R.id.first_icon);
             ProgressBar firstPr = v.findViewById(R.id.first_progress);
             TextView firstP = v.findViewById(R.id.first_percentage);
@@ -878,10 +911,10 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
         }
     }
 
-    class ViewHolder_Hint extends NaviViewHolder {
+    static class ViewHolder_Hint extends NaviViewHolder {
         Button button;
 
-        public ViewHolder_Hint(@NonNull View itemView) {
+        ViewHolder_Hint(@NonNull View itemView) {
             super(itemView);
             button = itemView.findViewById(R.id.button);
         }
@@ -893,7 +926,7 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
         TextView title, subtitle;
         ImageView settingButton;
 
-        public HeaderHolder(@NonNull View v) {
+        HeaderHolder(@NonNull View v) {
             super(v);
             settingButton = v.findViewById(R.id.navi_setting);
             title = v.findViewById(R.id.navi_title);
@@ -911,7 +944,7 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
                     for (int i = 0; i < checked.length; i++) {
                         checked[i] = root.getPreferences().getBoolean(cardNames[i] + "_enable", true);
                     }
-                    final SharedPreferences.Editor edit = root.getPreferences().edit();
+                    @SuppressLint("CommitPrefEdits") final SharedPreferences.Editor edit = root.getPreferences().edit();
                     AlertDialog ad = new AlertDialog.Builder(mContext).setTitle(mContext.getString(R.string.navi_settings_title)).setMultiChoiceItems(x, checked, new DialogInterface.OnMultiChoiceClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i, boolean b) {
@@ -922,7 +955,7 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                                    new saveOrderTask(edit).execute();
+                                    new saveOrderTask(edit, root).execute();
                                 }
                             })
                             .create();
@@ -964,11 +997,13 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
         }
     }
 
-    class saveOrderTask extends AsyncTask {
+    static class saveOrderTask extends AsyncTask<Object, Object, Object> {
         SharedPreferences.Editor edit;
+        NaviRoot root;
 
-        public saveOrderTask(SharedPreferences.Editor edit) {
+        saveOrderTask(SharedPreferences.Editor edit, NaviRoot root) {
             this.edit = edit;
+            this.root = root;
         }
 
         @Override
@@ -979,8 +1014,7 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
 
         @Override
         protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            root.Refresh(false, false, false);
+            if (root != null) root.Refresh(false, false, false);
         }
     }
 
@@ -993,7 +1027,7 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
         @Override
         public View createView(Context context) {
             // 返回页面布局
-            View view = LayoutInflater.from(context).inflate(R.layout.dynamic_navi_banner, null);
+            @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.dynamic_navi_banner, null);
             image = view.findViewById(R.id.banner_image);
             title = view.findViewById(R.id.banner_title);
             subtitle = view.findViewById(R.id.banner_subtitle);
@@ -1019,32 +1053,22 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
 
     }
 
-    class refreshNewsListTask extends AsyncTask {
+    static class refreshNewsListTask extends BaseOperationTask<Object> {
 
-        TextView first;
-        TextView second, third;
-        ProgressBar loading;
+
+        ViewHolder_News holder;
         Map<String, String> titleRes;
-        //ImageView image;
-        //String imageUri = null;
 
-        public refreshNewsListTask(TextView first, TextView third, TextView second, ProgressBar loading) {
-            this.first = first;
-            this.second = second;
-            this.loading = loading;
+        refreshNewsListTask(OperationListener listRefreshedListener, ViewHolder_News holder) {
+            super(listRefreshedListener);
             titleRes = new HashMap<>();
-            this.third = third;
-            // this.image = image;
+            this.holder = holder;
+            id = "news";
         }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loading.setVisibility(View.VISIBLE);
-        }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             try {
                 Document d = Jsoup.connect("http://www.hitsz.edu.cn/article/id-75.html?maxPageItems=20&keywords=&pager.offset=0")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
@@ -1070,29 +1094,6 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
                     }
                     i++;
                 }
-//                Document d2 = Jsoup.connect("http://www.hitsz.edu.cn/article/id-74.html?maxPageItems=20&keywords=&pager.offset=0")
-//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-//                        .header("X-Requested-With", "XMLHttpRequest")
-//                        .get();
-//                Elements annoucements = d2.getElementsByClass("announcement");
-//                //System.out.println(annoucements);
-//                if (annoucements.select("li").size() > 0) {
-//                    Elements xx = annoucements.select("li").first().select("a");
-//                    if (xx != null) titleRes.put("announce", xx.text());
-//                }
-//
-//
-//                Document d3 = Jsoup.connect("http://www.hitsz.edu.cn/article/id-78.html?maxPageItems=10&keywords=&pager.offset=0")
-//                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
-//                        .header("X-Requested-With", "XMLHttpRequest")
-//                        .get();
-//                Elements lect = d3.select("ul[class^=lecture_n]");
-//                Elements ee = lect.select("li");
-//                if (ee.size() > 0) {
-//                    Elements xxx = ee.first().select("a");
-//                    if (xxx != null) titleRes.put("lecture", xxx.text());
-//                }
-
                 return true;
 
             } catch (Exception e) {
@@ -1100,48 +1101,25 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
             }
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            try {
-                loading.setVisibility(View.GONE);
-                first.setVisibility(View.VISIBLE);
-                second.setVisibility(View.VISIBLE);
-                third.setVisibility(View.VISIBLE);
 
-                if (titleRes.get("news") == null)
-                    third.setText(HContext.getString(R.string.load_news_failed));
-                else third.setText(titleRes.get("news"));
-
-                if (titleRes.get("lecture") == null)
-                    second.setText(HContext.getString(R.string.load_lecture_failed));
-                else second.setText(titleRes.get("lecture"));
-
-
-                if (titleRes.get("announce") == null)
-                    first.setText(HContext.getString(R.string.load_annouce_failed));
-                else first.setText(titleRes.get("announce"));
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
     }
 
-    class punchTask extends AsyncTask {
+    static class punchTask extends BaseOperationTask<Object> {
         int type;
         String hint;
         int position;
 
-        public punchTask(int type, String hint, int position) {
+        punchTask(OperationListener listRefreshedListener, int type, String hint, int position) {
+            super(listRefreshedListener);
             this.type = type;
             this.hint = hint;
             this.position = position;
+            id = "punch";
         }
 
+
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             BmobQuery<Infos> bq = new BmobQuery<>();
             bq.addWhereEqualTo("name", "ut_mood_" + sdf.format(timeTableCore.getNow().getTime()));
@@ -1193,25 +1171,8 @@ public class NaviPageAdapter extends BaseListAdapter<NavigationCardItem, NaviPag
                 e.printStackTrace();
                 return false;
             }
-
-
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            try {
-                if ((boolean) o) {
-                    Toast.makeText(mContext, hint, Toast.LENGTH_SHORT).show();
-                    notifyItemChanged(position);
-                    //removeItem(TYPE_MOOD);
-                } else {
-                    Toast.makeText(mContext, HContext.getString(R.string.punch_failed), Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 

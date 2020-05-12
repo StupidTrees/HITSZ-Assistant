@@ -1,9 +1,11 @@
 package com.stupidtree.hita.activities;
 
-import android.os.AsyncTask;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,6 +20,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BaseOperationTask;
+import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
 import org.jsoup.Jsoup;
@@ -27,22 +31,19 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class ActivitySchoolCalendar extends BaseActivity {
+public class ActivitySchoolCalendar extends BaseActivity implements BaseOperationTask.OperationListener<List<ActivitySchoolCalendar.MonthViewRes>> {
 
     List<MonthViewRes> listRes;
     RecyclerView list;
     MonthAdapter listAdapter;
-    AsyncTask pageTask;
     TextView calendar_name;
     SwipeRefreshLayout refresh;
     String psString;
     FloatingActionButton fab;
 
-    @Override
-    protected void stopTasks() {
-        if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +52,30 @@ public class ActivitySchoolCalendar extends BaseActivity {
         setContentView(R.layout.activity_schoolcalendar);
         initToolbar();
         initList();
-
+        Refresh();
     }
 
     void initToolbar(){
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
+        toolbar.inflateMenu(R.menu.toolbar_teacher_official);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId() == R.id.action_open_in_browser){
+                    ActivityUtils.openInBrowser(getThis(),"http://www.hitsz.edu.cn/page/id-89.html");
+                    return true;
+                }
+                return false;
             }
         });
         fab = findViewById(R.id.fab);
@@ -74,7 +86,7 @@ public class ActivitySchoolCalendar extends BaseActivity {
                     Snackbar.make(v, "暂时没有获取到备注，请稍后再试", Snackbar.LENGTH_SHORT).show();
                     return;
                 }
-                View dlg = getLayoutInflater().inflate(R.layout.dialog_textview,null,false);
+                @SuppressLint("InflateParams") View dlg = getLayoutInflater().inflate(R.layout.dialog_textview,null,false);
                 TextView tv = dlg.findViewById(R.id.text);
                 AlertDialog ad = new AlertDialog.Builder(ActivitySchoolCalendar.this).setTitle("校历备注").setView(dlg).create();
                 tv.setText(Html.fromHtml(psString));
@@ -83,14 +95,11 @@ public class ActivitySchoolCalendar extends BaseActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Refresh();
-    }
+
 
     void initList() {
         refresh = findViewById(R.id.refresh);
+        refresh.setColorSchemeColors(getColorAccent());
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -107,12 +116,33 @@ public class ActivitySchoolCalendar extends BaseActivity {
 
 
     protected void Refresh() {
-        if (pageTask != null && pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
-        pageTask = new refreshTask();
-        pageTask.executeOnExecutor(HITAApplication.TPE);
+         new refreshTask(this).executeOnExecutor(HITAApplication.TPE);
     }
 
-    private class WeekViewRes {
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+        refresh.setRefreshing(true);
+    }
+
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, List<MonthViewRes> result) {
+        refreshTask rt = (refreshTask) task;
+        psString = rt.psString;
+        refresh.setRefreshing(false);
+        listRes.clear();
+        listRes.addAll(result);
+        listAdapter.notifyDataSetChanged();
+        list.scheduleLayoutAnimation();
+        calendar_name.setText(rt.calendarName);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_teacher_official,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private static class WeekViewRes {
         String name;
         String mon;
         String tue;
@@ -122,7 +152,7 @@ public class ActivitySchoolCalendar extends BaseActivity {
         String sat;
         String sun;
 
-        public WeekViewRes(String name, String mon, String tue, String wed, String thu, String fri, String sat, String sun) {
+        WeekViewRes(String name, String mon, String tue, String wed, String thu, String fri, String sat, String sun) {
             this.name = name;
             this.mon = mon;
             this.tue = tue;
@@ -134,25 +164,25 @@ public class ActivitySchoolCalendar extends BaseActivity {
         }
     }
 
-    private class MonthViewRes {
+    static class MonthViewRes {
         String name;
         List<WeekViewRes> weeks;
 
-        public MonthViewRes(String name) {
+        MonthViewRes(String name) {
             this.name = name;
             weeks = new ArrayList<>();
         }
 
-        public void addWeek(WeekViewRes wr) {
+        void addWeek(WeekViewRes wr) {
             weeks.add(wr);
         }
 
     }
 
-    private class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.weekViewHolder> {
+    class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.weekViewHolder> {
         List<WeekViewRes> mBeans;
 
-        public WeekAdapter() {
+        WeekAdapter() {
             this.mBeans = new ArrayList<>();
         }
 
@@ -189,7 +219,7 @@ public class ActivitySchoolCalendar extends BaseActivity {
         class weekViewHolder extends RecyclerView.ViewHolder {
             TextView name, mon, tue, wed, thu, fri, sat, sun;
 
-            public weekViewHolder(@NonNull View itemView) {
+            weekViewHolder(@NonNull View itemView) {
                 super(itemView);
                 name = itemView.findViewById(R.id.week_name);
                 mon = itemView.findViewById(R.id.mon);
@@ -229,7 +259,7 @@ public class ActivitySchoolCalendar extends BaseActivity {
             RecyclerView weeks;
             WeekAdapter weekAdapter;
 
-            public monthHolder(@NonNull View itemView) {
+            monthHolder(@NonNull View itemView) {
                 super(itemView);
                 name = itemView.findViewById(R.id.month_name);
                 weeks = itemView.findViewById(R.id.month_list);
@@ -240,18 +270,18 @@ public class ActivitySchoolCalendar extends BaseActivity {
         }
     }
 
-    class refreshTask extends AsyncTask {
+    static class refreshTask extends BaseOperationTask<List<MonthViewRes>> {
         String calendarName;
+        String psString;
 
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            refresh.setRefreshing(true);
+        refreshTask(OperationListener<? extends List> listRefreshedListener) {
+            super(listRefreshedListener);
         }
 
+
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected List<MonthViewRes> doInBackground(OperationListener<List<MonthViewRes>> listRefreshedListener, Boolean... booleans) {
+            List<MonthViewRes> result = new ArrayList<>();
             try {
                 Document page = Jsoup.connect("http://www.hitsz.edu.cn/page/id-89.html")
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
@@ -261,16 +291,16 @@ public class ActivitySchoolCalendar extends BaseActivity {
                 Element table = page.getElementsByTag("table").first();
                 Elements trs = table.select("tr");
                 psString = table.getElementsByClass("ps_td").first().toString();
-                listRes.clear();
+
                 for (Element week : trs) {
-                   // Log.e("week", String.valueOf(week));
+                    // Log.e("week", String.valueOf(week));
                     if (week.getElementsByClass("week").size() == 0) {
                         //Log.e("has_class", "no");
                         continue;
                     }
                     if (week.getElementsByClass("month").size()>0) {
                         String monthName = week.getElementsByClass("month").text();
-                        listRes.add(new MonthViewRes(monthName));
+                        result.add(new MonthViewRes(monthName));
                     }
                     String name = week.getElementsByClass("week").text();
                     Elements days = week.select("td");
@@ -286,21 +316,14 @@ public class ActivitySchoolCalendar extends BaseActivity {
                             days.get(0).text(), days.get(1).text(), days.get(2).text(), days.get(3).text(),
                             days.get(4).text(), days.get(5).text(), days.get(6).text()
                     );
-                    if (listRes.size() > 0) listRes.get(listRes.size() - 1).addWeek(wr);
-                     }
+                    if (result.size() > 0) result.get(result.size() - 1).addWeek(wr);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return null;
+            return result;
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            refresh.setRefreshing(false);
-            listAdapter.notifyDataSetChanged();
-            list.scheduleLayoutAnimation();
-            calendar_name.setText(calendarName);
-        }
     }
 }

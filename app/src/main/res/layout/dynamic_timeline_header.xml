@@ -20,6 +20,7 @@
     app:cardElevation="12dp">
 
     <ImageView
+        android:id="@+id/bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:srcCompat="@drawable/gradient_bg" />
@@ -142,7 +143,7 @@
             android:paddingTop="16dp"
             android:paddingBottom="8dp"
             app:el_duration="200"
-            app:el_expanded="true"
+            app:el_expanded="false"
             app:el_parallax="0.5">
 
             <LinearLayout

@@ -1,4 +1,4 @@
-package com.stupidtree.hita.jw;
+package com.stupidtree.hita.eas;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -21,9 +21,8 @@ import java.util.List;
 public class FragmentJWTS_cjgl extends JWFragment {
 
 
-    ViewPager pager;
-    TabLayout tabs;
-    List<JWFragment> fragments;
+    private ViewPager pager;
+    private List<JWFragment> fragments;
 
     public FragmentJWTS_cjgl() {
         // Required empty public constructor
@@ -31,8 +30,7 @@ public class FragmentJWTS_cjgl extends JWFragment {
 
 
     public static FragmentJWTS_cjgl newInstance() {
-        FragmentJWTS_cjgl fragment = new FragmentJWTS_cjgl();
-        return fragment;
+        return new FragmentJWTS_cjgl();
     }
 
     @Override
@@ -53,12 +51,12 @@ public class FragmentJWTS_cjgl extends JWFragment {
 
 
 
-    void initViews(View v){
+    private void initViews(View v){
         pager = v.findViewById(R.id.cjgl_pager);
-        tabs = v.findViewById(R.id.cjgl_tabs);
+        TabLayout tabs = v.findViewById(R.id.cjgl_tabs);
        fragments = new ArrayList<>();
         fragments.add(new FragmentJWTS_cjgl_grcj());
-        pager.setAdapter(new pagerAdapter(getFragmentManager(),fragments,new String[]{"学习进度","个人成绩","学分绩"}));
+        pager.setAdapter(new pagerAdapter(getChildFragmentManager(), fragments, new String[]{"学习进度", "个人成绩", "学分绩"}));
         tabs.setupWithViewPager(pager);
     }
 
@@ -103,16 +101,17 @@ public class FragmentJWTS_cjgl extends JWFragment {
     }
 
 
-    private class pagerAdapter extends FragmentPagerAdapter{
+    private static class pagerAdapter extends FragmentPagerAdapter{
 
         List<JWFragment> mBeans;
         String[] title;
-        public pagerAdapter(FragmentManager fm,List<JWFragment> res,String[] title) {
+        pagerAdapter(FragmentManager fm, List<JWFragment> res, String[] title) {
             super(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             this.title = title;
             mBeans = res;
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int i) {
             return mBeans.get(i);

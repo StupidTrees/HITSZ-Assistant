@@ -11,6 +11,7 @@ import android.view.animation.RotateAnimation;
 public class MaterialCircleAnimator {
    public static  void animShow(final View myView,int duration) {
        try {
+           //duration*=1.7;
            // 从 View 的中心开始
            int cx = (myView.getLeft() + myView.getRight()) / 2;
            int cy = (myView.getTop() + myView.getBottom()) / 2;
@@ -19,6 +20,7 @@ public class MaterialCircleAnimator {
            //为此视图创建动画设计(起始半径为零)
            Animator anim = ViewAnimationUtils.createCircularReveal(myView, cx, cy, 0, finalRadius);
            // 使视图可见并启动动画
+          // anim.setInterpolator(new DecelerateInterpolator());
            myView.setVisibility(View.VISIBLE);
            anim.setDuration(duration);
            anim.start();

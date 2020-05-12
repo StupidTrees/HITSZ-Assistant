@@ -34,6 +34,8 @@ import org.jsoup.nodes.Document;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import cn.bmob.v3.BmobArticle;
 import cn.bmob.v3.BmobQuery;
@@ -59,10 +61,6 @@ Runnable runnable;
 BroadcastReceiver receiver;
     TextView userPro, privacyPro;
 
-    @Override
-    protected void stopTasks() {
-
-    }
 
     //mReciever reciever;
     //IntentFilter intentFilter;
@@ -82,7 +80,10 @@ BroadcastReceiver receiver;
             e.printStackTrace();
         }
         //获取APP版本versionName
-        String versionName = packageInfo.versionName;
+        String versionName = null;
+        if (packageInfo != null) {
+            versionName = packageInfo.versionName;
+        }
         //获取APP版本versionCode
         version.setText(getString(R.string.version)+versionName);
         initReceiver();
@@ -118,8 +119,8 @@ BroadcastReceiver receiver;
             @Override
             public void onReceive(Context context, Intent intent) {
                 checkUpDate.setProgress(false);
-                if(intent.getAction().equals("com.stupidtree.hita.upgrade_failed"))  Toast.makeText(ActivityAboutHITA.this, R.string.check_for_update_failed, Toast.LENGTH_SHORT).show();
-                else if(intent.getAction().equals("com.stupidtree.hita.upgrade_success")) Toast.makeText(ActivityAboutHITA.this, R.string.update_available, Toast.LENGTH_SHORT).show();
+                if(Objects.equals(intent.getAction(), "com.stupidtree.hita.upgrade_failed"))  Toast.makeText(ActivityAboutHITA.this, R.string.check_for_update_failed, Toast.LENGTH_SHORT).show();
+                else if(Objects.equals(intent.getAction(), "com.stupidtree.hita.upgrade_success")) Toast.makeText(ActivityAboutHITA.this, R.string.update_available, Toast.LENGTH_SHORT).show();
                 else if(intent.getAction().equals("com.stupidtree.hita.upgrade_no_version"))Toast.makeText(ActivityAboutHITA.this, R.string.already_up_to_date,Toast.LENGTH_SHORT).show();
 
             }
@@ -134,7 +135,7 @@ BroadcastReceiver receiver;
         tb = findViewById(R.id.toolbar);
         tb.setTitle(getString(R.string.label_activity_about_hita));
         setSupportActionBar(tb);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         tb.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,30 +236,6 @@ BroadcastReceiver receiver;
             }
         });
          }
-    public void updateBtn(DownloadTask task) {
-
-        /*根据下载任务状态设置按钮*/
-        switch (task.getStatus()) {
-            case DownloadTask.INIT:
-            case DownloadTask.DELETED:
-            case DownloadTask.FAILED: {
-                update_start.setText("开始下载");
-            }
-            break;
-            case DownloadTask.COMPLETE: {
-                update_start.setText("安装");
-            }
-            break;
-            case DownloadTask.DOWNLOADING: {
-                update_start.setText("暂停");
-            }
-            break;
-            case DownloadTask.PAUSED: {
-                update_start.setText("继续下载");
-            }
-            break;
-        }
-    }
 
 
     @Override
@@ -274,7 +251,7 @@ BroadcastReceiver receiver;
     }
 
     @SuppressLint("SetTextI18n")
-    void refreshViews() throws Exception {
+    void refreshViews() {
 
         if(Beta.getUpgradeInfo()!=null){
             Glide.with(this).load(Beta.getUpgradeInfo().imageUrl).into(update_image);
@@ -290,13 +267,13 @@ BroadcastReceiver receiver;
             }
             updateArea.setVisibility(View.VISIBLE);
             about_info.setVisibility(View.GONE);
-            //   webView.setVisibility(View.GONE);
+            /* webView.setVisibility(View.GONE); */
             checkUpDate.setVisibility(View.GONE);
             update_title.setText(Beta.getUpgradeInfo().title);
 
             update_version.setText(getString(R.string.update_version)+ Beta.getUpgradeInfo().versionName);
             update_size.setText(getString(R.string.update_size)+ new DecimalFormat(".##").format((float)Beta.getUpgradeInfo().fileSize/(1024*1024))+"MB");
-            update_time.setText(getString(R.string.update_release_time)+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Beta.getUpgradeInfo().publishTime));
+            update_time.setText(getString(R.string.update_release_time)+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Beta.getUpgradeInfo().publishTime));
             update_message.setText(getString(R.string.update_log)+Beta.getUpgradeInfo().newFeature);
 
             switch (Beta.getStrategyTask().getStatus()) {

@@ -18,6 +18,7 @@ import com.stupidtree.hita.fragments.pref.FragmentSettings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ActivitySetting extends BaseActivity {
 
@@ -26,10 +27,6 @@ public class ActivitySetting extends BaseActivity {
     TabLayout tabLayout;
     List<FragmentSettings> fragments;
 
-    @Override
-    protected void stopTasks() {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +49,7 @@ public class ActivitySetting extends BaseActivity {
         mToolbar = findViewById(R.id.toolbar);
        // mToolbar.setTitle(getString(R.string.label_activity_settings));
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +87,7 @@ public class ActivitySetting extends BaseActivity {
         });
         tabLayout.setupWithViewPager(pager);
         if(getIntent()!=null&&getIntent().hasExtra("target")){
-            switch(getIntent().getStringExtra("target")){
+            switch(Objects.requireNonNull(getIntent().getStringExtra("target"))){
                 case "basic":
                     pager.setCurrentItem(0);
                     break;

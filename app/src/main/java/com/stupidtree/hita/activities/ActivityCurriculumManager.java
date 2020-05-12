@@ -41,8 +41,8 @@ import com.stupidtree.hita.adapter.SubjectsManagerPagerAdapter;
 import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.BasicRefreshTask;
 import com.stupidtree.hita.fragments.popup.FragmentImportCurriculum;
-import com.stupidtree.hita.fragments.timetable_manager.FragmentCurriculumChild;
-import com.stupidtree.hita.fragments.timetable_manager.FragmentCurriculumSettings;
+import com.stupidtree.hita.fragments.timetable_manager.FragmentTimeTableChild;
+import com.stupidtree.hita.fragments.timetable_manager.FragmentTimeTableSettings;
 import com.stupidtree.hita.timetable.CurriculumCreator;
 import com.stupidtree.hita.timetable.packable.Curriculum;
 import com.stupidtree.hita.util.FileOperator;
@@ -63,7 +63,7 @@ import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.activities.ActivityMain.saveData;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
-public class ActivityCurriculumManager extends BaseActivity implements FragmentCurriculumSettings.CurriculumPageRoot
+public class ActivityCurriculumManager extends BaseActivity implements FragmentTimeTableSettings.CurriculumPageRoot
         , BaseOperationTask.OperationListener<Object>
         , BasicRefreshTask.ListRefreshedListener<List<Curriculum>> {
 
@@ -87,11 +87,6 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
     private RecyclerView list;
     private Curriculum curriculumShow;
     private SharedPreferences timetableSP;
-
-    @Override
-    protected void stopTasks() {
-
-    }
 
 
     @Override
@@ -240,8 +235,8 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
             image.setImageResource(R.drawable.ic_winter);
         else image.setImageResource(R.drawable.ic_menu_jwts);
         for (Fragment fx : getSupportFragmentManager().getFragments()) {
-            if (!(fx instanceof FragmentCurriculumChild)) continue;
-            FragmentCurriculumChild f = (FragmentCurriculumChild) fx;
+            if (!(fx instanceof FragmentTimeTableChild)) continue;
+            FragmentTimeTableChild f = (FragmentTimeTableChild) fx;
             try {
                 f.Refresh();
             } catch (Exception e) {
@@ -281,8 +276,8 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentC
     @Override
     public void onChangeColorSettingsRefresh() {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        if (fragments.size() < 1 || !(fragments.get(0) instanceof FragmentCurriculumChild)) return;
-        FragmentCurriculumChild f = (FragmentCurriculumChild) fragments.get(0);
+        if (fragments.size() < 1 || !(fragments.get(0) instanceof FragmentTimeTableChild)) return;
+        FragmentTimeTableChild f = (FragmentTimeTableChild) fragments.get(0);
         try {
             f.Refresh();
         } catch (Exception e) {

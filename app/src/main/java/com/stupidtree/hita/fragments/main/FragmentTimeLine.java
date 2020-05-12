@@ -42,7 +42,7 @@ import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
-import static com.stupidtree.hita.adapter.NaviPageAdapter.strToIntegerList;
+import static com.stupidtree.hita.adapter.NavigationListAdapter.strToIntegerList;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 
@@ -64,6 +64,7 @@ public class FragmentTimeLine extends BaseFragment implements
     private PullExtendLayout mPullExtendLayout;
     private TaskCardListAdapter headerListAdapter;
     private MainFABController mainFABController;
+    private boolean firstEnter = true;
     public FragmentTimeLine() {
 
     }
@@ -100,6 +101,7 @@ public class FragmentTimeLine extends BaseFragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initListAndAdapter(view);
+        firstEnter = true;
     }
 
     @Override
@@ -183,6 +185,11 @@ public class FragmentTimeLine extends BaseFragment implements
             if (holder != null) {
                 TimelineListAdapter.timelineHeaderHolder header = (TimelineListAdapter.timelineHeaderHolder) holder;
                 header.UpdateHeadView();
+                if(firstEnter){
+                    header.showHeadView();
+                    firstEnter = false;
+                }
+
             }
             listAdapter.notifyItemChangedSmooth(toAdd, notifyAll);
         } catch (Exception e) {
@@ -239,18 +246,6 @@ public class FragmentTimeLine extends BaseFragment implements
                 EventsUtils.showEventItem(getBaseActivity(), timelineRes.get(position));
             }
         });
-//        listAdapter.setOnItemLongClickListener(new BaseListAdapter.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(View view, int position) {
-//                if (timelineRes.get(position).eventType != TimetableCore.COURSE && timelineRes.get(position).eventType != DYNAMIC) {
-//                    ExplosionField ef = ExplosionField.attach2Window(Objects.requireNonNull(FragmentTimeLine.this.getActivity()));
-//                    ef.explode(view);
-//                    new DeleteTask_timeline(position).executeOnExecutor(HITAApplication.TPE);
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
 
     }
 

@@ -1,4 +1,4 @@
-package com.stupidtree.hita.fragments.user_center;
+package com.stupidtree.hita.fragments.user;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -200,7 +200,7 @@ public class FragmentUserCenter_ut extends BaseFragment {
 
                 icons[i].setImageResource(iconID);
             }
-            punchLabel.setText(getString(R.string.user_center_you_have_punched, all));
+            punchLabel.setText(getResources().getQuantityString(R.plurals.user_center_you_have_punched, all,all));
 
         } catch (Exception e) {
             e.printStackTrace();

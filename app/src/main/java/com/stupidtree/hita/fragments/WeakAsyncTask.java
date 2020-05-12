@@ -33,7 +33,12 @@ public abstract class WeakAsyncTask<Params, Progress, Result, WeakTarget>
         final WeakTarget target = mTarget.get();
         if (this.params == null) this.params = params;
         if (target != null) {
-            return this.doInBackground(target, params);
+            try {
+                return this.doInBackground(target, params);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         } else {
             return null;
         }

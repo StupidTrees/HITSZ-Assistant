@@ -34,10 +34,7 @@ public class ActivityAttitude extends BaseActivity implements FragmentAddAttitud
     ViewPager pager;
     TabLayout tabs;
 
-    @Override
-    protected void stopTasks() {
 
-    }
 
 
     @Override

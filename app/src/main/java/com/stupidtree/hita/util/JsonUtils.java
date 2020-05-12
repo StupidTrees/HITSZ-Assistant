@@ -1,7 +1,5 @@
 package com.stupidtree.hita.util;
 
-import android.text.TextUtils;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -9,9 +7,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.stupidtree.hita.hita.TextTools;
 
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

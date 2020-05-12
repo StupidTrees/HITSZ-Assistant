@@ -73,9 +73,9 @@ public class EventItemHolder  {
         isWholeDay = c.getInt(c.getColumnIndex("is_whole_day"))!=0;
         ArrayList<Integer> weeks = new ArrayList<>();
         String[] wstr = c.getString(c.getColumnIndex("weeks")).split(",");
-        for(int i=0;i<wstr.length;i++) {
-            if(wstr[i].isEmpty()) continue;
-            weeks.add(Integer.parseInt(wstr[i]));
+        for (String s : wstr) {
+            if (s.isEmpty()) continue;
+            weeks.add(Integer.parseInt(s));
         }
         eventType = type;
         this.startTime = start;

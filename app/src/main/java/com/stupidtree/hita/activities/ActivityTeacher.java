@@ -35,6 +35,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
@@ -54,7 +55,8 @@ public class ActivityTeacher extends BaseActivity {
 
 
     @Override
-    protected void stopTasks() {
+    protected void onDestroy() {
+        super.onDestroy();
         if(pageTask!=null&&pageTask.getStatus()!=AsyncTask.Status.FINISHED) pageTask.cancel(true);
     }
 
@@ -65,7 +67,7 @@ public class ActivityTeacher extends BaseActivity {
         setContentView(R.layout.activity_teacher);
         initToolbar();
         initViews();
-        if(getIntent().getExtras().getSerializable("teacher")!=null){
+        if(Objects.requireNonNull(getIntent().getExtras()).getSerializable("teacher")!=null){
             refreshPage_get();
         }else refreshPage_search();
 
@@ -84,7 +86,7 @@ public class ActivityTeacher extends BaseActivity {
     void refreshPage_search() {
         teacherName = getIntent().getStringExtra("name");
         refresh.setVisibility(View.VISIBLE);
-        BmobQuery<Teacher> bq = new BmobQuery();
+        BmobQuery<Teacher> bq = new BmobQuery<>();
         bq.addWhereEqualTo("name", teacherName);
         bq.findObjects(new FindListener<Teacher>() {
             @Override
@@ -119,8 +121,8 @@ public class ActivityTeacher extends BaseActivity {
 
     void refreshPage_get() {
         refresh.setVisibility(View.GONE);
-       teacher = (Teacher) getIntent().getExtras().getSerializable("teacher");
-       teacherName = teacher.getName();
+       teacher = (Teacher) Objects.requireNonNull(getIntent().getExtras()).getSerializable("teacher");
+       teacherName = teacher != null ? teacher.getName() : null;
        loadInfos();
     }
 
@@ -130,7 +132,7 @@ public class ActivityTeacher extends BaseActivity {
         toolbar.setTitle("");
         toolbar.inflateMenu(R.menu.toolbar_teacher);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -151,13 +153,13 @@ public class ActivityTeacher extends BaseActivity {
             }
         });
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            private float mHeadImgScale = 0;
 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 float scale = 1.0f + (verticalOffset) / ((float) appBarLayout.getHeight());
                 teacherAvatar.setScaleX(scale);
                 teacherAvatar.setScaleY(scale);
+                float mHeadImgScale = 0;
                 teacherAvatar.setTranslationY(mHeadImgScale * verticalOffset);
                 avatar_card.setScaleX(scale);
                 avatar_card.setScaleY(scale);

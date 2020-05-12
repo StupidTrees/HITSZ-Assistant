@@ -13,7 +13,7 @@
         android:layout_margin="16dp"
         android:gravity="center|top"
         android:orientation="vertical"
-        tools:context=".fragments.user_center.FragmentUserCenter_sync">
+        tools:context=".fragments.user.FragmentUserCenter_sync">
 
         <LinearLayout
             android:id="@+id/save_to_cloud"

@@ -1,4 +1,4 @@
-package com.stupidtree.hita.cores;
+package com.stupidtree.hita;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
@@ -22,14 +22,14 @@ import static com.stupidtree.hita.HITAApplication.defaultSP;
 public class AppThemeCore {
     private int themeID;
     private ThemeItem currentTheme;
-    boolean darkModeOn = false;
-    String darkModeMode;
+    private boolean darkModeOn;
+    private String darkModeMode;
     private List<ThemeItem> allThemeList;
 
     public AppThemeCore() {
         allThemeList = Arrays.asList(
                 new ThemeItem(R.string.theme_name_amber, R.style.AmberTheme, R.color.amber_primary, R.color.amber_accent, R.color.amber_fade, R.style.AmberTheme_translucent),
-               new ThemeItem(R.string.theme_name_hit, R.style.HITTheme, R.color.hit_primary, R.color.hit_accent, R.color.hit_fade, R.style.HITTheme_translucent),
+                new ThemeItem(R.string.theme_name_hit, R.style.HITTheme, R.color.hit_primary, R.color.hit_accent, R.color.hit_fade, R.style.HITTheme_translucent),
                 new ThemeItem(R.string.theme_name_red, R.style.RedTheme, R.color.red_primary, R.color.red_accent, R.color.red_fade, R.style.RedTheme_translucent),
                 new ThemeItem(R.string.theme_name_blue, R.style.BlueTheme, R.color.blue_primary, R.color.blue_accent, R.color.blue_fade, R.style.BlueTheme_translucent),
                 new ThemeItem(R.string.theme_name_deep_orange, R.style.DeepOrangeTheme, R.color.deep_orange_primary, R.color.deep_orange_accent, R.color.deep_orange_fade, R.style.DeepOrangeTheme_translucent),
@@ -63,7 +63,7 @@ public class AppThemeCore {
     public boolean isCurrentDarkTheme() {
         return themeID == R.style.PHTheme || themeID == R.style.CyberPunkTheme;
     }
-    public ThemeItem getCurrentTheme() {
+    private ThemeItem getCurrentTheme() {
         return currentTheme;
     }
 
@@ -84,7 +84,7 @@ public class AppThemeCore {
         return allThemeList;
     }
 
-    public class ThemeItem {
+    public static class ThemeItem {
         String name;
         int themeId;
         int themeTranslucentID;
@@ -92,7 +92,7 @@ public class AppThemeCore {
         int colorAccent;
         int colorFade;
 
-        public ThemeItem(int nameId, int themeId, int colorPrimary, int colorAccent, int colorFade, int themeTranslucentID) {
+        ThemeItem(int nameId, int themeId, int colorPrimary, int colorAccent, int colorFade, int themeTranslucentID) {
             this.name = HContext.getString(nameId);
             this.themeTranslucentID = themeTranslucentID;
             this.themeId = themeId;
@@ -105,7 +105,7 @@ public class AppThemeCore {
             return name;
         }
 
-        public int getThemeId() {
+        int getThemeId() {
             return themeId;
         }
 
@@ -120,10 +120,6 @@ public class AppThemeCore {
         public int getColorFade() {
             return colorFade;
         }
-    }
-
-    public boolean isDarkModeFollowingSystem() {
-        return !darkModeMode.equals("dark_mode_normal");
     }
 
     public int getCurrentThemeID() {

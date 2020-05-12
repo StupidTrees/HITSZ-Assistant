@@ -168,18 +168,24 @@
     <string name="tt_saturday">六</string>
     <string name="tt_sunday">日</string>
     <string name="tt_wholeday">全天</string>
-    <string name="user_center_you_have_punched">累计%d天校园心情</string>
+    <plurals name="user_center_you_have_punched">
+        <item quantity="other">累计%d天校园心情</item>
+    </plurals>
     <string name="date_day">%d日</string>
     <string name="week">第%d周</string>
-    <string name="count_week">%d星期</string>
-    <string name="count_week_simplified">%d周</string>
+    <plurals name="count_week">
+        <item quantity="other">%d星期</item>
+    </plurals>
+    <plurals name="count_week_simplified">
+        <item quantity="other">%d周</item>
+    </plurals>
     <string name="navi_semister_not_begun">学期未开始</string>
     <string name="navi_semister_no_data">无学期数据</string>
     <string name="navi_settings_title">设置导航页内容</string>
     <string name="ade_no_suitable_allocation">没有找到合适的分配时间！</string>
     <string name="ade_set_time_first">请先设置日期！</string>
     <string name="pick_location">选择地点</string>
-    <string name="ade_exam_name">输入考试名称...</string>
+    <string name="ade_exam_name">输入考试名称…</string>
     <string name="ade_set_time_period">设置日期与时间段</string>
     <string name="ade_set_time_date">设置日期与时间</string>
     <string name="ade_set_date">设置日期</string>
@@ -531,7 +537,6 @@
         <item>设置</item>
     </string-array>
     <string-array name="user_center_tabs">
-
         <item>校园</item>
         <item>资料</item>
         <item>同步</item>

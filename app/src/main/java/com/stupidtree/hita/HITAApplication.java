@@ -20,9 +20,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.community.BmobCacheHelper;
-import com.stupidtree.hita.cores.AppThemeCore;
-import com.stupidtree.hita.cores.HITADBHelper;
-import com.stupidtree.hita.jw.JWCore;
+import com.stupidtree.hita.eas.JWCore;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.timetable.TimeWatcherService;
 import com.stupidtree.hita.timetable.TimetableCore;
@@ -31,6 +29,7 @@ import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
 
+import java.lang.ref.WeakReference;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -46,8 +45,7 @@ import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED
 public class HITAApplication extends Application {
 
     //一个全局的Context变量
-    public static Context HContext;
-    public static HITADBHelper mDBHelper;
+    public static Application HContext;
     public static AppThemeCore themeCore;
     public static JWCore jwCore;
     public static TimetableCore timeTableCore;
@@ -65,8 +63,7 @@ public class HITAApplication extends Application {
         super.onCreate();
         //初始化顺序不可乱
         TPE = new ThreadPoolExecutor(0,Integer.MAX_VALUE,60L, TimeUnit.SECONDS,new SynchronousQueue<Runnable>());
-        HContext = getBaseContext();
-        mDBHelper = new HITADBHelper(HContext);
+        HContext = this;
         defaultSP = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
         themeCore = new AppThemeCore();
         timeTableCore = new TimetableCore();
@@ -182,7 +179,6 @@ public class HITAApplication extends Application {
     public void onTerminate() {
         super.onTerminate();
         timeTableCore.onTerminate();
-        mDBHelper.close();
     }
 
 
@@ -192,13 +188,12 @@ public class HITAApplication extends Application {
 //    }
 
 
-    static class InitTask extends AsyncTask {
+    static class InitTask extends AsyncTask<Object,Object,Object> {
 
-        @SuppressLint("StaticFieldLeak")
-        Context context;
+        WeakReference<Context> context;
 
         InitTask(Context f) {
-            context = f;
+            context = new WeakReference<>(f);
         }
 
 
@@ -210,8 +205,11 @@ public class HITAApplication extends Application {
 
         @Override
         protected void onPostExecute(Object o) {
-            Intent i2 = new Intent(TIMETABLE_CHANGED);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(i2);
+            if(context.get()!=null){
+                Intent i2 = new Intent(TIMETABLE_CHANGED);
+                LocalBroadcastManager.getInstance(context.get()).sendBroadcast(i2);
+            }
+
         }
     }
 }

@@ -53,14 +53,9 @@ public class ActivityLocation extends BaseActivity {
     ArrayList<HashMap> infoListRes;
     ImageView appbarBG;
     FloatingActionButton fab;
-    //CollapsingToolbarLayout collapsingToolbarLayout;
     TextView rate;
     ImageView rateButton;
 
-    @Override
-    protected void stopTasks() {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

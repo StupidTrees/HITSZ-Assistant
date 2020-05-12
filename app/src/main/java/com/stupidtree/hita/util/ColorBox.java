@@ -1,10 +1,6 @@
 package com.stupidtree.hita.util;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.provider.CalendarContract;
-
-import androidx.core.graphics.ColorUtils;
 
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package com.stupidtree.hita.fragments;
+package com.stupidtree.hita.fragments.campus;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -16,6 +16,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BaseFragment;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;

@@ -19,7 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.BaseOperationTask;
-import com.stupidtree.hita.jw.JWException;
+import com.stupidtree.hita.eas.JWException;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.online.UserData;
 import com.stupidtree.hita.views.ButtonLoading;

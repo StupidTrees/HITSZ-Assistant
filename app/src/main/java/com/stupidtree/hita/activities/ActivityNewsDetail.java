@@ -3,7 +3,6 @@ package com.stupidtree.hita.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -22,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.JsonUtils;
 
@@ -33,26 +33,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 
-public class ActivityNewsDetail extends BaseActivity {
+
+public class ActivityNewsDetail extends BaseActivity implements BaseOperationTask.OperationListener {
     private static final int MODE_HITSZ_NEWS = 929;
     private static final int MODE_ZSW_NEWS = 482;
     String link;
     TextView title, time;
     WebView wv;
-    LoadTask pageTask;
     int mode;
     List<String> imagesOnPage;
 
 
-    @Override
-    protected void stopTasks() {
-        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask.cancel(true);
-    }
 
     public static String[] returnImageUrlsFromHtml(String htmlCode) {
         List<String> imageSrcList = new ArrayList<String>();
@@ -90,7 +87,7 @@ public class ActivityNewsDetail extends BaseActivity {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    void initViews(){
+    void initViews() {
         imagesOnPage = new ArrayList<>();
         title = findViewById(R.id.detail_title);
         time = findViewById(R.id.detail_time);
@@ -113,8 +110,8 @@ public class ActivityNewsDetail extends BaseActivity {
                 ActivityUtils.showOneImage(getThis(), url);
                 //   ActivityUtils.startPhotoDetailActivity(ActivityNewsDetail.this,url);
             }
-        },"jsCallJavaObj");
-        wv.setWebViewClient(new WebViewClient(){
+        }, "jsCallJavaObj");
+        wv.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
@@ -124,18 +121,51 @@ public class ActivityNewsDetail extends BaseActivity {
 
     }
 
+
+
+    @Override
+    public void onOperationStart(String id, Boolean[] params) {
+
+    }
+
+    @Override
+    public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object o) {
+        if (o != null) {
+            Map m = (Map) o;
+            Document d = new Document("");
+            if (m.get("time") != null) time.setText(Html.fromHtml(String.valueOf(m.get("time"))));
+            if (m.get("text") != null) d = Jsoup.parse(String.valueOf(m.get("text")));
+            // d.removeClass("download_file");
+            String js = "<script type=\"text/javascript\">" +
+                    "var imgs = document.getElementsByTagName('img');" + // 找到img标签
+                    "for(var i = 0; i<imgs.length; i++){" +  // 逐个改变
+                    "imgs[i].style.width = '100%';" +  // 宽度改为100%
+                    "imgs[i].style.height = 'auto';" +
+                    "}" +
+                    "</script>";
+            if (mode == MODE_HITSZ_NEWS) {
+                wv.loadUrl("http://www.hitsz.edu.cn" + getIntent().getStringExtra("link"));
+
+            } else {
+                wv.loadData(d.toString() + js, "text/html; charset=UTF-8", null);
+            }
+            //
+        }
+    }
+
     /**
      * Js調用Java接口
      */
-    private interface JsCallJavaObj{
+    private interface JsCallJavaObj {
         void showBigImg(String url);
     }
+
     void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         toolbar.inflateMenu(R.menu.toolbar_news_detail);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,9 +185,12 @@ public class ActivityNewsDetail extends BaseActivity {
             }
         });
     }
-    void initLink(){
-        if(mode==MODE_HITSZ_NEWS) link = "http://www.hitsz.edu.cn"+ getIntent().getStringExtra("link");
-        else if(mode == MODE_ZSW_NEWS) link="http://zsb.hitsz.edu.cn/zs_common/bkzn/zswz/zsjzxq?id="+ getIntent().getStringExtra("link");
+
+    void initLink() {
+        if (mode == MODE_HITSZ_NEWS)
+            link = "http://www.hitsz.edu.cn" + getIntent().getStringExtra("link");
+        else if (mode == MODE_ZSW_NEWS)
+            link = "http://zsb.hitsz.edu.cn/zs_common/bkzn/zswz/zsjzxq?id=" + getIntent().getStringExtra("link");
     }
 
     /**
@@ -184,21 +217,27 @@ public class ActivityNewsDetail extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED)
-            pageTask.cancel(true);
-        pageTask = new LoadTask();
-        pageTask.executeOnExecutor(HITAApplication.TPE);
+        new LoadTask(this, mode, getIntent().getStringExtra("link")).executeOnExecutor(HITAApplication.TPE);
     }
 
-    class LoadTask extends AsyncTask {
+    static class LoadTask extends BaseOperationTask<Object> {
+
+        int mode;
+        String link;
+
+        LoadTask(OperationListener listRefreshedListener, int mode, String link) {
+            super(listRefreshedListener);
+            this.mode = mode;
+            this.link = link;
+        }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             try {
                 Map<String, String> m = new HashMap<>();
-                HashMap<String,String> cookies = new HashMap<>();
-                if(mode==MODE_HITSZ_NEWS){
-                    Document d = Jsoup.connect("http://www.hitsz.edu.cn"+ getIntent().getStringExtra("link")).get();
+                HashMap<String, String> cookies = new HashMap<>();
+                if (mode == MODE_HITSZ_NEWS) {
+                    Document d = Jsoup.connect("http://www.hitsz.edu.cn" + link).get();
                     try {
                         String text = d.select("[class=detail]").select("[class=edittext]").toString();
                         m.put("text", text);
@@ -208,25 +247,25 @@ public class ActivityNewsDetail extends BaseActivity {
                         e.printStackTrace();
                     }
                     return m;
-                }else if(mode==MODE_ZSW_NEWS){
-                    Connection.Response  r = Jsoup.connect("http://zsb.hitsz.edu.cn/zs_common/bkzn/getJbxx")
+                } else if (mode == MODE_ZSW_NEWS) {
+                    Connection.Response r = Jsoup.connect("http://zsb.hitsz.edu.cn/zs_common/bkzn/getJbxx")
                             .cookies(cookies)
                             .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36")
                             .ignoreContentType(true)
                             .ignoreHttpErrors(true)
                             .cookies(cookies)
                             .method(Connection.Method.POST)
-                            .data("info","{\"id\":\""+getIntent().getStringExtra("link")+"\",\"xxlm\":\"\"}")
+                            .data("info", "{\"id\":\"" + link + "\",\"xxlm\":\"\"}")
                             .execute();
-                    String json =r.body();
+                    String json = r.body();
                     JsonObject jo = new JsonParser().parse(json).getAsJsonObject();
                     JsonObject data = jo.get("module").getAsJsonArray().get(0).getAsJsonObject().get("data").getAsJsonObject();
-                    String date = JsonUtils.getStringInfo(data,"fbsj");
-                    String views = JsonUtils.getStringInfo(data,"llcs");
-                   // Document d2 = Jsoup.parse(StringEscapeUtils.unescapeJava(d.toString()));
-                    String text = JsonUtils.getStringInfo(data,"pcdxxnr");
-                    m.put("text",text);
-                    m.put("time", getString(R.string.posted_in)+date+" "+getString(R.string.total_views)+views);
+                    String date = JsonUtils.getStringInfo(data, "fbsj");
+                    String views = JsonUtils.getStringInfo(data, "llcs");
+                    // Document d2 = Jsoup.parse(StringEscapeUtils.unescapeJava(d.toString()));
+                    String text = JsonUtils.getStringInfo(data, "pcdxxnr");
+                    m.put("text", text);
+                    m.put("time", HContext.getString(R.string.posted_in) + date + " " + HContext.getString(R.string.total_views) + views);
                     return m;
                 }
                 return null;
@@ -234,37 +273,8 @@ public class ActivityNewsDetail extends BaseActivity {
                 e.printStackTrace();
                 return null;
             }
-
         }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            try {
-                Map<String, String> m = (Map) o;
-                if (o != null) {
-                    Document d = new Document("");
-                    if(m.get("time")!=null) time.setText(Html.fromHtml(m.get("time")));
-                    if(m.get("text")!=null) d = Jsoup.parse(m.get("text"));
-                    // d.removeClass("download_file");
-                    String js = "<script type=\"text/javascript\">" +
-                            "var imgs = document.getElementsByTagName('img');" + // 找到img标签
-                            "for(var i = 0; i<imgs.length; i++){" +  // 逐个改变
-                            "imgs[i].style.width = '100%';" +  // 宽度改为100%
-                            "imgs[i].style.height = 'auto';" +
-                            "}" +
-                            "</script>";
-                    if (mode == MODE_HITSZ_NEWS) {
-                        wv.loadUrl("http://www.hitsz.edu.cn" + getIntent().getStringExtra("link"));
 
-                    } else {
-                        wv.loadData(d.toString() + js, "text/html; charset=UTF-8", null);
-                    }
-                    //
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

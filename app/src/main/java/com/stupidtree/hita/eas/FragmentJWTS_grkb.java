@@ -1,4 +1,4 @@
-package com.stupidtree.hita.jw;
+package com.stupidtree.hita.eas;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;

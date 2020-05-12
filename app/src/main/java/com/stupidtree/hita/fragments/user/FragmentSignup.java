@@ -1,4 +1,4 @@
-package com.stupidtree.hita.fragments;
+package com.stupidtree.hita.fragments.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.views.ButtonLoading;
 

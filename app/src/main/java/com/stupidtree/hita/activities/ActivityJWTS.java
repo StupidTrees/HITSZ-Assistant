@@ -23,11 +23,11 @@ import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.BaseTabAdapter;
 import com.stupidtree.hita.fragments.BaseOperationTask;
-import com.stupidtree.hita.jw.FragmentJWTS_cjgl;
-import com.stupidtree.hita.jw.FragmentJWTS_grkb;
-import com.stupidtree.hita.jw.FragmentJWTS_xsxk;
-import com.stupidtree.hita.jw.JWException;
-import com.stupidtree.hita.jw.JWFragment;
+import com.stupidtree.hita.eas.FragmentJWTS_cjgl;
+import com.stupidtree.hita.eas.FragmentJWTS_grkb;
+import com.stupidtree.hita.eas.FragmentJWTS_xsxk;
+import com.stupidtree.hita.eas.JWException;
+import com.stupidtree.hita.eas.JWFragment;
 import com.stupidtree.hita.views.MaterialCircleAnimator;
 
 import java.util.ArrayList;
@@ -54,11 +54,6 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot, Bas
     View loading;
 
 
-    @Override
-    protected void stopTasks() {
-
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +70,6 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot, Bas
         rootLayout = findViewById(R.id.jwts_root);
         fab = findViewById(R.id.fab);
         xnxqItems = new ArrayList<>();
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
     }
 
     void initToolbar() {
