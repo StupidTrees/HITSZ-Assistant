@@ -12,13 +12,12 @@
 		android:id="@+id/right_text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_centerVertical="true"
 		android:layout_margin="10dp"
 		android:gravity="center_vertical"
 		android:maxEms="12"
 		android:singleLine="false"
 		android:text="你好，希塔"
-		android:textColor="?attr/colorPrimary"
+        android:textColor="@color/material_text_icon_white_secondary"
 		android:textSize="18sp" />
 
 	<androidx.cardview.widget.CardView

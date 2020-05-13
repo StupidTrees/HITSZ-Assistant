@@ -88,7 +88,6 @@ lint/tmp/
 
 # IntelliJ project files
 .idea
-*.iml
 out
 gen
 /.idea/
@@ -102,3 +101,4 @@ app/src/main/res/values-zh-rHK/
 java_pid13892.hprof
 /.gradle/
 /app/release/
+app/src/main/res/menu-v26/

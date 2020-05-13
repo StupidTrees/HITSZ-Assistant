@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -395,10 +396,14 @@ public class NavigationListAdapter extends BaseListAdapter<NavigationCardItem, N
     private void onMove(int fromPosition, int toPosition) {
         //对原数据进行移动
         if (toPosition == 0 || fromPosition == 0) return;
-        Collections.swap(mBeans, fromPosition - 1, toPosition - 1);
-        //通知数据移动
-        notifyItemMoved(fromPosition, toPosition);
-        saveOrders();
+        try {
+            Collections.swap(mBeans, fromPosition - 1, toPosition - 1);
+            //通知数据移动
+            notifyItemMoved(fromPosition, toPosition);
+            saveOrders();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -501,6 +506,7 @@ public class NavigationListAdapter extends BaseListAdapter<NavigationCardItem, N
 
     static class NaviViewHolder extends RecyclerView.ViewHolder {
         CardView card;
+        boolean isDragging = true;
 
         NaviViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -674,6 +680,11 @@ public class NavigationListAdapter extends BaseListAdapter<NavigationCardItem, N
         }
 
         @Override
+        public boolean isLongPressDragEnabled() {
+            return true;
+        }
+
+        @Override
         public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
             //首先回调的方法,返回int表示是否监听该方向
             int dragFlag = ItemTouchHelper.DOWN | ItemTouchHelper.UP;//拖拽
@@ -687,36 +698,33 @@ public class NavigationListAdapter extends BaseListAdapter<NavigationCardItem, N
             if (mAdapter != null) {
                 mAdapter.onMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
             }
-
             return true;
         }
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
         }
 
 
         @Override
         public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
             super.clearView(recyclerView, viewHolder);
-//            Log.e("clearView", String.valueOf(viewHolder));
-            if (viewHolder instanceof HeaderHolder) return;
-            NaviViewHolder holder = (NaviViewHolder) viewHolder;
-            if (holder.card == null) return;
-            holder.itemView.setAlpha(1.0f);
-            //holder.card.setCardElevation(dip2px(HContext, 0));
 
-//            if (focusedHolder != null) {
-//                focusedHolder.itemView.setAlpha(1f);
-//                //focusedHolder.card.setCardElevation(dip2px(HContext, 0));
-//            }
-            try {
-                if (mAdapter != null) {
-                    mAdapter.notifyDataSetChanged();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (viewHolder instanceof HeaderHolder) return;
+            Log.e("clearView", ":" + viewHolder);
+            final NaviViewHolder holder = (NaviViewHolder) viewHolder;
+            if (!holder.isDragging) {
+                holder.isDragging = true;
+                ValueAnimator va = ValueAnimator.ofFloat(26f, 0f);
+                va.setDuration(260);
+                va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        //  holder.itemView.setAlpha(1f-(Float) animation.getAnimatedValue()/64f);
+                        holder.card.setCardElevation((Float) animation.getAnimatedValue());
+                    }
+                });
+                va.start();
             }
 
         }
@@ -725,23 +733,29 @@ public class NavigationListAdapter extends BaseListAdapter<NavigationCardItem, N
         public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
             super.onSelectedChanged(viewHolder, actionState);
             if (viewHolder instanceof HeaderHolder) return;
-            //Log.e("selectedChanged",viewHolder==null?"null":String.valueOf(viewHolder));
-            NaviViewHolder holder = (NaviViewHolder) viewHolder;
+            final NaviViewHolder holder = (NaviViewHolder) viewHolder;
             if (holder == null || holder.card == null) return;
-            if (actionState == 2) {
-                // focusedHolder = holder;
-                holder.itemView.setAlpha(0.8f);
-                //  holder.card.setCardElevation(dip2px(HContext, 6));
-//                holder.card.refreshDrawableState();
-//                Log.e("elevation_changed", String.valueOf(holder.card.getCardElevation()));
+            Log.e("onSelectedChanged", viewHolder + "," + actionState);
+            holder.isDragging = !holder.isDragging;
+            if (!holder.isDragging) {
+                Log.e("shadow!", "uuu");
+                ValueAnimator va = ValueAnimator.ofFloat(holder.card.getCardElevation(), 26f);
+                va.setDuration(260);
+                va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        //  holder.itemView.setAlpha(1f-(Float) animation.getAnimatedValue()/64f);
+                        holder.card.setCardElevation((Float) animation.getAnimatedValue());
+                    }
+                });
+                va.start();
+                // holder.itemView.setAlpha(0.8f);
             }
-
-
         }
 
     }
 
-    static class refreshUTMoodTask extends AsyncTask<Object,Object,Object> {
+    static class refreshUTMoodTask extends AsyncTask<Object, Object, Object> {
         ViewHolder_Mood holder;
         int totalNumber;
         float score;

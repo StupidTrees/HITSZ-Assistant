@@ -1,4 +1,4 @@
-//package com.stupidtree.hita;
+//package com.stupidtree.hita.widget;
 //
 //import android.app.PendingIntent;
 //import android.appwidget.AppWidgetManager;
@@ -14,12 +14,9 @@
 //import android.widget.Toast;
 //
 //import com.stupidtree.hita.activities.ActivityLeaderBoard;
-//import com.stupidtree.hita.activities.ActivityExplore;
 //import com.stupidtree.hita.activities.ActivityLogin;
 //import com.stupidtree.hita.activities.ActivityMain;
 //import com.stupidtree.hita.timetable.packable.Curriculum;
-//import com.stupidtree.hita.cores.HITADBHelper;
-//import com.stupidtree.hita.timetable.TimeTable;
 //import com.stupidtree.hita.timetable.TimetableCore;
 //import com.stupidtree.hita.timetable.packable.EventItem;
 //import com.stupidtree.hita.timetable.packable.HTime;
@@ -40,15 +37,12 @@
 // * Implementation of App Widget functionality.
 // */
 //public class TimeLineWidget extends AppWidgetProvider {
-//    private static List<EventItem> todaysEvents;
-//    private static Calendar now;
+//    private static List<EventItem> todayEvents;
 //    private static  EventItem nowEvent;
 //    private static EventItem nextEvent;
 //    private static float nowProgress;
-//    private static HITADBHelper mDBHelper;
-//    private static Curriculum curriculum;
-//    private static boolean dataAvailavle;
-//    private static int thisCurriculum;
+//
+//    private static TimetableCore timeTableCore;
 //    private static boolean hasInit = false;
 //    private static Set widgetsId = new HashSet(); //注意要是静态的
 //    private static DecimalFormat df = new DecimalFormat("#0.00");
@@ -57,7 +51,7 @@
 //
 //    public int getTodayCourseNum() {
 //        int result = 0;
-//        for (EventItem ei : todaysEvents) {
+//        for (EventItem ei : todayEvents) {
 //            if (ei.eventType == TimetableCore.COURSE) {
 //                result++;
 //            }
@@ -68,11 +62,11 @@
 //    public void refreshTodaysEvents() {
 //
 //        int DOW = timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) == 1 ? 7 : timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) - 1;
-//        todaysEvents.clear();
+//        todayEvents.clear();
 //        for (EventItem ei : TimetableCore.getOneDayEvents(curriculum.getWeekOfTerm(timeTableCore.getNow()), DOW)) {
-//            todaysEvents.add(ei);
+//            todayEvents.add(ei);
 //        }
-//        Collections.sort(todaysEvents);
+//        Collections.sort(todayEvents);
 //    }
 //
 //    public void refreshNowAndNextEvent() {
@@ -80,8 +74,8 @@
 //        boolean changed_next = false;
 //        try {
 //            HTime nowTime = new HTime(timeTableCore.getNow());
-//            for (int i = todaysEvents.size() - 1; i >= 0; i--) {
-//                EventItem ei = todaysEvents.get(i);
+//            for (int i = todayEvents.size() - 1; i >= 0; i--) {
+//                EventItem ei = todayEvents.get(i);
 //                if (ei.hasCross(nowTime) && (!ei.isWholeDay())
 //                        && ei.eventType != TimetableCore.DDL
 //                        && ei.eventType != TimetableCore.TIMETABLE_EVENT_TYPE_REMIND
@@ -123,7 +117,7 @@
 //                refreshTodaysEvents();
 //                refreshNowAndNextEvent();
 //                String titleToSet, subtitltToSet;
-//                if (todaysEvents.size() == 0) {
+//                if (todayEvents.size() == 0) {
 //                    titleToSet = context.getString(R.string.timeline_head_free_title);
 //                    subtitltToSet = context.getString(R.string.timeline_head_free_subtitle);
 //                    ImageToSet = R.drawable.ic_timeline_head_free;
@@ -248,7 +242,7 @@
 //    void init(Context context) {
 //        this.context = context;
 //        now = Calendar.getInstance();
-//        todaysEvents = new ArrayList<>();
+//        todayEvents = new ArrayList<>();
 //        mDBHelper = new HITADBHelper(context);
 //        thisCurriculum = PreferenceManager.getDefaultSharedPreferences(context).getInt("thisCurriculum", 0);
 //        SQLiteDatabase sq = mDBHelper.getReadableDatabase();

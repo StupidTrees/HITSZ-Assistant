@@ -23,7 +23,7 @@ import cn.bmob.v3.listener.SaveListener;
 public class ChatBotB {
 
 
-    public static JsonObject InteractTulin(String text){
+    public static JsonObject InteractTurin(String text) {
         JsonObject re = new JsonObject();
         JsonObject obj = transJosn(text);
         try {

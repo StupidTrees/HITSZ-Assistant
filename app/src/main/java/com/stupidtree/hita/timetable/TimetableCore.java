@@ -63,9 +63,9 @@ public class TimetableCore {
     public static Uri uri_subject = Uri.parse("content://com.stupidtree.hita.provider/subject");
     private static Uri uri_curriculum = Uri.parse("content://com.stupidtree.hita.provider/curriculum");
 
-    public TimetableCore() {
+    public TimetableCore(ContentResolver contentResolver) {
         now = Calendar.getInstance();
-        contentResolver = HContext.getContentResolver();
+        this.contentResolver = contentResolver;
     }
 
     public static List<HTime> getTimeAtNumber(int begin, int last) {
@@ -191,7 +191,7 @@ public class TimetableCore {
 
     public void loadDataFromCloud(UserData.UserDataCloud bud) {
         if (CurrentUser == null) return;
-        new writeDataToLocalTask(bud).executeOnExecutor(TPE);
+        new writeDataToLocalTask(contentResolver, bud).executeOnExecutor(TPE);
     }
 
     public void loadDataFromCloud(final Activity toFinish) {
@@ -203,7 +203,7 @@ public class TimetableCore {
             public void done(List<UserData.UserDataCloud> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
                 Log.e("下载", "done");
                 if (e == null && list != null && list.size() > 0) {
-                    new writeDataToLocalTask(list.get(0), toFinish).executeOnExecutor(TPE);
+                    new writeDataToLocalTask(contentResolver, list.get(0), toFinish).executeOnExecutor(TPE);
                 } else {
                     if (toFinish != null) toFinish.finish();
                     Log.e("下载失败", e == null ? "空结果" : e.toString());
@@ -371,7 +371,6 @@ public class TimetableCore {
 
     @WorkerThread
     public void saveCurriculum(Curriculum c) {
-        ContentResolver contentResolver = HContext.getContentResolver();
         if (contentResolver.update(uri_curriculum, c.getContentValues(), "curriculum_code=?", new String[]{c.getCurriculumCode()}) == 0) {
             contentResolver.insert(uri_curriculum, c.getContentValues());
         }
@@ -782,9 +781,9 @@ public class TimetableCore {
             public void done(List<UserData.UserDataCloud> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
                 Log.e("下载", "done");
                 if (e == null && list != null && list.size() > 0) {
-                    new writeDataToLocalTask(list.get(0)).execute();
+                    new writeDataToLocalTask(contentResolver, list.get(0)).execute();
                 } else {
-                    Toast.makeText(HContext, R.string.no_data_on_cloud, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(HContext, R.string.no_data_on_cloud, Toast.LENGTH_SHORT).show();
                     Log.e("下载失败", e == null ? "空结果" : e.toString());
                 }
             }
@@ -1635,7 +1634,6 @@ public class TimetableCore {
         protected Object doInBackground(Object[] objects) {
             try {
                 for (Curriculum c : timeTableCore.getAllCurriculum()) {
-                    ContentResolver contentResolver = HContext.getContentResolver();
                     if (contentResolver.update(uri_curriculum, c.getContentValues(), "curriculum_code=?", new String[]{c.getCurriculumCode()}) == 0) {
                         contentResolver.insert(uri_curriculum, c.getContentValues());
                     }
@@ -1664,19 +1662,20 @@ public class TimetableCore {
         WeakReference<Activity> toFinish;
         ContentResolver contentResolver;
 
-        writeDataToLocalTask(UserData.UserDataCloud data, Activity toFinish) {
+        writeDataToLocalTask(ContentResolver contentResolver, UserData.UserDataCloud data, Activity toFinish) {
             this.user_data = data;
             this.toFinish = new WeakReference<>(toFinish);
+            this.contentResolver = contentResolver;
         }
 
-        writeDataToLocalTask(UserData.UserDataCloud data) {
+        writeDataToLocalTask(ContentResolver contentResolver, UserData.UserDataCloud data) {
             this.user_data = data;
             this.toFinish = null;
+            this.contentResolver = contentResolver;
         }
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            contentResolver = HContext.getContentResolver();
             try {
                 UserData data = UserData.create(contentResolver).loadData(user_data);
                 // clearData();

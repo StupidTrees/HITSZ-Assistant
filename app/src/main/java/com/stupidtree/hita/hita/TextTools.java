@@ -11,19 +11,19 @@ import java.util.List;
 import static com.stupidtree.hita.HITAApplication.HContext;
 
 public class TextTools {
-    public static final int THIS = -2;
+    static final int THIS = -2;
     public static final int BEFORE= -3;
-    public static final int NEXT= -4;
-    public static final int T_BEFORE= -5;
-    public static final int T_NEXT= -6;
-    public static final int TT_BEFORE= -7;
-    public static final int TT_NEXT= -8;
-    public static final int LAST = 13;
+    static final int NEXT = -4;
+    static final int T_BEFORE = -5;
+    static final int T_NEXT = -6;
+    static final int TT_BEFORE = -7;
+    static final int TT_NEXT = -8;
+    static final int LAST = 13;
 
     public static String[] words_time_DOW = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期天", "周一", "周二", "周三", "周四", "周五", "周六", "周天", "周日", "星期日", "星期1", "星期2", "星期3", "星期4", "星期5", "星期6", "周1", "周2", "周3", "周4", "周5", "周6"};
 
     public static List<Term> NaiveSegmentation(String sentence){
-        List<Term> result = new ArrayList();
+        List<Term> result = new ArrayList<>();
         String leftSentence = sentence;
         while (true){
             Term next = getFirstTerm(leftSentence);
@@ -135,7 +135,7 @@ public class TextTools {
         return x;
     }
 
-    public static boolean mContains(String x, String[] bases) {
+    static boolean mContains(String x, String[] bases) {
         if (bases == null) return false;
         for (String i : bases) {
             if (x.contains(i)) return true;
@@ -147,7 +147,7 @@ public class TextTools {
                 s.contains("7")||s.contains("8")||s.contains("9")||s.contains("0");
     }
 
-    public static boolean mContains(String x, int id) {
+    static boolean mContains(String x, int id) {
         String[] bases = HContext.getResources().getStringArray(id);
         if (bases == null) return false;
         for (String i : bases) {
@@ -155,21 +155,23 @@ public class TextTools {
         }
         return false;
     }
-    public static String ContainsStrFromArray(String x, int id) {
+
+    private static String ContainsStrFromArray(String x, int id) {
         String[] bases = HContext.getResources().getStringArray(id);
-        if (bases == null) return null;
         for (String i : bases) {
             if(x.contains(i))return i;
         }
         return null;
     }
-    public static boolean mEquals(String x, String[] bases) {
+
+    static boolean mEquals(String x, String[] bases) {
         for (String i : bases) {
             if (x.equals(i)) return true;
         }
         return false;
     }
-    public static boolean mEquals(String x, int id) {
+
+    static boolean mEquals(String x, int id) {
         String[] bases = HContext.getResources().getStringArray(id);
         for (String i : bases) {
             if (x.equals(i)) return true;
@@ -182,7 +184,8 @@ public class TextTools {
         }
         return false;
     }
-    public static boolean mLike(String x, int id) {
+
+    static boolean mLike(String x, int id) {
         String[] str = HContext.getResources().getStringArray(id);
         for (String i : str) {
             if (like(x,i)) return true;
@@ -205,7 +208,7 @@ public class TextTools {
         return result;
     }
 
-    public static String getStringWithTag(List<Term> x, String type, int number) {
+    static String getStringWithTag(List<Term> x, String type, int number) {
         List<String> resultList = new ArrayList<>();
         for (Term m : x) {
             if (m.getTag().equals(type)) {
@@ -217,47 +220,14 @@ public class TextTools {
         else return resultList.get(number - 1);
     }
 
-    public String getStringWithTagFrom(List<Term> x, String type, String[] from, boolean isFromName, int number1, int number2, int number3) {
-        //number1:从第几个FROM标记开始
-        //number2:到第几个FROM标记结束，-1表示一直到结尾
-        //number3:这段区间内的第几个目标字符串
-        if (from == null || getCount(x, from, isFromName) <= 0) {
-
-            List<String> resultList = new ArrayList<>();
-            for (Term m : x) {
-                if (m.getTag().equals(type)) {
-                    resultList.add(m.getContent());
-                }
-            }
-            if (resultList.size() <= 0) return "";
-            if (number3 > resultList.size()) return resultList.get(resultList.size() - 1);
-            else return resultList.get(number3 - 1);
-        } else {
-            int gotit = 0;
-            List<String> resultList = new ArrayList<>();
-            for (Term m : x) {
-                if (isFromName) {
-                    if (mContains(m.getContent(), from)) gotit++;
-                } else {
-                    if (mContains(m.getTag(), from)) gotit++;
-                }
-                if (gotit < number1) {
-
-                } else if (number2 == -1) {
-                    if (m.getTag().equals(type)) {
-                        resultList.add(m.getContent());
-                    }
-                } else if (gotit < number2) {
-                    if (m.getTag().equals(type)) {
-                        resultList.add(m.getContent());
-                    }
-                }
-            }
-            if (resultList.size() <= 0) return "null";
-            if (number3 > resultList.size()) return resultList.get(resultList.size() - 1);
-            else return resultList.get(number3 - 1);
-        }
-
+    static boolean JudgeQuestioning(String text) {
+        // if (text.contains("有") && text.indexOf("有") < text.indexOf("呀")) return true;
+        if (text.contains("有") && text.indexOf("有") < text.indexOf("吗")) return true;
+        if (text.contains("有") && text.indexOf("有") < text.indexOf("不")) return true;
+        if (text.contains("有") && text.indexOf("有") < text.indexOf("否")) return true;
+        if (text.contains("存在") && text.indexOf("有") < text.indexOf("吗")) return true;
+        if (text.contains("存在") && text.indexOf("有") < text.indexOf("不")) return true;
+        return text.contains("存在") && text.indexOf("有") < text.indexOf("否");
     }
     public static String getStringAfterTag(List<Term> x, String[] from) {
         int last = 0;
@@ -271,28 +241,52 @@ public class TextTools {
         return sb.toString();
     }
 
-    public static boolean JudgeQuestionting(String text) {
-        // if (text.contains("有") && text.indexOf("有") < text.indexOf("呀")) return true;
-        if (text.contains("有") && text.indexOf("有") < text.indexOf("吗")) return true;
-        if (text.contains("有") && text.indexOf("有") < text.indexOf("不")) return true;
-        if (text.contains("有") && text.indexOf("有") < text.indexOf("否")) return true;
-        if (text.contains("存在") && text.indexOf("有") < text.indexOf("吗")) return true;
-        if (text.contains("存在") && text.indexOf("有") < text.indexOf("不")) return true;
-        return text.contains("存在") && text.indexOf("有") < text.indexOf("否");
-    }
-    public static int getCount_contains(List<Term> x, String key, boolean isName) {
+    static int getCount_contains(List<Term> x, String key, boolean isName) {
         int result = 0;
         if (!isName) for (Term t : x)
             if (t.getTag().contains(key)) result++;
             else for (Term y : x) if (y.getContent().contains(key)) result++;
         return result;
     }
-    public static int getCount_Equals(List<Term> x, String key, boolean isName) {
+
+    static int getCount_Equals(List<Term> x, String key, boolean isName) {
         int result = 0;
         if (!isName) for (Term t : x)
             if (t.getTag().equals(key)) result++;
             else for (Term y : x) if (y.getContent().equals(key)) result++;
         return result;
+    }
+
+    static String getStringBetweenTag(List<Term> x, String[] base, String[] tag, boolean isName, int number1, int number2, int number3) {
+        /*在第number1个到number2个tag之间出现的第number3个type类型的*/
+        /*number1=0表示从头开始，number2=0表示一直到尾巴*/
+        /*isname表示这个base是和name匹配还是和标签匹配*/
+        List<String> resultList = new ArrayList<>();
+        int tagNum = 0;
+        for (int i = 0; i < x.size(); i++) {
+
+            if (mEquals(x.get(i).getTag(), tag)) tagNum++;
+            if (tagNum >= number2 && number2 != 0) break;
+            if (tagNum < number1 && number1 != 0) continue;
+            if (isName) {
+                if (mEquals(x.get(i).getContent(), base)) resultList.add(x.get(i).getContent());
+            } else {
+                if (mEquals(x.get(i).getTag(), base)) resultList.add(x.get(i).getContent());
+            }
+        }
+        if (tagNum == 0) {
+            for (int i = 0; i < x.size(); i++) {
+
+                if (isName) {
+                    if (mEquals(x.get(i).getContent(), base)) resultList.add(x.get(i).getContent());
+                } else {
+                    if (mEquals(x.get(i).getTag(), base)) resultList.add(x.get(i).getContent());
+                }
+            }
+        }
+        if (resultList.size() == 0) return null;
+        if (number3 > resultList.size()) return resultList.get(resultList.size() - 1);
+        else return resultList.get(number3 - 1);
     }
     public int getCount(List<Term> x, String[] base, boolean isName) {
         int result = 0;
@@ -374,36 +368,35 @@ public class TextTools {
         return result;
     }
 
-    public static String getStringBetweenTag(List<Term> x, String[] base, String[] tag, boolean isName, int number1, int number2, int number3) {
-        /*在第number1个到number2个tag之间出现的第number3个type类型的*/
-        /*number1=0表示从头开始，number2=0表示一直到尾巴*/
-        /*isname表示这个base是和name匹配还是和标签匹配*/
-        List<String> resultList = new ArrayList<>();
-        int tagNum = 0;
-        for (int i = 0; i < x.size(); i++) {
-
-            if (mEquals(x.get(i).getTag(), tag)) tagNum++;
-            if (tagNum >= number2 && number2 != 0) break;
-            if (tagNum < number1 && number1 != 0) continue;
-            if (isName) {
-                if (mEquals(x.get(i).getContent(), base)) resultList.add(x.get(i).getContent());
-            } else {
-                if (mEquals(x.get(i).getTag(), base)) resultList.add(x.get(i).getContent());
-            }
+    private static int EditDistance(String source, String target) {
+        char[] sources = source.toCharArray();
+        char[] targets = target.toCharArray();
+        int sourceLen = sources.length;
+        int targetLen = targets.length;
+        int[][] d = new int[sourceLen + 1][targetLen + 1];
+        for (int i = 0; i <= sourceLen; i++) {
+            d[i][0] = i;
         }
-        if (tagNum == 0) {
-            for (int i = 0; i < x.size(); i++) {
+        for (int i = 0; i <= targetLen; i++) {
+            d[0][i] = i;
+        }
 
-                if (isName) {
-                    if (mEquals(x.get(i).getContent(), base)) resultList.add(x.get(i).getContent());
+        for (int i = 1; i <= sourceLen; i++) {
+            for (int j = 1; j <= targetLen; j++) {
+                if (sources[i - 1] == targets[j - 1]) {
+                    d[i][j] = d[i - 1][j - 1];
                 } else {
-                    if (mEquals(x.get(i).getTag(), base)) resultList.add(x.get(i).getContent());
+                    //插入
+                    int insert = d[i][j - 1] + 1;
+                    //删除
+                    int delete = d[i - 1][j] + 1;
+                    //替换
+                    int replace = d[i - 1][j - 1] + 1;
+                    d[i][j] = Math.min(Math.min(insert, delete), Math.min(delete, replace));
                 }
             }
         }
-        if (resultList.size() == 0) return null;
-        if (number3 > resultList.size()) return resultList.get(resultList.size() - 1);
-        else return resultList.get(number3 - 1);
+        return d[sourceLen][targetLen];
     }
     public Term getTermBetweenTag(List<Term> x, String[] base, String[] tag, boolean isName, int number1, int number2, int number3) {
         /*在第number1个到number2个tag之间出现的第number3个type类型的*/
@@ -475,36 +468,46 @@ public class TextTools {
         else if(a.length()>=11&&b.length()>=11) delta = 4;
         return EditDistance(a,b)<=delta;
     }
-    private static int EditDistance(String source, String target) {
-        char[] sources = source.toCharArray();
-        char[] targets = target.toCharArray();
-        int sourceLen = sources.length;
-        int targetLen = targets.length;
-        int[][] d = new int[sourceLen + 1][targetLen + 1];
-        for (int i = 0; i <= sourceLen; i++) {
-            d[i][0] = i;
-        }
-        for (int i = 0; i <= targetLen; i++) {
-            d[0][i] = i;
-        }
 
-        for (int i = 1; i <= sourceLen; i++) {
-            for (int j = 1; j <= targetLen; j++) {
-                if (sources[i - 1] == targets[j - 1]) {
-                    d[i][j] = d[i - 1][j - 1];
-                } else {
-                    //插入
-                    int insert = d[i][j - 1] + 1;
-                    //删除
-                    int delete = d[i - 1][j] + 1;
-                    //替换
-                    int replace = d[i - 1][j - 1] + 1;
-                    d[i][j] = Math.min(insert, delete) > Math.min(delete, replace) ? Math.min(delete, replace) :
-                            Math.min(insert, delete);
+    public String getStringWithTagFrom(List<Term> x, String type, String[] from, boolean isFromName, int number1, int number2, int number3) {
+        //number1:从第几个FROM标记开始
+        //number2:到第几个FROM标记结束，-1表示一直到结尾
+        //number3:这段区间内的第几个目标字符串
+        if (from == null || getCount(x, from, isFromName) <= 0) {
+
+            List<String> resultList = new ArrayList<>();
+            for (Term m : x) {
+                if (m.getTag().equals(type)) {
+                    resultList.add(m.getContent());
                 }
             }
+            if (resultList.size() <= 0) return "";
+            if (number3 > resultList.size()) return resultList.get(resultList.size() - 1);
+            else return resultList.get(number3 - 1);
+        } else {
+            int gotit = 0;
+            List<String> resultList = new ArrayList<>();
+            for (Term m : x) {
+                if (isFromName) {
+                    if (mContains(m.getContent(), from)) gotit++;
+                } else {
+                    if (mContains(m.getTag(), from)) gotit++;
+                }
+                if (gotit >= number1 && number2 == -1) {
+                    if (m.getTag().equals(type)) {
+                        resultList.add(m.getContent());
+                    }
+                } else if (gotit < number2) {
+                    if (m.getTag().equals(type)) {
+                        resultList.add(m.getContent());
+                    }
+                }
+            }
+            if (resultList.size() <= 0) return "null";
+            if (number3 > resultList.size()) return resultList.get(resultList.size() - 1);
+            else return resultList.get(number3 - 1);
         }
-        return d[sourceLen][targetLen];
+
     }
 
     public static boolean equals(String a,String b,String ignore){

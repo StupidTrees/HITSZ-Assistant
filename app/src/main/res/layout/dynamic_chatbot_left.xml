@@ -22,7 +22,7 @@
         android:maxEms="12"
         android:singleLine="false"
         android:text="你好，我是希塔"
-        android:textColor="?attr/text_color_primary"
+        android:textColor="@color/material_text_icon_white"
         android:textSize="24sp" />
 
     <TextView
@@ -34,6 +34,7 @@
         android:gravity="center"
         android:lineSpacingExtra="12sp"
         android:text="明天什么课？\n下节什么课？\n我还有什么任务？\n中国高校哪家强？"
+        android:textColor="@color/material_text_icon_white_secondary"
         android:textSize="16sp" />
 
     <ImageView
@@ -48,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:nestedScrollingEnabled="true"
+        android:nestedScrollingEnabled="false"
         android:overScrollMode="never">
 
     </androidx.recyclerview.widget.RecyclerView>

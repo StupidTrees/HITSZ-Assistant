@@ -360,7 +360,7 @@ public class ChatBotA {
         if(TextTools.getCount_Equals(terms,"sub",false)>=1) return FUN_QUERY_SUBJECTS;
 
         if (TextTools.mContains(text, R.array.words_search) ||
-                TextTools.JudgeQuestionting(text)
+                TextTools.JudgeQuestioning(text)
         ) {
             if (TextTools.mContains(text, R.array.words_course)) return FUN_SEARCH_EVENT_COURSE;
             if (TextTools.mContains(text,R.array.words_arrangement)) return FUN_SEARCH_EVENT_ARRANGE;

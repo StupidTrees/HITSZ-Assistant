@@ -2,7 +2,6 @@ package com.stupidtree.hita.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,6 @@ import static com.stupidtree.hita.HITAApplication.timeTableCore;
 public class PickSubjectDialog extends RoundedCornerDialog implements BaseOperationTask.OperationListener<List<Subject>> {
     public static List<Subject> listRes;
     private SearchResultAdapter listAdapter;
-    private getSuggestionsTask pageTask;
     private OnPickListener onPickListener;
     private String titleStr;
 
@@ -43,20 +41,11 @@ public class PickSubjectDialog extends RoundedCornerDialog implements BaseOperat
         initList();
     }
 
-    @Override
-    protected void onStop() {
-        if (pageTask != null) pageTask.cancel(true);
-        super.onStop();
-    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (pageTask != null && pageTask.getStatus() != AsyncTask.Status.FINISHED) {
-            pageTask.cancel(true);
-        }
-        pageTask = new getSuggestionsTask(this);
-        pageTask.executeOnExecutor(HITAApplication.TPE);
+        new getSuggestionsTask(this).executeOnExecutor(HITAApplication.TPE);
 
 
     }

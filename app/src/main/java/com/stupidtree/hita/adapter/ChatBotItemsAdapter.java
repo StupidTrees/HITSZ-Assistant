@@ -26,19 +26,15 @@ import java.util.List;
 
 
 public class ChatBotItemsAdapter extends RecyclerView.Adapter<ChatBotItemsAdapter.mHolder> {
-    List<HashMap> mList;
-    List mListRes;
-    LayoutInflater mInflater;
-    Context mContext;
+    private List<HashMap> mList;
+    private List mListRes;
+    private LayoutInflater mInflater;
+    private Context mContext;
     ChatBotItemsAdapter(List<HashMap> res,List listRes, Context context){
         mInflater = LayoutInflater.from(context);
         this.mListRes = listRes;
         mList = res;
         mContext = context;
-    }
-    //设置回调接口
-    public interface OnItemClickLitener{
-        void onItemClick(View view, int position);
     }
 
     @NonNull

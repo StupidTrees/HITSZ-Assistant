@@ -1,4 +1,4 @@
-//package com.stupidtree.hita;
+//package com.stupidtree.hita.widget;
 //
 //import android.appwidget.AppWidgetManager;
 //import android.appwidget.AppWidgetProvider;
@@ -15,6 +15,7 @@
 //
 //import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 //
+//import com.stupidtree.hita.R;
 //import com.stupidtree.hita.timetable.TimeWatcherService;
 //import com.stupidtree.hita.timetable.TimetableCore;
 //import com.stupidtree.hita.timetable.packable.EventItem;
@@ -32,6 +33,7 @@
 // */
 //public class TodayWidget extends AppWidgetProvider {
 //
+//    TimetableCore timetableCore;
 //    public static TimeWatcherService.TimeServiceBinder binder;
 //
 //    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,

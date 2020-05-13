@@ -25,12 +25,11 @@ public class XSXKListAdapter extends RecyclerView.Adapter<XSXKListAdapter.pyjhIt
     private static final int HEADER = 998;
     private static final int ITEM = 394;
     private static final int FOOT = 200;
-    List<Map<String, String>> mBeans;
-    LayoutInflater mInflater;
-    boolean footEnable;
-    Context mContext;
-    OnOperateClickListener mOnOperateClickListsner;
-    OnItemClickListener onItemClickListener;
+    private List<Map<String, String>> mBeans;
+    private LayoutInflater mInflater;
+    private boolean footEnable;
+    private Context mContext;
+    private OnItemClickListener onItemClickListener;
 
 
     public interface OnOperateClickListener {
@@ -56,15 +55,11 @@ public class XSXKListAdapter extends RecyclerView.Adapter<XSXKListAdapter.pyjhIt
         if (i == ITEM) layout = R.layout.dynamic_jwt_xsxk_item;
         else if (i == FOOT) layout = R.layout.dynamic_jw_xsxk_yx_foot;
         else layout = R.layout.dynamic_jwt_xsxk_header;
-//        if(i==LABEL) layout = R.layout.dynamic_jw_xsxk_popup_item_button;
-//        else if(i==ITEM_TEXT) layout = R.layout.dynamic_jw_xsxk_popup_item_text;
-//        else if(i==ITEM_SPECIAL_TEXT) layout = R.layout.dynamic_jw_xsxk_popup_item_text_special;
         View v = mInflater.inflate(layout, viewGroup, false);
         return new pyjhItemHolder(v, i);
     }
 
     public void setmOnOperateClickListsner(OnOperateClickListener mOnOperateClickListsner) {
-        this.mOnOperateClickListsner = mOnOperateClickListsner;
     }
 
     @Override
@@ -74,14 +69,6 @@ public class XSXKListAdapter extends RecyclerView.Adapter<XSXKListAdapter.pyjhIt
         else return ITEM;
     }
 
-//    @Override
-//    public int getItemViewType(int position) {
-//        if(position<labels.size()) return LABEL;
-//        int index = (position-labels.size())/labels.size();
-//        if(mBeans.get(index).get("button")!=null) return ITEM_BUTTON;
-//        if(mBeans.get(index).get("special")!=null) return ITEM_SPECIAL_TEXT;
-//        return ITEM_TEXT;
-//    }
 
     @Override
     public void onBindViewHolder(@NonNull pyjhItemHolder pyjhItemHolder, final int i) {
@@ -154,14 +141,14 @@ public class XSXKListAdapter extends RecyclerView.Adapter<XSXKListAdapter.pyjhIt
         void OnClick(View view, int position);
     }
 
-    class pyjhItemHolder extends RecyclerView.ViewHolder {
+    static class pyjhItemHolder extends RecyclerView.ViewHolder {
         View item;
         TextView name, credit, xs, type;
         TextView begin, end;// for header
         ImageView clock_activated, clock_disabled;
         int viewType;
 
-        public pyjhItemHolder(@NonNull View itemView, int viewType) {
+        pyjhItemHolder(@NonNull View itemView, int viewType) {
             super(itemView);
             item = itemView.findViewById(R.id.item);
             name = itemView.findViewById(R.id.name);

@@ -1,6 +1,7 @@
 package com.stupidtree.hita.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +37,6 @@ public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.
         mInflater = LayoutInflater.from(context);
     }
 
-    public interface OnUserAvatarClickListener{
-        void onClick(View v,int position);
-    }
 
 
     @NonNull
@@ -61,7 +59,6 @@ public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.
         if(messageItem.list!=null&&messageItem.listRes!=null) {
             recyclerHolder.resultRecy.setVisibility(View.VISIBLE);
             recyclerHolder.resultEventAdapter = new ChatBotItemsAdapter(messageItem.list,messageItem.listRes, mContext);
-            recyclerHolder.resultRecy.setNestedScrollingEnabled(true);
             LinearLayoutManager layoutManager = new WrapContentLinearLayoutManager(mContext);
             recyclerHolder.resultRecy.setLayoutManager(layoutManager);
             recyclerHolder.resultRecy.setAdapter(recyclerHolder.resultEventAdapter);
@@ -69,7 +66,7 @@ public class ChatBotListAdapter extends RecyclerView.Adapter<ChatBotListAdapter.
 
         }
         else if(recyclerHolder.type == TYPE_LEFT)recyclerHolder.resultRecy.setVisibility(View.GONE);
-        if(recyclerHolder.asr_image!=null&&recyclerHolder.type==TYPE_LEFT&&mMsgList.get(i).getImageURI()!= null) {
+        if (recyclerHolder.asr_image != null && recyclerHolder.type == TYPE_LEFT && !TextUtils.isEmpty(mMsgList.get(i).getImageURI())) {
             CornerTransform transformation;
             transformation = new CornerTransform(mContext, dip2px(mContext, 16));
             transformation.setExceptCorner(false, false, false, false);

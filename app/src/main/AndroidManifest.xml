@@ -102,7 +102,8 @@
         <!--                <action android:name="android.appwidget.action.APP_WIDGET_SERVICE" />-->
         <!--            </intent-filter>-->
         <!--        </service> &lt;!&ndash; <receiver android:name=".TimeLineWidget"> &ndash;&gt;-->
-        <service android:name=".online.DownloadService" /> <!-- <intent-filter> -->
+        <service android:name=".online.DownloadService" />
+        <service android:name=".widget.TodayListWidgetService" /> <!-- <intent-filter> -->
         <!-- <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> -->
         <!-- <action android:name="com.stupidtree.hita.UPDATE_ALL" /> -->
         <!-- </intent-filter> -->

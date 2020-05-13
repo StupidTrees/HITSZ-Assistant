@@ -1,5 +1,8 @@
-package com.stupidtree.hita.widget;
-
+//package com.stupidtree.hita.widget;
+//
+//
+//import android.content.Intent;
+//import android.widget.RemoteViewsService;
 //
 //public class TodayListWidgetService extends RemoteViewsService {
 //

@@ -20,6 +20,10 @@ public abstract class BaseListAdapter<T, H extends RecyclerView.ViewHolder> exte
     OnItemClickListener mOnItemClickListener;
     OnItemLongClickListener mOnItemLongClickListener;
 
+    public List<T> getBeans() {
+        return mBeans;
+    }
+
     public BaseListAdapter(Context mContext, List<T> mBeans) {
         this.mBeans = mBeans;
         this.mContext = mContext;
@@ -293,6 +297,7 @@ public abstract class BaseListAdapter<T, H extends RecyclerView.ViewHolder> exte
             }
         }
     }
+
 
     @Override
     public int getItemCount() {

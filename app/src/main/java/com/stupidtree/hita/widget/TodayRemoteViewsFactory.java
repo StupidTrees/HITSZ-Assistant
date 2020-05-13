@@ -15,14 +15,9 @@
 //import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 //
 //import com.stupidtree.hita.R;
-//import com.stupidtree.hita.TodayWidget;
-//import com.stupidtree.hita.timetable.TimetableCore;
 //import com.stupidtree.hita.timetable.packable.EventItem;
 //
-//import java.lang.ref.WeakReference;
-//import java.util.ArrayList;
-//import java.util.Calendar;
-//import java.util.List;
+//
 //public class TodayRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 //    private Context mContext;
 //    private int mAppWidgetId;
@@ -31,7 +26,7 @@
 //    /**
 //     * 构造GridRemoteViewsFactory
 //     */
-//    public TodayRemoteViewsFactory(Context context, Intent intent) {
+//    TodayRemoteViewsFactory(Context context, Intent intent) {
 //        mContext = context;
 //
 //        mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,

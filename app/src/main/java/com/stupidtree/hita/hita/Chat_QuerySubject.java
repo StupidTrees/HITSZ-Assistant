@@ -3,7 +3,6 @@ package com.stupidtree.hita.hita;
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.R;
 
-
 import java.util.List;
 
 public class Chat_QuerySubject {
@@ -31,7 +30,7 @@ public class Chat_QuerySubject {
 
     private static int Judge(List<Term> x,String text){
         if((TextTools.mContains(text, R.array.words_search) ||
-               TextTools.JudgeQuestionting(text)
+                TextTools.JudgeQuestioning(text)
         )&&TextTools.getCount_Equals(x,"sub",false)>=1) return QS_NUMBER_OF_SUBJECT;
         return QS_NUMBER_OF_SUBJECT;
     }

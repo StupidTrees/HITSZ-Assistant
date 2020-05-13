@@ -7,10 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.HITAApplication;
@@ -57,6 +55,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 
+import static com.github.lzyzsd.circleprogress.Utils.dp2px;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.timeTableCore;
@@ -92,12 +91,10 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
     CoordinatorLayout rootLayout;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        setWindowParams(true, true, false);
+        setWindowParams(true, false, false);
         chatbotA = new ChatBotA(this);
         chatbotB = new ChatBotB();
         setContentView(R.layout.activity_chatbot);
@@ -108,6 +105,7 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
     }
 
     void initChatBotInfo() {
+        animationView = findViewById(R.id.hita_animation_view);
         BmobQuery<Infos> bq = new BmobQuery<>();
         bq.addWhereEqualTo("name", "chatbot_info");
         bq.findObjects(new FindListener<Infos>() {
@@ -130,11 +128,24 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                 initHitaAnimation();
             }
         });
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar);
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                float scale = 1.0f + (verticalOffset) / ((float) appBarLayout.getHeight() - mToolbar.getHeight() - dp2px(getResources(), 28f));
+                animationView.setScaleX(scale);
+                animationView.setScaleY(scale);
+                float mHeadImgScale = 0;
+                animationView.setTranslationY(mHeadImgScale * verticalOffset);
+            }
+        });
     }
 
 
     void initHitaAnimation() {
-        animationView = findViewById(R.id.hita_animation_view);
+
         animationView.setImageAssetsFolder("hita_animation/");
 
         if (chatBotInfos.has("animation"))
@@ -152,16 +163,6 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
     public void onBackPressed() {
         super.onBackPressed();
     }
-
-
-
-
-
-
-
-
-
-
 
 
     private void initViews() {
@@ -216,15 +217,15 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
             }
         });
 
-        mToolbar.setOnMenuItemClickListener(new OnToolbarMenuClickListener());
+        // mToolbar.setOnMenuItemClickListener(new OnToolbarMenuClickListener());
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_chat_bot, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.toolbar_chat_bot, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
 
     //****将消息加入当前聊天中****
@@ -264,9 +265,6 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
     }
 
 
-
-
-
     class ChatBotIteractTask extends AsyncTask<String, Integer, JsonObject> {
 
         String message;
@@ -297,11 +295,12 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                 Pattern p = Pattern.compile(regEx);
                 Matcher m = p.matcher(message);
                 final String message = m.replaceAll("").trim();
-                if (message.length() <= 3) {
-                    cmb.addWhereEqualTo("queryText", message);
-                } else if (message.length() <= 5) {
-                    cmb.addWhereContains("queryText", message);
-                }
+                cmb.addWhereEqualTo("queryText", message);
+//                if (message.length() <= 3) {
+//                    cmb.addWhereEqualTo("queryText", message);
+//                } else if (message.length() <= 5) {
+//                    cmb.addWhereContains("queryText", message);
+//                }
                 // Log.e("where:",chatMessageBmobQuery.getWhere().toString());
                 //chatMessageBmobQuery.addWhereEqualTo("queryText",message);
                 //Log.e("message:",message);
@@ -319,7 +318,7 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                     return jo;
                 } else {
                     if (defaultSP.getBoolean("ChatBot_useTulin", true)) {
-                        JsonObject jo = ChatBotB.InteractTulin(message);
+                        JsonObject jo = ChatBotB.InteractTurin(message);
                         if (jo.get("message_show").toString().contains("请求次数"))
                             return ChatBotB.InteractQ(message);
                         else return jo;
@@ -605,40 +604,39 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                     } else {
                         textOnShow = "抱歉，处理地点信息错误";
                     }
-                }else if(msg.get("function").getAsString().equals("query_subject_number_of_subject")){
-                   String type = msg.get("type").getAsString();
-                   List<Subject> result = null;
-                   String desc = "课";
-                   if(type!=null){
-                       if(type.equals("exam")){
-                           result = timeTableCore.getSubjects_Exam(null);
-                           //Log.e("exam---", String.valueOf(result));
-                           desc = "考试课";
-                       }else if(type.equals("mooc")){
-                           result = timeTableCore.getSubjects_Mooc(null);
-                           desc = "慕课";
-                       }else if(type.equals("no_exam")){
-                           result = timeTableCore.getSubjects_No_Exam(null);
-                           desc = "考查课";
-                       }else if(type.equals("comp")){
-                           result = timeTableCore.getSubjects_Comp(null);
-                           desc = "必修课";
-                       }else if(type.equals("alt")){
-                           result = timeTableCore.getSubjects_Alt(null);
-                           desc = "选秀课";
-                       }else if(type.equals("wtv")){
-                           result = timeTableCore.getSubjects_WTV(null);
-                           desc = "任选课";
-                       }else result = timeTableCore.getSubjects(null);
-                   }
-                    if(result!=null&&result.size()>0){
+                } else if (msg.get("function").getAsString().equals("query_subject_number_of_subject")) {
+                    String type = msg.get("type").getAsString();
+                    List<Subject> result = null;
+                    String desc = "课";
+                    if (type != null) {
+                        if (type.equals("exam")) {
+                            result = timeTableCore.getSubjects_Exam(null);
+                            //Log.e("exam---", String.valueOf(result));
+                            desc = "考试课";
+                        } else if (type.equals("mooc")) {
+                            result = timeTableCore.getSubjects_Mooc(null);
+                            desc = "慕课";
+                        } else if (type.equals("no_exam")) {
+                            result = timeTableCore.getSubjects_No_Exam(null);
+                            desc = "考查课";
+                        } else if (type.equals("comp")) {
+                            result = timeTableCore.getSubjects_Comp(null);
+                            desc = "必修课";
+                        } else if (type.equals("alt")) {
+                            result = timeTableCore.getSubjects_Alt(null);
+                            desc = "选秀课";
+                        } else if (type.equals("wtv")) {
+                            result = timeTableCore.getSubjects_WTV(null);
+                            desc = "任选课";
+                        } else result = timeTableCore.getSubjects(null);
+                    }
+                    if (result != null && result.size() > 0) {
                         messagge.setSubjectList(result);
-                        textOnShow = "这学期共有"+result.size()+"门"+desc;
-                    }else{
+                        textOnShow = "这学期共有" + result.size() + "门" + desc;
+                    } else {
                         textOnShow = "没有~";
                     }
-                }
-                else if (msg.get("function").getAsString().equals("say_my_name")) {
+                } else if (msg.get("function").getAsString().equals("say_my_name")) {
                     if (CurrentUser == null) {
                         textOnShow = "你好像还没有登录的亚子，我怎么知道你是谁啊";
                     } else {
@@ -652,16 +650,16 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                 } else if (msg.get("function").getAsString().equals("search_people")) {
                     if (msg.has("name")) {
                         BmobQuery<Teacher> bq = new BmobQuery<>();
-                        bq.addWhereStartsWith("name",msg.get("name").getAsString());
+                        bq.addWhereStartsWith("name", msg.get("name").getAsString());
                         List<Teacher> result = bq.findObjectsSync(Teacher.class);
-                        if(result==null||result.size()==0){
+                        if (result == null || result.size() == 0) {
                             textOnShow = "没有找到TA的信息(ㆁωㆁ*)";
                             textToRead = "没有找到她的信息";
-                        }else{
+                        } else {
                             messagge.setTeacherList(result);
-                            if(result.size()>1){
-                                textOnShow = "共找到"+result.size()+"个结果";
-                            }else{
+                            if (result.size() > 1) {
+                                textOnShow = "共找到" + result.size() + "个结果";
+                            } else {
                                 textOnShow = "你要找的是不是TA？";
                                 textToRead = "你要找的是不是他？";
                             }
@@ -693,57 +691,57 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
         }
     }
 
-    class OnToolbarMenuClickListener implements Toolbar.OnMenuItemClickListener {
-
-        BottomSheetDialog ad;
-        EditText query, show;
-        android.widget.Button cancel, upload;
-
-        OnToolbarMenuClickListener() {
-            View v = getLayoutInflater().inflate(R.layout.dialog_chatbot_builddb, null);
-            query = v.findViewById(R.id.query);
-            show = v.findViewById(R.id.show);
-            cancel = v.findViewById(R.id.cancel);
-            upload = v.findViewById(R.id.upload);
-            ad = new BottomSheetDialog(ActivityChatbot.this);
-            ad.setContentView(v);
-            try {
-                // hack bg color of the BottomSheetDialog
-                ViewGroup parent = (ViewGroup) v.getParent();
-                parent.setBackgroundResource(android.R.color.transparent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            upload.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (TextUtils.isEmpty(query.getText()) || TextUtils.isEmpty(show.getText())) {
-                        Toast.makeText(ActivityChatbot.this, "请补全信息", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        new uploadMessageTask(query.getText().toString(),show.getText().toString(),ad).executeOnExecutor(HITAApplication.TPE);
-                    }
-                }
-            });
-            cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ad.dismiss();
-                }
-            });
-            ad.setCancelable(false);
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            ad.show();
-            return true;
-        }
-    }
+//    class OnToolbarMenuClickListener implements Toolbar.OnMenuItemClickListener {
+//
+//        BottomSheetDialog ad;
+//        EditText query, show;
+//        android.widget.Button cancel, upload;
+//
+//        OnToolbarMenuClickListener() {
+//            View v = getLayoutInflater().inflate(R.layout.dialog_chatbot_builddb, null);
+//            query = v.findViewById(R.id.query);
+//            show = v.findViewById(R.id.show);
+//            cancel = v.findViewById(R.id.cancel);
+//            upload = v.findViewById(R.id.upload);
+//            ad = new BottomSheetDialog(ActivityChatbot.this);
+//            ad.setContentView(v);
+//            try {
+//                // hack bg color of the BottomSheetDialog
+//                ViewGroup parent = (ViewGroup) v.getParent();
+//                parent.setBackgroundResource(android.R.color.transparent);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            upload.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (TextUtils.isEmpty(query.getText()) || TextUtils.isEmpty(show.getText())) {
+//                        Toast.makeText(ActivityChatbot.this, "请补全信息", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    } else {
+//                        new uploadMessageTask(query.getText().toString(),show.getText().toString(),ad).executeOnExecutor(HITAApplication.TPE);
+//                    }
+//                }
+//            });
+//            cancel.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    ad.dismiss();
+//                }
+//            });
+//            ad.setCancelable(false);
+//        }
+//
+//        @Override
+//        public boolean onMenuItemClick(MenuItem item) {
+//            ad.show();
+//            return true;
+//        }
+//    }
 
     @SuppressLint("StaticFieldLeak")
-    class uploadMessageTask extends AsyncTask{
-        String query,show;
+    class uploadMessageTask extends AsyncTask {
+        String query, show;
         BottomSheetDialog ad;
 
         uploadMessageTask(String query, String show, BottomSheetDialog ad) {
@@ -760,7 +758,7 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                     ChatMessage cm = new ChatMessage();
                     cm.setQueryText(q);
                     List<String> queryArr = new ArrayList<>();
-                    for(Term t:TextTools.NaiveSegmentation(query)){
+                    for (Term t : TextTools.NaiveSegmentation(query)) {
                         queryArr.add(t.getContent());
                     }
                     cm.setQueryArray(queryArr);
@@ -781,7 +779,7 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                     cm.save(new SaveListener<String>() {
                         @Override
                         public void done(String s, BmobException e) {
-                            Log.e("done",e==null?"success":e.toString());
+                            Log.e("done", e == null ? "success" : e.toString());
                         }
                     });
                 }
@@ -795,11 +793,11 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
 
         @Override
         protected void onPostExecute(Object o) {
-            if ((boolean)o) {
+            if ((boolean) o) {
                 Toast.makeText(ActivityChatbot.this, "上传成功！", Toast.LENGTH_SHORT).show();
                 ad.dismiss();
             } else
-                Toast.makeText(ActivityChatbot.this, "上传失败！" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(ActivityChatbot.this, "上传失败！", Toast.LENGTH_SHORT).show();
 
         }
     }

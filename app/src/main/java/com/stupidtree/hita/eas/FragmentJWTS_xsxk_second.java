@@ -36,7 +36,7 @@ public class FragmentJWTS_xsxk_second extends JWFragment
         implements FragmentJW_xk_popup.XKPageSecond, BasicRefreshTask.ListRefreshedListener2<Pair<List<Map<String, String>>, List<Map<String, String>>>> {
     RecyclerView list;
     XSXKListAdapter listAdapter;
-    List<Map<String, String>> lisRes;
+    List<Map<String, String>> listRes;
     List<Map<String,String>> listResFull;
     JsonObject pageInfo;
     TextView notification;
@@ -86,9 +86,9 @@ public class FragmentJWTS_xsxk_second extends JWFragment
     void initList(final View v) {
         notification = v.findViewById(R.id.xsxk_notification);
         list = v.findViewById(R.id.xsxk_list);
-        lisRes = new ArrayList<>();
+        listRes = new ArrayList<>();
         listResFull = new ArrayList<>();
-        listAdapter = new XSXKListAdapter(requireContext(), lisRes, false);
+        listAdapter = new XSXKListAdapter(requireContext(), listRes, false);
         list.setAdapter(listAdapter);
         list.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
         listAdapter.setOnItemClickListener(new XSXKListAdapter.OnItemClickListener() {
@@ -181,7 +181,6 @@ public class FragmentJWTS_xsxk_second extends JWFragment
 
     @Override
     public void onRefreshStart(String id, Boolean[] params) {
-        lisRes.clear();
         list.setVisibility(View.INVISIBLE);
         refresh.setRefreshing(true);
     }
@@ -194,20 +193,20 @@ public class FragmentJWTS_xsxk_second extends JWFragment
     @Override
     public void onListRefreshed(String id, Boolean[] params, Pair<List<Map<String, String>>, List<Map<String, String>>> result, Object[] others) {
         String message = null;
-        lisRes.clear();
+        listRes.clear();
         listResFull.clear();
-        lisRes.addAll(result.second);
+        listRes.addAll(result.second);
         listResFull.addAll(result.first);
+        refresh.setRefreshing(false);
+        list.setVisibility(View.VISIBLE);
+        listAdapter.notifyDataSetChanged();
+        list.scheduleLayoutAnimation();
         if (params.length > 1) message = (String) others[1];
         if (params.length > 0) pageInfo = (JsonObject) others[0];
         if (message != null) {
             notification.setVisibility(View.VISIBLE);
             notification.setText(message);
         } else notification.setVisibility(View.GONE);
-        refresh.setRefreshing(false);
-        list.setVisibility(View.VISIBLE);
-        listAdapter.notifyDataSetChanged();
-        list.scheduleLayoutAnimation();
     }
 
 

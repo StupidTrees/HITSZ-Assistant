@@ -10,12 +10,9 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.stupidtree.hita.activities.ActivityMain;
@@ -52,7 +49,6 @@ public class HITAApplication extends Application {
     public static SharedPreferences defaultSP;
     public static HITAUser CurrentUser = null;
     public static BmobCacheHelper bmobCacheHelper;
-    public static Handler ToastHandler;
     public static ThreadPoolExecutor TPE;
     public static TimeWatcherService.TimeServiceBinder timeServiceBinder;
 
@@ -66,20 +62,18 @@ public class HITAApplication extends Application {
         HContext = this;
         defaultSP = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
         themeCore = new AppThemeCore();
-        timeTableCore = new TimetableCore();
+        timeTableCore = new TimetableCore(getContentResolver());
         bmobCacheHelper = new BmobCacheHelper();
         jwCore = new JWCore();
-       // timeWatcher = new TimeWatcher(this);
         initUpgradeDialog();
         initServices();
-        //initLanguage();
-        ToastHandler = new Handler() {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                Toast.makeText(HContext,msg.getData().getString("msg"),Toast.LENGTH_LONG).show();
-            }
-        };
+//        ToastHandler = new Handler() {
+//            @Override
+//            public void handleMessage(@NonNull Message msg) {
+//                super.handleMessage(msg);
+//                Toast.makeText(HContext,msg.getData().getString("msg"),Toast.LENGTH_LONG).show();
+//            }
+//        };
         Bugly.init(this, "7c0e87536a", false);//务必最后再init
         Bmob.initialize(this, "9c9c53cd53b3c7f02c37b7a3e6fd9145");
         CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
