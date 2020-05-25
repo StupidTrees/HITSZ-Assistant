@@ -60,10 +60,11 @@ import com.google.gson.Gson;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.MainPagerAdapter;
+import com.stupidtree.hita.eas.JWException;
 import com.stupidtree.hita.fragments.main.FragmentTimeLine;
 import com.stupidtree.hita.fragments.popup.FragmentTheme;
-import com.stupidtree.hita.eas.JWException;
 import com.stupidtree.hita.online.errorTableText;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.Curriculum;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.FileOperator;
@@ -84,7 +85,6 @@ import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
 import static com.stupidtree.hita.HITAApplication.jwCore;
 import static com.stupidtree.hita.HITAApplication.themeCore;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.util.UpdateManager.checkUpdate;
 
 public class ActivityMain extends BaseActivity
@@ -150,7 +150,7 @@ public class ActivityMain extends BaseActivity
         click_timetable = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (timeTableCore.isDataAvailable()) {
+                if (TimetableCore.getInstance(HContext).isDataAvailable()) {
                     Intent i = new Intent(ActivityMain.this, ActivityTimeTable.class);
                     startActivity(i);
                 } else {
@@ -754,11 +754,12 @@ public class ActivityMain extends BaseActivity
 
         @Override
         protected Boolean doInBackground(Object... objects) {
+            TimetableCore tc = TimetableCore.getInstance(HContext);
             try {
-                for (Curriculum c : timeTableCore.getAllCurriculum()) {
-                    timeTableCore.saveCurriculum(c);
+                for (Curriculum c : tc.getAllCurriculum()) {
+                    tc.saveCurriculum(c);
                 }
-                return timeTableCore.saveDataToCloud();
+                return tc.saveDataToCloud();
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;

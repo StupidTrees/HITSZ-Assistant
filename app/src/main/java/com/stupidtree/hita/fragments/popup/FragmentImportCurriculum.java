@@ -20,6 +20,7 @@ import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.timetable.CurriculumCreator;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.Curriculum;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.util.FileOperator;
@@ -36,7 +37,6 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 @SuppressLint("ValidFragment")
@@ -144,7 +144,7 @@ public class FragmentImportCurriculum extends FragmentRadiusPopup implements Bas
 
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
-            List<Curriculum> all = timeTableCore.getAllCurriculum();
+            List<Curriculum> all = TimetableCore.getInstance(HContext).getAllCurriculum();
             int ex = 0;
             String name = "新建课表";
             for (Curriculum c : all) {
@@ -153,7 +153,7 @@ public class FragmentImportCurriculum extends FragmentRadiusPopup implements Bas
                 }
             }
             CurriculumCreator cc = CurriculumCreator.create(UUID.randomUUID().toString(), name + "(" + ex + ")", Calendar.getInstance());
-            timeTableCore.addCurriculum(cc, true);
+            TimetableCore.getInstance(HContext).addCurriculum(cc, true);
             return null;
         }
     }

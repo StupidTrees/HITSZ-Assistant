@@ -22,6 +22,7 @@ import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivityMain;
 import com.stupidtree.hita.online.Teacher;
 import com.stupidtree.hita.timetable.CurriculumCreator;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.views.ButtonLoading;
 
 import java.util.ArrayList;
@@ -33,7 +34,6 @@ import cn.bmob.v3.BmobQuery;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 
@@ -216,7 +216,7 @@ public class FragmentJWTS_grkb extends JWFragment {
                 if (uploadTeacher) {
                     uploadTeacherInfo(jwCore.getTeacherOfChosenSubjects(xn,xq));
                 }
-                if (timeTableCore.addCurriculum(s, syncSubject)) {
+                if (TimetableCore.getInstance(HContext).addCurriculum(s, syncSubject)) {
                     ActivityMain.saveData();
                     return true;
                 }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.hita.TextTools;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.Task;
 import com.stupidtree.hita.util.EventsUtils;
@@ -22,12 +23,12 @@ import com.stupidtree.hita.util.EventsUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
+
 
 public class TaskDialog extends RoundedCornerDialog {
     private TextView name, progress, length, ddl, start;
     private LinearLayout progressLayout, lengthLayout, ddlLayout, startLayout;
-    private RecyclerView eventList;
     private eventListAdapter listAdapter;
     private List<EventItem> listRes;
     private Task task;
@@ -44,7 +45,7 @@ public class TaskDialog extends RoundedCornerDialog {
         ddlLayout = v.findViewById(R.id.ddl_layout);
         startLayout = v.findViewById(R.id.start_layout);
         start = v.findViewById(R.id.start);
-        eventList = v.findViewById(R.id.event_list);
+        RecyclerView eventList = v.findViewById(R.id.event_list);
         listRes = new ArrayList<>();
         listAdapter = new eventListAdapter(listRes,context);
         eventList.setAdapter(listAdapter);
@@ -143,7 +144,7 @@ public class TaskDialog extends RoundedCornerDialog {
                 for(String x:task.getEvent_map().keySet()){
                     String uuid = x.split(":::")[0];
                     int week = Integer.parseInt(x.split(":::")[1]);
-                    listRes.add(timeTableCore.getEventItemHolderWithUUID(uuid).getEventAtWeek(week));
+                    listRes.add(TimetableCore.getInstance(HContext).getEventItemHolderWithUUID(uuid).getEventAtWeek(week));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

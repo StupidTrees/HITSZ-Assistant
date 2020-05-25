@@ -28,6 +28,7 @@ import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.BasicRefreshTask;
 import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
 import com.stupidtree.hita.fragments.popup.FragmentAddTask;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.util.EventsUtils;
 import com.stupidtree.hita.views.EditModeHelper;
@@ -41,7 +42,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 import static com.stupidtree.hita.timetable.TimetableCore.DDL;
 
@@ -124,7 +125,7 @@ BaseOperationTask.OperationListener<Object>{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!timeTableCore.isDataAvailable()) {
+                if (!TimetableCore.getInstance(HContext).isDataAvailable()) {
                     Snackbar.make(v, getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
                     return;
                 }
@@ -173,8 +174,8 @@ BaseOperationTask.OperationListener<Object>{
 
     @SuppressLint("SetTextI18n")
     void refreshText(List<EventItem> list) {
-
-        if (!timeTableCore.isDataAvailable()) {
+        TimetableCore tc = TimetableCore.getInstance(this);
+        if (!tc.isDataAvailable()) {
             none.setVisibility(View.VISIBLE);
             return;
         }
@@ -187,7 +188,7 @@ BaseOperationTask.OperationListener<Object>{
             List<EventItem> today = new ArrayList<>();
             List<EventItem> notToday = new ArrayList<>();
             for (EventItem ex : list) {
-                if (ex.isSameDay(timeTableCore.getCurrentCurriculum(), timeTableCore.getNow())) { //今天的
+                if (ex.isSameDay(tc.getCurrentCurriculum(), TimetableCore.getNow())) { //今天的
                     today.add(ex);
                 } else {
                     notToday.add(ex);
@@ -236,7 +237,7 @@ BaseOperationTask.OperationListener<Object>{
                 time3.setVisibility(View.VISIBLE);
                 tag3.setVisibility(View.VISIBLE);
                 next_name.setText(toShow.getMainName());
-                long minutes = toShow.getInWhatTimeWillItHappen(timeTableCore.getCurrentCurriculum(), timeTableCore.getNow());
+                long minutes = toShow.getInWhatTimeWillItHappen(tc.getCurrentCurriculum(), TimetableCore.getNow());
                 int weeks = (int) (minutes / 10080);
                 minutes %= 10080;
                 int days = (int) (minutes / 1440);
@@ -379,7 +380,7 @@ BaseOperationTask.OperationListener<Object>{
         protected Pair<List<EventItem>, List<EventItem>> doInBackground(ListRefreshedListener listRefreshedListener, Boolean... booleans) {
             List<EventItem> result_todo = new ArrayList<>();
             List<EventItem> result_passed = new ArrayList<>();
-            List<EventItem> res = timeTableCore.getAllEvents(DDL);
+            List<EventItem> res = TimetableCore.getInstance(HContext).getAllEvents(DDL);
             for (EventItem ei : res) {
                 if (ei.hasPassed(System.currentTimeMillis())) result_passed.add(ei);
                 else result_todo.add(ei);
@@ -414,7 +415,7 @@ BaseOperationTask.OperationListener<Object>{
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             if (toDelete!=null) {
                 for (EventItem ei : toDelete) {
-                    timeTableCore.deleteEvent(ei, true);
+                    TimetableCore.getInstance(HContext).deleteEvent(ei, true);
                 }
             }
             return null;

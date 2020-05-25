@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.BaseActivity;
 import com.stupidtree.hita.fragments.popup.FragmentEvent;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.Curriculum;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.HTime;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class EventsUtils {
     public static final int TTY_NONE = 0;
@@ -33,7 +34,7 @@ public class EventsUtils {
 
     public static String itWillStartIn(Calendar from, EventItem target, boolean simplified) {
         try {
-            long minutes = target.getInWhatTimeWillItHappen(timeTableCore.getCurrentCurriculum(), from);
+            long minutes = target.getInWhatTimeWillItHappen(TimetableCore.getInstance(HContext).getCurrentCurriculum(), from);
             int weeks = (int) (minutes / 10080);
             minutes %= 10080;
             int days = (int) (minutes / 1440);
@@ -109,17 +110,18 @@ public class EventsUtils {
      * TTY=n+4
      **/
     public static String getWeekDowString(EventItem ei, boolean simplified, int TTYMode) {
-        if (!timeTableCore.isDataAvailable()) return "";
+        if (!TimetableCore.getInstance(HContext).isDataAvailable()) return "";
         return getWeekDowString(ei.getWeek(), ei.getDOW(), simplified, TTYMode);
     }
 
     public static String getWeekDowString(int week, int dow, boolean simplified, int TTYMode) {
-        if (!timeTableCore.isDataAvailable()) return "";
-        Curriculum c = timeTableCore.getCurrentCurriculum();
+        TimetableCore tc = TimetableCore.getInstance(HContext);
+        if (!tc.isDataAvailable()) return "";
+        Curriculum c = tc.getCurrentCurriculum();
         Calendar then = c.getDateAt(week, dow, new HTime(12, 0));
         String rawText = new SimpleDateFormat(HContext.getString(simplified ? R.string.date_format_2_simplified : R.string.date_format_2, week), Locale.getDefault()).format(then.getTime());
         String tag = getTTTag(then);
-        String wkTag = getWKTag(timeTableCore.getThisWeekOfTerm(), week);
+        String wkTag = getWKTag(tc.getThisWeekOfTerm(), week);
         if ((TTYMode & TTY_WK_FOLLOWING) > 0) {
             if (!TextUtils.isEmpty(wkTag)) {
                 rawText = new SimpleDateFormat(HContext.getString(simplified ? R.string.date_format_2_simplified_wk_followed : R.string.date_format_2_wk_followed, week, wkTag), Locale.getDefault()).format(then.getTime());
@@ -145,14 +147,15 @@ public class EventsUtils {
     }
 
     private static String getTTTag(Calendar then) {
+
         Calendar now = Calendar.getInstance();
-        Calendar tom = (Calendar) timeTableCore.getNow().clone();
+        Calendar tom = (Calendar) TimetableCore.getNow().clone();
         tom.add(Calendar.DATE, 1);
-        Calendar yest = (Calendar) timeTableCore.getNow().clone();
+        Calendar yest = (Calendar) TimetableCore.getNow().clone();
         yest.add(Calendar.DATE, -1);
-        Calendar tat = (Calendar) timeTableCore.getNow().clone();
+        Calendar tat = (Calendar) TimetableCore.getNow().clone();
         tat.add(Calendar.DATE, 2);
-        Calendar tby = (Calendar) timeTableCore.getNow().clone();
+        Calendar tby = (Calendar) TimetableCore.getNow().clone();
         tby.add(Calendar.DATE, -2);
         if (isSameDay(now, then)) return HContext.getString(R.string.today);
         else if (isSameDay(tom, then)) return HContext.getString(R.string.tomorrow);
@@ -177,8 +180,8 @@ public class EventsUtils {
     }
 
     public static String getWeekDowString(EventItem ei) {
-        if (!timeTableCore.isDataAvailable()) return "";
-        Curriculum c = timeTableCore.getCurrentCurriculum();
+        if (!TimetableCore.getInstance(HContext).isDataAvailable()) return "";
+        Curriculum c = TimetableCore.getInstance(HContext).getCurrentCurriculum();
         Calendar then = c.getDateAt(ei.getWeek(), ei.getDOW(), ei.startTime);
         return new SimpleDateFormat(HContext.getString(R.string.date_format_2_simplified, ei.week), Locale.getDefault()).format(then.getTime());
     }

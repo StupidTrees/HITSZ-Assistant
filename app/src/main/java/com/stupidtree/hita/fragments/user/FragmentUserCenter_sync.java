@@ -14,7 +14,7 @@ import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.timetable.TimetableCore;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
 
 
 public class FragmentUserCenter_sync extends BaseFragment {
@@ -37,7 +37,7 @@ public class FragmentUserCenter_sync extends BaseFragment {
         save_to_cloud.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timeTableCore.saveDataToCloud(new TimetableCore.OnDoneListener() {
+                TimetableCore.getInstance(HContext).saveDataToCloud(new TimetableCore.OnDoneListener() {
                     @Override
                     public void onSuccess() {
                         Toast.makeText(requireContext(), R.string.upload_done, Toast.LENGTH_SHORT).show();
@@ -58,7 +58,7 @@ public class FragmentUserCenter_sync extends BaseFragment {
                 AlertDialog ad = new AlertDialog.Builder(getActivity()).setTitle(R.string.attention).setMessage("同步数据将清除所有本地数据").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        timeTableCore.loadDataFromCloud();
+                        TimetableCore.getInstance(HContext).loadDataFromCloud();
                     }
                 }).setNegativeButton(R.string.button_cancel, null).create();
                 ad.show();

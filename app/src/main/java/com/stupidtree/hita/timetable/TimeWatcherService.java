@@ -45,9 +45,10 @@ import java.util.Objects;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class TimeWatcherService extends Service {
     public static final String WATCHER_REFRESH = "COM.STUPIDTREE.HITA.WATCHER_REFRESH";
@@ -146,17 +147,17 @@ public class TimeWatcherService extends Service {
 
     @WorkerThread
     private void refreshProgress(int switchNotification) {
-        timeTableCore.syncTimeFlags();
-        if (defaultSP.getBoolean("dtt_preview", false) && timeTableCore.isDataAvailable()) {
-            TimeTableGenerator.Dynamic_PreviewPlan(timeTableCore.getNow());
-        } else if (timeTableCore.isDataAvailable()) {
-            timeTableCore.clearTask(":::");
-           // timeTableCore.clearTask("");
-            // timeTableCore.clearEvent(TimetableCore.DYNAMIC);
+        TimetableCore.getInstance(HContext).syncTimeFlags();
+        if (defaultSP.getBoolean("dtt_preview", false) && TimetableCore.getInstance(HContext).isDataAvailable()) {
+            TimeTableGenerator.Dynamic_PreviewPlan(TimetableCore.getNow());
+        } else if (TimetableCore.getInstance(HContext).isDataAvailable()) {
+            TimetableCore.getInstance(HContext).clearTask(":::");
+            // TimetableCore.getInstance(HContext).clearTask("");
+            // TimetableCore.getInstance(HContext).clearEvent(TimetableCore.DYNAMIC);
         }
-        refreshTodaysEvents();
+        refreshTodayEvents();
         refreshNowAndNextEvent();
-        updateTaskProgress();
+        //updateTaskProgress();
         if (switchNotification == NOTIFICATION_NOT_SPECIFIC) {
             if (defaultSP.getBoolean("notification", true)) sendNotification();
             else notificationManager.cancel(R.string.app_notification_channel_id);
@@ -195,37 +196,39 @@ public class TimeWatcherService extends Service {
 
     @WorkerThread
     private void updateTaskProgress() {
-        if (!timeTableCore.isDataAvailable()) return;
-        List<EventItem> events = timeTableCore.getAllEvents();
+        if (!TimetableCore.getInstance(HContext).isDataAvailable()) return;
+        List<EventItem> events = TimetableCore.getInstance(HContext).getAllEvents();
         for (EventItem ei : events) {
-            if (!ei.hasPassed(timeTableCore.getNow()) || TextUtils.isEmpty(ei.tag4) || ei.tag4 != null && ei.tag4.equals("null"))
+            if (!ei.hasPassed(TimetableCore.getNow()) || TextUtils.isEmpty(ei.tag4) || ei.tag4 != null && ei.tag4.equals("null"))
                 continue;
-            Task t = timeTableCore.getTaskWithUUID(ei.tag4);
+            Task t = TimetableCore.getInstance(HContext).getTaskWithUUID(ei.tag4);
             if (t != null) {
                 if (t.getEvent_map().get(ei.getUuid() + ":::" + ei.week) != null && !t.getEvent_map().get(ei.getUuid() + ":::" + ei.week)) {
                     t.putEventMap(ei.getUuid() + ":::" + ei.week, true);
                     float newProgress = (float) (100 * ((float) t.getProgress() / 100.0 * t.getLength() + ei.getDuration()) / t.getLength());
                     t.updateProgress((int) newProgress);
-                    if (newProgress >= 100f) timeTableCore.setFinishTask(t, true);
+                    if (newProgress >= 100f)
+                        TimetableCore.getInstance(HContext).setFinishTask(t, true);
                 }
             }
         }
-        List<Task> taks = timeTableCore.getUnfinishedTasks();
+        List<Task> taks = TimetableCore.getInstance(HContext).getUnfinishedTasks();
         for (Task t : taks) {
             if (!t.has_deadline) continue;
-            Calendar end = timeTableCore.getCurrentCurriculum().getDateAt(t.tW, t.tDOW, t.eTime);
-            if (end.before(timeTableCore.getNow())) timeTableCore.setFinishTask(t, true);
+            Calendar end = TimetableCore.getInstance(HContext).getCurrentCurriculum().getDateAt(t.tW, t.tDOW, t.eTime);
+            if (end.before(TimetableCore.getNow()))
+                TimetableCore.getInstance(HContext).setFinishTask(t, true);
         }
 
     }
 
     @WorkerThread
-    private void refreshTodaysEvents() {
-        if (!timeTableCore.isDataAvailable()) return;
-        int DOW = timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ? 7 : timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) - 1;
+    private void refreshTodayEvents() {
+        if (!TimetableCore.getInstance(HContext).isDataAvailable()) return;
+        int DOW = TimetableCore.getNow().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ? 7 : TimetableCore.getNow().get(Calendar.DAY_OF_WEEK) - 1;
         todaysEvents.clear();
-        timeTableCore.syncTimeFlags();
-        todaysEvents.addAll(timeTableCore.getOneDayEvents(timeTableCore.getThisWeekOfTerm(), DOW));
+        TimetableCore.getInstance(HContext).syncTimeFlags();
+        todaysEvents.addAll(TimetableCore.getInstance(HContext).getOneDayEvents(TimetableCore.getInstance(HContext).getThisWeekOfTerm(), DOW));
         try {
             Collections.sort(todaysEvents, new Comparator<EventItem>() {
                 @Override
@@ -239,7 +242,7 @@ public class TimeWatcherService extends Service {
     }
 
     private void refreshNowAndNextEvent() {
-        HTime nowTime = new HTime(timeTableCore.getNow());
+        HTime nowTime = new HTime(TimetableCore.getNow());
         try {
             boolean changed_now = false;
             boolean changed_next = false;
@@ -250,7 +253,7 @@ public class TimeWatcherService extends Service {
                 ) {
                     nowEvent = ei;
                     changed_now = true;
-                } else if (ei.startTime.compareTo(nowTime) > 0) {
+                } else if (!ei.isWholeDay() && ei.startTime.compareTo(nowTime) > 0) {
                     nextEvent = ei;
                     changed_next = true;
                 }
@@ -269,7 +272,7 @@ public class TimeWatcherService extends Service {
             boolean autoMute = defaultSP.getBoolean("auto_mute", false);
             boolean eventNotify = defaultSP.getBoolean("event_notify_enable", true);
             if (nowEvent != null) {
-                nowProgress = ((float) new HTime(timeTableCore.getNow()).getDuration(nowEvent.startTime)) / ((float) nowEvent.endTime.getDuration(nowEvent.startTime));
+                nowProgress = ((float) new HTime(TimetableCore.getNow()).getDuration(nowEvent.startTime)) / ((float) nowEvent.endTime.getDuration(nowEvent.startTime));
                 if (autoMute) {
                     String x = defaultSP.getString("mute_course", null);
                     if (nowEvent.eventType == TimetableCore.COURSE && (x == null || nowEvent.equalsEvent(x))) {
@@ -344,18 +347,18 @@ public class TimeWatcherService extends Service {
         String content = "";
         int IntentTerminal = 0;
         boolean current = false;
-        if (CurrentUser == null || !timeTableCore.isDataAvailable()) {
+        if (CurrentUser == null || !TimetableCore.getInstance(HContext).isDataAvailable()) {
             title = getString(R.string.guide_1p);
             content = getString(R.string.notifi_import_first);
             if (CurrentUser == null) IntentTerminal = 1;
             else if (TextUtils.isEmpty(CurrentUser.getStudentnumber())) IntentTerminal = 2;
-            else if (!timeTableCore.isDataAvailable()) IntentTerminal = 3;
+            else if (!TimetableCore.getInstance(HContext).isDataAvailable()) IntentTerminal = 3;
         } else if (todaysEvents.size() == 0) {
             title = getString(R.string.timeline_head_free_title);
             content = getString(R.string.timeline_head_free_subtitle);
             IntentTerminal = 0;
         } else if (nowEvent == null) {
-            if (new HTime(timeTableCore.getNow()).compareTo(new HTime(23, 0)) > 0 || new HTime(timeTableCore.getNow()).compareTo(new HTime(5, 0)) < 0) {
+            if (new HTime(TimetableCore.getNow()).compareTo(new HTime(23, 0)) > 0 || new HTime(TimetableCore.getNow()).compareTo(new HTime(5, 0)) < 0) {
                 title = getString(R.string.timeline_head_goodnight_title);
                 content = getString(R.string.timeline_head_goodnight_subtitle);
                 IntentTerminal = 0;
@@ -366,14 +369,14 @@ public class TimeWatcherService extends Service {
             } else {
 //                String text1 = String.format(
 //                        getString(R.string.time_format_1),
-//                        nextEvent.startTime.getDuration(new HTime(timeTableCore.getNow())) / 60,
-//                        nextEvent.startTime.getDuration(new HTime(timeTableCore.getNow())) % 60);
+//                        nextEvent.startTime.getDuration(new HTime(TimetableCore.getNow())) / 60,
+//                        nextEvent.startTime.getDuration(new HTime(TimetableCore.getNow())) % 60);
 //                String text2 = String.format(
 //                        getString(R.string.time_format_2),
-//                        nextEvent.startTime.getDuration(new HTime(timeTableCore.getNow()))
+//                        nextEvent.startTime.getDuration(new HTime(TimetableCore.getNow()))
 //                );
-                String timeText = EventsUtils.itWillStartIn(timeTableCore.getNow(), nextEvent, false);
-//                nextEvent.startTime.getDuration(new HTime(timeTableCore.getNow())) >= 60 ? text1
+                String timeText = EventsUtils.itWillStartIn(TimetableCore.getNow(), nextEvent, false);
+//                nextEvent.startTime.getDuration(new HTime(TimetableCore.getNow())) >= 60 ? text1
 //                        : text2;
                 title = timeText + getString(R.string.timeline_counting_middle);
                 content = nextEvent.mainName;

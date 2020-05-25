@@ -24,6 +24,7 @@ import com.stupidtree.hita.adapter.NavigationListAdapter;
 import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.fragments.BasicRefreshTask;
 import com.stupidtree.hita.online.BannerItem;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
 import java.util.ArrayList;
@@ -40,10 +41,9 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_BOARD_JW;
-import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_HINT;
 import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_CAMPUS;
+import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_HINT;
 import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_MOOD;
 import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_NEWS;
 import static com.stupidtree.hita.adapter.NavigationListAdapter.TYPE_NOTIFICATION;
@@ -278,7 +278,7 @@ public class FragmentNavigation extends BaseFragment implements NavigationListAd
         if (firstEnterTime != null) { //不是第一次进
             Calendar target = (Calendar) firstEnterTime.clone();
             target.add(Calendar.MINUTE, 10); //每10分钟刷新一次
-            if (target.before(timeTableCore.getNow())) { //间隔一小时后，可以刷新banner
+            if (target.before(TimetableCore.getNow())) { //间隔一小时后，可以刷新banner
                 firstEnterTime.setTimeInMillis(System.currentTimeMillis());
                 Refresh(false, true, false);
             } else {

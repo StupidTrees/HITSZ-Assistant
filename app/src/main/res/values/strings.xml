@@ -1036,5 +1036,9 @@
     <string name="name_last_week">上周</string>
     <string name="ade_title_edit">编辑%s</string>
     <string name="edit_event_done">已保存</string>
+    <string name="jw_tabs_xxjd">学习进度</string>
+    <string name="bx_progress_number">完成%d/%d门</string>
+    <string name="bx_progress_credit">已修%.1f/%.1f学分</string>
+    <string name="jw_xxjd_xflb_progress_txt">%.1f/%.1f</string>
 
 </resources>

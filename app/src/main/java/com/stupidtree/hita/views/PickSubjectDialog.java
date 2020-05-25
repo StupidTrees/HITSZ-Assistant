@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.BaseOperationTask;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
+
 
 public class PickSubjectDialog extends RoundedCornerDialog implements BaseOperationTask.OperationListener<List<Subject>> {
     public static List<Subject> listRes;
@@ -98,7 +100,7 @@ public class PickSubjectDialog extends RoundedCornerDialog implements BaseOperat
 
         @Override
         protected List<Subject> doInBackground(OperationListener<List<Subject>> listRefreshedListener, Boolean... booleans) {
-            return timeTableCore.getSubjects(null);
+            return TimetableCore.getInstance(HContext).getSubjects(null);
         }
 
     }

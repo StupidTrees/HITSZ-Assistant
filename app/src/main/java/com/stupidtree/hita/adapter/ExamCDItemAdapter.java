@@ -8,12 +8,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.util.EventsUtils;
 
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class ExamCDItemAdapter extends BaseCheckableListAdapter<EventItem, ExamCDItemAdapter.yHolder> {
 
@@ -53,7 +54,7 @@ public class ExamCDItemAdapter extends BaseCheckableListAdapter<EventItem, ExamC
         } else {
             holder.title.setText(data.getMainName());
             if (holder.type == TODO) {
-                holder.remain.setText(EventsUtils.itWillStartIn(timeTableCore.getNow(), data, true));
+                holder.remain.setText(EventsUtils.itWillStartIn(TimetableCore.getNow(), data, true));
             } else holder.remain.setText(R.string.exam_passed_tag);
             if (EditMode) {
                 holder.remain.setVisibility(View.GONE);

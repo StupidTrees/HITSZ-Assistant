@@ -24,7 +24,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class ActivityEmptyClassroomDetail extends BaseActivity {
     Toolbar toolbar;
@@ -56,8 +56,8 @@ public class ActivityEmptyClassroomDetail extends BaseActivity {
        // xnxq = getIntent().getStringExtra("xnxq");
         cd = getIntent().getStringExtra("cd");
         name = getIntent().getStringExtra("name");
-        pageDow = TimetableCore.getDOW(timeTableCore.getNow());
-        pageWeek = timeTableCore.getThisWeekOfTerm();
+        pageDow = TimetableCore.getDOW(TimetableCore.getNow());
+        pageWeek = TimetableCore.getInstance(HContext).getThisWeekOfTerm();
         initToolbar();
         initViews();
         // getResult();

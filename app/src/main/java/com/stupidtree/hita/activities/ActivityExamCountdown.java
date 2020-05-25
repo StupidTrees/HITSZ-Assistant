@@ -25,6 +25,7 @@ import com.stupidtree.hita.adapter.ExamCDItemAdapter;
 import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
 import com.stupidtree.hita.fragments.popup.FragmentAddTask;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.util.EventsUtils;
 import com.stupidtree.hita.views.EditModeHelper;
@@ -38,8 +39,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 import static com.stupidtree.hita.timetable.TimetableCore.EXAM;
 
@@ -122,7 +123,7 @@ BaseOperationTask.OperationListener<Object>{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!timeTableCore.isDataAvailable()) {
+                if (!TimetableCore.getInstance(HContext).isDataAvailable()) {
                     Snackbar.make(v, getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
                     return;
                 }
@@ -176,7 +177,7 @@ BaseOperationTask.OperationListener<Object>{
     @SuppressLint("SetTextI18n")
     void refreshText(List<EventItem> list) {
 
-        if (!timeTableCore.isDataAvailable()) {
+        if (!TimetableCore.getInstance(HContext).isDataAvailable()) {
             none.setVisibility(View.VISIBLE);
             return;
         }
@@ -206,7 +207,7 @@ BaseOperationTask.OperationListener<Object>{
                         EventsUtils.showEventItem(getThis(), finalToShow);
                     }
                 });
-                long minutes = toShow.getInWhatTimeWillItHappen(timeTableCore.getCurrentCurriculum(), timeTableCore.getNow());
+                long minutes = toShow.getInWhatTimeWillItHappen(TimetableCore.getInstance(HContext).getCurrentCurriculum(), TimetableCore.getNow());
                 int weeks = (int) (minutes / 10080);
                 minutes %= 10080;
                 int days = (int) (minutes / 1440);
@@ -329,7 +330,7 @@ BaseOperationTask.OperationListener<Object>{
 
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
-            List<EventItem> res = timeTableCore.getAllEvents(EXAM);
+            List<EventItem> res = TimetableCore.getInstance(HContext).getAllEvents(EXAM);
             for (EventItem ei : res) {
                 if (ei.hasPassed(System.currentTimeMillis())) result_passed.add(ei);
                 else result_todo.add(ei);
@@ -367,7 +368,7 @@ BaseOperationTask.OperationListener<Object>{
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             if (toDelete != null) {
                 for (EventItem ei : toDelete) {
-                    timeTableCore.deleteEvent(ei, true);
+                    TimetableCore.getInstance(HContext).deleteEvent(ei, true);
                 }
             }
             return null;

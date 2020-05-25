@@ -41,7 +41,6 @@ public class HITAContentProvider extends ContentProvider {
     public boolean onCreate() {
         mContext = getContext();
         // 在ContentProvider创建时对数据库进行初始化
-        // 运行在主线程，故不能做耗时操作,此处仅作展示
         mDbHelper = new HITADBHelper(mContext);
         db = mDbHelper.getWritableDatabase();
         return true;

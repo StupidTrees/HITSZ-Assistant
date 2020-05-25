@@ -44,6 +44,7 @@ import com.stupidtree.hita.fragments.popup.FragmentImportCurriculum;
 import com.stupidtree.hita.fragments.timetable_manager.FragmentTimeTableChild;
 import com.stupidtree.hita.fragments.timetable_manager.FragmentTimeTableSettings;
 import com.stupidtree.hita.timetable.CurriculumCreator;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.Curriculum;
 import com.stupidtree.hita.util.FileOperator;
 import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
@@ -59,7 +60,6 @@ import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.activities.ActivityMain.saveData;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
@@ -206,7 +206,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentT
 
 
     public void Refresh() {
-        curriculumShow = timeTableCore.getCurrentCurriculum();
+        curriculumShow = TimetableCore.getInstance(HContext).getCurrentCurriculum();
         if (curriculumShow == null) {
             name.setText(R.string.curriculum_none);
             pagerData.clear();
@@ -383,7 +383,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentT
         int index = -1;
         for (int i = 0; i < pagerData.size(); i++) {
             Curriculum c = pagerData.get(i);
-            if (c.getCurriculumCode().equals(timeTableCore.getCurrentCurriculum().getCurriculumCode())) {
+            if (c.getCurriculumCode().equals(TimetableCore.getInstance(HContext).getCurrentCurriculum().getCurriculumCode())) {
                 index = i;
                 break;
             }
@@ -404,7 +404,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentT
         @Override
         protected List<Curriculum> doInBackground(ListRefreshedListener listRefreshedListener, Boolean... booleans) {
             result = new ArrayList<>();
-            for (Curriculum c : timeTableCore.getAllCurriculum()) {
+            for (Curriculum c : TimetableCore.getInstance(HContext).getAllCurriculum()) {
                 if (c != null) result.add(c);
             }
             return result;
@@ -428,7 +428,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentT
         protected Pair<Boolean, Integer> doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
             try {
                 boolean result = true;
-                List<Curriculum> all = timeTableCore.getAllCurriculum();
+                List<Curriculum> all = TimetableCore.getInstance(HContext).getAllCurriculum();
                 List<CurriculumCreator> res = FileOperator.loadCurriculumFromExcel(file, startDate);
                 for (CurriculumCreator cc : res) {
                     for (Curriculum existed : all) {
@@ -450,7 +450,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentT
                             }
                         }
                     }
-                    result = result && timeTableCore.addCurriculum(cc, true);
+                    result = result && TimetableCore.getInstance(HContext).addCurriculum(cc, true);
                 }
 
                 return new Pair<>(result, res.size());
@@ -475,7 +475,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentT
 
         @Override
         protected Boolean doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
-            return timeTableCore.deleteCurriculum(curriculumCode);
+            return TimetableCore.getInstance(HContext).deleteCurriculum(curriculumCode);
         }
 
     }
@@ -493,7 +493,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentT
 
         @Override
         protected Boolean doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
-            return timeTableCore.changeCurrentCurriculum(newID);
+            return TimetableCore.getInstance(HContext).changeCurrentCurriculum(newID);
         }
     }
 
@@ -520,7 +520,7 @@ public class ActivityCurriculumManager extends BaseActivity implements FragmentT
         public void onBindViewHolder(@NonNull final CHolder holder, int position) {
             final Curriculum c = pagerData.get(position);
             holder.title.setText(c.getName());
-            final boolean isCurrent = c.getCurriculumCode().equals(timeTableCore.getCurrentCurriculum().getCurriculumCode());
+            final boolean isCurrent = c.getCurriculumCode().equals(TimetableCore.getInstance(HContext).getCurrentCurriculum().getCurriculumCode());
             holder.switchTo.setChecked(isCurrent);
             holder.subtitle.setText(getString(R.string.curriculum_manager_satrtat) + c.readStartDate());
             holder.delete.setOnClickListener(new View.OnClickListener() {

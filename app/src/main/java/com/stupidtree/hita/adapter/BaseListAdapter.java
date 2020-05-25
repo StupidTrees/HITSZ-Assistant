@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Stack;
 
 public abstract class BaseListAdapter<T, H extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<H> {
-    List<T> mBeans;
+    protected List<T> mBeans;
     Context mContext;
     LayoutInflater mInflater;
     OnItemClickListener mOnItemClickListener;

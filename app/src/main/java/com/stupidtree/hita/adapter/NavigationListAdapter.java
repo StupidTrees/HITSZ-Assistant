@@ -85,7 +85,6 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NewsIpNewsListAdapter.dip2px;
 import static com.stupidtree.hita.fragments.main.FragmentNavigation.cardNames;
 import static com.stupidtree.hita.fragments.main.FragmentNavigation.cardType;
@@ -345,7 +344,7 @@ public class NavigationListAdapter extends BaseListAdapter<NavigationCardItem, N
                 vm.enableButtons();
                 if (e == null) {
                     CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
-                    if (CurrentUser != null && !CurrentUser.hasPunch(timeTableCore.getNow())) {
+                    if (CurrentUser != null && !CurrentUser.hasPunch(TimetableCore.getNow())) {
                         vm.ut.setVisibility(View.GONE);
                         vm.vote.setVisibility(View.VISIBLE);
                         vm.normal.setOnClickListener(new View.OnClickListener() {
@@ -608,7 +607,7 @@ public class NavigationListAdapter extends BaseListAdapter<NavigationCardItem, N
                     }
                     break;
                 case "timetable":
-                    if (!timeTableCore.isDataAvailable()) return;
+                    if (!TimetableCore.getInstance(HContext).isDataAvailable()) return;
                     if (action.has("event_type") && action.has("name")) {
                         FragmentAddEvent fad = FragmentAddEvent.newInstance();
                         fad.setInitialType(action.get("event_type").getAsString()).setInitialName(action.get("name").getAsString());
@@ -770,7 +769,7 @@ public class NavigationListAdapter extends BaseListAdapter<NavigationCardItem, N
         @Override
         protected Object doInBackground(Object[] objects) {
             try {
-                @SuppressLint("SimpleDateFormat") String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(timeTableCore.getNow().getTime());
+                @SuppressLint("SimpleDateFormat") String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(TimetableCore.getNow().getTime());
                 BmobQuery<Infos> bq = new BmobQuery<>();
                 bq.addWhereEqualTo("name", "ut_mood_" + today);
                 List<Infos> resu = bq.findObjectsSync(Infos.class);
@@ -934,81 +933,75 @@ public class NavigationListAdapter extends BaseListAdapter<NavigationCardItem, N
         }
     }
 
-    class HeaderHolder extends NaviViewHolder {
-        MZBannerView<BannerItem> banner;
+    static class punchTask extends BaseOperationTask<Object> {
+        int type;
+        String hint;
+        int position;
 
-        TextView title, subtitle;
-        ImageView settingButton;
-
-        HeaderHolder(@NonNull View v) {
-            super(v);
-            settingButton = v.findViewById(R.id.navi_setting);
-            title = v.findViewById(R.id.navi_title);
-            subtitle = v.findViewById(R.id.navi_subtitle);
-
-            banner = v.findViewById(R.id.navi_banner);
-            banner.setDelayedTime(4000);
-            banner.start();
-            settingButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    String[] x = mContext.getResources().getStringArray(R.array.navi_setting_items);
-                    // final Integer[] preferenceTyps = new Integer[]{TYPE_NEWS, TYPE_HITA, TYPE_MOOD, TYPE_BOARD_JW};
-                    boolean[] checked = new boolean[4];
-                    for (int i = 0; i < checked.length; i++) {
-                        checked[i] = root.getPreferences().getBoolean(cardNames[i] + "_enable", true);
-                    }
-                    @SuppressLint("CommitPrefEdits") final SharedPreferences.Editor edit = root.getPreferences().edit();
-                    AlertDialog ad = new AlertDialog.Builder(mContext).setTitle(mContext.getString(R.string.navi_settings_title)).setMultiChoiceItems(x, checked, new DialogInterface.OnMultiChoiceClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                            edit.putBoolean(cardNames[i] + "_enable", b);
-                        }
-                    })
-                            .setPositiveButton(mContext.getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-                                    new saveOrderTask(edit, root).execute();
-                                }
-                            })
-                            .create();
-                    ad.show();
-                }
-            });
+        punchTask(OperationListener listRefreshedListener, int type, String hint, int position) {
+            super(listRefreshedListener);
+            this.type = type;
+            this.hint = hint;
+            this.position = position;
+            id = "punch";
         }
 
-        @SuppressLint("SetTextI18n")
-        void refresh() {
-            title.setText(EventsUtils.getDateString(timeTableCore.getNow(), false, EventsUtils.TTY_NONE));
-            // title.setText(mContext.getResources().getStringArray(R.array.months_full)[timeTableCore.getNow().get(Calendar.MONTH)] + String.format(mContext.getString(R.string.date_day), timeTableCore.getNow().get(Calendar.DAY_OF_MONTH)));
-            if (timeTableCore.isDataAvailable()) {
-                if (timeTableCore.isThisTerm())
-                    subtitle.setText(
-                            mContext.getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(timeTableCore.getNow()) - 1]
-                                    + " " +
-                                    String.format(mContext.getString(R.string.week), timeTableCore.getCurrentCurriculum().getWeekOfTerm(timeTableCore.getNow()))
-                    );
-                else
-                    subtitle.setText(mContext.getString(R.string.navi_semister_not_begun) + " " + mContext.getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(timeTableCore.getNow()) - 1]);
 
-            } else subtitle.setText(mContext.getString(R.string.navi_semister_no_data));
-
-            if (root.getADBanners().size() == 1) banner.setCanLoop(false);
-            else banner.setCanLoop(true);
-            banner.setPages(root.getADBanners(), new MZHolderCreator<BannerViewHolder>() {
-                @Override
-                public BannerViewHolder createViewHolder() {
-                    return new BannerViewHolder();
+        @Override
+        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            BmobQuery<Infos> bq = new BmobQuery<>();
+            bq.addWhereEqualTo("name", "ut_mood_" + sdf.format(TimetableCore.getNow().getTime()));
+            Infos utMood;
+            try {
+                List<Infos> res = bq.findObjectsSync(Infos.class);
+                if (res != null && res.size() > 0) {
+                    utMood = res.get(0);
+                    JsonObject JO = utMood.getJson();
+                    if (!JO.has("happy")) JO.addProperty("happy", 0);
+                    if (!JO.has("normal")) JO.addProperty("normal", 0);
+                    if (!JO.has("sad")) JO.addProperty("sad", 0);
+                    if (type == 0) {
+                        int happy = JO.get("happy").getAsInt();
+                        JO.addProperty("happy", happy + 1);
+                    } else if (type == 1) {
+                        int normal = JO.get("normal").getAsInt();
+                        JO.addProperty("normal", normal + 1);
+                    } else if (type == 2) {
+                        int sad = JO.get("sad").getAsInt();
+                        JO.addProperty("sad", sad + 1);
+                    }
+                    utMood.setJson(JO);
+                    utMood.updateSync();
+                } else {
+                    JsonObject jx = new JsonObject();
+                    int a = type == 0 ? 1 : 0;
+                    int b = type == 1 ? 1 : 0;
+                    int c = type == 2 ? 1 : 0;
+                    jx.addProperty("happy", a);
+                    jx.addProperty("normal", b);
+                    jx.addProperty("sad", c);
+                    Infos in = new Infos();
+                    in.setName("ut_mood_" + sdf.format(TimetableCore.getNow().getTime()));
+                    in.setType("ut_mood");
+                    in.setJson(jx);
+                    in.saveSync();
                 }
-            });
-            if (root.getADBanners().size() == 0) {
-                banner.setVisibility(View.GONE);
-            } else {
-                banner.setVisibility(View.VISIBLE);
-                banner.start();
+                CurrentUser.Punch(TimetableCore.getNow(), type);
+                CurrentUser.update(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+
+                    }
+                });
+                return true;
+                // CurrentUser.Punch(TimetableCore.getNow(),type);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
             }
         }
+
     }
 
     static class saveOrderTask extends AsyncTask<Object, Object, Object> {
@@ -1118,75 +1111,81 @@ public class NavigationListAdapter extends BaseListAdapter<NavigationCardItem, N
 
     }
 
-    static class punchTask extends BaseOperationTask<Object> {
-        int type;
-        String hint;
-        int position;
+    class HeaderHolder extends NaviViewHolder {
+        MZBannerView<BannerItem> banner;
 
-        punchTask(OperationListener listRefreshedListener, int type, String hint, int position) {
-            super(listRefreshedListener);
-            this.type = type;
-            this.hint = hint;
-            this.position = position;
-            id = "punch";
+        TextView title, subtitle;
+        ImageView settingButton;
+
+        HeaderHolder(@NonNull View v) {
+            super(v);
+            settingButton = v.findViewById(R.id.navi_setting);
+            title = v.findViewById(R.id.navi_title);
+            subtitle = v.findViewById(R.id.navi_subtitle);
+
+            banner = v.findViewById(R.id.navi_banner);
+            banner.setDelayedTime(4000);
+            banner.start();
+            settingButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    String[] x = mContext.getResources().getStringArray(R.array.navi_setting_items);
+                    // final Integer[] preferenceTyps = new Integer[]{TYPE_NEWS, TYPE_HITA, TYPE_MOOD, TYPE_BOARD_JW};
+                    boolean[] checked = new boolean[4];
+                    for (int i = 0; i < checked.length; i++) {
+                        checked[i] = root.getPreferences().getBoolean(cardNames[i] + "_enable", true);
+                    }
+                    @SuppressLint("CommitPrefEdits") final SharedPreferences.Editor edit = root.getPreferences().edit();
+                    AlertDialog ad = new AlertDialog.Builder(mContext).setTitle(mContext.getString(R.string.navi_settings_title)).setMultiChoiceItems(x, checked, new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                            edit.putBoolean(cardNames[i] + "_enable", b);
+                        }
+                    })
+                            .setPositiveButton(mContext.getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                                    new saveOrderTask(edit, root).execute();
+                                }
+                            })
+                            .create();
+                    ad.show();
+                }
+            });
         }
 
+        @SuppressLint("SetTextI18n")
+        void refresh() {
+            title.setText(EventsUtils.getDateString(TimetableCore.getNow(), false, EventsUtils.TTY_NONE));
+            // title.setText(mContext.getResources().getStringArray(R.array.months_full)[TimetableCore.getNow().get(Calendar.MONTH)] + String.format(mContext.getString(R.string.date_day), TimetableCore.getNow().get(Calendar.DAY_OF_MONTH)));
+            if (TimetableCore.getInstance(HContext).isDataAvailable()) {
+                if (TimetableCore.getInstance(HContext).isThisTerm())
+                    subtitle.setText(
+                            mContext.getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(TimetableCore.getNow()) - 1]
+                                    + " " +
+                                    String.format(mContext.getString(R.string.week), TimetableCore.getInstance(HContext).getCurrentCurriculum().getWeekOfTerm(TimetableCore.getNow()))
+                    );
+                else
+                    subtitle.setText(mContext.getString(R.string.navi_semister_not_begun) + " " + mContext.getResources().getStringArray(R.array.dow1)[TimetableCore.getDOW(TimetableCore.getNow()) - 1]);
 
-        @Override
-        protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            BmobQuery<Infos> bq = new BmobQuery<>();
-            bq.addWhereEqualTo("name", "ut_mood_" + sdf.format(timeTableCore.getNow().getTime()));
-            Infos utMood;
-            try {
-                List<Infos> res = bq.findObjectsSync(Infos.class);
-                if (res != null && res.size() > 0) {
-                    utMood = res.get(0);
-                    JsonObject JO = utMood.getJson();
-                    if (!JO.has("happy")) JO.addProperty("happy", 0);
-                    if (!JO.has("normal")) JO.addProperty("normal", 0);
-                    if (!JO.has("sad")) JO.addProperty("sad", 0);
-                    if (type == 0) {
-                        int happy = JO.get("happy").getAsInt();
-                        JO.addProperty("happy", happy + 1);
-                    } else if (type == 1) {
-                        int normal = JO.get("normal").getAsInt();
-                        JO.addProperty("normal", normal + 1);
-                    } else if (type == 2) {
-                        int sad = JO.get("sad").getAsInt();
-                        JO.addProperty("sad", sad + 1);
-                    }
-                    utMood.setJson(JO);
-                    utMood.updateSync();
-                } else {
-                    JsonObject jx = new JsonObject();
-                    int a = type == 0 ? 1 : 0;
-                    int b = type == 1 ? 1 : 0;
-                    int c = type == 2 ? 1 : 0;
-                    jx.addProperty("happy", a);
-                    jx.addProperty("normal", b);
-                    jx.addProperty("sad", c);
-                    Infos in = new Infos();
-                    in.setName("ut_mood_" + sdf.format(timeTableCore.getNow().getTime()));
-                    in.setType("ut_mood");
-                    in.setJson(jx);
-                    in.saveSync();
+            } else subtitle.setText(mContext.getString(R.string.navi_semister_no_data));
+
+            if (root.getADBanners().size() == 1) banner.setCanLoop(false);
+            else banner.setCanLoop(true);
+            banner.setPages(root.getADBanners(), new MZHolderCreator<BannerViewHolder>() {
+                @Override
+                public BannerViewHolder createViewHolder() {
+                    return new BannerViewHolder();
                 }
-                CurrentUser.Punch(timeTableCore.getNow(), type);
-                CurrentUser.update(new UpdateListener() {
-                    @Override
-                    public void done(BmobException e) {
-
-                    }
-                });
-                return true;
-                // CurrentUser.Punch(timeTableCore.getNow(),type);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
+            });
+            if (root.getADBanners().size() == 0) {
+                banner.setVisibility(View.GONE);
+            } else {
+                banner.setVisibility(View.VISIBLE);
+                banner.start();
             }
         }
-
     }
 
 

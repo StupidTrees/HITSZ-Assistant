@@ -20,6 +20,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.HTime;
 import com.stupidtree.hita.util.EventsUtils;
@@ -35,7 +36,6 @@ import java.util.List;
 import tyrantgit.explosionfield.ExplosionField;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 import static com.stupidtree.hita.timetable.TimetableCore.COURSE;
 import static com.stupidtree.hita.timetable.TimetableCore.DDL;
@@ -191,8 +191,8 @@ public class FragmentTimeTablePage extends BaseFragment implements BaseOperation
 
         try {
             /*显示上方日期*/
-            topDateTexts[0].setText(HContext.getResources().getStringArray(R.array.months)[timeTableCore.getCurrentCurriculum().getFirstDateAtWOT(pageWeek).get(Calendar.MONTH)]);
-            Calendar firstDateTemp = timeTableCore.getCurrentCurriculum().getFirstDateAtWOT(pageWeek);
+            topDateTexts[0].setText(HContext.getResources().getStringArray(R.array.months)[TimetableCore.getInstance(HContext).getCurrentCurriculum().getFirstDateAtWOT(pageWeek).get(Calendar.MONTH)]);
+            Calendar firstDateTemp = TimetableCore.getInstance(HContext).getCurrentCurriculum().getFirstDateAtWOT(pageWeek);
             Calendar temp = Calendar.getInstance();
             for (int k = 1; k <= 7; k++) {
                 temp.setTime(firstDateTemp.getTime());
@@ -263,7 +263,7 @@ public class FragmentTimeTablePage extends BaseFragment implements BaseOperation
     public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, List result) {
         switch (id) {
             case "refresh":
-                if (!timeTableCore.isDataAvailable()) return;
+                if (!TimetableCore.getInstance(HContext).isDataAvailable()) return;
                 refreshDateViews();
                 timeTableView.removeAllViews();
                 timeTableView.notifyRefresh();
@@ -297,7 +297,7 @@ public class FragmentTimeTablePage extends BaseFragment implements BaseOperation
                 if (hasWholedayWholeWeek) allDayLayout.setVisibility(View.VISIBLE);
                 else allDayLayout.setVisibility(View.GONE);
 
-                if (pageWeek == timeTableCore.getThisWeekOfTerm() && root.drawNowLine() && new HTime(timeTableCore.getNow()).after(root.getStartTime())) {
+                if (pageWeek == TimetableCore.getInstance(HContext).getThisWeekOfTerm() && root.drawNowLine() && new HTime(TimetableCore.getNow()).after(root.getStartTime())) {
                     timeTableView.addView(new TimeTableNowLine(requireContext(), getIconColorSecond()));
                 }
                 break;
@@ -323,8 +323,8 @@ public class FragmentTimeTablePage extends BaseFragment implements BaseOperation
         @Override
         protected List doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
             List<Object> res = new ArrayList<>();
-            if (timeTableCore.getCurrentCurriculum() == null) return res;
-            List<EventItem> oneWeekEvent = timeTableCore.getEventsWithinWeeks(week, week);
+            if (TimetableCore.getInstance(HContext).getCurrentCurriculum() == null) return res;
+            List<EventItem> oneWeekEvent = TimetableCore.getInstance(HContext).getEventsWithinWeeks(week, week);
             for (int p = 1; p <= 7; p++) {
                 List<EventItem> oneDayEvent = new ArrayList<>();
                 for (EventItem x : oneWeekEvent) {
@@ -378,7 +378,7 @@ public class FragmentTimeTablePage extends BaseFragment implements BaseOperation
         @Override
         protected Boolean doInBackground(OperationListener<Boolean> listRefreshedListener, Boolean... booleans) {
             for (EventItem ei : eventItems) {
-                boolean res = timeTableCore.deleteEvent(ei, ei.eventType == DDL);
+                boolean res = TimetableCore.getInstance(HContext).deleteEvent(ei, ei.eventType == DDL);
                 if (!res) return false;
             }
             return true;

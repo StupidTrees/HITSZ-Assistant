@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.gson.JsonObject;
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.HTime;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.activities.ActivityChatbot.STATE_SEARCH_COURSE_SINGLE;
 import static com.stupidtree.hita.activities.ActivityChatbot.State;
 import static com.stupidtree.hita.hita.TextTools.BEFORE;
@@ -67,6 +68,7 @@ public class ChatBotA {
         return test!=0;
     }
     public static List<EventItem> propcessSerchEvents(JsonObject values) {
+        TimetableCore tc = TimetableCore.getInstance(HContext);
         int fromW = values.get("fW").getAsInt();
         int toW = values.get("tW").getAsInt();
         int fromDOW = values.get("fDOW").getAsInt();
@@ -75,78 +77,79 @@ public class ChatBotA {
         HTime toT = new HTime(values.get("tH").getAsInt(), values.get("tM").getAsInt());
         int tag = values.get("tag").getAsInt();
         int num = values.get("num").getAsInt();
-        int thisDOW = timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) == 1 ? 7 : timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) - 1;
-        if (fromW == BEFORE) fromW = timeTableCore.getThisWeekOfTerm() - 1 <= 0 ? 1 : timeTableCore.getThisWeekOfTerm() - 1;
-        if (fromW == THIS) fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
+        int thisDOW = TimetableCore.getNow().get(Calendar.DAY_OF_WEEK) == 1 ? 7 : TimetableCore.getNow().get(Calendar.DAY_OF_WEEK) - 1;
+        if (fromW == BEFORE)
+            fromW = tc.getThisWeekOfTerm() - 1 <= 0 ? 1 : tc.getThisWeekOfTerm() - 1;
+        if (fromW == THIS) fromW = tc.isThisTerm() ? tc.getThisWeekOfTerm() : 1;
         if (fromW == NEXT)
-            fromW = timeTableCore.isThisTerm() ? ((timeTableCore.getThisWeekOfTerm() + 1 > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : timeTableCore.getThisWeekOfTerm() + 1) : 2;
-        if (toW == BEFORE) toW = timeTableCore.getThisWeekOfTerm() - 1 <= 0 ? 1 : timeTableCore.getThisWeekOfTerm() - 1;
-        if (toW == THIS) toW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
+            fromW = tc.isThisTerm() ? ((tc.getThisWeekOfTerm() + 1 > tc.getCurrentCurriculum().getTotalWeeks()) ? tc.getCurrentCurriculum().getTotalWeeks() : tc.getThisWeekOfTerm() + 1) : 2;
+        if (toW == BEFORE) toW = tc.getThisWeekOfTerm() - 1 <= 0 ? 1 : tc.getThisWeekOfTerm() - 1;
+        if (toW == THIS) toW = tc.isThisTerm() ? tc.getThisWeekOfTerm() : 1;
         if (toW == NEXT)
-            toW = timeTableCore.isThisTerm() ? ((timeTableCore.getThisWeekOfTerm() + 1 > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : timeTableCore.getThisWeekOfTerm() + 1) : 2;
+            toW = tc.isThisTerm() ? ((tc.getThisWeekOfTerm() + 1 > tc.getCurrentCurriculum().getTotalWeeks()) ? tc.getCurrentCurriculum().getTotalWeeks() : tc.getThisWeekOfTerm() + 1) : 2;
 
         if (fromW == -1) {
             if (fromDOW == BEFORE) {
                 if (thisDOW < 2) {
-                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
+                    fromW = tc.getThisWeekOfTerm() - 1;
                     fromDOW = 7;
                 } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
+                    fromW = tc.getThisWeekOfTerm();
                     fromDOW = thisDOW - 1;
                 }
             } else if (fromDOW == T_BEFORE) {
                 if (thisDOW < 3) {
-                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
+                    fromW = tc.getThisWeekOfTerm() - 1;
                     if (thisDOW == 2) fromDOW = 7;
                     else if (thisDOW == 1) fromDOW = 6;
                 } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
+                    fromW = tc.getThisWeekOfTerm();
                     fromDOW = thisDOW - 2;
                 }
             } else if (fromDOW == TT_BEFORE) {
                 if (thisDOW < 4) {
-                    fromW = timeTableCore.getThisWeekOfTerm() - 1;
+                    fromW = tc.getThisWeekOfTerm() - 1;
                     if (thisDOW == 3) fromDOW = 7;
                     else if (thisDOW == 2) fromDOW = 6;
                     else if (thisDOW == 1) fromDOW = 5;
                 } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
+                    fromW = tc.getThisWeekOfTerm();
                     fromDOW = thisDOW - 3;
                 }
             } else if (fromDOW == THIS) {
-                fromW = timeTableCore.getThisWeekOfTerm();
+                fromW = tc.getThisWeekOfTerm();
                 fromDOW = thisDOW;
             } else if (fromDOW == NEXT) {
                 if (thisDOW == 7) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
+                    fromW = tc.getThisWeekOfTerm() + 1;
                     fromDOW = 1;
                 } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
+                    fromW = tc.getThisWeekOfTerm();
                     fromDOW = thisDOW + 1;
                 }
             } else if (fromDOW == T_NEXT) {
                 if (thisDOW == 6) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
+                    fromW = tc.getThisWeekOfTerm() + 1;
                     fromDOW = 1;
                 } else if (thisDOW == 7) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
+                    fromW = tc.getThisWeekOfTerm() + 1;
                     fromDOW = 2;
                 } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
+                    fromW = tc.getThisWeekOfTerm();
                     fromDOW = thisDOW + 2;
                 }
             } else if (fromDOW == TT_NEXT) {
                 if (thisDOW == 5) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
+                    fromW = tc.getThisWeekOfTerm() + 1;
                     fromDOW = 1;
                 } else if (thisDOW == 6) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
+                    fromW = tc.getThisWeekOfTerm() + 1;
                     fromDOW = 2;
                 } else if (thisDOW == 7) {
-                    fromW = timeTableCore.getThisWeekOfTerm() + 1;
+                    fromW = tc.getThisWeekOfTerm() + 1;
                     fromDOW = 3;
                 } else {
-                    fromW = timeTableCore.getThisWeekOfTerm();
+                    fromW = tc.getThisWeekOfTerm();
                     fromDOW = thisDOW + 3;
                 }
             }
@@ -154,65 +157,65 @@ public class ChatBotA {
         if (toW == -1) {
             if (toDOW == BEFORE) {
                 if (thisDOW < 2) {
-                    toW = timeTableCore.getThisWeekOfTerm() - 1;
+                    toW = tc.getThisWeekOfTerm() - 1;
                     toDOW = 7;
                 } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
+                    toW = tc.getThisWeekOfTerm();
                     toDOW = thisDOW - 1;
                 }
             } else if (toDOW == T_BEFORE) {
                 if (thisDOW < 3) {
-                    toW = timeTableCore.getThisWeekOfTerm() - 1;
+                    toW = tc.getThisWeekOfTerm() - 1;
                     if (thisDOW == 2) toDOW = 7;
                     else if (thisDOW == 1) toDOW = 6;
                 } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
+                    toW = tc.getThisWeekOfTerm();
                     toDOW = thisDOW - 2;
                 }
             } else if (toDOW == TT_BEFORE) {
                 if (thisDOW < 4) {
-                    toW = timeTableCore.getThisWeekOfTerm() - 1;
+                    toW = tc.getThisWeekOfTerm() - 1;
                     if (thisDOW == 3) toDOW = 7;
                     else if (thisDOW == 2) toDOW = 6;
                     else if (thisDOW == 1) toDOW = 5;
                 } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
+                    toW = tc.getThisWeekOfTerm();
                     toDOW = thisDOW - 3;
                 }
             } else if (toDOW == THIS) {
-                toW = timeTableCore.getThisWeekOfTerm();
+                toW = tc.getThisWeekOfTerm();
                 toDOW = thisDOW;
             } else if (toDOW == NEXT) {
                 if (thisDOW == 7) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
+                    toW = tc.getThisWeekOfTerm() + 1;
                     toDOW = 1;
                 } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
+                    toW = tc.getThisWeekOfTerm();
                     toDOW = thisDOW + 1;
                 }
             } else if (toDOW == T_NEXT) {
                 if (thisDOW == 6) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
+                    toW = tc.getThisWeekOfTerm() + 1;
                     toDOW = 1;
                 } else if (thisDOW == 7) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
+                    toW = tc.getThisWeekOfTerm() + 1;
                     toDOW = 2;
                 } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
+                    toW = tc.getThisWeekOfTerm();
                     toDOW = thisDOW + 2;
                 }
             } else if (toDOW == TT_NEXT) {
                 if (thisDOW == 5) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
+                    toW = tc.getThisWeekOfTerm() + 1;
                     toDOW = 1;
                 } else if (thisDOW == 6) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
+                    toW = tc.getThisWeekOfTerm() + 1;
                     toDOW = 2;
                 } else if (thisDOW == 7) {
-                    toW = timeTableCore.getThisWeekOfTerm() + 1;
+                    toW = tc.getThisWeekOfTerm() + 1;
                     toDOW = 3;
                 } else {
-                    toW = timeTableCore.getThisWeekOfTerm();
+                    toW = tc.getThisWeekOfTerm();
                     toDOW = thisDOW + 3;
                 }
             }
@@ -230,8 +233,8 @@ public class ChatBotA {
             }
         }
         if (fromW == -1 || toW == -1) {
-            if (fromW == toW) toW = fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : 1;
-            else if (fromW == -1) fromW = timeTableCore.isThisTerm() ? timeTableCore.getThisWeekOfTerm() : toW;
+            if (fromW == toW) toW = fromW = tc.isThisTerm() ? tc.getThisWeekOfTerm() : 1;
+            else if (fromW == -1) fromW = tc.isThisTerm() ? tc.getThisWeekOfTerm() : toW;
             else if (toW == -1) toW = fromW;
         }
         if (fromT.hour == -1) {
@@ -242,26 +245,26 @@ public class ChatBotA {
             toT.hour = 23;
             toT.minute = 59;
         }
-        if (toW > timeTableCore.getCurrentCurriculum().getTotalWeeks())
-            toW = timeTableCore.getCurrentCurriculum().getTotalWeeks();
-        toW = (toW > timeTableCore.getCurrentCurriculum().getTotalWeeks()) ? timeTableCore.getCurrentCurriculum().getTotalWeeks() : toW;
+        if (toW > tc.getCurrentCurriculum().getTotalWeeks())
+            toW = tc.getCurrentCurriculum().getTotalWeeks();
+        toW = (toW > tc.getCurrentCurriculum().getTotalWeeks()) ? tc.getCurrentCurriculum().getTotalWeeks() : toW;
         System.out.println("放入查询函数的是：fW=" + fromW + ",fDOW=" + fromDOW + ",fT=" + fromT.tellTime() + ",tW=" + toW + ",tDOW=" + toDOW + ",tT=" + toT.tellTime());
         List<EventItem> result = null;
         switch (tag) {
             case ChatBotA.FUN_SEARCH_EVENT_ALL:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT);
+                result = tc.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_COURSE:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, COURSE);
+                result = tc.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, COURSE);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_ARRANGE:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, ARRANGEMENT);
+                result = tc.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, ARRANGEMENT);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_EXAM:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, EXAM);
+                result = tc.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, EXAM);
                 break;
             case ChatBotA.FUN_SEARCH_EVENT_DDL:
-                result = timeTableCore.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, DDL);
+                result = tc.getEventFrom(fromW, fromDOW, fromT, toW, toDOW, toT, DDL);
                 break;
         }
         if (num != -1 && result != null && result.size() > 0) {

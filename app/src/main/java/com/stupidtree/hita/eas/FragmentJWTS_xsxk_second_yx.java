@@ -11,6 +11,7 @@ import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.XSXKListAdapter;
 import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.hita.TextTools;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.views.ButtonLoading;
 import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
@@ -23,9 +24,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class FragmentJWTS_xsxk_second_yx extends FragmentJWTS_xsxk_second implements BaseOperationTask.OperationListener<Object> {
 
@@ -192,12 +194,13 @@ public class FragmentJWTS_xsxk_second_yx extends FragmentJWTS_xsxk_second implem
 
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
-            if (!timeTableCore.isDataAvailable()) return false;
+            TimetableCore tc = TimetableCore.getInstance(HContext);
+            if (!tc.isDataAvailable()) return false;
 
             try {
                 for (Map<String, String> d : jwCore.getChosenSubjectsInfo(xn, xq)) {
                     boolean found = false;
-                    for (Subject s : timeTableCore.getSubjects(null)) {
+                    for (Subject s : tc.getSubjects(null)) {
                         if (TextTools.equals(s.getName(), Objects.requireNonNull(d.get("name")), "【实验】")) {
                             found = true;
                             s.setCode(d.get("code"));
@@ -212,16 +215,16 @@ public class FragmentJWTS_xsxk_second_yx extends FragmentJWTS_xsxk_second implem
                             s.setMOOC(Objects.equals(d.get("type"), "MOOC"));
                             if (TextUtils.isEmpty(s.getUUID())) {
                                 s.setUUID(UUID.randomUUID().toString());
-                                timeTableCore.saveSubject(s, "name=? AND curriculum_code=?", new String[]{s.getName(), s.getCurriculumId()});
+                                tc.saveSubject(s, "name=? AND curriculum_code=?", new String[]{s.getName(), s.getCurriculumId()});
                             } else {
-                                timeTableCore.saveSubject(s);
+                                tc.saveSubject(s);
                             }
                             number++;
                         }
                     }
                     if (Objects.equals(d.get("type"), "MOOC")) {
                         if (!found) {
-                            Subject s = new Subject(timeTableCore.getCurrentCurriculum().getCurriculumCode(), d.get("name"), d.get("teacher"));
+                            Subject s = new Subject(tc.getCurrentCurriculum().getCurriculumCode(), d.get("name"), d.get("teacher"));
                             s.setMOOC(true);
                             s.setCode(d.get("code"));
                             s.setSchool(d.get("school"));
@@ -232,7 +235,7 @@ public class FragmentJWTS_xsxk_second_yx extends FragmentJWTS_xsxk_second implem
                             s.setTeacher(d.get("teacher"));
                             s.setXnxq(d.get("xnxq"));
                             s.setId(d.get("id"));
-                            timeTableCore.insertSubject(s);
+                            tc.insertSubject(s);
                             number++;
                         }
                     }

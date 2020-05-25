@@ -4,13 +4,14 @@ import com.stupidtree.hita.hita.ChatBotA;
 import com.stupidtree.hita.hita.Chat_SearchEvent;
 import com.stupidtree.hita.hita.Term;
 import com.stupidtree.hita.hita.TextTools;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.hita.ChatBotA.propcessSerchEvents;
 
 public class SearchTimetableCore extends SearchCore<Object> {
@@ -25,12 +26,12 @@ public class SearchTimetableCore extends SearchCore<Object> {
     }
 
     @Override
-    protected List<Object> reloadResult(String text) throws SearchException {
+    protected List<Object> reloadResult(String text) {
 
         List<String> texts = Arrays.asList(text.replaceAll(" {2}", " ").split(" "));
         List<String> keywordConditions = new ArrayList<>();
         List<EventItem> UnderTimeCondition = new ArrayList<>();
-        List res = new ArrayList<>();
+        List<Object> res = new ArrayList<>();
         try {
             for (String condition : texts) {
                 List<Term> segment = TextTools.NaiveSegmentation(condition);
@@ -61,7 +62,7 @@ public class SearchTimetableCore extends SearchCore<Object> {
                 if (allMatched) res.add(ei);
             }
         } else {
-            res.addAll(timeTableCore.getEventWithInfoContainsAll(texts));
+            res.addAll(TimetableCore.getInstance(HContext).getEventWithInfoContainsAll(texts));
         }
 
 
@@ -69,7 +70,7 @@ public class SearchTimetableCore extends SearchCore<Object> {
     }
 
     @Override
-    protected List<Object> loadMoreResult(String text) throws SearchException {
+    protected List<Object> loadMoreResult(String text) {
         return new ArrayList<>();
     }
 

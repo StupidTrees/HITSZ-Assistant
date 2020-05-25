@@ -18,10 +18,11 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
-import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.eas.JWException;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.online.HITAUser;
 import com.stupidtree.hita.online.UserData;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.views.ButtonLoading;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import cn.bmob.v3.listener.UpdateListener;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class FragmentBindStuNum extends FragmentRadiusPopup implements BaseOperationTask.OperationListener<Object> {
 
@@ -103,7 +104,7 @@ public class FragmentBindStuNum extends FragmentRadiusPopup implements BaseOpera
                                                             // Log.e("found!", String.valueOf(list2));
                                                             // System.out.println(list2.get(0).getHitaUser());
                                                             UserData.UserDataCloud bud = list2.get(0);
-                                                            timeTableCore.loadDataFromCloud(bud);
+                                                            TimetableCore.getInstance(HContext).loadDataFromCloud(bud);
                                                             UserData.UserDataCloud newUD = bud.cloneWithNewUser(CurrentUser);
                                                             newUD.setObjectId(bud.getObjectId());
                                                             newUD.update(bud.getObjectId(), new UpdateListener() {

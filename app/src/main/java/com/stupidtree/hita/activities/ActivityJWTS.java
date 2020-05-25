@@ -22,12 +22,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.BaseTabAdapter;
-import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.eas.FragmentJWTS_cjgl;
 import com.stupidtree.hita.eas.FragmentJWTS_grkb;
 import com.stupidtree.hita.eas.FragmentJWTS_xsxk;
+import com.stupidtree.hita.eas.FragmentJWTS_xxjd;
 import com.stupidtree.hita.eas.JWException;
 import com.stupidtree.hita.eas.JWFragment;
+import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.views.MaterialCircleAnimator;
 
 import java.util.ArrayList;
@@ -120,8 +121,8 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot, Bas
         tabs = findViewById(R.id.jwts_tab);
         pager = findViewById(R.id.jwts_pager);
         keyToTitle = new HashMap<>();
-        final int[] titles = new int[]{R.string.jw_tabs_frkb, R.string.jw_tabs_xk, R.string.jw_tabs_cj};
-        pager.setAdapter(new BaseTabAdapter(getSupportFragmentManager(), 3) {
+        final int[] titles = new int[]{R.string.jw_tabs_frkb, R.string.jw_tabs_xk, R.string.jw_tabs_cj, R.string.jw_tabs_xxjd};
+        pager.setAdapter(new BaseTabAdapter(getSupportFragmentManager(), 4) {
             @Override
             protected Fragment initItem(int position) {
                 switch (position) {
@@ -131,6 +132,8 @@ public class ActivityJWTS extends BaseActivity implements JWFragment.JWRoot, Bas
                         return FragmentJWTS_xsxk.newInstance();
                     case 2:
                         return FragmentJWTS_cjgl.newInstance();
+                    case 3:
+                        return FragmentJWTS_xxjd.newInstance();
                 }
                 return null;
             }

@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.fragments.popup.FragmentBindStuNum;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.views.PickNumberDialog;
 
 import java.util.Calendar;
@@ -26,7 +27,7 @@ import cn.bmob.v3.listener.UpdateListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 
 public class FragmentUserCenter_Info extends BaseFragment {
@@ -200,7 +201,7 @@ public class FragmentUserCenter_Info extends BaseFragment {
             @Override
             public void onClick(View v) {
                 new PickNumberDialog(getBaseActivity(), getString(R.string.usercenter_info_grade),
-                        timeTableCore.getNow().get(Calendar.YEAR), 2016, new PickNumberDialog.onDialogConformListener() {
+                        TimetableCore.getNow().get(Calendar.YEAR), 2016, new PickNumberDialog.onDialogConformListener() {
                     @Override
                     public void onClick(int number) {
                         CurrentUser.setGrade(number);

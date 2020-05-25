@@ -4,16 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.WorkerThread;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.stupidtree.hita.R;
 import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.online.UserData;
 import com.stupidtree.hita.timetable.packable.Curriculum;
@@ -39,12 +40,9 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
-import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.timeServiceBinder;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.CurriculumCreator.CURRICULUM_TYPE_COURSE;
+import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 public class TimetableCore {
     public final static int COURSE = 1;
@@ -52,20 +50,35 @@ public class TimetableCore {
     public final static int ARRANGEMENT = 3;
     public final static int DDL = 5;
     public final static int DYNAMIC = 6;
-    private Curriculum currentCurriculum = null;
-    private String currentCurriculumId = null;
-    private boolean isThisTerm = true;
-    private int thisWeekOfTerm = -1;
-    private Calendar now;
-    private ContentResolver contentResolver;
     public static Uri uri_timetable = Uri.parse("content://com.stupidtree.hita.provider/timetable");
     public static Uri uri_task = Uri.parse("content://com.stupidtree.hita.provider/task");
     public static Uri uri_subject = Uri.parse("content://com.stupidtree.hita.provider/subject");
     private static Uri uri_curriculum = Uri.parse("content://com.stupidtree.hita.provider/curriculum");
 
-    public TimetableCore(ContentResolver contentResolver) {
+    private static TimetableCore instance;
+
+    private Curriculum currentCurriculum = null;
+    private String currentCurriculumId = null;
+    private boolean isThisTerm = true;
+    private int thisWeekOfTerm = -1;
+    private static Calendar now;
+    private ContentResolver contentResolver;
+    private LocalBroadcastManager localBroadcastManager;
+
+    private TimetableCore(Context context) {
         now = Calendar.getInstance();
-        this.contentResolver = contentResolver;
+        this.contentResolver = context.getContentResolver();
+        this.localBroadcastManager = LocalBroadcastManager.getInstance(context);
+    }
+
+    public static TimetableCore getInstance(Context context) {
+        if (instance == null) return instance = new TimetableCore(context);
+        else return instance.updateInstance(context);
+    }
+
+    public static Calendar getNow() {
+        now.setTimeInMillis(System.currentTimeMillis());
+        return now;
     }
 
     public static List<HTime> getTimeAtNumber(int begin, int last) {
@@ -117,24 +130,6 @@ public class TimetableCore {
         return true;
     }
 
-    //    @WorkerThread
-//    public ArrayList<Subject> getSubjects(String curriculumCode) {
-//        ArrayList<Subject> res = new ArrayList<>();
-//        try {
-//            Cursor c = contentResolver.query(uri_subject, null, "curriculum_code=?", new String[]{curriculumCode}, null, null);
-//            while (c != null && c.moveToNext()) {
-//                Subject s = new Subject(c);
-//                res.add(s);
-//            }
-//            if (c != null) {
-//                c.close();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            contentResolver.delete(uri_subject, null, null);
-//        }
-//        return res;
-//    }
     public static int getNumberAtTime(HTime to) {
 
         TimePeriod[] dots = new TimePeriod[]{
@@ -180,9 +175,10 @@ public class TimetableCore {
         return null;
     }
 
-    public Calendar getNow() {
-        now.setTimeInMillis(System.currentTimeMillis());
-        return now;
+    private TimetableCore updateInstance(Context context) {
+        this.contentResolver = context.getContentResolver();
+        this.localBroadcastManager = LocalBroadcastManager.getInstance(context);
+        return this;
     }
 
     public boolean isDataAvailable() {
@@ -191,7 +187,7 @@ public class TimetableCore {
 
     public void loadDataFromCloud(UserData.UserDataCloud bud) {
         if (CurrentUser == null) return;
-        new writeDataToLocalTask(contentResolver, bud).executeOnExecutor(TPE);
+        new writeDataToLocalTask(contentResolver, bud).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void loadDataFromCloud(final Activity toFinish) {
@@ -203,7 +199,7 @@ public class TimetableCore {
             public void done(List<UserData.UserDataCloud> list, BmobException e) { //如果done里面其他的函数出错，会再执行一次done抛出异常！！！
                 Log.e("下载", "done");
                 if (e == null && list != null && list.size() > 0) {
-                    new writeDataToLocalTask(contentResolver, list.get(0), toFinish).executeOnExecutor(TPE);
+                    new writeDataToLocalTask(contentResolver, list.get(0), toFinish, TimetableCore.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } else {
                     if (toFinish != null) toFinish.finish();
                     Log.e("下载失败", e == null ? "空结果" : e.toString());
@@ -228,8 +224,8 @@ public class TimetableCore {
     public boolean addCurriculum(CurriculumCreator il, boolean coverSubject) {
         if (il == null) return false;
         Curriculum cur = il.getCurriculum();
-        if (cur.getWeekOfTerm(timeTableCore.getNow()) > cur.getTotalWeeks())
-            cur.setTotalWeeks(cur.getWeekOfTerm(timeTableCore.getNow()));
+        if (cur.getWeekOfTerm(getNow()) > cur.getTotalWeeks())
+            cur.setTotalWeeks(cur.getWeekOfTerm(getNow()));
         contentResolver.delete(uri_curriculum, "curriculum_code=?", new String[]{il.getCurriculumCode()});
         contentResolver.insert(uri_curriculum, cur.getContentValues());
         //if(clearSubject)contentResolver.delete(uri_subject, "curriculum_code=?", new String[]{il.getCurriculumCode()});
@@ -307,7 +303,7 @@ public class TimetableCore {
     public void syncTimeFlags() {
 
         if (isDataAvailable()) {
-            thisWeekOfTerm = currentCurriculum.getWeekOfTerm(timeTableCore.getNow());
+            thisWeekOfTerm = currentCurriculum.getWeekOfTerm(getNow());
             isThisTerm = thisWeekOfTerm > 0;
             if (thisWeekOfTerm > currentCurriculum.getTotalWeeks()) {
                 currentCurriculum.setTotalWeeks(thisWeekOfTerm);
@@ -651,7 +647,6 @@ public class TimetableCore {
         currentCurriculumId = defaultSP.getString("current_curriculum", null);
         if (currentCurriculumId == null) {
             List<Curriculum> all = getAllCurriculum();
-            // Log.e("init_size", String.valueOf(all));
             if (all.size() > 0) {
                 currentCurriculum = all.get(all.size() - 1);
                 currentCurriculumId = currentCurriculum.getCurriculumCode();
@@ -769,7 +764,7 @@ public class TimetableCore {
     }
 
     private void packUp(OnPackDoneListener listener) {
-        new packUpTask(listener, contentResolver).executeOnExecutor(TPE);
+        new packUpTask(listener, contentResolver, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void loadDataFromCloud() {
@@ -809,9 +804,9 @@ public class TimetableCore {
             currentCurriculumId = newId;
             currentCurriculum = newC;
             syncTimeFlags();
-            //setThisWeekOfTerm(newC.getWeekOfTerm(timeTableCore.getNow()));
+            //setThisWeekOfTerm(newC.getWeekOfTerm(timetableCore.getNow()));
             if (getThisWeekOfTerm() > newC.getTotalWeeks()) {
-                newC.setTotalWeeks(timeTableCore.getThisWeekOfTerm());
+                newC.setTotalWeeks(getThisWeekOfTerm());
             }
             defaultSP.edit().putString("current_curriculum", newId).commit();
             //saveData();
@@ -1240,7 +1235,7 @@ public class TimetableCore {
     @WorkerThread
     public List<EventItem> getOneDayEvents(int week, int DOW) {
         List<EventItem> result = new ArrayList<>();
-        if (week <= 0 || !timeTableCore.isDataAvailable() || week > getCurrentCurriculum().getTotalWeeks())
+        if (week <= 0 || !isDataAvailable() || week > getCurrentCurriculum().getTotalWeeks())
             return result;
         Cursor c = contentResolver.query(uri_timetable, null, "curriculum_code=? and dow=? and weeks like?",
                 new String[]{getCurrentCurriculum().getCurriculumCode() + ""
@@ -1620,26 +1615,41 @@ public class TimetableCore {
         void onFailed(Exception e);
     }
 
+
+    private String getWeeksText(List<Integer> weeks) {
+        StringBuilder res = new StringBuilder();
+        for (Integer x : weeks) {
+            res.append(x).append(",");
+        }
+        if (res.toString().endsWith(","))
+            res = new StringBuilder(res.substring(0, res.length() - 1));
+        return res.toString();
+    }
+
+
+
     private static class packUpTask extends AsyncTask<Object, Object, Object> {
 
+        TimetableCore timetableCore;
         OnPackDoneListener listener;
         ContentResolver contentResolver;
 
-        packUpTask(OnPackDoneListener listener, ContentResolver contentResolver) {
+        packUpTask(OnPackDoneListener listener, ContentResolver contentResolver, TimetableCore timetableCore) {
             this.listener = listener;
             this.contentResolver = contentResolver;
+            this.timetableCore = timetableCore;
         }
 
         @Override
         protected Object doInBackground(Object[] objects) {
             try {
-                for (Curriculum c : timeTableCore.getAllCurriculum()) {
+                for (Curriculum c : timetableCore.getAllCurriculum()) {
                     if (contentResolver.update(uri_curriculum, c.getContentValues(), "curriculum_code=?", new String[]{c.getCurriculumCode()}) == 0) {
                         contentResolver.insert(uri_curriculum, c.getContentValues());
                     }
                 }
                 UserData data = UserData.create(contentResolver);
-                data.loadTaskData().loadTimetableData().loadSubjectData().loadCurriculumData(timeTableCore.getAllCurriculum());
+                data.loadTaskData().loadTimetableData().loadSubjectData().loadCurriculumData(timetableCore.getAllCurriculum());
                 return data.getPreparedCloudData(CurrentUser);
             } catch (Exception e) {
                 return e;
@@ -1655,17 +1665,18 @@ public class TimetableCore {
             }
         }
     }
-
     static class writeDataToLocalTask extends AsyncTask<Object, Object, Object> {
 
         UserData.UserDataCloud user_data;
         WeakReference<Activity> toFinish;
         ContentResolver contentResolver;
+        TimetableCore timetableCore;
 
-        writeDataToLocalTask(ContentResolver contentResolver, UserData.UserDataCloud data, Activity toFinish) {
+        writeDataToLocalTask(ContentResolver contentResolver, UserData.UserDataCloud data, Activity toFinish, TimetableCore timetableCore) {
             this.user_data = data;
             this.toFinish = new WeakReference<>(toFinish);
             this.contentResolver = contentResolver;
+            this.timetableCore = timetableCore;
         }
 
         writeDataToLocalTask(ContentResolver contentResolver, UserData.UserDataCloud data) {
@@ -1687,7 +1698,7 @@ public class TimetableCore {
                     contentResolver.insert(uri_curriculum, ci.getContentValues());
                     CurriculumCreator curriculumCreator = CurriculumCreator.create(ci.getCurriculumCode(), ci.getName(), ci.getStartDate());
                     curriculumCreator.loadCourse(ci.getCurriculumText());
-                    timeTableCore.addCurriculum(curriculumCreator, true);
+                    timetableCore.addCurriculum(curriculumCreator, true);
                 }
                 contentResolver.delete(uri_subject, null, null);
                 for (Subject s : data.getSubjects()) {
@@ -1701,7 +1712,7 @@ public class TimetableCore {
                 for (Task t : data.getTasks()) {
                     contentResolver.insert(uri_subject, t.getContentValues());
                 }
-                timeTableCore.initCoreData();
+                timetableCore.initCoreData();
                 return true;
 
             } catch (Exception e1) {
@@ -1716,24 +1727,16 @@ public class TimetableCore {
         protected void onPostExecute(Object o) {
             if (toFinish != null && toFinish.get() != null && !toFinish.get().isFinishing() && !toFinish.get().isDestroyed()) {
                 toFinish.get().finish();
+
             }
             if ((Boolean) o) {
-                Toast.makeText(HContext, R.string.sync_success, Toast.LENGTH_SHORT).show();
-                if (timeTableCore.isDataAvailable()) timeServiceBinder.refreshNowAndNextEvent();
+                //Toast.makeText(HContext, R.string.sync_success, Toast.LENGTH_SHORT).show();
+                timetableCore.localBroadcastManager.sendBroadcast(new Intent(TIMETABLE_CHANGED));
+                // if (timetableCore.isDataAvailable()) timeServiceBinder.refreshNowAndNextEvent();
             } else {
-                Toast.makeText(HContext, R.string.sync_error, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(HContext, R.string.sync_error, Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    private String getWeeksText(List<Integer> weeks) {
-        StringBuilder res = new StringBuilder();
-        for (Integer x : weeks) {
-            res.append(x).append(",");
-        }
-        if (res.toString().endsWith(","))
-            res = new StringBuilder(res.substring(0, res.length() - 1));
-        return res.toString();
     }
 
 }

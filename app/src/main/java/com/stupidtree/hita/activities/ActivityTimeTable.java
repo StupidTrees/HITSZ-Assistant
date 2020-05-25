@@ -27,6 +27,7 @@ import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.TimeTablePagerAdapter;
 import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.popup.FragmentTimetablePanel;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.HTime;
 import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.util.ColorBox;
@@ -34,7 +35,7 @@ import com.stupidtree.hita.views.TimeTableBlockView;
 
 import java.util.Objects;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 public class ActivityTimeTable extends BaseActivity implements
@@ -78,6 +79,7 @@ public class ActivityTimeTable extends BaseActivity implements
 
 
     void initAllViews() {
+        final TimetableCore tc = TimetableCore.getInstance(HContext);
         fab = findViewById(R.id.fab_thisweek);
         fab.setBackgroundTintList(ColorStateList.valueOf(getColorAccent()));
         fab.setImageTintList(ColorStateList.valueOf(Color.WHITE));
@@ -86,9 +88,9 @@ public class ActivityTimeTable extends BaseActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pageWeekOfTerm != timeTableCore.getThisWeekOfTerm() && timeTableCore.isThisTerm()) {
-                    pageWeekOfTerm = timeTableCore.getThisWeekOfTerm();
-                    viewPager.setCurrentItem(timeTableCore.getThisWeekOfTerm() - 1);
+                if (pageWeekOfTerm != tc.getThisWeekOfTerm() && tc.isThisTerm()) {
+                    pageWeekOfTerm = tc.getThisWeekOfTerm();
+                    viewPager.setCurrentItem(tc.getThisWeekOfTerm() - 1);
                 }
             }
         });
@@ -99,8 +101,8 @@ public class ActivityTimeTable extends BaseActivity implements
         viewPager = findViewById(R.id.timetable_viewpager);
         tabs = findViewById(R.id.timetable_tabs);
         tabs.setTabIndicatorFullWidth(false);
-        if (timeTableCore.isDataAvailable())
-            pagerAdapter = new TimeTablePagerAdapter(this, getSupportFragmentManager(), timeTableCore.getCurrentCurriculum().getTotalWeeks());
+        if (TimetableCore.getInstance(HContext).isDataAvailable())
+            pagerAdapter = new TimeTablePagerAdapter(this, getSupportFragmentManager(), TimetableCore.getInstance(HContext).getCurrentCurriculum().getTotalWeeks());
         else pagerAdapter = new TimeTablePagerAdapter(this, getSupportFragmentManager(), 0);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -112,10 +114,10 @@ public class ActivityTimeTable extends BaseActivity implements
             @Override
             public void onPageSelected(int i) {
                 pageWeekOfTerm = i + 1;
-                if (pageWeekOfTerm == timeTableCore.getThisWeekOfTerm()) {
+                if (pageWeekOfTerm == TimetableCore.getInstance(HContext).getThisWeekOfTerm()) {
                     fab.hide();
                     //toolbar_title.setTextColor(ContextCompat.getColor(ActivityTimeTable.this, R.color.theme1_colorPrimaryDark));
-                } else if (timeTableCore.isThisTerm()) {
+                } else if (TimetableCore.getInstance(HContext).isThisTerm()) {
                     if (timetableSP.getBoolean("timetable_back_enable", true)) fab.show();
                     //toolbar_title.setTextColor(ContextCompat.getColor(ActivityTimeTable.this, R.color.material_primary_text));
                 }
@@ -175,9 +177,10 @@ public class ActivityTimeTable extends BaseActivity implements
 
     /*刷新课表视图函数*/
     public void Refresh(boolean backToThisWeek) {
-        timeTableCore.syncTimeFlags();
+        TimetableCore tc = TimetableCore.getInstance(HContext);
+        tc.syncTimeFlags();
         syncAllPreferences();
-        if (!timeTableCore.isDataAvailable()) {
+        if (!tc.isDataAvailable()) {
             invalidLayout.setVisibility(View.VISIBLE);
             viewPager.setVisibility(View.GONE);
             fab.hide();
@@ -186,14 +189,14 @@ public class ActivityTimeTable extends BaseActivity implements
             invalidLayout.setVisibility(View.GONE);
             viewPager.setVisibility(View.VISIBLE);
         }
-        pageWeekOfTerm = timeTableCore.getThisWeekOfTerm();
+        pageWeekOfTerm = tc.getThisWeekOfTerm();
         if (pageWeekOfTerm < 0) {
             Snackbar.make(fab.getRootView(), getString(R.string.snack_semester_notstarted), Snackbar.LENGTH_SHORT).show();
             pageWeekOfTerm = 1;
         }
         if (backToThisWeek) viewPager.setCurrentItem(pageWeekOfTerm - 1);
         boolean fabEnable = timetableSP.getBoolean("timetable_back_enable", true);
-        if (!timeTableCore.isThisTerm() || !fabEnable || pageWeekOfTerm == timeTableCore.getThisWeekOfTerm())
+        if (!tc.isThisTerm() || !fabEnable || pageWeekOfTerm == tc.getThisWeekOfTerm())
             fab.hide();
         else fab.show();
     }
@@ -275,7 +278,8 @@ public class ActivityTimeTable extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setWindowParams(true, true, false);
-        if (timeTableCore == null || !timeTableCore.isDataAvailable()) {
+        TimetableCore tc = TimetableCore.getInstance(HContext);
+        if (tc == null || !tc.isDataAvailable()) {
             finish();
             return;
         }
@@ -362,7 +366,7 @@ public class ActivityTimeTable extends BaseActivity implements
         }
         if (!firstEnter) Refresh(false);
         else {
-            viewPager.setCurrentItem(timeTableCore.getThisWeekOfTerm() - 1);
+            viewPager.setCurrentItem(TimetableCore.getInstance(HContext).getThisWeekOfTerm() - 1);
         }
         firstEnter = false;
     }
@@ -428,7 +432,7 @@ public class ActivityTimeTable extends BaseActivity implements
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            for (Subject s : timeTableCore.getSubjects(null)) {
+            for (Subject s : TimetableCore.getInstance(HContext).getSubjects(null)) {
                 editor.putInt("color:" + s.getName(), ColorBox.getRandomColor_Material());
             }
             editor.commit();

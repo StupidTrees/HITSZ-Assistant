@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.online.HITAUser;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.views.ButtonLoading;
 
 import cn.bmob.v3.BmobUser;
@@ -25,7 +26,6 @@ import cn.bmob.v3.listener.SaveListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.USER_CHANGED;
 
 public class FragmentLogin extends BaseFragment {
@@ -86,7 +86,7 @@ public class FragmentLogin extends BaseFragment {
                                 Intent i = new Intent(USER_CHANGED);
                                 LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
                                 CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
-                                timeTableCore.loadDataFromCloud(getActivity());
+                                TimetableCore.getInstance(HContext).loadDataFromCloud(getActivity());
                             } else {
                                 switch (e.getErrorCode()){
                                     case 101:Snackbar.make(login,getString(R.string.username_or_password_wrong),Snackbar.LENGTH_SHORT).show();

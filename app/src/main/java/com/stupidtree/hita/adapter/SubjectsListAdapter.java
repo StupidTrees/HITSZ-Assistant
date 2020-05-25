@@ -17,12 +17,13 @@ import androidx.annotation.NonNull;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.BaseOperationTask;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.Subject;
 
 import java.util.ArrayList;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
 
 
 public class SubjectsListAdapter extends BaseCheckableListAdapter<Subject, SubjectsListAdapter.SubjectViewHolder> {
@@ -126,9 +127,9 @@ public class SubjectsListAdapter extends BaseCheckableListAdapter<Subject, Subje
         @Override
         protected Integer doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
             int finished = 0, unfinished = 0;
-            ArrayList<EventItem> result = timeTableCore.getCourses(subject);
+            ArrayList<EventItem> result = TimetableCore.getInstance(HContext).getCourses(subject);
             for (EventItem ei : result) {
-                if (ei.hasPassed(timeTableCore.getNow())) finished++;
+                if (ei.hasPassed(TimetableCore.getNow())) finished++;
                 else unfinished++;
             }
             float x = ((float) finished) * 100.0f / (float) (finished + unfinished);

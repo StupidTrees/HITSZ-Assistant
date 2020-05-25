@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.ActivitySubject;
 import com.stupidtree.hita.fragments.BaseOperationTask;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -39,7 +40,7 @@ import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class FragmentCourse extends FragmentEventItem
         implements BaseOperationTask.OperationListener<Map<String, Integer>> {
@@ -81,7 +82,7 @@ public class FragmentCourse extends FragmentEventItem
 //            @Override
 //            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
 //                //System.out.println(rating);
-//                timeTableCore.getSubjectByCourse(eventItem).setRate(courseNumber, Float.valueOf(rating).doubleValue());
+//                TimetableCore.getInstance(HContext).getSubjectByCourse(eventItem).setRate(courseNumber, Float.valueOf(rating).doubleValue());
 //            }
 //        });
 
@@ -181,7 +182,7 @@ public class FragmentCourse extends FragmentEventItem
             });
         }
         name.setText(eventItem.mainName);
-        final Calendar c = timeTableCore.getCurrentCurriculum().getDateAtWOT(eventItem.week, eventItem.DOW);
+        final Calendar c = TimetableCore.getInstance(HContext).getCurrentCurriculum().getDateAtWOT(eventItem.week, eventItem.DOW);
         date.setText(EventsUtils.getDateString(c, false, EventsUtils.TTY_FOLLOWING)
                 + "\n" +
                 EventsUtils.getWeekDowString(eventItem, false, EventsUtils.TTY_WK_FOLLOWING));
@@ -254,13 +255,13 @@ public class FragmentCourse extends FragmentEventItem
         protected Map<String, Integer> doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
             Map<String, Integer> res = new HashMap<>();
             try {
-                Subject subject = timeTableCore.getSubjectByCourse(eventItem);
-                List courses = timeTableCore.getCourses(subject);
+                Subject subject = TimetableCore.getInstance(HContext).getSubjectByCourse(eventItem);
+                List courses = TimetableCore.getInstance(HContext).getCourses(subject);
                 res.put("total", courses.size());
                 Collections.sort(courses);
                 int now = courses.indexOf(eventItem) + 1;
                 res.put("now", now);
-                //rate = timeTableCore.getCurrentCurriculum().getSubjectByCourse(eventItem).getRate(courseNumber);
+                //rate = TimetableCore.getInstance(HContext).getCurrentCurriculum().getSubjectByCourse(eventItem).getRate(courseNumber);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

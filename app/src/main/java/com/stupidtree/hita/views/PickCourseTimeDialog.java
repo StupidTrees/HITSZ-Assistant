@@ -18,6 +18,7 @@ import com.cncoderx.wheelview.OnWheelChangedListener;
 import com.cncoderx.wheelview.WheelView;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.BaseActivity;
+import com.stupidtree.hita.timetable.TimetableCore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +26,7 @@ import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.themeCore;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class PickCourseTimeDialog extends RoundedCornerDialog {
 
@@ -58,7 +59,7 @@ public class PickCourseTimeDialog extends RoundedCornerDialog {
             int max = weeks.get(0);
             for(int i:weeks) if(i>max) max = i;
             this.weeks.clear();
-            int realMax = timeTableCore.getCurrentCurriculum().getTotalWeeks()>max?timeTableCore.getCurrentCurriculum().getTotalWeeks():max;
+            int realMax = TimetableCore.getInstance(HContext).getCurrentCurriculum().getTotalWeeks() > max ? TimetableCore.getInstance(HContext).getCurrentCurriculum().getTotalWeeks() : max;
             for(int i = 1;i<=realMax;i++){
                 this.weeks.add(weeks.contains(i));
             }
@@ -134,7 +135,8 @@ public class PickCourseTimeDialog extends RoundedCornerDialog {
     void initList(View v){
         list = v.findViewById(R.id.weekList);
         weeks = new ArrayList<>();
-        for(int i=0;i<timeTableCore.getCurrentCurriculum().getTotalWeeks()+1;i++) weeks.add(false);
+        for (int i = 0; i < TimetableCore.getInstance(HContext).getCurrentCurriculum().getTotalWeeks() + 1; i++)
+            weeks.add(false);
         listAdapter = new pickWeekListAdapter();
         list.setAdapter(listAdapter);
         list.setLayoutManager(new GridLayoutManager(getContext(),5));
@@ -143,7 +145,7 @@ public class PickCourseTimeDialog extends RoundedCornerDialog {
     protected void onStart() {
         super.onStart();
         if(!hasInit){
-            int tempDOW = timeTableCore.getNow().get(Calendar.DAY_OF_WEEK);
+            int tempDOW = TimetableCore.getNow().get(Calendar.DAY_OF_WEEK);
             dow = tempDOW==1?7:tempDOW-1;
             begin = 1;
             end = 2;

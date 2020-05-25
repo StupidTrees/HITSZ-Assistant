@@ -40,8 +40,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NavigationListAdapter.strToIntegerList;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
@@ -271,7 +271,7 @@ public class FragmentTimeLine extends BaseFragment implements
     }
 
     private void refreshNowAndNextEvent() {
-        HTime nowTime = new HTime(timeTableCore.getNow());
+        HTime nowTime = new HTime(TimetableCore.getNow());
         try {
             boolean changed_now = false;
             boolean changed_next = false;
@@ -282,7 +282,7 @@ public class FragmentTimeLine extends BaseFragment implements
                 ) {
                     nowEvent = ei;
                     changed_now = true;
-                } else if (ei.startTime.compareTo(nowTime) > 0) {
+                } else if (!ei.isWholeDay() && ei.startTime.compareTo(nowTime) > 0) {
                     nextEvent = ei;
                     changed_next = true;
                 }
@@ -290,7 +290,7 @@ public class FragmentTimeLine extends BaseFragment implements
             if (!changed_next) nextEvent = null;
             if (!changed_now) nowEvent = null;
             if (nowEvent != null) {
-                nowProgress = ((float) new HTime(timeTableCore.getNow()).getDuration(nowEvent.startTime)) / ((float) nowEvent.endTime.getDuration(nowEvent.startTime));
+                nowProgress = ((float) new HTime(TimetableCore.getNow()).getDuration(nowEvent.startTime)) / ((float) nowEvent.endTime.getDuration(nowEvent.startTime));
 
             }
         } catch (Exception e) {
@@ -321,14 +321,15 @@ public class FragmentTimeLine extends BaseFragment implements
 
         @Override
         protected ArrayList[] doInBackground(ListRefreshedListener listRefreshedListener, Boolean... booleans) {
+            TimetableCore tc = TimetableCore.getInstance(HContext);
             ArrayList<EventItem> todayEventsToAdd = new ArrayList<>();
             ArrayList<EventItem> toAdd = new ArrayList<>();
             ArrayList[] result = new ArrayList[]{toAdd, todayEventsToAdd};
-            if (!timeTableCore.isDataAvailable()) return result;
-            if (!timeTableCore.isThisTerm() || !timeTableCore.isDataAvailable()) {
+            if (!tc.isDataAvailable()) return result;
+            if (!tc.isThisTerm() || !tc.isDataAvailable()) {
                 return result;
             }
-            todayEventsToAdd.addAll(timeTableCore.getOneDayEvents(timeTableCore.getThisWeekOfTerm(), TimetableCore.getDOW(timeTableCore.getNow())));
+            todayEventsToAdd.addAll(tc.getOneDayEvents(tc.getThisWeekOfTerm(), TimetableCore.getDOW(TimetableCore.getNow())));
             List<EventItem> wholeDayRes = new ArrayList<>();
             for (EventItem ei : todayEventsToAdd) {
                 if (ei.isWholeDay()) wholeDayRes.add(ei);

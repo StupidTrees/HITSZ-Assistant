@@ -33,6 +33,7 @@ import com.stupidtree.hita.hita.TextTools;
 import com.stupidtree.hita.online.ChatMessage;
 import com.stupidtree.hita.online.Infos;
 import com.stupidtree.hita.online.Teacher;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.HTime;
 import com.stupidtree.hita.timetable.packable.Subject;
@@ -57,8 +58,8 @@ import cn.bmob.v3.listener.SaveListener;
 
 import static com.github.lzyzsd.circleprogress.Utils.dp2px;
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.hita.ChatBotA.propcessSerchEvents;
 import static com.stupidtree.hita.timetable.TimetableCore.ARRANGEMENT;
 import static com.stupidtree.hita.timetable.TimetableCore.COURSE;
@@ -358,14 +359,14 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
         ChatBotMessageItem messagge;
         String textOnShow, textToRead;
 
-        public ProcessReplyMessageTask(JsonObject msg) {
+        ProcessReplyMessageTask(JsonObject msg) {
             this.msg = msg;
             messagge = new ChatBotMessageItem(VIEW_TYPE_LEFT, "");
         }
 
         @Override
         protected Object doInBackground(Object[] objects) {
-
+            TimetableCore tc = TimetableCore.getInstance(HContext);
             if (msg.has("hint")) {
                 messagge.setHint(msg.get("hint").getAsString());
             }
@@ -373,9 +374,9 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                 if (msg.get("function").getAsString().equals("search_event_ww")) {
                     List<EventItem> courseList;
                     final int tag = msg.get("tag").getAsInt();
-                    if (!timeTableCore.isDataAvailable()) {
+                    if (!tc.isDataAvailable()) {
                         textOnShow = "请先导入数据或选择当前日程表！";
-                    } else if (!timeTableCore.isThisTerm()) {
+                    } else if (!tc.isThisTerm()) {
                         textOnShow = "别急着问啊，这学期还没开始";
                     } else {
                         courseList = propcessSerchEvents(msg);
@@ -453,22 +454,22 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                 } else if (msg.get("function").getAsString().equals("search_event_nextone")) {
 
                     final int tag = msg.get("tag").getAsInt();
-                    if (!timeTableCore.isDataAvailable()) {
+                    if (!tc.isDataAvailable()) {
                         textOnShow = "请先导入数据或选择当前日程表！";
-                    } else if (!timeTableCore.isThisTerm()) {
+                    } else if (!tc.isThisTerm()) {
                         textOnShow = "别急着问啊，这学期还没开始";
                     } else {
                         EventItem nextevent = null;
                         Calendar c = Calendar.getInstance();
                         c.set(Calendar.HOUR_OF_DAY, 23);
                         c.set(Calendar.MINUTE, 59);
-                        List<EventItem> tempList = timeTableCore.getEventFrom(timeTableCore.getNow(), c, -1);
+                        List<EventItem> tempList = tc.getEventFrom(TimetableCore.getNow(), c, -1);
                         if (tempList == null || tempList.size() == 0) nextevent = null;
                         else {
                             Log.e("!!", tempList.toString());
                             for (EventItem ei : tempList) {
                                 Log.e("!!", ei.toString());
-                                if (ei.startTime.compareTo(new HTime(timeTableCore.getNow())) < 0)
+                                if (ei.startTime.compareTo(new HTime(TimetableCore.getNow())) < 0)
                                     continue;
                                 int eventTypeFilter = -99;
                                 switch (tag) {
@@ -556,7 +557,7 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
 //                        textOnShow = "给我个提醒的名字鸭";
 //                        textToRead = "给我个提醒的名字鸭";
 //                    } else {
-//                        timeTableCore.addEvent(ei);
+//                        tc.addEvent(ei);
 //                        List<EventItem> add = new ArrayList<>();
 //                        add.add(ei);
 //                        messagge.setCourseList(add);
@@ -565,7 +566,7 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
 //                    }
 //                }
                 else if (msg.get("function").getAsString().equals("search_task")) {
-                    List<Task> tl = timeTableCore.getUnfinishedTasks();
+                    List<Task> tl = tc.getUnfinishedTasks();
                     messagge.setTaskList(tl);
                     if (tl.size() > 0) {
                         textOnShow = "还有如下" + tl.size() + "个待办任务";
@@ -610,25 +611,25 @@ public class ActivityChatbot extends BaseActivity implements TransparentActivity
                     String desc = "课";
                     if (type != null) {
                         if (type.equals("exam")) {
-                            result = timeTableCore.getSubjects_Exam(null);
+                            result = tc.getSubjects_Exam(null);
                             //Log.e("exam---", String.valueOf(result));
                             desc = "考试课";
                         } else if (type.equals("mooc")) {
-                            result = timeTableCore.getSubjects_Mooc(null);
+                            result = tc.getSubjects_Mooc(null);
                             desc = "慕课";
                         } else if (type.equals("no_exam")) {
-                            result = timeTableCore.getSubjects_No_Exam(null);
+                            result = tc.getSubjects_No_Exam(null);
                             desc = "考查课";
                         } else if (type.equals("comp")) {
-                            result = timeTableCore.getSubjects_Comp(null);
+                            result = tc.getSubjects_Comp(null);
                             desc = "必修课";
                         } else if (type.equals("alt")) {
-                            result = timeTableCore.getSubjects_Alt(null);
+                            result = tc.getSubjects_Alt(null);
                             desc = "选秀课";
                         } else if (type.equals("wtv")) {
-                            result = timeTableCore.getSubjects_WTV(null);
+                            result = tc.getSubjects_WTV(null);
                             desc = "任选课";
-                        } else result = timeTableCore.getSubjects(null);
+                        } else result = tc.getSubjects(null);
                     }
                     if (result != null && result.size() > 0) {
                         messagge.setSubjectList(result);

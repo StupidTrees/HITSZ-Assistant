@@ -2,21 +2,21 @@ package com.stupidtree.hita.timetable.packable;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import com.google.gson.Gson;
+import com.stupidtree.hita.timetable.TimetableCore;
 
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimetableCore.uri_task;
 
-public class Task {
+public class Task implements Comparable {
     public static final int TAG = 931;
     public static final int TYPE_DYNAMIC = 833;
     public String name;
@@ -99,7 +99,7 @@ public class Task {
         int result = 0;
         for(String x:event_map.keySet()){
             String uuid = x.split(":::")[0];
-            EventItemHolder eih = timeTableCore.getEventItemHolderWithUUID(uuid);
+            EventItemHolder eih = TimetableCore.getInstance(HContext).getEventItemHolderWithUUID(uuid);
             if(eih!=null) {
                 result += eih.startTime.getDuration(eih.endTime);
             }
@@ -285,5 +285,13 @@ public class Task {
         Gson gson = new Gson();
         return gson.toJson(this);
        // return name+"##"+ has_deadline +"##"+ddlName+"##"+fW+"##"+fDOW+"##"+sTime.hour+"##"+sTime.minute+"##"+tW+"##"+tDOW+"##"+eTime.hour+"##"+eTime.minute+"##"+curriculumCode;
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        if (o instanceof Task) {
+            return priority - ((Task) o).getPriority();
+        }
+        return 0;
     }
 }

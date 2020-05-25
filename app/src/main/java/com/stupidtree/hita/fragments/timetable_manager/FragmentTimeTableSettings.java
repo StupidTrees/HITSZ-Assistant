@@ -23,6 +23,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.activities.BaseActivity;
 import com.stupidtree.hita.fragments.BaseOperationTask;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.Curriculum;
 import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.util.ColorBox;
@@ -35,7 +36,6 @@ import java.util.Calendar;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 
@@ -285,7 +285,7 @@ public class FragmentTimeTableSettings extends FragmentTimeTableChild
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            for (Subject s : timeTableCore.getSubjects(null)) {
+            for (Subject s : TimetableCore.getInstance(HContext).getSubjects(null)) {
                 editor.putInt("color:" + s.getName(), ColorBox.getRandomColor_Material());
             }
             editor.apply();
@@ -307,10 +307,11 @@ public class FragmentTimeTableSettings extends FragmentTimeTableChild
 
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
-            if (curriculum != null) timeTableCore.saveCurriculum(curriculum);
-            if (timeTableCore.getCurrentCurriculum() != null &&
-                    timeTableCore.getCurrentCurriculum().getCurriculumCode().equals(curriculum.getCurriculumCode())) {
-                timeTableCore.updateCurrentCurriculumInfo(curriculum);
+            TimetableCore tc = TimetableCore.getInstance(HContext);
+            if (curriculum != null) tc.saveCurriculum(curriculum);
+            if (tc.getCurrentCurriculum() != null &&
+                    tc.getCurrentCurriculum().getCurriculumCode().equals(curriculum.getCurriculumCode())) {
+                tc.updateCurrentCurriculumInfo(curriculum);
             }
             return super.doInBackground(listRefreshedListener, booleans);
         }
@@ -328,7 +329,7 @@ public class FragmentTimeTableSettings extends FragmentTimeTableChild
 
         @Override
         protected Boolean doInBackground(OperationListener listRefreshedListener, Boolean... booleans) {
-            return timeTableCore.deleteCurriculum(curriculumCode);
+            return TimetableCore.getInstance(HContext).deleteCurriculum(curriculumCode);
         }
 
 

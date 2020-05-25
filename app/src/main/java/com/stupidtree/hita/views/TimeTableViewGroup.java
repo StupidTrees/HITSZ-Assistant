@@ -25,7 +25,7 @@ import com.stupidtree.hita.timetable.packable.TimePeriod;
 
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.timetable.TimetableCore.DDL;
 
 public class TimeTableViewGroup extends ViewGroup {
@@ -71,7 +71,7 @@ public class TimeTableViewGroup extends ViewGroup {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        if (week == timeTableCore.getThisWeekOfTerm()) drawTodayRect(canvas);
+        if (week == TimetableCore.getInstance(HContext).getThisWeekOfTerm()) drawTodayRect(canvas);
         drawLabels(canvas);
         super.dispatchDraw(canvas);
     }
@@ -106,7 +106,7 @@ public class TimeTableViewGroup extends ViewGroup {
     }
 
     private void drawTodayRect(Canvas canvas) {
-        int left = labelWidth + sectionWidth * (TimetableCore.getDOW(timeTableCore.getNow()) - 1);
+        int left = labelWidth + sectionWidth * (TimetableCore.getDOW(TimetableCore.getNow()) - 1);
         int right = (left + sectionWidth);
         Paint paint = new Paint();
         paint.setColor(root.getTodayBGColor());
@@ -258,7 +258,7 @@ public class TimeTableViewGroup extends ViewGroup {
                 // block.measure(sectionWidth,getCardHeight(block));
                 block.layout(left, top, right, bottom);
             } else if (child instanceof TimeTableNowLine) {
-                @SuppressLint("DrawAllocation") float startTimeFromBeginning = startTime.getDuration(new HTime(timeTableCore.getNow()));
+                @SuppressLint("DrawAllocation") float startTimeFromBeginning = startTime.getDuration(new HTime(TimetableCore.getNow()));
                 int top = (int) ((startTimeFromBeginning / 60f) * sectionHeight);
                 child.layout(0, top, width, top + 4);
             } else if (child instanceof TimeTableBlockAddView) {

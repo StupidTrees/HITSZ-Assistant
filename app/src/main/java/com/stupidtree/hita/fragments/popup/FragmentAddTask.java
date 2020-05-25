@@ -39,12 +39,12 @@ import com.stupidtree.hita.views.PickSingleTimeDialog;
 
 import java.util.Calendar;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 @SuppressLint("ValidFragment")
 public class FragmentAddTask extends FragmentRadiusPopup {
-    private HTime fT = new HTime(timeTableCore.getNow()), tT = new HTime(timeTableCore.getNow());
+    private HTime fT = new HTime(TimetableCore.getNow()), tT = new HTime(TimetableCore.getNow());
     private int fW;
     private int fDOW;
     private int tDOW;
@@ -103,8 +103,8 @@ public class FragmentAddTask extends FragmentRadiusPopup {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fT = new HTime(timeTableCore.getNow());
-        tT = new HTime(timeTableCore.getNow());
+        fT = new HTime(TimetableCore.getNow());
+        tT = new HTime(TimetableCore.getNow());
     }
 
     private void initViews(View v) {
@@ -206,7 +206,7 @@ public class FragmentAddTask extends FragmentRadiusPopup {
                         fTset = true;
 
                     }
-                }, timeTableCore.getNow().get(Calendar.HOUR_OF_DAY), timeTableCore.getNow().get(Calendar.MINUTE), true);
+                }, TimetableCore.getNow().get(Calendar.HOUR_OF_DAY), TimetableCore.getNow().get(Calendar.MINUTE), true);
                 TPD.create();
                 TPD.show();
 
@@ -225,7 +225,7 @@ public class FragmentAddTask extends FragmentRadiusPopup {
                         tTset = true;
 
                     }
-                }, timeTableCore.getNow().get(Calendar.HOUR_OF_DAY), timeTableCore.getNow().get(Calendar.MINUTE), true);
+                }, TimetableCore.getNow().get(Calendar.HOUR_OF_DAY), TimetableCore.getNow().get(Calendar.MINUTE), true);
                 TPD.create();
                 TPD.show();
 
@@ -234,24 +234,25 @@ public class FragmentAddTask extends FragmentRadiusPopup {
         bt_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                TimetableCore tc = TimetableCore.getInstance(HContext);
                 if (adt_switch.isChecked() && (!fDset || !tDset)) {
                     Toast.makeText(requireContext(), "请设置任务期限！", Toast.LENGTH_SHORT).show();
                 } else if (name.getText().toString().isEmpty()) {
                     Toast.makeText(requireContext(), "请输入任务名称！", Toast.LENGTH_SHORT).show();
                 } else {
-                    Task t = new Task(timeTableCore.getCurrentCurriculum().getCurriculumCode(), name.getText().toString());
+                    Task t = new Task(tc.getCurrentCurriculum().getCurriculumCode(), name.getText().toString());
                     if (adt_switch.isChecked()) {
-                        String ddlUUID = timeTableCore.addEvent(tW, tDOW, TimetableCore.DDL,
+                        String ddlUUID = tc.addEvent(tW, tDOW, TimetableCore.DDL,
                                 "DDL:" + name.getText().toString(), "任务截至", "Deadline", t.getUuid(), tT, tT, false);
-                        //  timeTableCore.addTask(name.getText().toString(),fW,fDOW,tW,tDOW,fT,tT,"DDL:"+name.getText().toString());
+                        //  tc.addTask(name.getText().toString(),fW,fDOW,tW,tDOW,fT,tT,"DDL:"+name.getText().toString());
                         t.arrangeTime(fW, fDOW, tW, tDOW, fT, tT, ddlUUID + ":::" + tW);
                     }
-                    //else  timeTableCore.addTask(name.getText().toString());
+                    //else  tc.addTask(name.getText().toString());
                     if (adt_switch2.isChecked()) {
                         t.setLength(adt_lengthpicker.getValue());
                     }
                     t.setEvery_day(adt_switch3.isChecked());
-                    timeTableCore.addTask(t);
+                    tc.addTask(t);
                     dismiss();
                     Intent mes = new Intent(TIMETABLE_CHANGED);
                     //Intent mes = new Intent(TASK_REFRESH);

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.stupidtree.hita.HITAApplication;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.BaseOperationTask;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -23,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
 
 
 public class FragmentTeachers extends FragmentTimeTableChild implements BaseOperationTask.OperationListener<List<Map<String,String>>> {
@@ -115,10 +116,11 @@ public class FragmentTeachers extends FragmentTimeTableChild implements BaseOper
         @Override
         protected List< Map<String, String>> doInBackground(OperationListener<List< Map<String, String>>> listRefreshedListener, Boolean... booleans) {
             List<Map<String, String>> result = new ArrayList<>();
-            if (!timeTableCore.isDataAvailable()) return result;
-            List<Subject> sl = timeTableCore.getSubjects(curriculumCode);
+            TimetableCore tc = TimetableCore.getInstance(HContext);
+            if (!tc.isDataAvailable()) return result;
+            List<Subject> sl = tc.getSubjects(curriculumCode);
             for (Subject s : sl) {
-                EventItem ei = timeTableCore.getFirstCourse(s);
+                EventItem ei = tc.getFirstCourse(s);
                 if (ei == null) continue;
                 if(TextUtils.isEmpty(ei.getTag3())) continue;
                 for (String name : ei.getTag3().split("，")) {

@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class FragmentEmptyClassroomDialog extends FragmentRadiusPopup {
     private String lhName;
@@ -132,7 +132,7 @@ public class FragmentEmptyClassroomDialog extends FragmentRadiusPopup {
             detailViewHolder.item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ActivityUtils.startEmptyClassroomDetailActivity(getActivity(), String.valueOf(mBeans.get(i).get("name")),timeTableCore.getCurrentCurriculum().getCurriculumCode(),lh,String.valueOf(mBeans.get(i).get("value")));
+                    ActivityUtils.startEmptyClassroomDetailActivity(getActivity(), String.valueOf(mBeans.get(i).get("name")), TimetableCore.getInstance(HContext).getCurrentCurriculum().getCurriculumCode(), lh, String.valueOf(mBeans.get(i).get("value")));
                 }
             });
             if((mBeans.get(i).get("available")!=null&&(Boolean)mBeans.get(i).get("available"))){
@@ -187,8 +187,8 @@ public class FragmentEmptyClassroomDialog extends FragmentRadiusPopup {
         protected Object doInBackground(Object[] objects) {
             try {
                 Document page = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kjscx/queryKjs_wdl")
-                    //    .data("pageXnxq",timeTableCore.getCurrentCurriculum().curriculumCode)
-                        .data("pageZc1", String.valueOf(timeTableCore.getThisWeekOfTerm())).data("pageZc2", String.valueOf(timeTableCore.getThisWeekOfTerm()))
+                        //    .data("pageXnxq",TimetableCore.getInstance(HContext).getCurrentCurriculum().curriculumCode)
+                        .data("pageZc1", String.valueOf(TimetableCore.getInstance(HContext).getThisWeekOfTerm())).data("pageZc2", String.valueOf(TimetableCore.getInstance(HContext).getThisWeekOfTerm()))
                         .data("pageXiaoqu","1")
                         .data("pageLhdm",lhValue)
                         .data("pageCddm","")
@@ -246,7 +246,7 @@ public class FragmentEmptyClassroomDialog extends FragmentRadiusPopup {
                         }
                     }
                     if(!hasMatch) m.put("value",tds.get(0).text());
-                    int dow = TimetableCore.getDOW(timeTableCore.getNow());
+                    int dow = TimetableCore.getDOW(TimetableCore.getNow());
                     int number = pageCourseNumber;
                     int index = (dow-1)*6+(number%2==0?number/2:number/2+1);
                     Log.e("Number", String.valueOf(number));

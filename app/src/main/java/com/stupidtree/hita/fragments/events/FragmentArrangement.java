@@ -14,11 +14,12 @@ import androidx.fragment.app.FragmentManager;
 
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.util.EventsUtils;
 
 import java.util.Calendar;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
 
 
 public class FragmentArrangement extends FragmentEventItem {
@@ -43,7 +44,7 @@ public class FragmentArrangement extends FragmentEventItem {
         } else {
             value3.setText(eventItem.startTime.tellTime() + "-" + eventItem.endTime.tellTime());
         }
-        final Calendar c = timeTableCore.getCurrentCurriculum().getDateAtWOT(eventItem.week, eventItem.DOW);
+        final Calendar c = TimetableCore.getInstance(HContext).getCurrentCurriculum().getDateAtWOT(eventItem.week, eventItem.DOW);
         date.setText(EventsUtils.getDateString(c, false, EventsUtils.TTY_FOLLOWING)
                 + "\n" +
                 EventsUtils.getWeekDowString(eventItem, false, EventsUtils.TTY_WK_FOLLOWING));
@@ -85,6 +86,5 @@ public class FragmentArrangement extends FragmentEventItem {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
     }
-
 
 }

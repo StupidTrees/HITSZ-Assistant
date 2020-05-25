@@ -39,6 +39,7 @@ import com.stupidtree.hita.adapter.SubjectCoursesListAdapter;
 import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.BasicRefreshTask;
 import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.util.ActivityUtils;
@@ -55,9 +56,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.activities.ActivityMain.saveData;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
@@ -642,7 +643,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         }
         int finished = 0, unfinished = 0;
         for (EventItem ei : result) {
-            if (ei.hasPassed(timeTableCore.getNow())) finished++;
+            if (ei.hasPassed(TimetableCore.getNow())) finished++;
             else unfinished++;
         }
         float percentage = ((float) finished) * 100.0f / (float) (finished + unfinished);
@@ -673,7 +674,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
 
         @Override
         protected List<EventItem> doInBackground(ListRefreshedListener listRefreshedListener, Boolean... booleans) {
-            ArrayList<EventItem> result = timeTableCore.getCourses(subject);
+            ArrayList<EventItem> result = TimetableCore.getInstance(HContext).getCourses(subject);
             Collections.sort(result, new Comparator<EventItem>() {
                 @Override
                 public int compare(EventItem o1, EventItem o2) {
@@ -702,9 +703,9 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             if (!useCode) {
-                subject = timeTableCore.getSubjectByName(null,subjectKey);
+                subject = TimetableCore.getInstance(HContext).getSubjectByName(null, subjectKey);
             } else {
-                subject = timeTableCore.getSubjectByCourseCode(null,subjectKey);
+                subject = TimetableCore.getInstance(HContext).getSubjectByCourseCode(null, subjectKey);
             }
             return subject != null;
         }
@@ -725,7 +726,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             if (subject == null) return null;
-            timeTableCore.saveSubject(subject);
+            TimetableCore.getInstance(HContext).saveSubject(subject);
             return null;
         }
 
@@ -744,7 +745,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             for (Object ei : target) {
                 if(ei instanceof EventItem){
-                    timeTableCore.deleteEvent((EventItem) ei, true);
+                    TimetableCore.getInstance(HContext).deleteEvent((EventItem) ei, true);
                 }
 
             }
@@ -765,7 +766,7 @@ public class ActivitySubject extends BaseActivity implements EditModeHelper.Edit
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             try {
-                timeTableCore.deleteSubject(name, timeTableCore.getCurrentCurriculum().getCurriculumCode());
+                TimetableCore.getInstance(HContext).deleteSubject(name, TimetableCore.getInstance(HContext).getCurrentCurriculum().getCurriculumCode());
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;

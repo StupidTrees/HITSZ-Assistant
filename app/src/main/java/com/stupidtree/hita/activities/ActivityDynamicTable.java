@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.snackbar.Snackbar;
 import com.stupidtree.hita.R;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
@@ -160,24 +159,17 @@ public class ActivityDynamicTable extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
 
                 if(isChecked) {
-                    if(defaultSP.getBoolean("app_task_enabled", false)){
-                        defaultSP.edit().putBoolean("dtt_preview",true).apply();
-                        preview_expand.expand();
-                    }else{
-                        Snackbar.make(buttonView,"请先进入设置开启任务模块",Snackbar.LENGTH_SHORT).show();
-                        preViewPlan.setChecked(false);
-                    }
-
+                    defaultSP.edit().putBoolean("dtt_preview", true).apply();
+                    preview_expand.expand();
                 }
                 else {
-                    defaultSP.edit().putBoolean("dtt_preview",true).apply();
+                    defaultSP.edit().putBoolean("dtt_preview", false).apply();
                     preview_expand.collapse();
                 }
 
             }
         });
-        if(defaultSP.getBoolean("app_task_enabled", false))preViewPlan.setChecked(defaultSP.getBoolean("dtt_preview",false));
-        else preViewPlan.setChecked(false);
+        preViewPlan.setChecked(defaultSP.getBoolean("dtt_preview", false));
         preview_skip_no_exam.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

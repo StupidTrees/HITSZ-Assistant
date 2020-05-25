@@ -58,6 +58,7 @@ import com.stupidtree.hita.online.Location;
 import com.stupidtree.hita.online.Scenery;
 import com.stupidtree.hita.online.Teacher;
 import com.stupidtree.hita.online.Topic;
+import com.stupidtree.hita.timetable.TimetableCore;
 
 import java.io.File;
 import java.util.HashMap;
@@ -67,7 +68,6 @@ import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.community.ActivityCommunity.REFRESH_RETURN;
 
 public class ActivityUtils {
@@ -100,7 +100,7 @@ public class ActivityUtils {
     }
 
     public static void startTasksActivity(Context from) {
-        if (timeTableCore.isDataAvailable()) {
+        if (TimetableCore.getInstance(HContext).isDataAvailable()) {
             Intent i = new Intent(from, ActivityTasks.class);
             from.startActivity(i);
         } else {
@@ -109,7 +109,7 @@ public class ActivityUtils {
     }
 
     public static void startDDLManagerActivity(Context from) {
-        if (timeTableCore.isDataAvailable()) {
+        if (TimetableCore.getInstance(HContext).isDataAvailable()) {
             Intent i = new Intent(from, ActivityDDLManager.class);
             from.startActivity(i);
         } else {
@@ -118,7 +118,7 @@ public class ActivityUtils {
     }
 
     public static void startExamCDActivity(Context from) {
-        if (timeTableCore.isDataAvailable()) {
+        if (TimetableCore.getInstance(HContext).isDataAvailable()) {
             Intent i = new Intent(from, ActivityExamCountdown.class);
             from.startActivity(i);
         } else {

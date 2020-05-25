@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.util.EventsUtils;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class DDLItemAdapter extends BaseCheckableListAdapter<EventItem, DDLItemAdapter.xHolder> {
 
@@ -59,7 +60,7 @@ public class DDLItemAdapter extends BaseCheckableListAdapter<EventItem, DDLItemA
             if (data.isWholeDay()) holder.time_time.setText(mContext.getString(R.string.wholeday));
             else holder.time_time.setText(data.startTime.tellTime());
             if (holder.type == TODO) {
-                holder.remain.setText(EventsUtils.itWillStartIn(timeTableCore.getNow(), data, true));
+                holder.remain.setText(EventsUtils.itWillStartIn(TimetableCore.getNow(), data, true));
             } else holder.remain.setText(R.string.ddl_passed);
             if (EditMode) {
                 holder.remain.setVisibility(View.GONE);

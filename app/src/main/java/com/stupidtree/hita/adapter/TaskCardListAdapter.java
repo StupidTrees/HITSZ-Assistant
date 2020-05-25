@@ -28,18 +28,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.adapter.NavigationListAdapter.integerToString;
 
 public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapter.BaseHolder> {
     public static final int TYPE_TASK = 8;
     public static final int TYPE_DDL = 765;
     public static final int TYPE_EXAM = 902;
-    List<Integer> mBeans;
-    LayoutInflater mInflater;
-    BaseActivity mContext;
+    private List<Integer> mBeans;
+    private LayoutInflater mInflater;
+    private BaseActivity mContext;
 
 
     public TaskCardListAdapter(BaseActivity c, List<Integer> res) {
@@ -86,7 +86,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             holder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (timeTableCore.isDataAvailable())
+                    if (TimetableCore.getInstance(HContext).isDataAvailable())
                         new FragmentAddTask().show(mContext.getSupportFragmentManager(), "fat");
                     else
                         Snackbar.make(view, mContext.getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
@@ -99,7 +99,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             holder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (timeTableCore.isDataAvailable())
+                    if (TimetableCore.getInstance(HContext).isDataAvailable())
                         new FragmentAddEvent().setInitialType("ddl").show(mContext.getSupportFragmentManager(), "fae");
                     else
                         Snackbar.make(view, mContext.getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
@@ -110,7 +110,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
             holder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (timeTableCore.isDataAvailable())
+                    if (TimetableCore.getInstance(HContext).isDataAvailable())
                         new FragmentAddEvent().setInitialType("exam").show(mContext.getSupportFragmentManager(), "fae");
                     else
                         Snackbar.make(view, mContext.getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
@@ -229,12 +229,13 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            if (!timeTableCore.isDataAvailable()) {
+            TimetableCore tc = TimetableCore.getInstance(HContext);
+            if (!tc.isDataAvailable()) {
                 vht.num = 0;
                 return null;
             }
             try {
-                vht.num = timeTableCore.getUnfinishedTasks().size();
+                vht.num = tc.getUnfinishedTasks().size();
             } catch (Exception e) {
                 e.printStackTrace();
                 vht.num = 0;
@@ -270,12 +271,13 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            if (!timeTableCore.isDataAvailable()) {
+            TimetableCore tc = TimetableCore.getInstance(HContext);
+            if (!tc.isDataAvailable()) {
                 vht.num = 0;
                 nextToDo = null;
                 return null;
             }
-            List<EventItem> result = timeTableCore.getUnfinishedEvent(timeTableCore.getNow(), TimetableCore.DDL);
+            List<EventItem> result = tc.getUnfinishedEvent(TimetableCore.getNow(), TimetableCore.DDL);
             Collections.sort(result, new Comparator<EventItem>() {
                 @Override
                 public int compare(EventItem o1, EventItem o2) {
@@ -303,7 +305,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
                 vht.number.setVisibility(View.VISIBLE);
                 vht.number.setText("" + vht.num);
                 vht.title.setText(R.string.task_card_title_ddlnum);
-                long minutes = nextToDo.getInWhatTimeWillItHappen(timeTableCore.getCurrentCurriculum(), timeTableCore.getNow());
+                long minutes = nextToDo.getInWhatTimeWillItHappen(TimetableCore.getInstance(HContext).getCurrentCurriculum(), TimetableCore.getNow());
                 int weeks = (int) (minutes / 10080);
                 minutes %= 10080;
                 int days = (int) (minutes / 1440);
@@ -372,12 +374,13 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            if (!timeTableCore.isDataAvailable()) {
+            TimetableCore tc = TimetableCore.getInstance(HContext);
+            if (!tc.isDataAvailable()) {
                 vht.num = 0;
                 nextToDo = null;
                 return null;
             }
-            List<EventItem> result = timeTableCore.getUnfinishedEvent(timeTableCore.getNow(), TimetableCore.EXAM);
+            List<EventItem> result = tc.getUnfinishedEvent(TimetableCore.getNow(), TimetableCore.EXAM);
             Collections.sort(result, new Comparator<EventItem>() {
                 @Override
                 public int compare(EventItem o1, EventItem o2) {
@@ -400,7 +403,7 @@ public class TaskCardListAdapter extends RecyclerView.Adapter<TaskCardListAdapte
                 vht.number.setText("" + vht.num);
                 vht.busy.setVisibility(View.VISIBLE);
                 vht.title.setText(R.string.ade_exam);
-                long minutes = nextToDo.getInWhatTimeWillItHappen(timeTableCore.getCurrentCurriculum(), timeTableCore.getNow());
+                long minutes = nextToDo.getInWhatTimeWillItHappen(TimetableCore.getInstance(HContext).getCurrentCurriculum(), TimetableCore.getNow());
                 int weeks = (int) (minutes / 10080);
                 minutes %= 10080;
                 int days = (int) (minutes / 1440);

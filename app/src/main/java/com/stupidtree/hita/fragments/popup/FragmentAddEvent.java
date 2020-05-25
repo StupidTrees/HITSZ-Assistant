@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +59,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 import static com.stupidtree.hita.timetable.TimetableCore.ARRANGEMENT;
 import static com.stupidtree.hita.timetable.TimetableCore.COURSE;
@@ -88,7 +86,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
     private ExpandableLayout mExpandableLayout;
     private CheckBox wholeDaySwitch;
     private ImageView extra_button;
-    private HTime fromT = new HTime(timeTableCore.getNow()), toT = new HTime(timeTableCore.getNow());
+    private HTime fromT = new HTime(TimetableCore.getNow()), toT = new HTime(TimetableCore.getNow());
     private int week = 1;
     private int dow = 1;
     private String initIndex = "arrangement";
@@ -272,7 +270,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
                     Toast.makeText(HContext, getString(R.string.ade_set_time_first), Toast.LENGTH_SHORT).show();
                     return false;
                 }
-                SparseArray<HTime> times = TimeTableGenerator.autoAdd_getTime(timeTableCore.getNow(), week, dow, 25);
+                SparseArray<HTime> times = TimeTableGenerator.autoAdd_getTime(TimetableCore.getNow(), week, dow, 25);
                 if (times != null) {
                     setFromTime(times.get(0).hour, times.get(0).minute);
                     setToTime(times.get(1).hour, times.get(1).minute);
@@ -560,7 +558,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
                         break;
                 }
                 if (mRadioGroup.getCheckedRadioButtonId() == R.id.ade_course) {
-                    new addCourseTask(FragmentAddEvent.this, timeTableCore.getCurrentCurriculum().getCurriculumCode(), weeks,
+                    new addCourseTask(FragmentAddEvent.this, TimetableCore.getInstance(HContext).getCurrentCurriculum().getCurriculumCode(), weeks,
                             extra.getText().toString(), locationStr, teacher, begin, last, dow).executeOnExecutor(HITAApplication.TPE);
                     return;
                 }
@@ -578,11 +576,11 @@ public class FragmentAddEvent extends FragmentRadiusPopup
                 }
                 HTime tempToTime = type == TimetableCore.ARRANGEMENT || type == TimetableCore.EXAM ? toT : fromT;
                 if (!EditMode) {
-                    new addEventTask(FragmentAddEvent.this, timeTableCore.getCurrentCurriculum().getCurriculumCode(),
+                    new addEventTask(FragmentAddEvent.this, TimetableCore.getInstance(HContext).getCurrentCurriculum().getCurriculumCode(),
                             type, Tname, Ttag2, Ttag3, fromT, tempToTime, week, dow, wholeDaySwitch.isChecked()).executeOnExecutor(HITAApplication.TPE);
 
                 } else {
-                    new addEventTask(FragmentAddEvent.this, timeTableCore.getCurrentCurriculum().getCurriculumCode(),
+                    new addEventTask(FragmentAddEvent.this, TimetableCore.getInstance(HContext).getCurrentCurriculum().getCurriculumCode(),
                             type, Tname, Ttag2, Ttag3, fromT, tempToTime, week, dow, wholeDaySwitch.isChecked(), EditEvent).executeOnExecutor(HITAApplication.TPE);
 
                 }
@@ -656,7 +654,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
     }
 
     public FragmentAddEvent setInitialDate(Calendar c) {
-        int week = timeTableCore.getCurrentCurriculum().getWeekOfTerm(c);
+        int week = TimetableCore.getInstance(HContext).getCurrentCurriculum().getWeekOfTerm(c);
         int DOW = c.get(Calendar.DAY_OF_WEEK);
         int dow = DOW == 1 ? 7 : DOW - 1;
         this.week = week;
@@ -972,7 +970,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
                                         name.setText("处理任务：" + task.name);
                                         if (fromT.getDuration(toT) > task.getLength()) {
                                             Toast.makeText(HContext, "时长超过任务时长！", Toast.LENGTH_SHORT).show();
-                                            toT = new HTime(timeTableCore.getNow());
+                                            toT = new HTime(TimetableCore.getNow());
                                         }
                                         refreshTaskBlock();
                                     }
@@ -1002,7 +1000,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
 
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
-            tasks = timeTableCore.getUnfinishedTaskWithLength();
+            tasks = TimetableCore.getInstance(HContext).getUnfinishedTaskWithLength();
             List<Task> toRemove = new ArrayList<>();
             for (Task t : tasks) {
                 int left = t.getLength() - t.getDealtTime_All();
@@ -1086,7 +1084,7 @@ public class FragmentAddEvent extends FragmentRadiusPopup
             }
             int[] types_length = new int[]{TimetableCore.EXAM
                     , TimetableCore.COURSE, TimetableCore.ARRANGEMENT, TimetableCore.DYNAMIC};
-            List<EventItem> overlapEvents = timeTableCore.getEventFrom_typeLimit(week, DOW, start, week, DOW, end, types_length);
+            List<EventItem> overlapEvents = TimetableCore.getInstance(HContext).getEventFrom_typeLimit(week, DOW, start, week, DOW, end, types_length);
             List<EventItem> toRemove = new ArrayList<>();
             for (EventItem ei : overlapEvents) {
                 if (ei.isWholeDay() || !ei.hasCross_Strict(end) && !ei.hasCross(start))
@@ -1096,16 +1094,16 @@ public class FragmentAddEvent extends FragmentRadiusPopup
             if (eventItem == null && !isWholeDay && contains_integer(types_length, type) && overlapEvents.size() > 0) {
                 return overlapEvents;
             } else {
-                EventItem toAdd = new EventItem(null, timeTableCore.getCurrentCurriculum().getCurriculumCode(), type, eventName, tag2, tag3, tag4, start, end, week, DOW, isWholeDay);
+                EventItem toAdd = new EventItem(null, TimetableCore.getInstance(HContext).getCurrentCurriculum().getCurriculumCode(), type, eventName, tag2, tag3, tag4, start, end, week, DOW, isWholeDay);
                 if (eventItem != null) {
                     toAdd.setUuid(eventItem.getUuid());
                 }
-                uuid = timeTableCore.addEvent(toAdd);
+                uuid = TimetableCore.getInstance(HContext).addEvent(toAdd);
 //                if (dealWithTask && task != null && taskSet)
 //                    task.putEventMap(uuid+":::"+toAdd.week, false);
 //                if (type == TimetableCore.DDL) {
 //                    ddl_task.setDdlName(uuid, week + "");
-//                    timeTableCore.addTask(ddl_task);
+//                    TimetableCore.getInstance(HContext).addTask(ddl_task);
 //                }
                 return null;
             }
@@ -1146,12 +1144,12 @@ public class FragmentAddEvent extends FragmentRadiusPopup
                 sb.append(i + from);
                 if (i != last - 1) sb.append(",");
             }
-            if (timeTableCore.getSubjectByName(null, name) == null) {
+            if (TimetableCore.getInstance(HContext).getSubjectByName(null, name) == null) {
                 newSubject = true;
-                Subject s = new Subject(timeTableCore.getCurrentCurriculum().getCurriculumCode(), name, teacher);
-                timeTableCore.insertSubject(s);
+                Subject s = new Subject(TimetableCore.getInstance(HContext).getCurrentCurriculum().getCurriculumCode(), name, teacher);
+                TimetableCore.getInstance(HContext).insertSubject(s);
             }
-            timeTableCore.addEvents(weeks, dow, COURSE, name, location, teacher, sb.toString(), from, last, false);
+            TimetableCore.getInstance(HContext).addEvents(weeks, dow, COURSE, name, location, teacher, sb.toString(), from, last, false);
             return newSubject;
         }
     }

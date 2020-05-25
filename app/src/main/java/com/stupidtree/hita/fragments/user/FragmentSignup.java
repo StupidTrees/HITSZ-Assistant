@@ -16,6 +16,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.BaseFragment;
 import com.stupidtree.hita.online.HITAUser;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.views.ButtonLoading;
 
 import cn.bmob.v3.BmobUser;
@@ -24,7 +25,6 @@ import cn.bmob.v3.listener.SaveListener;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.USER_CHANGED;
 
 public class FragmentSignup extends BaseFragment {
@@ -93,7 +93,7 @@ public class FragmentSignup extends BaseFragment {
                                     @Override
                                     public void done(HITAUser hitaUser, BmobException e) {
                                         CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
-                                        timeTableCore.clearData();
+                                        TimetableCore.getInstance(HContext).clearData();
                                         Intent i = new Intent(USER_CHANGED);
                                         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(i);
                                         getActivity().finish();

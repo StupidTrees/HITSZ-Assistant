@@ -17,6 +17,7 @@ import com.stupidtree.hita.adapter.BaseListAdapter;
 import com.stupidtree.hita.adapter.SubjectsListAdapter;
 import com.stupidtree.hita.fragments.BasicRefreshTask;
 import com.stupidtree.hita.fragments.popup.FragmentAddEvent;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.util.ActivityUtils;
 import com.stupidtree.hita.views.EditModeHelper;
@@ -28,7 +29,6 @@ import java.util.List;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 
 
@@ -61,14 +61,14 @@ public class FragmentSubjects extends FragmentTimeTableChild
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (timeTableCore.isDataAvailable()) initSubjects(view);
+        if (TimetableCore.getInstance(HContext).isDataAvailable()) initSubjects(view);
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        if ((firstResume || willRefreshOnResume) && timeTableCore.isDataAvailable()) {
+        if ((firstResume || willRefreshOnResume) && TimetableCore.getInstance(HContext).isDataAvailable()) {
             Refresh(firstResume);
             willRefreshOnResume = false;
         }
@@ -192,9 +192,10 @@ public class FragmentSubjects extends FragmentTimeTableChild
         protected List<Subject> doInBackground(ListRefreshedListener listRefreshedListener, Boolean... booleans) {
             super.doInBackground(listRefreshedListener, booleans);
             List<Subject> newList = new ArrayList<>();
-            if (!timeTableCore.isDataAvailable()) return newList;
-            List<Subject> all = timeTableCore.getSubjects(null);
-            //timeTableCore.getAllEvents();
+            TimetableCore tc = TimetableCore.getInstance(HContext);
+            if (!tc.isDataAvailable()) return newList;
+            List<Subject> all = tc.getSubjects(null);
+            //tc.getAllEvents();
             List<Subject> exam = new ArrayList<>();
             List<Subject> other = new ArrayList<>();
             List<Subject> mooc = new ArrayList<>();
@@ -229,7 +230,7 @@ public class FragmentSubjects extends FragmentTimeTableChild
         protected Object doInBackground(Object[] objects) {
             try {
                 for (Subject s : toDelete) {
-                    timeTableCore.deleteSubject(s.getName(), timeTableCore.getCurrentCurriculum().getCurriculumCode());
+                    TimetableCore.getInstance(HContext).deleteSubject(s.getName(), TimetableCore.getInstance(HContext).getCurrentCurriculum().getCurriculumCode());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

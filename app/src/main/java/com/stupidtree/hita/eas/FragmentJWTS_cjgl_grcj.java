@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.Curriculum;
 import com.stupidtree.hita.timetable.packable.Subject;
 import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
@@ -28,9 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class FragmentJWTS_cjgl_grcj extends JWFragment {
     private RecyclerView qmcj_list;
@@ -233,11 +235,12 @@ public class FragmentJWTS_cjgl_grcj extends JWFragment {
         @Override
         protected Object doInBackground(Object... strings) {
                 try {
+                    TimetableCore tc = TimetableCore.getInstance(HContext);
                     qmcj_listRes.clear();
                    qmcj_listRes.addAll(jwCore.getGRCJ(xn,xq));
                     for (Map<? extends String, ? extends String> m : qmcj_listRes) {
-                        for(Curriculum cc:timeTableCore.getAllCurriculum()){
-                            for (Subject s : timeTableCore.getSubjectsByCourseCode(cc.getCurriculumCode(),m.get("code"))) {
+                        for (Curriculum cc : tc.getAllCurriculum()) {
+                            for (Subject s : tc.getSubjectsByCourseCode(cc.getCurriculumCode(), m.get("code"))) {
                                 s.addScore("qm", m.get("final_score"));
                             }
                         }

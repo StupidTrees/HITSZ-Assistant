@@ -32,7 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
+
 
 public class ActivityEmptyClassroom extends BaseActivity implements BasicRefreshTask.ListRefreshedListener<List<Map<String,String>>> {
     Toolbar toolbar;
@@ -144,14 +145,15 @@ public class ActivityEmptyClassroom extends BaseActivity implements BasicRefresh
     @SuppressLint("SetTextI18n")
     @Override
     public void onRefreshStart(String id, Boolean[] params) {
+        TimetableCore tc = TimetableCore.getInstance(HContext);
         invalid.setVisibility(View.GONE);
-        pageXnxq_Text.setText(timeTableCore.getCurrentCurriculum().getCurriculumCode());
-        pageCourseNumber = TimetableCore.getNumberAtTime(timeTableCore.getNow());
+        pageXnxq_Text.setText(tc.getCurrentCurriculum().getCurriculumCode());
+        pageCourseNumber = TimetableCore.getNumberAtTime(TimetableCore.getNow());
         String nowNumber;
         if(pageCourseNumber<0)nowNumber = "课间/课后";
         else nowNumber = "第"+pageCourseNumber+"节课";
         pageTime_Text.setText(
-                EventsUtils.getWeekDowString(timeTableCore.getThisWeekOfTerm(),TimetableCore.getDOW(timeTableCore.getNow()),false,EventsUtils.TTY_NONE)+" " + nowNumber);
+                EventsUtils.getWeekDowString(tc.getThisWeekOfTerm(), TimetableCore.getDOW(TimetableCore.getNow()), false, EventsUtils.TTY_NONE) + " " + nowNumber);
         refresh.setRefreshing(true);
     }
 
@@ -181,7 +183,7 @@ public class ActivityEmptyClassroom extends BaseActivity implements BasicRefresh
             List<Map> result = new ArrayList<>();
             try {
                 Document page = Jsoup.connect("http://jwts.hitsz.edu.cn:8080/kjscx/queryKjs_wdl")
-                        //.data("pageXnxq",timeTableCore.getCurrentCurriculum().curriculumCode)
+                        //.data("pageXnxq",TimetableCore.getInstance(HContext).getCurrentCurriculum().curriculumCode)
                         .data("pageZc1","1").data("pageZc2","1")
                         .data("pageXiaoqu","1")
                         .data("pageLhdm","")

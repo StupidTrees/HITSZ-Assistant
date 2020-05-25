@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.Objects;
 import java.util.UUID;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.timetable.TimetableCore.ARRANGEMENT;
 import static com.stupidtree.hita.timetable.TimetableCore.COURSE;
 import static com.stupidtree.hita.timetable.TimetableCore.DDL;
@@ -154,8 +154,9 @@ public class EventItem implements Serializable, Comparable {
     }
 
     public boolean hasPassed(Calendar c) {
-        if (!timeTableCore.isDataAvailable()) return false;
-        int week = timeTableCore.getCurrentCurriculum().getWeekOfTerm(c);
+        TimetableCore tc = TimetableCore.getInstance(HContext);
+        if (!tc.isDataAvailable()) return false;
+        int week = tc.getCurrentCurriculum().getWeekOfTerm(c);
         int dow = getDOW(c);
         if (this.week == week) {
             if (this.DOW == dow) {
@@ -168,10 +169,11 @@ public class EventItem implements Serializable, Comparable {
     }
 
     public boolean hasPassed(long timeInMills) {
-        if (!timeTableCore.isDataAvailable()) return false;
+        TimetableCore tc = TimetableCore.getInstance(HContext);
+        if (!tc.isDataAvailable()) return false;
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(timeInMills);
-        int week = timeTableCore.getCurrentCurriculum().getWeekOfTerm(c);
+        int week = tc.getCurrentCurriculum().getWeekOfTerm(c);
         int dow = getDOW(c);
         if (this.week == week) {
             if (this.DOW == dow) {

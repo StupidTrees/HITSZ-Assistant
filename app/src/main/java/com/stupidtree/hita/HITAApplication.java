@@ -45,7 +45,6 @@ public class HITAApplication extends Application {
     public static Application HContext;
     public static AppThemeCore themeCore;
     public static JWCore jwCore;
-    public static TimetableCore timeTableCore;
     public static SharedPreferences defaultSP;
     public static HITAUser CurrentUser = null;
     public static BmobCacheHelper bmobCacheHelper;
@@ -62,18 +61,11 @@ public class HITAApplication extends Application {
         HContext = this;
         defaultSP = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
         themeCore = new AppThemeCore();
-        timeTableCore = new TimetableCore(getContentResolver());
+        //   TimetableCore.getInstance(HContext) = new TimetableCore(getContentResolver());
         bmobCacheHelper = new BmobCacheHelper();
         jwCore = new JWCore();
         initUpgradeDialog();
         initServices();
-//        ToastHandler = new Handler() {
-//            @Override
-//            public void handleMessage(@NonNull Message msg) {
-//                super.handleMessage(msg);
-//                Toast.makeText(HContext,msg.getData().getString("msg"),Toast.LENGTH_LONG).show();
-//            }
-//        };
         Bugly.init(this, "7c0e87536a", false);//务必最后再init
         Bmob.initialize(this, "9c9c53cd53b3c7f02c37b7a3e6fd9145");
         CurrentUser = BmobUser.getCurrentUser(HITAUser.class);
@@ -172,7 +164,7 @@ public class HITAApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        timeTableCore.onTerminate();
+        TimetableCore.getInstance(this).onTerminate();
     }
 
 
@@ -193,7 +185,7 @@ public class HITAApplication extends Application {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            timeTableCore.initCoreData();
+            TimetableCore.getInstance(HContext).initCoreData();
             return null;
         }
 

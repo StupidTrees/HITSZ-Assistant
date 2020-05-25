@@ -20,6 +20,7 @@ import com.stupidtree.hita.adapter.DDLItemAdapter;
 import com.stupidtree.hita.adapter.TaskListAdapter;
 import com.stupidtree.hita.fragments.BaseOperationTask;
 import com.stupidtree.hita.fragments.popup.FragmentAddTask;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.Task;
 import com.stupidtree.hita.views.EditModeHelper;
 import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.HContext;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class ActivityTasks extends BaseActivity implements
         FragmentAddTask.AddTaskDoneListener, EditModeHelper.EditableContainer, BaseOperationTask.OperationListener<Object> {
@@ -75,7 +76,7 @@ public class ActivityTasks extends BaseActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (timeTableCore.isDataAvailable()) showAddTaskDialog();
+                if (TimetableCore.getInstance(HContext).isDataAvailable()) showAddTaskDialog();
                 else
                     Snackbar.make(v, getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
             }
@@ -105,7 +106,7 @@ public class ActivityTasks extends BaseActivity implements
         listAdapter_now.setOnItemClickListener(new BaseListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View card, int position) {
-                //if(listRes_timeTableCore.getNow().get(position).getType()!=Task.TAG)new TaskDialog(getThis(),listRes_timeTableCore.getNow().get(position)).show();
+                //if(listRes_TimetableCore.getNow().get(position).getType()!=Task.TAG)new TaskDialog(getThis(),listRes_TimetableCore.getNow().get(position)).show();
             }
         });
         listAdapter_now.setOnItemSelectedListener(new DDLItemAdapter.OnItemSelectedListener() {
@@ -145,7 +146,7 @@ public class ActivityTasks extends BaseActivity implements
     }
 
     void refreshText() {
-        if (!timeTableCore.isDataAvailable()) {
+        if (!TimetableCore.getInstance(HContext).isDataAvailable()) {
             none.setVisibility(View.VISIBLE);
             return;
         }
@@ -242,8 +243,8 @@ public class ActivityTasks extends BaseActivity implements
 
         @Override
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
-            nowRes = timeTableCore.getUnfinishedTasks();
-            finishedRes = timeTableCore.getFinishedTasks();
+            nowRes = TimetableCore.getInstance(HContext).getUnfinishedTasks();
+            finishedRes = TimetableCore.getInstance(HContext).getFinishedTasks();
             return null;
         }
 
@@ -280,7 +281,7 @@ public class ActivityTasks extends BaseActivity implements
             if (t.isHas_length() && t.getProgress() < 100) {
                 return "dialog";
             } else {
-                return timeTableCore.setFinishTask(t, finished);
+                return TimetableCore.getInstance(HContext).setFinishTask(t, finished);
             }
         }
 
@@ -300,7 +301,7 @@ public class ActivityTasks extends BaseActivity implements
         protected Object doInBackground(OperationListener<Object> listRefreshedListener, Boolean... booleans) {
             if (toDelete != null) {
                 for (Task t : toDelete) {
-                    timeTableCore.deleteTask(t);
+                    TimetableCore.getInstance(HContext).deleteTask(t);
                 }
             }
             return null;

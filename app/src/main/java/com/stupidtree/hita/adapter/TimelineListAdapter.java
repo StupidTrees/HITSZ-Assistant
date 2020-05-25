@@ -38,7 +38,8 @@ import java.util.List;
 import java.util.Stack;
 
 import static com.stupidtree.hita.HITAApplication.CurrentUser;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+import static com.stupidtree.hita.HITAApplication.HContext;
+
 
 public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView.ViewHolder> {
 
@@ -183,7 +184,7 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
             if (position == mBeans.size() + 1) return FOOT;
             int type;
             if (mBeans.get(position - 1).isWholeDay()) return WHOLE_DAY;
-            else if (mBeans.get(position - 1).hasPassed(timeTableCore.getNow())) type = PASSED;
+            else if (mBeans.get(position - 1).hasPassed(TimetableCore.getNow())) type = PASSED;
             else type = mBeans.get(position - 1).eventType;
             return type;
         }
@@ -335,7 +336,7 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
             bt_bar_addEvent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (timeTableCore.isDataAvailable()) {
+                    if (TimetableCore.getInstance(HContext).isDataAvailable()) {
                         new FragmentAddEvent().show(timeLineSelf.getFragmentManager(), "add_event");
                     } else {
                         Snackbar.make(v, mContext.getString(R.string.notif_importdatafirst), Snackbar.LENGTH_SHORT).show();
@@ -345,7 +346,7 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
         }
 
         private void collapseCard() {
-            if (timeTableCore.isDataAvailable()) {
+            if (TimetableCore.getInstance(HContext).isDataAvailable()) {
                 float fromD, toD;
                 fromD = 180f;
                 toD = 0f;
@@ -372,7 +373,7 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
                 head_counting_layout.setVisibility(View.INVISIBLE);
                 MaterialCircleAnimator.animShow(head_counting_layout, 500);
             }
-            if (timeTableCore.isDataAvailable()) {
+            if (TimetableCore.getInstance(HContext).isDataAvailable()) {
                 float fromD, toD;
                 if (!head_expand.isExpanded()) {
                     fromD = 0f;
@@ -411,6 +412,7 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
 
         @SuppressLint("SetTextI18n")
         public void UpdateHeadView() {
+            TimetableCore tc = TimetableCore.getInstance(HContext);
             String titleToSet, subtitltToSet;
             if (CurrentUser == null) {
                 titleToSet = mContext.getString(R.string.timeline_head_nulluser_title);
@@ -419,12 +421,12 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
                 //switchToCountingAvailable = false;
                 headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.LOG_IN);
 
-            } else if (!timeTableCore.isDataAvailable()) {
+            } else if (!tc.isDataAvailable()) {
                 titleToSet = mContext.getString(R.string.timeline_head_nulldata_title);
                 subtitltToSet = mContext.getString(R.string.timeline_head_nulldata_subtitle);
                 switchHeadView(head_image, R.drawable.ic_timeline_head_nulldata);
                 headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.JWTS);
-            } else if (!timeTableCore.isThisTerm()) {
+            } else if (!tc.isThisTerm()) {
                 titleToSet = mContext.getString(R.string.timeline_head_notthisterm_title);
                 subtitltToSet = mContext.getString(R.string.timeline_head_notthisterm_subtitle);
                 switchHeadView(head_image, R.drawable.ic_origami_paper_bird);
@@ -445,32 +447,32 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
 
                 headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.SHOW_NEXT);
             } else {
-                if (new HTime(timeTableCore.getNow()).compareTo(new HTime(5, 0)) < 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(0, 0)) > 0) {
+                if (new HTime(TimetableCore.getNow()).compareTo(new HTime(5, 0)) < 0 && new HTime(TimetableCore.getNow()).compareTo(new HTime(0, 0)) > 0) {
                     switchHeadView(head_image, R.drawable.ic_moon);
                     titleToSet = mContext.getString(R.string.timeline_head_goodnight_title);
                     subtitltToSet = mContext.getString(R.string.timeline_head_goodnight_subtitle);
                     headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.SHOW_NEXT);
-                } else if (new HTime(timeTableCore.getNow()).compareTo(new HTime(8, 15)) < 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(5, 0)) > 0) {
+                } else if (new HTime(TimetableCore.getNow()).compareTo(new HTime(8, 15)) < 0 && new HTime(TimetableCore.getNow()).compareTo(new HTime(5, 0)) > 0) {
                     switchHeadView(head_image, R.drawable.ic_sunny);
                     titleToSet = mContext.getString(R.string.timeline_head_goodmorning_title);
                     subtitltToSet = String.format(mContext.getString(R.string.timelinr_goodmorning_subtitle), timeLineSelf.getTodayCourseNum());
                     headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.SHOW_NEXT);
-                } else if (new HTime(timeTableCore.getNow()).compareTo(new HTime(12, 15)) > 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(13, 0)) < 0) {
+                } else if (new HTime(TimetableCore.getNow()).compareTo(new HTime(12, 15)) > 0 && new HTime(TimetableCore.getNow()).compareTo(new HTime(13, 0)) < 0) {
                     switchHeadView(head_image, R.drawable.ic_lunch);
                     titleToSet = mContext.getString(R.string.timeline_head_lunch_title);
                     subtitltToSet = mContext.getString(R.string.timeline_head_lunch_subtitle);
                     headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.SHOW_NEXT);
-                } else if (new HTime(timeTableCore.getNow()).compareTo(new HTime(17, 10)) > 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(18, 10)) < 0) {
+                } else if (new HTime(TimetableCore.getNow()).compareTo(new HTime(17, 10)) > 0 && new HTime(TimetableCore.getNow()).compareTo(new HTime(18, 10)) < 0) {
                     switchHeadView(head_image, R.drawable.ic_lunch);
                     titleToSet = mContext.getString(R.string.timeline_head_dinner_title);
                     subtitltToSet = mContext.getString(R.string.timeline_head_dinner_subtitle);
                     headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.SHOW_NEXT);
                 } else if (timeLineSelf.getNextvent() != null) {
-                    if (timeLineSelf.getNextvent().startTime.getDuration(new HTime(timeTableCore.getNow())) <= 15 && (timeLineSelf.getNextvent().eventType == TimetableCore.COURSE || timeLineSelf.getNextvent().eventType == TimetableCore.EXAM)) {
+                    if (timeLineSelf.getNextvent().startTime.getDuration(new HTime(TimetableCore.getNow())) <= 15 && (timeLineSelf.getNextvent().eventType == TimetableCore.COURSE || timeLineSelf.getNextvent().eventType == TimetableCore.EXAM)) {
                         switchHeadView(head_goNow, -1);
                         titleToSet = timeLineSelf.getNextvent().getMainName();
                         // subtitltToSet = mContext.getString(R.string.timeline_head_gonow_subtitle);
-                        subtitltToSet = String.format(mContext.getString(R.string.timeline_gonow_subtitle), timeLineSelf.getNextvent().startTime.getDuration(new HTime(timeTableCore.getNow())));
+                        subtitltToSet = String.format(mContext.getString(R.string.timeline_gonow_subtitle), timeLineSelf.getNextvent().startTime.getDuration(new HTime(TimetableCore.getNow())));
                         head_goQuickly_classroom.setText(timeLineSelf.getNextvent().tag2);
                         headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.SHOW_NEXT);
                     } else {
@@ -480,7 +482,7 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
                         headCardClickListener.setMode(TimelineListAdapter.headCardClickListener.SHOW_NEXT);
                     }
                 } else {
-                    if (new HTime(timeTableCore.getNow()).compareTo(new HTime(23, 0)) > 0 || new HTime(timeTableCore.getNow()).compareTo(new HTime(5, 0)) < 0) {
+                    if (new HTime(TimetableCore.getNow()).compareTo(new HTime(23, 0)) > 0 || new HTime(TimetableCore.getNow()).compareTo(new HTime(5, 0)) < 0) {
                         switchHeadView(head_image, R.drawable.ic_moon);
                         titleToSet = mContext.getString(R.string.timeline_head_goodnight_title);
                         subtitltToSet = mContext.getString(R.string.timeline_head_goodnight_subtitle);
@@ -496,13 +498,13 @@ public class TimelineListAdapter extends BaseListAdapter<EventItem, RecyclerView
             if (timeLineSelf.getNextvent() != null) {
                 String text1 = String.format(
                         mContext.getString(R.string.time_format_1),
-                        timeLineSelf.getNextvent().startTime.getDuration(new HTime(timeTableCore.getNow())) / 60,
-                        timeLineSelf.getNextvent().startTime.getDuration(new HTime(timeTableCore.getNow())) % 60);
+                        timeLineSelf.getNextvent().startTime.getDuration(new HTime(TimetableCore.getNow())) / 60,
+                        timeLineSelf.getNextvent().startTime.getDuration(new HTime(TimetableCore.getNow())) % 60);
                 String text2 = String.format(
                         mContext.getString(R.string.time_format_2),
-                        timeLineSelf.getNextvent().startTime.getDuration(new HTime(timeTableCore.getNow()))
+                        timeLineSelf.getNextvent().startTime.getDuration(new HTime(TimetableCore.getNow()))
                 );
-                String timeText = timeLineSelf.getNextvent().startTime.getDuration(new HTime(timeTableCore.getNow())) >= 60 ? text1
+                String timeText = timeLineSelf.getNextvent().startTime.getDuration(new HTime(TimetableCore.getNow())) >= 60 ? text1
                         : text2;
                 head_counting_name.setText(timeLineSelf.getNextvent().mainName);
                 head_counting_time.setText(timeText + mContext.getString(R.string.timeline_counting_middle));

@@ -33,7 +33,7 @@
 // */
 //public class TodayWidget extends AppWidgetProvider {
 //
-//    TimetableCore timetableCore;
+//    TimetableCore TimetableCore.getInstance(HContext);
 //    public static TimeWatcherService.TimeServiceBinder binder;
 //
 //    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,

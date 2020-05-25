@@ -9,13 +9,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.stupidtree.hita.R;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.util.EventsUtils;
 
 import java.util.Calendar;
 import java.util.List;
 
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 
 public class SubjectCoursesListAdapter extends BaseCheckableListAdapter<EventItem, SubjectCoursesListAdapter.CoursesViewHolder> {
@@ -56,7 +57,7 @@ public class SubjectCoursesListAdapter extends BaseCheckableListAdapter<EventIte
                 coursesViewHolder.icon.setRotation(180f);
             }
         } else {
-            Calendar c = timeTableCore.getCurrentCurriculum().getDateAtWOT(data.getWeek(), data.getDOW());
+            Calendar c = TimetableCore.getInstance(mContext).getCurrentCurriculum().getDateAtWOT(data.getWeek(), data.getDOW());
             coursesViewHolder.date.setText(EventsUtils.getDateString(c, true, EventsUtils.TTY_REPLACE));
             if (EditMode) coursesViewHolder.icon.setVisibility(View.GONE);
             else coursesViewHolder.icon.setVisibility(View.VISIBLE);

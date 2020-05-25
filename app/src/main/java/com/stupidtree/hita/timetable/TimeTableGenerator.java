@@ -3,6 +3,8 @@ package com.stupidtree.hita.timetable;
 import android.util.Log;
 import android.util.SparseArray;
 
+import androidx.annotation.WorkerThread;
+
 import com.stupidtree.hita.timetable.packable.EventItem;
 import com.stupidtree.hita.timetable.packable.HTime;
 import com.stupidtree.hita.timetable.packable.Subject;
@@ -16,12 +18,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.defaultSP;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class TimeTableGenerator {
 
+    @WorkerThread
     static void Dynamic_PreviewPlan(Calendar present) {
+        TimetableCore tc = TimetableCore.getInstance(HContext);
         int totalLength =  defaultSP.getInt("dtt_preview_length",60); //每天花一小时预习
         Calendar from = (Calendar) present.clone();
         Calendar to = (Calendar) present.clone();
@@ -33,27 +38,24 @@ public class TimeTableGenerator {
         to.add(Calendar.DATE,1);
         List<EventItem> toRemove = new ArrayList<>();
         HashMap<EventItem,Float> courseMap = new HashMap<>();
-        List<EventItem> courses = timeTableCore.getEventFrom(from, to, TimetableCore.COURSE);
+        List<EventItem> courses = tc.getEventFrom(from, to, TimetableCore.COURSE);
         if(courses==null||courses.size()==0) return;
         boolean skipNoExam = defaultSP.getBoolean("dtt_preview_skip_no_exam",true);
         for(EventItem ei:courses){
-            Subject subject = timeTableCore.getSubjectByCourse(ei);
+            Subject subject = tc.getSubjectByCourse(ei);
             if(subject==null) continue;
             if((!subject.isExam())&&skipNoExam)  toRemove.add(ei);
             else courseMap.put(ei,subject.getPriority());
         }
-        float total = 0;
-        for(Float f:courseMap.values()) total+=f;
+
         for(Map.Entry<EventItem,Float> entry:courseMap.entrySet()){
-            Task t = new Task(timeTableCore.getCurrentCurriculum().getCurriculumCode(),"预习"+entry.getKey().mainName);
+            Task t = new Task(tc.getCurrentCurriculum().getCurriculumCode(), "预习" + entry.getKey().mainName);
             t.setType(Task.TYPE_DYNAMIC);
-            //t.setLength((int) (totalLength*entry.getValue()/total));
-            // t.arrangeTime(thisWeekOfTerm,TimetableCore.getDOW(timeTableCore.getNow()),entry.getKey().week,entry.getKey().DOW,new HTime(timeTableCore.getNow()),entry.getKey().startTime,"null");
             t.setPriority(entry.getValue().intValue());
             String tag = entry.getKey().getUuid()+":::"+entry.getKey().week;
             t.setTag(tag);
-            if(timeTableCore.getTaskByTag(tag)==null){
-                timeTableCore.addTask(t);
+            if (tc.getTaskByTag(tag) == null) {
+                tc.addTask(t);
             }
         }
 
@@ -61,10 +63,11 @@ public class TimeTableGenerator {
 
     public static SparseArray<HTime> autoAdd_getTime(Calendar now,int week, int dow, int duration) {
         int minDURATION = 40;
-        Calendar date = timeTableCore.getCurrentCurriculum().getDateAtWOT(week, dow);
+        TimetableCore tc = TimetableCore.getInstance(HContext);
+        Calendar date = tc.getCurrentCurriculum().getDateAtWOT(week, dow);
         Calendar from,to;
-        if (now != null && date.get(Calendar.YEAR) == timeTableCore.getNow().get(Calendar.YEAR) && date.get(Calendar.DAY_OF_YEAR) == timeTableCore.getNow().get(Calendar.DAY_OF_YEAR)) {
-            from = (Calendar) timeTableCore.getNow().clone();
+        if (now != null && date.get(Calendar.YEAR) == TimetableCore.getNow().get(Calendar.YEAR) && date.get(Calendar.DAY_OF_YEAR) == TimetableCore.getNow().get(Calendar.DAY_OF_YEAR)) {
+            from = (Calendar) TimetableCore.getNow().clone();
             to = (Calendar) date.clone();
         }else{
             from = (Calendar) date.clone();
@@ -74,15 +77,15 @@ public class TimeTableGenerator {
         }
         to.set(Calendar.HOUR_OF_DAY, 23);
         to.set(Calendar.MINUTE, 59);
-        //timeTableCore.deleteEvent(from, to, TimetableCore.DYNAMIC);
+        //tc.deleteEvent(from, to, TimetableCore.DYNAMIC);
         List<TimePeriod> breakTime = getBreakTime();
         List<EventItem> breakTemp = new ArrayList<>();
         for (TimePeriod tp : breakTime) {
-            breakTemp.add(new EventItem("", timeTableCore.getCurrentCurriculum().getCurriculumCode(), TimetableCore.DYNAMIC, "%%%break", "", "", "", tp.start, tp.end, week, dow, false));
+            breakTemp.add(new EventItem("", tc.getCurrentCurriculum().getCurriculumCode(), TimetableCore.DYNAMIC, "%%%break", "", "", "", tp.start, tp.end, week, dow, false));
         }
-        List<TimePeriod> spaces = timeTableCore.getSpaces(breakTemp,from, to, minDURATION, -1);
+        List<TimePeriod> spaces = tc.getSpaces(breakTemp, from, to, minDURATION, -1);
        // Log.e("spaces", String.valueOf(spaces));
-        //timeTableCore.clearEvent(TimetableCore.DYNAMIC, "%%%break");
+        //tc.clearEvent(TimetableCore.DYNAMIC, "%%%break");
         Collections.sort(spaces);
        // Log.e( "autoAdd_getTime:the free time is: ",spaces.toString() );
         if(spaces.size() == 0) return null;

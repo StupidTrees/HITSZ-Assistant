@@ -312,8 +312,8 @@ public class JWCore {
                     .ignoreHttpErrors(true)
                     .method(Connection.Method.POST)
                     .execute();
-                String json = r.body();
-                String currentText = "";
+            String json = r.body();
+            String currentText = "";
             try {
                 JsonArray jsonList = new JsonParser().parse(json).getAsJsonArray();
                 List<String> processedItems = new ArrayList<>();
@@ -321,9 +321,9 @@ public class JWCore {
                     currentText = je.toString();
                     JsonObject jo = je.getAsJsonObject();
                     //JsonObject jo = new JsonParser().parse("{\"id\":null,\"xh\":null,\"xm\":null,\"xm_en\":null,\"xn\":null,\"xq\":null,\"zc\":null,\"qsjsz\":null,\"xqj\":null,\"jc\":null,\"jsjc\":null,\"ksjc\":null,\"zylx\":null,\"rwh\":null,\"czsj\":null,\"cddm\":null,\"cdmc\":null,\"cdmc_en\":null,\"skjs\":null,\"skjs_em\":null,\"kcdm\":null,\"kcmc\":null,\"kcmc_em\":null,\"ljkcdm\":null,\"ljkcmc\":null,\"ljkcmc_en\":null,\"glsjid\":null,\"xkfsdm\":null,\"zyxxms\":null,\"key\":\"xq3_jc\",\"kbxx\":\"【实验】通信电子线路实验\\n[13-13节][12-13周]\\n[(K403)通信工程综合实验室]\",\"kbxx_en\":null,\"xnxqmc\":null,\"xnxqmc_en\":null,\"bjmc\":null,\"bjmc_en\":null,\"sksj\":null,\"sksj_en\":null,\"sxbj\":null,\"xb\":\"8\"}").getAsJsonObject();
-                    String tm = JsonUtils.getStringInfo(jo,"key");
-                    Map<String,String> map = new HashMap<>();
-                    if(!TextUtils.isEmpty(tm)&&tm.contains("xq")&&tm.contains("jc")){
+                    String tm = JsonUtils.getStringInfo(jo, "key");
+                    Map<String, String> map = new HashMap<>();
+                    if (!TextUtils.isEmpty(tm) && tm.contains("xq") && tm.contains("jc")) {
                         String[] twoInfo = tm.split("_");
                         try {
                             int dow = twoInfo[0].charAt(2) - '0';
@@ -332,23 +332,23 @@ public class JWCore {
                             e.printStackTrace();
                         }
                         try {
-                           String beginS = twoInfo[1].replaceAll("jc","");
-                           if(!TextUtils.isEmpty(beginS)&&TextTools.isNumber(beginS)){
-                               int begin = Integer.parseInt(beginS) * 2 - 1;
-                               map.put("begin", String.valueOf(begin));
-                           }
+                            String beginS = twoInfo[1].replaceAll("jc", "");
+                            if (!TextUtils.isEmpty(beginS) && TextTools.isNumber(beginS)) {
+                                int begin = Integer.parseInt(beginS) * 2 - 1;
+                                map.put("begin", String.valueOf(begin));
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                     map.put("last", String.valueOf(2));
-                    analyseBlockText(map,JsonUtils.getStringInfo(jo,"kbxx"));
-                   // System.out.println(map);
+                    analyseBlockText(map, JsonUtils.getStringInfo(jo, "kbxx"));
+                    // System.out.println(map);
                     if (!processedItems.contains(map.toString())) {
                         processedItems.add(map.toString());
-                        if(map.get("begin")!=null){
+                        if (map.get("begin") != null) {
                             int begin = Integer.parseInt(map.get("begin"));
-                            if(begin>0&&begin<13)result.add(map);
+                            if (begin > 0 && begin < 13) result.add(map);
                         }
                     }
                     //String mainSTR = jo.get("kbxx").getAsString();
@@ -362,9 +362,9 @@ public class JWCore {
                 et.save(new SaveListener<String>() {
                     @Override
                     public void done(String s, BmobException e) {
-                        if(e!=null){
+                        if (e != null) {
                             e.printStackTrace();
-                            Log.e("upload_error",e.toString());
+                            Log.e("upload_error", e.toString());
                         }
                     }
                 });
@@ -378,34 +378,33 @@ public class JWCore {
         }
     }
 
-    private void analyseBlockText(Map<String,String> result,String text){
-       // text = "【实验】通信电子线路实验\\n[13-13节][12-13周]\\n[(K403)通信工程综合实验室]"
-        if(TextUtils.isEmpty(text)) return;
+    private void analyseBlockText(Map<String, String> result, String text) {
+        // text = "【实验】通信电子线路实验\\n[13-13节][12-13周]\\n[(K403)通信工程综合实验室]"
+        if (TextUtils.isEmpty(text)) return;
         String name = null;
         String teacher = null;
         String classroom = null;
         String specificTime = null;
         String weekText = null;
-        text = text.replaceAll("\n","");
+        text = text.replaceAll("\n", "");
         List<String> inBoxes = new ArrayList<>();
         List<String> outBoxes = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         boolean inBox = false;
-        for(int i=0;i<text.length();i++){
-            if(text.charAt(i)=='[') {
-                if(!inBox&&sb.length()>0){
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '[') {
+                if (!inBox && sb.length() > 0) {
                     outBoxes.add(sb.toString());
                 }
                 sb = new StringBuilder();
                 inBox = true;
-            }
-            else if(text.charAt(i)==']'){
-                if(inBox&&sb.length()>0){
+            } else if (text.charAt(i) == ']') {
+                if (inBox && sb.length() > 0) {
                     inBoxes.add(sb.toString());
                 }
                 sb = new StringBuilder();
                 inBox = false;
-            }else{
+            } else {
                 sb.append(text.charAt(i));
             }
         }
@@ -413,25 +412,24 @@ public class JWCore {
 //        Log.e("inboxes", String.valueOf(inBoxes));
 //        Log.e("outboxes", String.valueOf(outBoxes));
         List<String> toRemove = new ArrayList<>();
-        for(String info:inBoxes){
+        for (String info : inBoxes) {
             if (TextTools.containsNumber(info) && info.contains("周") ||
-                    TextTools.isNumber(info.replaceAll(",", "").replaceAll("-", "").replaceAll("单", "").replaceAll("双", ""))){
+                    TextTools.isNumber(info.replaceAll(",", "").replaceAll("-", "").replaceAll("单", "").replaceAll("双", ""))) {
                 weekText = info;
                 toRemove.add(info);
-            }
-            else if (TextTools.containsNumber(info) && info.contains("节")) {
+            } else if (TextTools.containsNumber(info) && info.contains("节")) {
                 specificTime = info.replaceAll("节", "");
                 toRemove.add(info);
             }
         }
         inBoxes.removeAll(toRemove);
-        if(inBoxes.size()>1){
+        if (inBoxes.size() > 1) {
             teacher = inBoxes.get(0);
-            classroom = inBoxes.get(inBoxes.size()-1);
-        }else if(inBoxes.size()==1){
+            classroom = inBoxes.get(inBoxes.size() - 1);
+        } else if (inBoxes.size() == 1) {
             classroom = inBoxes.get(0);
         }
-        if(outBoxes.size()>0) name = outBoxes.get(0);
+        if (outBoxes.size() > 0) name = outBoxes.get(0);
 
 
         if (weekText != null) {
@@ -467,10 +465,10 @@ public class JWCore {
 
         if (specificTime != null && specificTime.contains("-")) {
             String[] spcf = specificTime.split("-");
-            if(spcf.length>0){
+            if (spcf.length > 0) {
                 result.put("begin", String.valueOf(Integer.parseInt(spcf[0])));
             }
-            if(spcf.length>1){
+            if (spcf.length > 1) {
                 result.put("last", String.valueOf(Integer.parseInt(spcf[1]) - Integer.parseInt(spcf[0]) + 1));
             }
 
@@ -650,7 +648,7 @@ public class JWCore {
     }
 
     @WorkerThread
-    public List<Map<String, String>> getXKList(String xn, String xq, String type,boolean filter_novacancy,boolean filter_conflict) throws JWException {
+    public List<Map<String, String>> getXKList(String xn, String xq, String type, boolean filter_novacancy, boolean filter_conflict) throws JWException {
         List<Map<String, String>> res = new ArrayList<>();
         try {
             Connection.Response content = Jsoup.connect("http://jw.hitsz.edu.cn/Xsxk/queryKxrw")
@@ -669,8 +667,8 @@ public class JWCore {
 //                    .data("p_dqxq", xq)
 //                    .data("p_dqxnxq", xn + xq)
                     .data("p_xkfsdm", type)
-                    .data("p_sfhlctkc", filter_conflict?"1":"0")
-                    .data("p_sfhllrlkc", filter_novacancy?"1":"0")
+                    .data("p_sfhlctkc", filter_conflict ? "1" : "0")
+                    .data("p_sfhllrlkc", filter_novacancy ? "1" : "0")
                     .data("p_sfxsgwckb", "1")
                     .data("pageNum", "1")
                     .data("pageSize", "100")
@@ -680,11 +678,11 @@ public class JWCore {
                 String contentS = content.body();
                 //System.out.println(contentS);
                 JsonObject jo = new JsonParser().parse(contentS).getAsJsonObject();
-                if(jo.has("xsxkPage")){
+                if (jo.has("xsxkPage")) {
                     JsonObject page = jo.get("xsxkPage").getAsJsonObject();
                     Map<String, String> headerMap = new HashMap<String, String>();
-                    headerMap.put("header","true");
-                    headerMap.put("page",page.toString());
+                    headerMap.put("header", "true");
+                    headerMap.put("page", page.toString());
                     res.add(headerMap);
                 }
                 if (!jo.has("kxrwList")) return res;
@@ -739,11 +737,11 @@ public class JWCore {
                     .execute();
             String json = r.body();
             JsonObject jo = new JsonParser().parse(json).getAsJsonObject();
-            if(jo.has("xsxkPage")){
+            if (jo.has("xsxkPage")) {
                 JsonObject page = jo.get("xsxkPage").getAsJsonObject();
                 Map<String, String> headerMap = new HashMap<String, String>();
-                headerMap.put("header","true");
-                headerMap.put("page",page.toString());
+                headerMap.put("header", "true");
+                headerMap.put("page", page.toString());
                 result.add(headerMap);
             }
             JsonArray yxkc = new JsonParser().parse(json).getAsJsonObject().get("yxkcList").getAsJsonArray();
@@ -776,37 +774,37 @@ public class JWCore {
 
 
     @WorkerThread
-    public String xkOrTkAction(String xn,String xq,String type,String subjectType,String subjectId) throws JWException{
+    public String xkOrTkAction(String xn, String xq, String type, String subjectType, String subjectId) throws JWException {
         try {
-            String url = type.equals("tk")?"http://jw.hitsz.edu.cn/Xsxk/tuike":"http://jw.hitsz.edu.cn/Xsxk/addGouwuche";
+            String url = type.equals("tk") ? "http://jw.hitsz.edu.cn/Xsxk/tuike" : "http://jw.hitsz.edu.cn/Xsxk/addGouwuche";
             Connection.Response r = Jsoup.connect(url)
                     .headers(defaultRequestHeader)
                     .cookies(cookies)
                     .ignoreHttpErrors(true)
-                    .data("p_pylx","1")
-                    .data("p_sfgldjr","0")
-                    .data("p_sfredis","0")
-                    .data("p_sfsyxkgwc","0")
-                    .data("p_xktjz","rwtjzyx")
-                    .data("p_xn",xn)
-                    .data("p_xq",xq)
-                    .data("p_xnxq",xn+xq)
+                    .data("p_pylx", "1")
+                    .data("p_sfgldjr", "0")
+                    .data("p_sfredis", "0")
+                    .data("p_sfsyxkgwc", "0")
+                    .data("p_xktjz", "rwtjzyx")
+                    .data("p_xn", xn)
+                    .data("p_xq", xq)
+                    .data("p_xnxq", xn + xq)
 //                    .data("p_dqxn",xn)
 //                    .data("p_dqxq",xq)
 //                    .data("p_dqxnxq",xn+xq)
-                    .data("p_xkfsdm",subjectType)
-                    .data("p_id",subjectId)
-                    .data("p_sfhlctkc","0")
-                    .data("p_sfhllrlkc","0")
-                    .data("p_sfxsgwckb","1")
+                    .data("p_xkfsdm", subjectType)
+                    .data("p_id", subjectId)
+                    .data("p_sfhlctkc", "0")
+                    .data("p_sfhllrlkc", "0")
+                    .data("p_sfxsgwckb", "1")
                     .ignoreContentType(true)
                     .method(Connection.Method.POST)
                     .execute();
             try {
                 String json = r.body();
-                Log.e("选课结果",json);
+                Log.e("选课结果", json);
                 JsonObject jo = new JsonParser().parse(json).getAsJsonObject();
-                return JsonUtils.getStringInfo(jo,"message");
+                return JsonUtils.getStringInfo(jo, "message");
             } catch (JsonSyntaxException e) {
                 e.printStackTrace();
                 throw JWException.getFormatErrorException();
@@ -818,6 +816,7 @@ public class JWCore {
 //        pageNum: 2
 //        pageSize: 13
     }
+
     @WorkerThread
     public Map<String, Object> getSubjectDetail(String subjectId) throws JWException {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -908,6 +907,155 @@ public class JWCore {
         }
 
     }
+
+
+    /**
+     * 获取必修课进度信息
+     * 参数：xnxq:截止学年学期 eg:2019-20202
+     * 返回：Map
+     * required_number(credit) 要求门数/学分
+     * done_number(credit) 已完成门数/学分
+     **/
+    Map<String, String> getBXProgress(String xnxq) throws JWException {
+        Map<String, String> result = new HashMap<>();
+
+        Connection.Response r = null;
+        String xjid = null; //学籍id
+        String xh = null; //学号
+        String fah = null;//方案号
+        String nj = null;//年级
+        String pylx = null;//培养类型
+        /*获取上述信息*/
+        try {
+            r = Jsoup.connect("http://jw.hitsz.edu.cn/cjgl/cjzhtjcx/cjcx/getXss")
+                    .cookies(cookies).headers(defaultRequestHeader)
+                    .method(Connection.Method.POST)
+                    .ignoreContentType(true)
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .execute();
+            String json = r.body();
+            JsonObject jo = new JsonParser().parse(json).getAsJsonObject();
+            JsonObject content = jo.get("content").getAsJsonArray().get(0).getAsJsonObject();
+            fah = JsonUtils.getStringInfo(content, "fah");
+            xjid = JsonUtils.getStringInfo(content, "xjid");
+            xh = JsonUtils.getStringInfo(content, "xh");
+            nj = JsonUtils.getStringInfo(content, "nj");
+            pylx = JsonUtils.getStringInfo(content, "pylx");
+        } catch (Exception ignored) {
+            throw JWException.getConnectErrorExpection();
+        }
+        /*请求条件完整后，获取必修课进度信息*/
+        JsonObject requestPayload = new JsonObject();
+        requestPayload.addProperty("fah", fah);
+        requestPayload.addProperty("jzxnxq", xnxq);
+        requestPayload.addProperty("nj", nj);
+        requestPayload.addProperty("pylx", pylx);
+        requestPayload.addProperty("xh", xh);
+        requestPayload.addProperty("xjid", xjid);
+        if (fah != null && xjid != null && xh != null) {
+            try {
+                r = Jsoup.connect("http://jw.hitsz.edu.cn/cjgl/cjzhtjcx/cjcx/queryBxkqk")
+                        .cookies(cookies).headers(defaultRequestHeader)
+                        .method(Connection.Method.POST)
+                        .ignoreContentType(true)
+                        .header("X-Requested-With", "XMLHttpRequest")
+                        .header("Content-Type", "application/json") //这里特殊
+                        .requestBody(requestPayload.toString()) //用payload传递参数
+                        .execute();
+                String json = r.body();
+                Log.e("json", json);
+                JsonObject content = new JsonParser().parse(json).getAsJsonObject().get("content").getAsJsonObject();
+                result.put("done_number", content.get("ywcms").getAsString());
+                result.put("done_credit", content.get("ywcxf").getAsString());
+                JsonObject required = content.get("yqmsxf").getAsJsonObject();
+                result.put("required_number", required.get("YQMS").getAsString());
+                result.put("required_credit", required.get("YQXF").getAsString());
+                result.put("xfj", required.get("XFJ").getAsString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        } else {
+            throw JWException.getFormatErrorException();
+        }
+        return result;
+    }
+
+
+    /**
+     * 获取学分类别要求
+     * 参数：xnxq:截止学年学期 eg:2019-20202
+     * 返回：List<Map>
+     * name 名称
+     * required 要求
+     * done 已完成学分
+     **/
+    List<Map<String, String>> getCreditTypeRequirement() throws JWException {
+        List<Map<String, String>> result = new ArrayList<>();
+
+        Connection.Response r = null;
+        String xjid = null; //学籍id
+        String fah = null;//方案号
+        String pylx = null;//培养类型
+        /*获取上述信息*/
+        try {
+            r = Jsoup.connect("http://jw.hitsz.edu.cn/cjgl/cjzhtjcx/cjcx/getXss")
+                    .cookies(cookies).headers(defaultRequestHeader)
+                    .method(Connection.Method.POST)
+                    .ignoreContentType(true)
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .execute();
+            String json = r.body();
+            JsonObject jo = new JsonParser().parse(json).getAsJsonObject();
+            JsonObject content = jo.get("content").getAsJsonArray().get(0).getAsJsonObject();
+            fah = JsonUtils.getStringInfo(content, "fah");
+            xjid = JsonUtils.getStringInfo(content, "xjid");
+            pylx = JsonUtils.getStringInfo(content, "pylx");
+        } catch (Exception ignored) {
+            throw JWException.getConnectErrorExpection();
+        }
+        /*请求条件完整后，获取必修课进度信息*/
+        JsonObject requestPayload = new JsonObject();
+        requestPayload.addProperty("fah", fah);
+        requestPayload.addProperty("pylx", pylx);
+        requestPayload.addProperty("current", "1");
+        requestPayload.addProperty("pageSize", "100");
+        requestPayload.addProperty("xjid", xjid);
+        if (fah != null && xjid != null) {
+            try {
+                r = Jsoup.connect("http://jw.hitsz.edu.cn/cjgl/cjzhtjcx/cjcx/queryXflbyq")
+                        .cookies(cookies).headers(defaultRequestHeader)
+                        .method(Connection.Method.POST)
+                        .ignoreContentType(true)
+                        .header("X-Requested-With", "XMLHttpRequest")
+                        .header("Content-Type", "application/json") //这里特殊
+                        .requestBody(requestPayload.toString()) //用payload传递参数
+                        .execute();
+                String json = r.body();
+                Log.e("json", json);
+                JsonObject content = new JsonParser().parse(json).getAsJsonObject().get("content").getAsJsonObject();
+                JsonArray list = content.get("list").getAsJsonArray();
+                for (JsonElement je : list) {
+                    Map<String, String> item = new HashMap<>();
+                    JsonObject jo = je.getAsJsonObject();
+                    item.put("name", JsonUtils.getStringInfo(jo, "kclbmc"));
+                    item.put("done", JsonUtils.getStringInfo(jo, "ywcxf"));
+                    item.put("required", JsonUtils.getStringInfo(jo, "yqwcxf"));
+                    item.put("togo", JsonUtils.getStringInfo(jo, "wwcxf"));
+                    result.add(item);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        } else {
+            throw JWException.getFormatErrorException();
+        }
+        return result;
+    }
+
 
     public HashMap<String, String> getCookies() {
         return cookies;

@@ -20,16 +20,16 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.themeCore;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 public class PickSingleTimeDialog extends RoundedCornerDialog {
     private String plusTag;
     private int week,dow,hour,minute;
-    BaseActivity context;
+    private BaseActivity context;
     private TextView dialogTitle,dialogTitleTime;
     private boolean timeSet = false;
-    private ImageView done;
     private onDialogConformListener mOnDialogConformListener;
     private mWheel3DView picker_week;
     private mWheel3DView picker_dow;
@@ -61,12 +61,12 @@ public class PickSingleTimeDialog extends RoundedCornerDialog {
     }
 
 
-
-    void initViews(View view){
+    private void initViews(View view) {
+        TimetableCore tc = TimetableCore.getInstance(getContext());
         picker_week = view.findViewById(R.id.ade_weekpicker_week);
         picker_dow = view.findViewById(R.id.ade_weekpicker_dow);
         picker_hour = view.findViewById(R.id.hour);
-        done = view.findViewById(R.id.done);
+        ImageView done = view.findViewById(R.id.done);
         picker_minute = view.findViewById(R.id.minute);
         calendarView = view.findViewById(R.id.ade_calendarview);
         dialogTitle = view.findViewById(R.id.dialog_title);
@@ -74,16 +74,16 @@ public class PickSingleTimeDialog extends RoundedCornerDialog {
         calendarDateChangeListener = new mCalendarDateChangeListener();
         weekWheelListener = new mWheelChangedListener();
         dowWheelListener = new mWheelChangedListener();
-        calendarView.setMinDate(timeTableCore.getCurrentCurriculum().getFirstDateAtWOT(1).getTimeInMillis());
-        //calendarView.setMinDate(timeTableCore.getNow().getTimeInMillis());
-        calendarView.setMaxDate(timeTableCore.getCurrentCurriculum().getFirstDateAtWOT(3000).getTimeInMillis());
+        calendarView.setMinDate(tc.getCurrentCurriculum().getFirstDateAtWOT(1).getTimeInMillis());
+        //calendarView.setMinDate(TimetableCore.getNow().getTimeInMillis());
+        calendarView.setMaxDate(tc.getCurrentCurriculum().getFirstDateAtWOT(3000).getTimeInMillis());
 
         List weekTexts = new ArrayList();
         List<String> dowTexts = Arrays.asList(context.getResources().getStringArray(R.array.dow2));
         List<String> hourTexts = new ArrayList<>();
         List<String> minuteTexts = new ArrayList<>();
-        for(int i=1;i<=timeTableCore.getCurrentCurriculum().getTotalWeeks();i++){
-            if(i==timeTableCore.getThisWeekOfTerm()) weekTexts.add(i<10?"0"+i+"·":i+""+"·");
+        for (int i = 1; i <= tc.getCurrentCurriculum().getTotalWeeks(); i++) {
+            if (i == tc.getThisWeekOfTerm()) weekTexts.add(i < 10 ? "0" + i + "·" : i + "" + "·");
             else weekTexts.add(i<10?"0"+i:i+"");
         }
         for(int i=0;i<24;i++) if(i<10)hourTexts.add("0"+i+"");else hourTexts.add(i+"");
@@ -124,19 +124,20 @@ public class PickSingleTimeDialog extends RoundedCornerDialog {
     @Override
     protected void onStart() {
         super.onStart();
+        TimetableCore tc = TimetableCore.getInstance(getContext());
         if(hasInit){
             picker_dow.setCurrentIndex(init_dow-1);
             picker_week.setCurrentIndex(init_week-1);
             picker_hour.setCurrentIndex(init_time.hour);
             picker_minute.setCurrentIndex(init_time.minute);
         }else{
-            int tempDOW = timeTableCore.getNow().get(Calendar.DAY_OF_WEEK);
+            int tempDOW = TimetableCore.getNow().get(Calendar.DAY_OF_WEEK);
             picker_dow.setCurrentIndex(tempDOW==1?6:tempDOW-2);
-            picker_week.setCurrentIndex(timeTableCore.getThisWeekOfTerm()-1);
-            picker_hour.setCurrentIndex(timeTableCore.getNow().get(Calendar.HOUR_OF_DAY));
-            picker_minute.setCurrentIndex(timeTableCore.getNow().get(Calendar.MINUTE));
-            if (timeTableCore.isThisTerm())
-                calendarView.setDate(timeTableCore.getNow().getTimeInMillis());
+            picker_week.setCurrentIndex(tc.getThisWeekOfTerm() - 1);
+            picker_hour.setCurrentIndex(TimetableCore.getNow().get(Calendar.HOUR_OF_DAY));
+            picker_minute.setCurrentIndex(TimetableCore.getNow().get(Calendar.MINUTE));
+            if (tc.isThisTerm())
+                calendarView.setDate(TimetableCore.getNow().getTimeInMillis());
         }
         week = picker_week.getCurrentIndex()+1;
         dow = picker_dow.getCurrentIndex()+1;
@@ -153,16 +154,17 @@ public class PickSingleTimeDialog extends RoundedCornerDialog {
         @SuppressLint("SetTextI18n")
         @Override
         public void onSelectedDayChange( CalendarView view, int year, int month, int dayOfMonth) {
+            TimetableCore tc = TimetableCore.getInstance(getContext());
             Calendar c = Calendar.getInstance();
             c.set(year,month,dayOfMonth);
             dialogTitle.setText(EventsUtils.getDateString(c, true, EventsUtils.TTY_REPLACE));
-            week = timeTableCore.getCurrentCurriculum().getWeekOfTerm(c);
+            week = tc.getCurrentCurriculum().getWeekOfTerm(c);
             dow = TimetableCore.getDOW(c);
             if(!fromWheel){
                 weekWheelListener.fromCalender = true;
                 dowWheelListener.fromCalender = true;
                 picker_dow.setCurrentIndex(dow - 1);
-                picker_week.setCurrentIndex(timeTableCore.getCurrentCurriculum().getWeekOfTerm(c)-1);
+                picker_week.setCurrentIndex(tc.getCurrentCurriculum().getWeekOfTerm(c) - 1);
             }else{
                 fromWheel=false;
             }
@@ -175,7 +177,7 @@ public class PickSingleTimeDialog extends RoundedCornerDialog {
         @SuppressLint("SetTextI18n")
         @Override
         public void onChanged(WheelView view, int oldIndex, int newIndex) {
-            Calendar tempD = timeTableCore.getCurrentCurriculum().getDateAtWOT(picker_week.getCurrentIndex()+1,picker_dow.getCurrentIndex()+1);
+            Calendar tempD = TimetableCore.getInstance(HContext).getCurrentCurriculum().getDateAtWOT(picker_week.getCurrentIndex() + 1, picker_dow.getCurrentIndex() + 1);
             int tempDOW = tempD.get(Calendar.DAY_OF_WEEK);
             week = picker_week.getCurrentIndex()+1;
             dow = tempDOW==1?7:tempDOW-1;

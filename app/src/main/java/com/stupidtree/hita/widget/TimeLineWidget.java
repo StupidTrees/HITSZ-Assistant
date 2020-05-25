@@ -42,7 +42,7 @@
 //    private static EventItem nextEvent;
 //    private static float nowProgress;
 //
-//    private static TimetableCore timeTableCore;
+//    private static TimetableCore TimetableCore.getInstance(HContext);
 //    private static boolean hasInit = false;
 //    private static Set widgetsId = new HashSet(); //注意要是静态的
 //    private static DecimalFormat df = new DecimalFormat("#0.00");
@@ -61,9 +61,9 @@
 //
 //    public void refreshTodaysEvents() {
 //
-//        int DOW = timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) == 1 ? 7 : timeTableCore.getNow().get(Calendar.DAY_OF_WEEK) - 1;
+//        int DOW = TimetableCore.getNow().get(Calendar.DAY_OF_WEEK) == 1 ? 7 : TimetableCore.getNow().get(Calendar.DAY_OF_WEEK) - 1;
 //        todayEvents.clear();
-//        for (EventItem ei : TimetableCore.getOneDayEvents(curriculum.getWeekOfTerm(timeTableCore.getNow()), DOW)) {
+//        for (EventItem ei : TimetableCore.getOneDayEvents(curriculum.getWeekOfTerm(TimetableCore.getNow()), DOW)) {
 //            todayEvents.add(ei);
 //        }
 //        Collections.sort(todayEvents);
@@ -73,7 +73,7 @@
 //        boolean changed_now = false;
 //        boolean changed_next = false;
 //        try {
-//            HTime nowTime = new HTime(timeTableCore.getNow());
+//            HTime nowTime = new HTime(TimetableCore.getNow());
 //            for (int i = todayEvents.size() - 1; i >= 0; i--) {
 //                EventItem ei = todayEvents.get(i);
 //                if (ei.hasCross(nowTime) && (!ei.isWholeDay())
@@ -90,7 +90,7 @@
 //            if (!changed_next) nextEvent = null;
 //            if (!changed_now) nowEvent = null;
 //            if (nowEvent != null) {
-//                nowProgress = ((float) new HTime(timeTableCore.getNow()).getDuration(nowEvent.startTime)) / ((float) nowEvent.endTime.getDuration(nowEvent.startTime));
+//                nowProgress = ((float) new HTime(TimetableCore.getNow()).getDuration(nowEvent.startTime)) / ((float) nowEvent.endTime.getDuration(nowEvent.startTime));
 //            }
 //        } catch (Exception e) {
 //            e.printStackTrace();
@@ -128,27 +128,27 @@
 //                    subtitltToSet = "进度:" + df.format(nowProgress * 100) + "%";
 //                    IntentTerminal = 6;
 //                } else {
-//                    if (new HTime(timeTableCore.getNow()).compareTo(new HTime(5, 0)) < 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(0, 0)) > 0) {
+//                    if (new HTime(TimetableCore.getNow()).compareTo(new HTime(5, 0)) < 0 && new HTime(TimetableCore.getNow()).compareTo(new HTime(0, 0)) > 0) {
 //                        ImageToSet = R.drawable.ic_moon;
 //                        titleToSet = context.getString(R.string.timeline_head_goodnight_title);
 //                        subtitltToSet = context.getString(R.string.timeline_head_goodnight_subtitle);
-//                    } else if (new HTime(timeTableCore.getNow()).compareTo(new HTime(8, 15)) < 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(5, 00)) > 0) {
+//                    } else if (new HTime(TimetableCore.getNow()).compareTo(new HTime(8, 15)) < 0 && new HTime(TimetableCore.getNow()).compareTo(new HTime(5, 00)) > 0) {
 //                        ImageToSet = R.drawable.ic_sunny;
 //                        titleToSet = context.getString(R.string.timeline_head_goodmorning_title);
 //                        subtitltToSet = "今天共有" + getTodayCourseNum() + "节课";
 //
-//                    } else if (new HTime(timeTableCore.getNow()).compareTo(new HTime(12, 15)) > 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(13, 00)) < 0) {
+//                    } else if (new HTime(TimetableCore.getNow()).compareTo(new HTime(12, 15)) > 0 && new HTime(TimetableCore.getNow()).compareTo(new HTime(13, 00)) < 0) {
 //                        ImageToSet = R.drawable.ic_lunch;
 //                        titleToSet = context.getString(R.string.timeline_head_lunch_title);
 //                        subtitltToSet = context.getString(R.string.timeline_head_lunch_subtitle);
 //                        IntentTerminal = 4;
-//                    } else if (new HTime(timeTableCore.getNow()).compareTo(new HTime(17, 10)) > 0 && new HTime(timeTableCore.getNow()).compareTo(new HTime(18, 10)) < 0) {
+//                    } else if (new HTime(TimetableCore.getNow()).compareTo(new HTime(17, 10)) > 0 && new HTime(TimetableCore.getNow()).compareTo(new HTime(18, 10)) < 0) {
 //                        ImageToSet = R.drawable.ic_lunch;
 //                        titleToSet = context.getString(R.string.timeline_head_dinner_title);
 //                        subtitltToSet = context.getString(R.string.timeline_head_dinner_subtitle);
 //                        IntentTerminal = 4;
 //                    } else if (nextEvent != null) {
-//                        if (nextEvent.startTime.getDuration(new HTime(timeTableCore.getNow())) <= 15 && (nextEvent.eventType == TimetableCore.COURSE || nextEvent.eventType == TimetableCore.EXAM)) {
+//                        if (nextEvent.startTime.getDuration(new HTime(TimetableCore.getNow())) <= 15 && (nextEvent.eventType == TimetableCore.COURSE || nextEvent.eventType == TimetableCore.EXAM)) {
 //                            subtitltToSet = "前往" + nextEvent.tag2;
 //                            titleToSet = nextEvent.mainName + "马上开始";
 //                            ImageToSet = R.drawable.ic_now_circle;
@@ -160,7 +160,7 @@
 //                            ImageToSet = R.drawable.ic_sunglasses;
 //                        }
 //                    } else {
-//                        if (new HTime(timeTableCore.getNow()).compareTo(new HTime(23, 00)) > 0 || new HTime(timeTableCore.getNow()).compareTo(new HTime(5, 0)) < 0) {
+//                        if (new HTime(TimetableCore.getNow()).compareTo(new HTime(23, 00)) > 0 || new HTime(TimetableCore.getNow()).compareTo(new HTime(5, 0)) < 0) {
 //                            ImageToSet = R.drawable.ic_moon;
 //                            titleToSet = context.getString(R.string.timeline_head_goodnight_title);
 //                            subtitltToSet = context.getString(R.string.timeline_head_goodnight_subtitle);

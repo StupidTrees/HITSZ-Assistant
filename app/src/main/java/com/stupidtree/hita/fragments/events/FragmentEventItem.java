@@ -1,7 +1,6 @@
 package com.stupidtree.hita.fragments.events;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -10,16 +9,18 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.fragments.BaseFragment;
+import com.stupidtree.hita.fragments.BaseOperationTask;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.timetable.packable.EventItem;
 
+import static com.stupidtree.hita.HITAApplication.HContext;
 import static com.stupidtree.hita.HITAApplication.TPE;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
 import static com.stupidtree.hita.timetable.TimeWatcherService.TIMETABLE_CHANGED;
 import static com.stupidtree.hita.timetable.TimetableCore.COURSE;
 import static com.stupidtree.hita.timetable.TimetableCore.DDL;
 import static com.stupidtree.hita.timetable.TimetableCore.EXAM;
 
-abstract public class FragmentEventItem extends BaseFragment {
+public class FragmentEventItem extends BaseFragment {
     EventItem eventItem;
     PopupFragment popupRoot;
 
@@ -74,33 +75,54 @@ abstract public class FragmentEventItem extends BaseFragment {
 
     }
 
+    @Override
+    protected int getLayoutId() {
+        return 0;
+    }
+
 
     void deleteEvent() {
-        new deleteTask().executeOnExecutor(TPE);
+        new deleteTask(new BaseOperationTask.OperationListener() {
+            @Override
+            public void onOperationStart(String id, Boolean[] params) {
+
+            }
+
+            @Override
+            public void onOperationDone(String id, BaseOperationTask task, Boolean[] params, Object result) {
+                Toast.makeText(requireContext(), getString(R.string.notif_delete_success), Toast.LENGTH_SHORT).show();
+                Intent i = new Intent();
+                i.putExtra("week", eventItem.week);
+                i.setAction(TIMETABLE_CHANGED);
+                //Intent i2 = new Intent();
+                LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
+                // dialog.dismiss();
+                if (popupRoot != null) popupRoot.callDismiss();
+            }
+        }, eventItem).executeOnExecutor(TPE);
     }
 
     public interface PopupFragment {
         void callDismiss();
     }
 
-    class deleteTask extends AsyncTask {
 
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            return timeTableCore.deleteEvent(eventItem, eventItem.eventType == DDL);
+    static class deleteTask extends BaseOperationTask<Boolean> {
+
+
+        EventItem eventItem;
+
+        deleteTask(OperationListener listRefreshedListener, EventItem eventItem) {
+            super(listRefreshedListener);
+            this.eventItem = eventItem;
         }
 
         @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            Toast.makeText(requireContext(), getString(R.string.notif_delete_success), Toast.LENGTH_SHORT).show();
-            Intent i = new Intent();
-            i.putExtra("week", eventItem.week);
-            i.setAction(TIMETABLE_CHANGED);
-            //Intent i2 = new Intent();
-            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(i);
-            // dialog.dismiss();
-            if (popupRoot != null) popupRoot.callDismiss();
+        protected Boolean doInBackground(OperationListener<Boolean> listRefreshedListener, Boolean... booleans) {
+            return TimetableCore.getInstance(HContext).deleteEvent(eventItem, eventItem.eventType == DDL);
+
         }
+
+
     }
 }

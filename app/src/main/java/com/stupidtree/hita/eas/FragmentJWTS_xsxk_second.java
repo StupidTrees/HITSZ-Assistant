@@ -15,6 +15,7 @@ import com.google.gson.JsonParser;
 import com.stupidtree.hita.R;
 import com.stupidtree.hita.adapter.XSXKListAdapter;
 import com.stupidtree.hita.fragments.BasicRefreshTask;
+import com.stupidtree.hita.timetable.TimetableCore;
 import com.stupidtree.hita.util.JsonUtils;
 import com.stupidtree.hita.views.WrapContentLinearLayoutManager;
 
@@ -29,7 +30,7 @@ import java.util.Objects;
 
 import static com.stupidtree.hita.HITAApplication.TPE;
 import static com.stupidtree.hita.HITAApplication.jwCore;
-import static com.stupidtree.hita.HITAApplication.timeTableCore;
+
 
 
 public class FragmentJWTS_xsxk_second extends JWFragment
@@ -160,7 +161,7 @@ public class FragmentJWTS_xsxk_second extends JWFragment
                 Date beginD = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).parse(begin);
                 Date endD = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).parse(end);
                 if (beginD == null || endD == null) return false;
-                return beginD.before(timeTableCore.getNow().getTime()) && endD.after(timeTableCore.getNow().getTime());
+                return beginD.before(TimetableCore.getNow().getTime()) && endD.after(TimetableCore.getNow().getTime());
             }
             return false;
         } catch (Exception e) {
