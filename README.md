@@ -4,6 +4,7 @@
 
 ## 项目背景
 项目来自哈尔滨工业大学（深圳）2018级本科生大一年度立项，由三个项目组合作完成的包含问答系统、地图导航、日程、教务、校园在线功能在内的APP。立项结束后，考虑到APP日常使用的便捷性，将地图导航和语音问答等立项的重点研究功能暂时移除，精简后的APP专注于日程管理和校园在线等日常助手功能，及当前上架各大应用市场的“HITSZ助手”。
+
 ## 应用简介
 HITSZ助手是面向哈尔滨工业大学（深圳）学生的工具类APP+校园在线APP。
 - ###### UI设计
@@ -19,6 +20,9 @@ HITSZ助手是面向哈尔滨工业大学（深圳）学生的工具类APP+校�
 
 ## 应用截图
 ![1](http://file.market.xiaomi.com/thumbnail/jpeg/l395/AppStore/0076a5168f659598850e23363e29668106d4212cc "1")  ![2](http://file.market.xiaomi.com/thumbnail/jpeg/l395/AppStore/014a3247ae36942d63022f549001733030f54f82d "2")  ![3](http://file.market.xiaomi.com/thumbnail/jpeg/l395/AppStore/03c44445d96d60b4e974ae36dde7c4c9572423501 "3")  ![4](http://file.market.xiaomi.com/thumbnail/jpeg/l395/AppStore/0d4a3407a53f9b2d560229549ef172383ce432032 "4")
+
+## 代码说明
+- 代码结构和APP架构太混乱了....不建议查看代码，有时间会重构
 
 ## 用到第三方开源库
 - 加载效果的按钮：[LoadingButtonAndroid](https://github.com/leandroBorgesFerreira/LoadingButtonAndroid)
